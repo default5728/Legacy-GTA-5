@@ -1,0 +1,321 @@
+.wrap {
+  position: relative;
+  height: 532px;
+  width: 532px;
+  background-image: url('../img/main-c.png');
+  background-size: cover;
+  /* transition: all ease 0.2s; */
+}
+
+.wrap.left {
+  background-image: url('../img/left-c.png');
+}
+
+.wrap.top {
+  background-image: url('../img/top-c.png');
+}
+
+.wrap.right {
+  background-image: url('../img/right-c.png');
+}
+
+.wrap.bottom {
+  background-image: url('../img/bottom-c.png');
+}
+
+.wrap a {
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 99999;
+}
+
+.wrap a:hover svg path {
+  fill: #fff;
+}
+
+.wrap a:hover p {
+  color: #fff;
+}
+
+.square-top {
+  top: 8%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.square-top div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.square-mid {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2%;
+  padding-right: 3%;
+}
+
+.square-mid div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 110px;
+}
+
+.square-bottom {
+  bottom: 9%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.square-bottom div {
+  display: flex;
+  flex-wrap: wrap;
+  width: 190px;
+  align-items: center;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+.wrap div p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  text-align: center;
+}
+
+.circle {
+  position: absolute;
+  z-index: 99999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  background: rgba(23, 24, 39, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a.circle:hover svg path {
+  fill: #006EFF;
+}
+
+.dual-actions .wrap a.square-top:hover svg path, .dual-actions .wrap a.square-top:hover svg ellipse {
+  fill: none;
+  stroke: #fff;
+}
+
+.dual-actions .square-mid {
+  padding-right: 5%;
+}
+
+.dual-actions .wrap a.square-right div {
+  width: 90px;
+}
+.dual-actions .square-bottom div {
+  width: 140px;
+}
+
+.transfer-money {
+  position: relative;
+  width: 548px;
+  height: 185px;
+  background: #171827;
+  padding-left: 43px;
+  padding-top: 32px;
+}
+
+.back-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 59px;
+  height: 59px;
+  border-radius: 50%;
+  background: #252635;
+  position: absolute;
+  top:-25px;
+  right: -25px;
+}
+
+.transfer-money img {
+  position: absolute;
+  top: -153px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.transfer-money p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.transfer-money p a {
+  text-decoration: none;
+  color: #fff;
+}
+
+p.balance-p {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  margin-top: 16px;
+}
+
+p.balance-p b {
+  font-weight: 500;
+  font-size: 12px;
+  color: #A1A3C2;
+}
+
+.transfer-input-block {
+  display: flex;
+  margin-top: 10px;
+}
+
+.transfer-input-block input {
+  width: 240px;
+  height: 47px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  border: 1px solid #252635;
+  border-right: none;
+  padding-left: 16px;
+  background: none;
+  outline: none;
+}
+
+.transfer-input-block input::-webkit-input-placeholder {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+}
+
+.transfer-input-dop {
+  width: 29px;
+  height: 47px;
+  color: #fff;
+  border: 1px solid #252635;
+  border-left: none;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transfer-input-block button {
+  margin-left: 16px;
+  width: 167px;
+  height: 47px;
+  border: 1px solid #006EFF;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  background: none;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.transfer-input-block button:hover {
+  background: #006EFF;
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+}
+
+.animations-block {
+  position: absolute;
+  top: 40%;
+  transform: translate(0, -50%);
+  width: 359px;
+  height: 429px;
+  background: #171827;
+}
+
+.animations-block p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 18px;
+  color:#fff;
+  margin-left: 48px;
+}
+
+.animations-block hr {
+  margin: 0;
+  width: 100%;
+  border-color: #252635;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.animations-block ul {
+  overflow: auto;
+  height: 340px;
+}
+
+.animations-block ul  li {
+  list-style-type: none;
+  height: 59px;
+}
+
+.animations-block ul  li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  text-decoration: none;
+  padding-left: 48px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  transition: all 0.3s;
+}
+
+.animations-block ul  li a:hover {
+  background: #252635;
+  color: #fff;
+  padding-left: 68px;
+}
+
+.animations-block div {
+  width: 100%;
+  height: 16px;
+  position: relative;
+}
+
+.animations-back-actions {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  background: #252635;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#actions a.square-top div {
+  width: 60px;
+}

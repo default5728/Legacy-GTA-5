@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="notify.css?v=4">
+    <style>
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('package://browsers/hudnew/fonts/Gilroy-Medium.woff2') format('woff2'),
+                 url('package://browsers/hudnew/fonts/Gilroy-Medium.woff') format('woff'),
+                 url('package://browsers/hudnew/fonts/Gilroy-Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('fonts/Gilroy-Heavy.woff2') format('woff2'),
+                 url('fonts/Gilroy-Heavy.woff') format('woff'),
+                 url('fonts/Gilroy-Heavy.ttf') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('fonts/Gilroy-Black.woff2') format('woff2'),
+                 url('fonts/Gilroy-Black.woff') format('woff'),
+                 url('fonts/Gilroy-Black.ttf') format('truetype');
+            font-weight: 800;
+            font-style: normal;
+        }
+        html, body, body * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: transparent;
+            pointer-events: none;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+            user-drag: none !important;
+        }
+        ::selection,
+        ::-moz-selection {
+            background: transparent !important;
+            color: inherit !important;
+        }
+        .yk-text.w-5 {
+            font-family: 'Gilroy', Arial, sans-serif;
+            font-weight: 500;
+            color: #fff;
+        }
+    </style>
+    <script>
+        (function () {
+            function blockSelect(e) {
+                e.preventDefault();
+                return false;
+            }
+            function blockCtrlA(e) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A' || e.keyCode === 65)) {
+                    e.preventDefault();
+                    if (window.getSelection && window.getSelection().removeAllRanges) {
+                        window.getSelection().removeAllRanges();
+                    }
+                    return false;
+                }
+            }
+            document.addEventListener('selectstart', blockSelect, true);
+            document.addEventListener('dragstart', blockSelect, true);
+            document.addEventListener('keydown', blockCtrlA, true);
+            document.addEventListener('keyup', blockCtrlA, true);
+            document.addEventListener('mousedown', function () {
+                if (window.getSelection && window.getSelection().removeAllRanges) {
+                    window.getSelection().removeAllRanges();
+                }
+            }, true);
+        })();
+    </script>
+</head>
+<body>
+    <script src="jquery.js"></script>
+    <script src="notify.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+// В packages/server/accounts.js — после успешного SELECT аккаунта при логине:
+
+if (typeof global.hydrateCrosshairSettingsFromAccount === 'function') {
+    global.hydrateCrosshairSettingsFromAccount(player, row);
+}
+
+// Если f10_reticle_server.js не подключён, но hydrate уже есть в accounts.js:
+// hydrateCrosshairSettingsFromAccount(player, row);

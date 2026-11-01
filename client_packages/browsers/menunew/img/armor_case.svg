@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
+  <rect width="160" height="160" rx="20" fill="#121212"/>
+  <rect x="28" y="36" width="104" height="88" rx="14" fill="#181818" stroke="#dc2626" stroke-width="3"/>
+  <path d="M80 48c-18 8-28 22-28 38v24c10 6 20 8 28 8s18-2 28-8V86c0-16-10-30-28-38Z" fill="rgba(220,38,38,0.18)" stroke="#ef4444" stroke-width="3"/>
+  <text x="80" y="138" text-anchor="middle" fill="#f87171" font-size="14" font-family="Segoe UI,Arial,sans-serif" font-weight="700">ARMOR</text>
+</svg>

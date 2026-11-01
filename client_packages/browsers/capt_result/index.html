@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика боя</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Segoe UI,Roboto,Arial,sans-serif;background:transparent}
+#root{display:none;position:fixed;inset:0;background:rgba(12,13,20,0.92);color:#fff;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 24px 24px}
+#root.open{display:flex}
+.cr-header{text-align:center;margin-bottom:28px}
+.cr-title{font-size:26px;font-weight:700;margin-bottom:8px}
+.cr-sub{font-size:15px;color:#a1a3c2;line-height:1.5}
+.cr-winner{color:#31c02e;font-weight:600}
+.cr-personal{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;width:100%;max-width:960px}
+.cr-card{min-width:200px;flex:1;max-width:280px;background:#252635;border:1px solid #3d3f53;border-radius:10px;padding:18px 20px;text-align:center}
+.cr-card-val{font-size:32px;font-weight:700;color:#fff;margin-bottom:6px}
+.cr-card-lbl{font-size:13px;color:#a1a3c2;text-transform:uppercase;letter-spacing:.4px}
+.cr-table-wrap{width:100%;max-width:960px;max-height:340px;overflow:auto;border:1px solid #3d3f53;border-radius:10px;background:rgba(37,38,53,0.6)}
+.cr-table{width:100%;border-collapse:collapse;font-size:14px}
+.cr-table thead{position:sticky;top:0;background:#1e1f2b;z-index:1}
+.cr-table th,.cr-table td{padding:12px 14px;text-align:center;border-bottom:1px solid #3d3f53}
+.cr-table th{font-weight:600;color:#a1a3c2;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+.cr-table td{color:#fff}
+.cr-table td:first-child,.cr-table th:first-child{text-align:left}
+.cr-table tr.me td{background:rgba(220,38,38,0.12)}
+.cr-you{color:#ef4444;font-size:12px;font-weight:600}
+.cr-btn{margin-top:28px;padding:14px 48px;background:#252635;border:1px solid #3d3f53;border-radius:8px;color:#a1a3c2;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.cr-btn:hover{background:#dc2626;border-color:#dc2626;color:#fff}
+.cr-table-wrap::-webkit-scrollbar{width:5px;height:5px}
+.cr-table-wrap::-webkit-scrollbar-thumb{background:rgba(220,38,38,0.45);border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="cr-header">
+    <div class="cr-title" id="crTitle">Статистика боя</div>
+    <div class="cr-sub" id="crSub"></div>
+  </div>
+  <div class="cr-personal" id="crPersonal"></div>
+  <div class="cr-table-wrap">
+    <table class="cr-table">
+      <thead>
+        <tr>
+          <th>Игрок</th>
+          <th>Выстр.</th>
+          <th>Попад.</th>
+          <th>% попад.</th>
+          <th>% в голову</th>
+          <th>Урон</th>
+          <th>K/D</th>
+        </tr>
+      </thead>
+      <tbody id="crBody"></tbody>
+    </table>
+  </div>
+  <button type="button" class="cr-btn" id="crClose">Закрыть</button>
+</div>
+<script>
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+window.CaptResultApp = {
+  show(data, myStatic) {
+    if (!data || !Array.isArray(data.players)) return;
+    const root = document.getElementById('root');
+    const kind = data.kind === 'bizwar' ? 'Капт' : 'Война семей';
+    document.getElementById('crTitle').textContent = kind + ' — ' + (data.zoneLabel || 'статистика');
+    document.getElementById('crSub').innerHTML =
+      esc(data.attackerLabel || '—') + ' <span style="color:#666">vs</span> ' + esc(data.defenderLabel || '—') +
+      '<br><span class="cr-winner">Победитель: ' + esc(data.winnerLabel || '—') + '</span>';
+
+    const me = data.players.find(p => Number(p.static) === Number(myStatic)) || null;
+    const personal = document.getElementById('crPersonal');
+    if (me) {
+      personal.innerHTML =
+        '<div class="cr-card"><div class="cr-card-val">' + (me.damage || 0) + '</div><div class="cr-card-lbl">Урон в тере</div></div>' +
+        '<div class="cr-card"><div class="cr-card-val">' + (me.hitPct || 0) + '%</div><div class="cr-card-lbl">Попадания</div></div>' +
+        '<div class="cr-card"><div class="cr-card-val">' + (me.headPct || 0) + '%</div><div class="cr-card-lbl">В голову</div></div>';
+    } else {
+      personal.innerHTML = '';
+    }
+
+    const body = document.getElementById('crBody');
+    body.innerHTML = data.players.map(p => {
+      const mine = Number(p.static) === Number(myStatic);
+      const kd = (Number(p.kills) || 0) + ' / ' + (Number(p.deaths) || 0);
+      return '<tr class="' + (mine ? 'me' : '') + '">' +
+        '<td>' + esc(p.name) + (mine ? ' <span class="cr-you">(вы)</span>' : '') + '</td>' +
+        '<td>' + (p.shots || 0) + '</td>' +
+        '<td>' + (p.hits || 0) + '</td>' +
+        '<td>' + (p.hitPct || 0) + '%</td>' +
+        '<td>' + (p.headPct || 0) + '%</td>' +
+        '<td>' + (p.damage || 0) + '</td>' +
+        '<td>' + kd + '</td>' +
+      '</tr>';
+    }).join('');
+
+    root.classList.add('open');
+  },
+
+  hide() {
+    document.getElementById('root').classList.remove('open');
+  }
+};
+
+document.getElementById('crClose').addEventListener('click', () => {
+  try {
+    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('capt:result:close');
+  } catch (_e) {}
+});
+</script>
+</body>
+</html>

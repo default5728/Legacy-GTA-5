@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interaction Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; }
+html, body { width:100%; height:100%; overflow:hidden; background:transparent; }
+body {
+    background: transparent !important;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+body.open { display: flex; }
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 175px;
+    transform: translate(50px, 50px);
+}
+.menu-item {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(to right, rgba(20, 20, 20, 0.55), rgba(64, 64, 64, 0.55));
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 400;
+    padding: 10px 10px;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-align: left;
+    outline: none;
+    white-space: nowrap;
+}
+.menu-item:hover {
+    background: linear-gradient(to right, rgba(35, 37, 45, 0.55), rgba(170, 180, 200, 0.55));
+}
+.menu-item.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="menu-container">
+    <div class="menu-item" id="btnCharacter" onclick="FracInteract.pick('character')">Меню персонажа</div>
+    <div class="menu-item hidden" id="btnFaction" onclick="FracInteract.pick('faction')">Меню фракции</div>
+    <div class="menu-item hidden" id="btnAttack" onclick="FracInteract.pick('attack')">Забить капт</div>
+    <div class="menu-item hidden" id="btnFamily" onclick="FracInteract.pick('family')">Меню семьи</div>
+    <div class="menu-item hidden" id="btnFamilyWar" onclick="FracInteract.pick('familyWar')">Война семей</div>
+</div>
+<script>
+(function () {
+    var root = document.body;
+    window.FracInteract = {
+        open: function (x, y, fractionId, hasFamily) {
+            root.classList.add('open');
+            var fid = Number(fractionId) || 0;
+            var showFrac = fid >= 1;
+            var showCapt = fid >= 1 && fid <= 5;
+            var showFamily = !!hasFamily;
+            var btnFaction = document.getElementById('btnFaction');
+            var btnAttack = document.getElementById('btnAttack');
+            var btnFamily = document.getElementById('btnFamily');
+            var btnFamilyWar = document.getElementById('btnFamilyWar');
+            if (btnFaction) btnFaction.classList.toggle('hidden', !showFrac);
+            if (btnAttack) btnAttack.classList.toggle('hidden', !showCapt);
+            if (btnFamily) btnFamily.classList.toggle('hidden', !showFamily);
+            if (btnFamilyWar) btnFamilyWar.classList.toggle('hidden', !showFamily);
+        },
+        close: function () {
+            root.classList.remove('open');
+        },
+        pick: function (action) {
+            try {
+                if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('fracInteract:action', String(action || ''));
+            } catch (_e) {}
+        }
+    };
+    document.addEventListener('mousedown', function (e) {
+        if (!root.classList.contains('open')) return;
+        if (e.target && e.target.closest && e.target.closest('.menu-container')) return;
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('fracInteract:close');
+        } catch (_e) {}
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+            if (root.classList.contains('open')) {
+                try {
+                    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('fracInteract:close');
+                } catch (_e) {}
+            }
+        }
+    });
+    try {
+        if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('fracInteract:ready');
+    } catch (_e2) {}
+})();
+</script>
+</body>
+</html>

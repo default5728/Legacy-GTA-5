@@ -1,0 +1,54 @@
+.fraction-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fraction {
+  margin-top: 32px;
+  margin-right: 28px;
+  width: 285px;
+  height: 307px;
+  color: #fff;
+  border: 1px solid #3D3F53;
+}
+
+.fraction img {
+  width: 285px;
+  height: 167px;
+}
+
+.fraction-info {
+  margin-left: 32px;
+}
+
+.fraction hr {
+  margin: 0;
+  width: 100%;
+  border-color: #3D3F53;
+  margin-bottom: 20px;
+}
+
+.fraction b {
+  font-weight: normal;
+  color: #3D3F53;
+}
+
+.fraction button {
+  margin-top: 10px;
+  width: 142px;
+  height: 47px;
+  background: none;
+  border: 1px solid #3D3F53;
+  color: #A1A3C2;
+  outline: none;
+}
+
+.fraction button:hover {
+  border-color: #006EFF;
+  color: #fff;
+}
+
+.fraction button:disabled {
+  border-color: #3D3F53;
+  color: #3D3F53;
+}

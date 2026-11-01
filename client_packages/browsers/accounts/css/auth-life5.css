@@ -1,0 +1,246 @@
+@import url('fonts.css');
+@import url('help.css');
+@import url('../Menu/UI/style.css');
+
+/* auth 2 / Auth/auth.html — стили 1в1 (без наших max-width хаков) */
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body.server-bg-1,
+body.server-bg-2,
+body.server-bg-3,
+body.server-bg-4,
+body.server-bg-5,
+body.server-bg-6,
+body.server-bg-7,
+body.server-bg-8,
+body.server-bg-9,
+body.server-bg-10,
+body.server-bg-23,
+body.server-bg-24 {
+    background: url('../img/theme/23-bg.webp');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.auth-form-block {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.auth-input {
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+}
+.auth-input > .menu-input {
+    color: #fff;
+}
+
+.auth-input.server-1 {
+    background: rgba(66, 74, 102, 0.25);
+}
+.auth-input.server-2 {
+    background: rgba(76, 76, 76, 0.25);
+}
+.auth-input.server-3,
+.auth-input.server-23,
+.auth-input.server-24 {
+    background: rgba(76, 76, 76, 0.25);
+}
+.auth-input.server-4 {
+    background: rgba(78, 78, 97, 0.25);
+}
+.auth-input.server-5 {
+    background: rgba(76, 76, 76, 0.25);
+}
+.auth-input.server-6 {
+    background: rgba(255, 255, 255, 0.25);
+}
+.auth-input.server-7 {
+    background: rgba(144, 144, 144, 0.25);
+}
+.auth-input.server-8 {
+    background: rgba(149, 149, 149, 0.25);
+}
+.auth-input.server-9 {
+    background: rgba(144, 144, 144, 0.25);
+}
+.auth-input.server-10 {
+    background: rgba(144, 144, 144, 0.25);
+}
+
+.auth-btn {
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    transition: 0.5s;
+    background-size: 200% auto;
+}
+.auth-btn:hover {
+    background-position: right center;
+}
+
+.auth-btn.server-1 {
+    background-image: linear-gradient(45deg, #0072ee 0%, #11ade4 51%, #0072ee 100%);
+}
+.auth-btn.server-2 {
+    background-image: linear-gradient(45deg, #ff2424 0%, #ff00d2 51%, #ff2424 100%);
+}
+.auth-btn.server-3,
+.auth-btn.server-23,
+.auth-btn.server-24 {
+    background-image: linear-gradient(45deg, #fe8926 0%, #ffc339 51%, #fe8926 100%);
+}
+.auth-btn.server-4 {
+    background-image: linear-gradient(45deg, #6800dd 0%, #a503e1 51%, #6800dd 100%);
+}
+.auth-btn.server-5 {
+    background-image: linear-gradient(45deg, #ff2424 0%, #ff8a00 51%, #ff2424 100%);
+}
+.auth-btn.server-6 {
+    background-image: linear-gradient(45deg, #e4407a 0%, #ff7263 51%, #e4407a 100%);
+}
+.auth-btn.server-7 {
+    background-image: linear-gradient(45deg, #ff00de 0%, #f76234 25%, #ffd776 50%, #f76234 75%, #ff00de 100%);
+}
+.auth-btn.server-8 {
+    background-image: linear-gradient(45deg, #6800dd 0%, #7070ff 51%, #6800dd 100%);
+}
+.auth-btn.server-9 {
+    background-image: linear-gradient(45deg, #739ece 0%, #bdd1ee 51%, #739ece 100%);
+}
+.auth-btn.server-10 {
+    background-image: linear-gradient(45deg, #1c5c64 0%, #1abc85 51%, #1c5c64 100%);
+}
+
+.auth-input-ico {
+    height: 22px;
+    width: 22px;
+    margin-right: 5px;
+}
+.auth-input-ico.server-1 > g * {
+    fill: url(#authIcoGrad1);
+}
+.auth-input-ico.server-2 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-3 > g *,
+.auth-input-ico.server-23 > g *,
+.auth-input-ico.server-24 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-4 > g * {
+    fill: url(#authIcoGrad1);
+}
+.auth-input-ico.server-5 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-6 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-7 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-8 > g * {
+    fill: url(#authIcoGrad1);
+}
+.auth-input-ico.server-9 > g * {
+    fill: url(#authIcoGrad2);
+}
+.auth-input-ico.server-10 > g * {
+    fill: url(#authIcoGrad2);
+}
+
+.auth-news-list {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Три карточки с отступами — 805px. На низких экранах их обрезало бы сверху и снизу. */
+@media screen and (max-height: 880px) {
+    .auth-news-list {
+        transform: translateY(-50%) scale(0.82);
+        transform-origin: 100% 50%;
+    }
+}
+
+.auth-news-block {
+    display: none;
+    position: relative;
+    height: 255px;
+    width: 452px;
+}
+.auth-news-block:before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    bottom: -1px;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5) 5%, transparent 40%, transparent);
+    border-radius: 15px;
+    pointer-events: none;
+    z-index: 2;
+}
+.auth-news-img {
+    position: absolute;
+    height: 255px;
+    width: 452px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px 1px #000;
+    transition: all 0.5s;
+    z-index: 1;
+}
+.auth-news-img:hover {
+    box-shadow: 0px 0px 20px 1px #000;
+}
+.auth-news-date {
+    position: absolute;
+    left: 10px;
+    bottom: 6px;
+    font-family: 'Geometria-Light';
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 0px 0px 2px black;
+    z-index: 3;
+}
+.auth-news-img-corner {
+    position: absolute;
+    right: -7px;
+    bottom: -5px;
+    pointer-events: none;
+    z-index: 3;
+}
+
+@media screen and (min-width: 1300px) {
+    .auth-news-block {
+        display: block;
+    }
+
+    .auth-form-block {
+        position: absolute;
+        right: inherit;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+}

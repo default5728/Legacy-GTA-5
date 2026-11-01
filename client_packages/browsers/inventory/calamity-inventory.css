@@ -1,0 +1,2444 @@
+.box-inventory .item {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvtrade .centerinv .btntrade.active {
+    border-radius: 0.5556vh;
+    background: rgb(74, 141, 229);
+}
+
+    .magicinv .minvtrade .centerinv .btntrade.active p {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvtrade .leftinv .itemlist .activetrade {
+    position: absolute;
+    width: 32.5074vh;
+    height: 58.3556vh;
+    background: rgb(18, 18, 19, 80%);
+    z-index: 1;
+}
+
+.magicinv .minvtrade .centerinv .itemlist .activetrade {
+    position: absolute;
+    width: 32.5074vh;
+    height: 45.3704vh;
+    background: rgb(18, 18, 19, 80%);
+    z-index: 1;
+}
+
+.box-inventory .magiciteminfo {
+    position: absolute;
+    width: 28.8889vh;
+    border-radius: 0.5556vh;
+    background: rgb(18, 18, 19);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-bottom: 1.4815vh;
+    z-index: 1;
+}
+
+.box-inventory .magicitemuse {
+    position: absolute;
+    width: 14.8148vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: 0.5556vh;
+    background: rgb(18, 18, 19);
+    z-index: 1;
+}
+
+    .box-inventory .magicitemuse p {
+        width: 14.8148vh;
+        height: 3.7037vh;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        text-transform: capitalize;
+        padding-left: 1.0185vh;
+    }
+
+.box-inventory .magicitemuse p:first-child{
+    border-radius: 0.5556vh 0.5556vh 0vh 0vh;
+}
+
+.box-inventory .magicitemuse p:last-child{
+    border-radius: 0vh 0vh 0.5556vh 0.5556vh;
+}
+
+.box-inventory .magicitemuse p:hover{
+    background: rgb(255, 255, 255, 7%);
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .leftib img {
+    width: 11.0185vh;
+}
+
+.box-inventory .magiciteminfo h1 {
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 1.4815vh;
+    font-weight: 600;
+    line-height: 1.7593vh;
+    letter-spacing: 0%;
+    text-align: left;
+    margin-left: 1.5741vh;
+    margin-top: 1.4815vh;
+    width: 26.2037vh;
+}
+
+.box-inventory .magiciteminfo p {
+    width: 26.2037vh;
+    margin-top: 1.2963vh;
+    margin-left: 1.5741vh;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: SF Pro Display;
+    font-size: 1.2963vh;
+    font-weight: 400;
+    line-height: 1.5741vh;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+.box-inventory .magiciteminfo span {
+    width: 26.2037vh;
+    margin-top: 1.2963vh;
+    margin-left: 1.5741vh;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: SF Pro Display;
+    font-size: 1.2963vh;
+    font-weight: 400;
+    line-height: 1.5741vh;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+.box-inventory .item img {height: 4.4444vh;max-width: 6.0185vh;margin-top: 1.0185vh;}
+
+.box-inventory .item span {
+    min-height: 1.2037vh;
+    height: 1.2037vh;
+    padding: 0vh 0.3704vh;
+    border-radius: 0.1852vh;
+    background: rgb(18, 18, 19);
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 0.7407vh;
+    font-weight: 600;
+    letter-spacing: 0%;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: -0.463vh;
+    margin-right: 0.1852vh;
+    margin-left: auto;
+}
+
+.box-inventory .magiciteminput {
+    position: absolute;
+    width: 26.2963vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: rgb(18,18,19);
+    z-index: 1;
+    border-radius: 0.5556vh;
+}
+
+    .box-inventory .magiciteminput h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        margin-top: 1.3889vh;
+        margin-left: 1.2963vh;
+    }
+
+.box-inventory .magiciteminput .dopinput {
+    display: flex;
+    width: 23.4259vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2.5vh;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.box-inventory .magiciteminput .btninput {
+    width: 23.4259vh;
+    height: 3.7037vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(30,30,31);
+    border-radius: 0.3704vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2.7778vh;
+    margin-bottom: 1.4815vh;
+}
+
+    .box-inventory .magiciteminput .btninput p {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+    }
+
+    .box-inventory .magiciteminput .dopinput input {
+        width: 4.6296vh;
+        height: 2.7778vh;
+        background: rgb(41, 41, 42);
+        outline: none;
+        border: none;
+        border-radius: 0.1852vh;
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        text-align: center;
+    }
+
+.box-inventory .magiciteminput .closedinp {
+    position: absolute;
+    top: 1.2963vh;
+    right: 1.4815vh;
+    width: 1.7593vh;
+    height: 1.7593vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.2315vh;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.box-inventory .magiciteminput .closedinp svg {
+    width: 0.7407vh;
+    height: 0.7407vh;
+}
+
+.box-inventory .magiciteminput .closedinp:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.box-inventory .magiciteminput .btninput:hover {
+    background: rgb(41, 41, 42);
+}
+
+.box-inventory .magiciteminput .dopinput input#dopi {
+    margin-left: 0.9259vh;
+    width: 17.963vh;
+    height: 0.2778vh;
+    background: rgb(63,63,64);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.box-inventory .magiciteminput .dopinput input#dopi::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0.9259vh;
+    height: 0.9259vh;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.box-inventory .magiciteminput .dopinput input#dopi::-moz-range-thumb {
+    width: 0.9259vh;
+    height: 0.9259vh;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.magicinv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0vh;
+    top: 0vh;
+    width: 100%;
+    height: 100%;
+}
+
+.magicinv .minvdop {
+    width: 138.6111vh;
+    height: 82.4074vh;
+    border-radius: 0.9259vh;
+    background: rgb(20, 20, 20);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.magicinv .minvdop .mainleft {
+    width: 91.0185vh;
+    height: 82.4074vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.magicinv .minvdop .mainright {
+    width: 47.5926vh;
+    height: 82.4074vh;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    border-left: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.magicinv .minvdop .mainleft .mhead {
+    width: 91.0185vh;
+    height: 5.6481vh;
+    border-bottom: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.9259vh 0.9259vh 0vh 0vh;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvdop .mainleft .itemslist {
+    width: 85.463vh;
+    height: 72.8704vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: 0.9259vh;
+    margin: auto;
+    overflow: auto;
+}
+
+.magicinv .minvdop .mainleft .itemslist .itemblock {
+    width: 27.7778vh;
+    height: 19.8148vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.04);
+    border-radius: 0.7407vh;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+    .magicinv .minvdop .mainleft .itemslist .itemblock h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: left;
+        margin-top: 1.9444vh;
+        width: 24.0741vh;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+.magicinv .minvdop .mainleft .itemslist .itemblock img {
+    height: 9.4444vh;
+    margin: auto;
+}
+
+    .magicinv .minvdop .mainleft .itemslist .itemblock span {
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: left;
+        color: rgb(251, 251, 251);
+        width: 24.0741vh;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1.9444vh;
+        margin-top: auto;
+    }
+
+        .magicinv .minvdop .mainleft .itemslist .itemblock span b {
+            font-family: SF Pro Display;
+            font-size: 1.2963vh;
+            font-weight: 600;
+            line-height: 1.5741vh;
+            letter-spacing: 0%;
+            text-align: left;
+            color: rgba(251, 251, 251, 0.5);
+            margin-left: 0.3704vh;
+        }
+
+.magicinv .minvdop .mainleft .mhead svg {
+    margin-left: 2.7778vh;
+    width: 1.8519vh;
+    height: 1.8519vh;
+}
+
+    .magicinv .minvdop .mainleft .mhead h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.6667vh;
+        font-weight: 600;
+        line-height: 2.037vh;
+        letter-spacing: 0%;
+        text-align: left;
+        margin-left: 0.9259vh;
+    }
+
+.magicinv .minvdop .mainleft .mhead .maxslot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 2.7778vh;
+}
+
+.magicinv .minvdop .mainleft .mhead .inputbg {
+    width: 48.6111vh;
+    height: 3.3333vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.3704vh;
+    background: rgba(20, 20, 20, 0.95);
+    margin-right: 2.7778vh;
+    margin-left: auto;
+}
+
+.magicinv .minvdop .mainleft .mhead .inputbg svg {
+    width: 1.2963vh;
+    height: 1.2963vh;
+    margin-left: 0.9259vh;
+}
+
+    .magicinv .minvdop .mainleft .mhead .inputbg input {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: left;
+        background: none;
+        outline: none;
+        border: none;
+        margin-left: 0.9259vh;
+        width: 44.0741vh;
+    }
+
+    .magicinv .minvdop .mainleft .mhead .maxslot p {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-family: SF Pro Display;
+        font-size: 1.6667vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: left;
+        color: #fff;
+        align-content: flex-start;
+    }
+
+.magicinv .minvdop .mainleft .mhead .maxslot svg {
+    margin-left: 0.5556vh;
+    width: 1.8519vh;
+    height: 1.8519vh;
+}
+
+    .magicinv .minvdop .mainleft .mhead .maxslot p b {
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: left;
+        color: rgba(251, 251, 251, 0.5);
+        margin-left: 0.1852vh;
+    }
+
+.magicinv .minvdop .mainright .mhead {
+    width: 47.5926vh;
+    height: 5.6481vh;
+    border-bottom: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.9259vh 0.9259vh 0vh 0vh;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0vh 1.8519vh;
+}
+
+.magicinv .minvdop .mainright .itemslist {
+    width: 47.4074vh;
+    height: 67.6852vh;
+    margin-top: 1.8519vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.9259vh;
+    overflow: auto;
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock {
+    width: 41.9444vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.04);
+    border-radius: 0.7407vh;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .leftib {
+    width: 13.0556vh;
+    border-radius: 0.7407vh 0vh 0vh 0.7407vh;
+    background: rgba(255, 255, 255, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 28.7037vh;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: left;
+        margin-top: 1.5741vh;
+        width: 25.5556vh;
+    }
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib p {
+        margin-top: 1.2037vh;
+        width: 25.5556vh;
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.2037vh;
+        font-weight: 600;
+        line-height: 1.8519vh;
+        letter-spacing: 0%;
+        text-align: left;
+    }
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib span {
+        margin-top: 1.3889vh;
+        margin-bottom: 1.3889vh;
+        width: 25.5556vh;
+        font-family: SF Pro Display;
+        font-size: 1.2037vh;
+        font-weight: 600;
+        line-height: 1.8519vh;
+        letter-spacing: 0%;
+        text-align: left;
+        color: rgb(251, 251, 251);
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .btnuse {
+    width: 25.463vh;
+    height: 3.7037vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5556vh;
+    background: rgba(255, 255, 255, 0.04);
+    margin-bottom: 1.7593vh;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .btnuse p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin: 0;
+        width: auto;
+    }
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib span b {
+        font-family: SF Pro Display;
+        font-size: 1.2037vh;
+        font-weight: 600;
+        line-height: 1.8519vh;
+        letter-spacing: 0%;
+        text-align: left;
+        color: rgba(251, 251, 251, 0.5);
+        margin-left: 0.3704vh;
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .leftib img {}
+
+.magicinv p,.magicinv h1 {
+    margin: 0;
+}
+
+.magicinv .minvdop .mainleft .itemslist .itemblock:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.04);
+    border-radius: 0.7407vh;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.magicinv .minvdop .mainleft .itemslist::-webkit-scrollbar {
+  width: 0vh;
+}
+
+    .magicinv .minvdop .mainright .mhead p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        padding: 0vh 1.6667vh;
+        height: 5.6481vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: solid 0.1852vh rgb(225 16 101 / 0%);
+    }
+
+.magicinv .minvdop .mainright .mhead span {
+    margin-left: auto;
+    width: 2.2222vh;
+    height: 2.2222vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.463vh;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.magicinv .minvdop .mainright .mhead span svg {width: 0.9259vh;height: 0.9259vh;}
+
+    .magicinv .minvdop .mainright .mhead p.active {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        border-bottom: solid 0.1852vh #8B1A1A;
+    }
+
+    .magicinv .minvdop .mainright .mhead p:hover {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        border-bottom: solid 0.1852vh #8B1A1A;
+    }
+
+.magicinv .minvdop .mainright .mhead span:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .btnuse:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5556vh;
+    background: #8B1A1A;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .btnuse:hover p {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvdop .mainright .itemslist::-webkit-scrollbar {
+  width: 0vh;
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo {
+    width: 25.5556vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 1.5741vh;
+    gap: 0.9259vh;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo input {
+        width: 7.7778vh;
+        height: 3.7963vh;
+        box-sizing: border-box;
+        border: 0.0926vh solid rgba(255, 255, 255, 0.14);
+        border-radius: 0.5556vh;
+        background: rgb(28, 28, 28);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.8519vh;
+        letter-spacing: 0%;
+        text-align: center;
+        outline: none;
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv {
+    width: 7.7778vh;
+    height: 3.7963vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.13);
+    border-radius: 0.5556vh;
+    background: rgba(217, 217, 217, 0);
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv p {
+        color: rgb(119, 119, 119);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.8519vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin: 0;
+        width: 3.7963vh;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0vh 0.463vh 0.463vh 0vh;
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .btndrop {
+    width: 25.463vh;
+    height: 3.7037vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5556vh;
+    background: rgba(255, 255, 255, 0.04);
+    margin-bottom: 1.7593vh;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .btndrop p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin: 0;
+        width: auto;
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .btndrop:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5556vh;
+    background: #8B1A1A;
+}
+
+    .magicinv .minvdop .mainright .itemslist .itemblock .rightib .btndrop:hover p {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv p:hover {
+    color: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv p:nth-child(1) {
+    border-radius: 0.463vh 0vh 0vh 0.463vh;
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv p:nth-child(1) {
+    border-right: 0.0926vh solid rgba(255, 255, 255, 0.13);
+}
+
+.magicinv .minvdop .mainright .itemslist .itemblock .rightib .kolvo .btnskolv p:nth-child(1):hover {
+    border-right: 0.0926vh solid rgba(255, 255, 255, 0);
+}
+
+.magicinv .minvosn {
+    position: relative;
+    width: 109.8148vh;
+    height: 72.3148vh;
+    border-radius: 0.9259vh;
+    background: rgba(30, 30, 30);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3.4259vh;
+}
+
+.magicinv .minvosn .leftinv {
+    width: 32.4074vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.magicinv .minvosn .centerinv {
+    width: 34.2593vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvosn .rightinv {
+    width: 32.4074vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+    .magicinv .minvosn .leftinv h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin-top: 1.9444vh;
+        margin-left: 1.2037vh;
+    }
+
+.magicinv .minvosn .leftinv .itemlist {
+    width: 32.5074vh;
+    margin-top: 1.9444vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.magicinv .minvosn .leftinv .itemlist .item {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvosn .leftinv .itemlist .item img {
+    height: 4.4444vh;
+    max-width: 6.0185vh;
+    margin-top: 1.0185vh;
+}
+
+    .magicinv .minvosn .leftinv .itemlist .item span {
+        min-height: 1.2037vh;
+        height: 1.2037vh;
+        padding: 0vh 0.3704vh;
+        border-radius: 0.1852vh;
+        background: rgb(18, 18, 19);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.7407vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -0.463vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+    }
+
+    .magicinv .minvosn .centerinv h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin-top: 1.9444vh;
+    }
+
+.magicinv .minvosn .centerinv .invpers {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0.463vh;
+    margin-top: 1.4815vh;
+}
+
+.magicinv .minvosn .centerinv .dopslots {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.3704vh;
+    margin-top: 6.6667vh;
+}
+
+.magicinv .minvosn .centerinv .fastslot {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.463vh;
+    margin-top: 0.463vh;
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem {
+    width: 11.1111vh;
+    height: 10.1852vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+    .magicinv .minvosn .centerinv .fastslot .blockitem span {
+        width: 1.2963vh;
+        margin-top: 0.1852vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+        height: 1.2037vh;
+        border-radius: 0.1852vh;
+        background: rgba(255, 255, 255, 0.03);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.9259vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+.magicinv .minvosn .centerinv .fastslot .blockitem img {
+    height: 8.3333vh;
+    margin-top: -0.463vh;
+    max-width: 10.6481vh;
+}
+
+.magicinv .minvosn .centerinv .dopslots .blockitem {
+    width: 16.9444vh;
+    height: 12.963vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7407vh;
+}
+
+.magicinv .minvosn .centerinv .dopslots .blockitem svg {
+    width: 3.2407vh;
+    height: 3.2407vh;
+}
+
+    .magicinv .minvosn .centerinv .dopslots .blockitem p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvosn .centerinv .invpers .lpers {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 0.463vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.463vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem svg {
+    width: 3.3333vh;
+    height: 3.3333vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers img {
+    width: 8.0556vh;
+    height: 24.0741vh;
+    margin-bottom: 2.3148vh;
+    margin-top: 1.3889vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.463vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem svg {
+    width: 3.3333vh;
+    height: 3.3333vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .lpers .blockitem {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.magicinv .minvosn .centerinv .invpers .lpers .blockitem img {
+    width: 5.3333vh;
+    height: 5.3333vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem img {
+    width: 5.3333vh;
+    height: 5.3333vh;
+}
+
+.magicinv .minvosn .leftinv .itemlist.max {
+    height: 26vh;
+    overflow: auto;
+}
+
+.magicinv .minvosn .leftinv .itemlist.max::-webkit-scrollbar {
+    width: 0.0926vh;
+}
+
+.magicinv .minvosn .leftinv .itemlist.max::-webkit-scrollbar-track {
+    background: #3F3F40;
+}
+.magicinv .minvosn .leftinv .itemlist.max::-webkit-scrollbar-thumb {
+    background: #ffffff40;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem img {
+    width: 5.3333vh;
+    height: 5.3333vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .lpers .blockitem span {
+    font-size: 3.3333vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem span {
+    font-size: 3.3333vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem span {
+    font-size: 3.3333vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+.magicinv .minvosn .centerinv .dopslots .blockitem span {
+    font-size: 3.3333vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+.magicinv .minvosn .centerinv .dopslots .blockitem img {
+    width: 9.3333vh;
+    height: 9.3333vh;
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem p {
+    display: none;
+}
+
+.magicinv .minvosn .centerinv .invpers .lpers .blockitem p {
+    display: none;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem p {
+    display: none;
+}
+
+    .magicinv .minvosn .rightinv h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin-top: 1.9444vh;
+        margin-left: 1.2037vh;
+    }
+
+.magicinv .minvosn .rightinv .itemlist {
+    width: 32.5074vh;
+    margin-top: 1.9444vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.magicinv .minvosn .rightinv .itemlist .item {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvosn .rightinv .itemlist .item img {height: 4.4444vh;max-width: 6.0185vh;margin-top: 1.0185vh;}
+
+    .magicinv .minvosn .rightinv .itemlist .item span {
+        min-height: 1.2037vh;
+        height: 1.2037vh;
+        padding: 0vh 0.3704vh;
+        border-radius: 0.1852vh;
+        background: rgb(18, 18, 19);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.7407vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -0.463vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+    }
+
+.magicinv .minvosn .leftinv .itemlist .item:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .dopslots .blockitem:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .listitem .blockitem:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .invpers .lpers .blockitem:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .invpers .rpers .blockitem:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .rightinv .itemlist .item:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem .disab {
+    position: absolute;
+    width: 4.8148vh;
+    height: 4.8148vh;
+    border-radius: 0.5556vh;
+    background: rgb(18, 18, 19);
+    align-items: center;
+    justify-content: center;
+    margin-top: 2.6852vh;
+    display: none;
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem .disab svg {
+    width: 1.8519vh;
+    height: 1.8519vh;
+    fill: #fff;
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem .disab:hover {
+    background: rgb(248, 248, 248);
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem .disab:hover svg {
+    fill: #000;
+}
+
+.magicinv .minvosn .centerinv .fastslot .blockitem.active:hover .disab {
+    display: flex;
+}
+
+.magicinv .minvtrade {
+    position: relative;
+    width: 109.8148vh;
+    height: 72.3148vh;
+    border-radius: 0.9259vh;
+    background: rgba(30, 30, 30);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3.4259vh;
+}
+
+.magicinv .minvtrade .leftinv {
+    width: 32.4074vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.magicinv .minvtrade .centerinv {
+    width: 32.4074vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvtrade .rightinv {
+    width: 32.4074vh;
+    height: 69.7222vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+    .magicinv .minvtrade .rightinv h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin-top: 1.9444vh;
+        margin-left: 1.2037vh;
+    }
+
+.magicinv .minvtrade .rightinv .itemlist {
+    width: 32.5074vh;
+    margin-top: 1.9444vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.magicinv .minvtrade .rightinv .itemlist .item {width: 6.4815vh;height: 6.4815vh;box-sizing: border-box;border: 0.0926vh solid rgba(255, 255, 255, 0.03);border-radius: 0.3704vh;background: rgba(34, 34, 34, 0.5);display: flex;flex-direction: column;align-items: center;justify-content: flex-start;}
+
+.magicinv .minvtrade .rightinv .itemlist .item img {
+    height: 4.4444vh;
+    max-width: 6.0185vh;
+    margin-top: 1.0185vh;
+}
+
+    .magicinv .minvtrade .rightinv .itemlist .item span {
+        min-height: 1.2037vh;
+        height: 1.2037vh;
+        padding: 0vh 0.3704vh;
+        border-radius: 0.1852vh;
+        background: rgb(18, 18, 19);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.7407vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -0.463vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+    }
+
+    .magicinv .minvtrade .centerinv h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+        margin-top: 1.9444vh;
+    }
+
+.magicinv .minvtrade .centerinv .itemlist {
+    width: 32.5074vh;
+    height: 45.3704vh;
+    margin-top: 1.4815vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+    .magicinv .minvtrade .centerinv input {
+        margin-top: 4.9074vh;
+        width: 32.4074vh;
+        height: 4.4444vh;
+        box-sizing: border-box;
+        border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+        border-radius: 0.5556vh;
+        background: rgb(42, 42, 42);
+        color: rgba(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: left;
+        outline: none;
+        padding: 0vh 1.3889vh;
+    }
+
+.magicinv .minvtrade .centerinv .checktrade {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 1.2037vh;
+}
+
+.magicinv .minvtrade .centerinv .btntrade {
+    margin-top: 1.7593vh;
+    width: 32.4074vh;
+    height: 4.4444vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5556vh;
+    background: rgb(255 255 255 / 3%);
+}
+
+    .magicinv .minvtrade .centerinv .btntrade p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvtrade .centerinv .checktrade .yestrade {
+    width: 2.4074vh;
+    height: 2.4074vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.3704vh;
+    background: rgb(42, 42, 42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .magicinv .minvtrade .centerinv .checktrade p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.2963vh;
+        font-weight: 600;
+        line-height: 1.5741vh;
+        letter-spacing: 0%;
+        text-align: left;
+        margin-left: 0.9259vh;
+    }
+
+.magicinv .minvtrade .centerinv .checktrade .yestrade svg {
+    width: 2.4074vh;
+    height: 2.4074vh;
+    opacity: 0;
+}
+
+.magicinv .minvtrade .centerinv .itemlist .item {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvtrade .centerinv .itemlist .item img {
+    height: 4.4444vh;
+    max-width: 6.0185vh;
+    margin-top: 1.0185vh;
+}
+
+    .magicinv .minvtrade .centerinv .itemlist .item span {
+        min-height: 1.2037vh;
+        height: 1.2037vh;
+        padding: 0vh 0.3704vh;
+        border-radius: 0.1852vh;
+        background: rgb(18, 18, 19);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.7407vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -0.463vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+    }
+
+
+.magicinv .minvtrade .leftinv .lihead {
+    width: 32.4074vh;
+    margin-top: 1.9444vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.magicinv .minvtrade .leftinv .itemlist {
+    width: 32.5074vh;
+    height: 58.0556vh;
+    margin-top: 1.4815vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.magicinv .minvtrade .leftinv .btntrade.active {
+    border-radius: 0.5556vh;
+    background: rgb(74, 141, 229);
+}
+
+.magicinv .minvtrade .leftinv .btntrade {
+    margin-top: 2.037vh;
+    width: 32.4074vh;
+    height: 4.4444vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5556vh;
+    background: rgb(255 255 255 / 3%);
+}
+
+    .magicinv .minvtrade .leftinv .btntrade p {
+        color: rgba(251, 251, 251, 0.5);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvtrade .leftinv .itemlist .item {
+    width: 6.4815vh;
+    height: 6.4815vh;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(34, 34, 34, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.magicinv .minvtrade .leftinv .itemlist .item img {
+    height: 4.4444vh;
+    max-width: 6.0185vh;
+    margin-top: 1.0185vh;
+}
+
+    .magicinv .minvtrade .leftinv .itemlist .item span {
+        min-height: 1.2037vh;
+        height: 1.2037vh;
+        padding: 0vh 0.3704vh;
+        border-radius: 0.1852vh;
+        background: rgb(18, 18, 19);
+        color: rgb(255, 255, 255);
+        font-family: SF Pro Display;
+        font-size: 0.7407vh;
+        font-weight: 600;
+        letter-spacing: 0%;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: -0.463vh;
+        margin-right: 0.1852vh;
+        margin-left: auto;
+    }
+
+    .magicinv .minvtrade .leftinv .lihead h1 {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: left;
+    }
+
+    .magicinv .minvtrade .leftinv .lihead p {
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: right;
+        color: rgba(251, 251, 251, 0.5);
+    }
+
+        .magicinv .minvtrade .leftinv .lihead p b {
+            margin-left: 0.5556vh;
+            font-family: SF Pro Display;
+            font-size: 1.4815vh;
+            font-weight: 600;
+            line-height: 1.7593vh;
+            letter-spacing: 0%;
+            text-align: right;
+            color: rgb(116, 230, 98);
+        }
+
+.magicinv .minvtrade .leftinv .itemlist .item:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+    .magicinv .minvtrade .leftinv .btntrade.active p {
+        color: rgb(251, 251, 251);
+        font-family: SF Pro Display;
+        font-size: 1.4815vh;
+        font-weight: 600;
+        line-height: 1.7593vh;
+        letter-spacing: 0%;
+        text-align: center;
+    }
+
+.magicinv .minvtrade .centerinv .itemlist .item:hover {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+    border-radius: 0.3704vh;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+
+.magicinv .minvtrade .centerinv .checktrade .yestrade.active svg {
+    opacity: 1;
+}
+
+.magicinv .minvtrade .centerinv .checktrade .yestrade.active {
+    background: #8B1A1A;
+}
+
+.magicinv .minvtrade .centerinv .btntrade:hover {
+    border-radius: 0.5556vh;
+    background: rgb(74, 141, 229);
+}
+
+.magicinv .minvtrade .centerinv .btntrade:hover p {
+    color: rgba(251, 251, 251);
+}
+
+.magicinv .closedinv {
+    position: absolute;
+    right: 1.3889vh;
+    top: 1.1111vh;
+    width: 2.2222vh;
+    height: 2.2222vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.463vh;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.magicinv .closedinv svg {
+    width: 0.9259vh;
+    height: 0.9259vh;
+}
+
+.magicinv .closedinv:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.inventoryhax {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0vh;
+    top: 0vh;
+    background-size: cover;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.inventoryhax.active {
+    display: flex !important;
+}
+
+.inventoryhax .invhax_head {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    position: absolute;
+    top: 6.2963vh;
+    left: 6.2963vh;
+}
+
+.inventoryhax .invhax_head .head_name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.inventoryhax .invhax_head .head_desc {
+    width: 29.0741vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 1.3889vh;
+}
+
+.inventoryhax .invhax_head .head_name h1 {
+    color: #FF9900;
+    font-family: SF Pro Display;
+    font-size: 2.7778vh;
+    font-weight: 600;
+    line-height: 1.6667vh;
+    text-align: left;
+    text-shadow: 0vh 0vh 3.1481vh rgba(255, 136, 0, 0.5);
+}
+
+.inventoryhax .invhax_head .head_name p {
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 1.5741vh;
+    font-weight: 600;
+    line-height: 1.6667vh;
+    letter-spacing: 2%;
+    text-align: left;
+    margin-top: 1.1111vh;
+    text-shadow: 0vh 0vh 0.3704vh rgba(255, 255, 255, 0.5);
+}
+
+.inventoryhax .invhax_head .head_desc p {
+    font-family: SF Pro Display;
+    font-size: 1.0185vh;
+    font-weight: 600;
+    line-height: 1.2037vh;
+    letter-spacing: 0%;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.inventoryhax .invhax_head .head_desc p b {
+    font-family: SF Pro Display;
+    font-size: 1.0185vh;
+    font-weight: 600;
+    line-height: 1.2037vh;
+    letter-spacing: 0%;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.inventoryhax .invhax_closed {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    top: 6.7593vh;
+    right: 6.2963vh;
+}
+
+.inventoryhax .invhax_closed p {
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 1.1111vh;
+    font-weight: 600;
+    line-height: 1.3889vh;
+    letter-spacing: 6%;
+    text-align: left;
+}
+
+.inventoryhax .invhax_closed span {
+    width: 2.7778vh;
+    height: 2.7778vh;
+    border-radius: 0.2778vh;
+    box-shadow: 0vh 0.5556vh 2.037vh 0vh #8B1A1A;
+    background: #8B1A1A;
+    margin-left: 0.9259vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 1.2963vh;
+    font-weight: 300;
+    line-height: 1.3889vh;
+    letter-spacing: 6%;
+    text-align: left;
+}
+
+.inventoryhax p,h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.inventoryhax .invhax_menu {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu {
+    padding-top: 20.3704vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between {
+    justify-content: center !important;
+}
+
+.e-player {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .e-player {
+    margin-left: 6.8519vh !important;
+    margin-right: 6.8519vh !important;
+    width: 56.1111vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.accessories.box-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 31.6667vh !important;
+    align-content: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-main .box-between.height-box {
+    justify-content: flex-start !important;
+    min-height: auto !important;
+}
+
+.box-item.undefined.noAnim {}
+
+.inventoryhax .invhax_menu div#box-menu .box-item {
+    width: 7.2222vh !important;
+    height: 7.2222vh !important;
+    box-sizing: border-box !important;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 0.2778vh !important;
+    background: radial-gradient(70.71% 70.71% at 50% 50%,rgba(255, 255, 255, 0.05),rgba(255, 255, 255, 0) 100%)!important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-main .box-list {
+    grid-gap: 1.1111vh 0.9259vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .e-player .box-player {
+    grid-gap: 1.1111vh 0.9259vh;
+    width: 56.1111vh !important;
+    padding: 0 !important;
+    margin-bottom: 1.4815vh !important;
+    height: 40.5556vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-main .box-other {
+    align-items: flex-start !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-main .box-between.height-box .box-column.height-box {
+    min-height: auto !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item .item-png {
+    width: 4.6296vh !important;
+    height: 4.6296vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item .hover {
+    width: 0.463vh;
+    box-shadow: 0vh 0vh 0.2778vh 0.0926vh rgba(207, 248, 11, 0.2);
+    background: rgb(207, 248, 11);
+    height: 0.463vh;
+    border-radius: 0.463vh;
+    color: white;
+    pointer-events: none;
+    position: absolute;
+    bottom: 0vh !important;
+    left: 0.5556vh !important;
+    top: 0.5556vh !important;
+    text-align: right;
+    font-family: SF Pro Display;
+    font-size: 0.7407vh;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    opacity: 0;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item:hover .hover {
+    opacity: 1;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item .count {
+    pointer-events: none;
+    position: absolute;
+    bottom: 0vh !important;
+    right: 0.5556vh !important;
+    top: 0.2778vh !important;
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 0.9259vh !important;
+    font-weight: 400 !important;
+    line-height: 1.1111vh;
+    text-align: right !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.accessories.box-column .inventory_grid {
+    grid-gap: 1.1111vh 0.9259vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.accessories.box-column .box-quickuse {
+    position: relative;
+    right: 0vh !important;
+    top: 4.4vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.accessories.box-column .box-quickuse .fastslots {
+    width: 7.2222vh !important;
+    height: 7.2222vh !important;
+    margin-bottom: 1.24vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.accessories.box-column .box-quickuse .fastslots .id {
+    width: 1.4815vh !important;
+    height: 1.4815vh !important;
+    border-radius: 0.1852vh !important;
+    color: rgb(52, 52, 52);
+    font-family: Gilroy;
+    font-size: 1.1111vh;
+    font-weight: 500;
+    line-height: 1.3889vh;
+    letter-spacing: 0%;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0vh 0vh 0.9259vh 0vh rgba(255, 255, 255, 0.2);
+    position: absolute !important;
+    left: 5.1849vh !important;
+    top: 0.5556vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item-info {
+    background: #fff0 !important;
+    color: #000 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item-info .bg-info {
+    background: #fff !important;
+    border-radius: 0.1852vh !important;
+    padding: 0.2778vh 0.3704vh;
+    color: #000 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-item-info .bg-info .title {
+    color: rgb(30, 30, 30) !important;
+    font-family: SF Pro Display !important;
+    font-size: 0.9259vh !important;
+    font-weight: 500 !important;
+    line-height: 1.1111vh !important;
+    letter-spacing: 0%;
+    text-align: right;
+}
+
+.box-inventory {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use {
+    width: 28.0556vh !important;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    background: rgba(30, 30, 30, 0.95);
+    padding: 0 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon {
+    background: none !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .item {
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    width: 28.0556vh !important;
+    height: 3.8889vh !important;
+    padding-left: 1.3889vh !important;
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 1.1111vh !important;
+    font-weight: 500;
+    line-height: 1.2963vh !important;
+    letter-spacing: 0%;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info {
+    width: 25.463vh !important;
+    padding: 0 !important;
+    background: none !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-left: 1.2963vh;
+    margin-top: 1.2963vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-column {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .title.left {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .desc.left {
+    width: 25.463vh !important;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: SF Pro Display;
+    font-size: 1.0185vh !important;
+    font-weight: 400;
+    line-height: 1.2037vh !important;
+    letter-spacing: 0%;
+    text-align: left;
+    margin-top: 0.6481vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-column .name .title {
+    display: flex;
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display !important;
+    font-size: 1.1111vh !important;
+    font-weight: 600 !important;
+    line-height: 1.2963vh !important;
+    letter-spacing: 0.5%;
+    text-align: left;
+    text-shadow: 0vh 0vh 0.5556vh rgba(0, 0, 0, 0.5);
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-column .name .title span {
+    margin-left: 0.3vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-column .name .type {
+    margin-top: 0 !important;
+    color: rgb(207, 248, 11);
+    font-family: SF Pro Display;
+    font-size: 0.9259vh !important;
+    font-weight: 600;
+    line-height: 1.1111vh !important;
+    letter-spacing: 0.5%;
+    text-align: left;
+    text-shadow: 0vh 0vh 0.5556vh rgba(207, 248, 11, 0.5);
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .item span {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .item:hover {
+    background: #6B1414 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 0.3vh solid rgba(0, 0, 0, 0.25) !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-column img.icon {
+    width: 3.2407vh !important;
+    height: 3.2407vh !important;
+    margin-right: 0.8333vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .linebottom {
+    width: 25.6481vh;
+    height: 0.0926vh;
+    background: rgba(255, 255, 255, 0.05);
+    margin-left: 1.2037vh;
+    margin-right: 1.2037vh;
+    margin-top: 0.9259vh;
+    margin-bottom: 1.0185vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .title.left {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-item-weapon__element {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-item-weapon__element .weapon__progress {
+    min-height: 0.3704vh !important;
+    border-radius: 0.0926vh !important;
+    width: 6.8519vh !important;
+    background: #ffffff1f;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-item-weapon__element .weapon__progress .weapon__progress-line {
+    min-height: 0.3704vh;
+    background: #c4e90c;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-item-weapon__element .name {
+    color: rgb(30, 30, 30);
+    font-family: SF Pro Display;
+    font-size: 0.9259vh;
+    font-weight: 500;
+    line-height: 1.1111vh;
+    letter-spacing: 0%;
+    text-align: right;
+    background: #fff;
+    height: 1.6667vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.1852vh;
+    padding: 0vh 0.3704vh;
+    margin-right: 0.9259vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-use .box-item-weapon .bg-info .box-item-weapon__element .desc {
+    color: rgb(196 233 12);
+    font-family: SF Pro Display;
+    font-size: 1.0185vh;
+    font-weight: 600;
+    line-height: 1.2037vh;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+#box-menu .box-inventory .box-other .box-list::-webkit-scrollbar-thumb {
+    background: #6B1414 !important;
+}
+
+#box-menu .box-inventory .box-other .box-list::-webkit-scrollbar-thumb {
+    background: #6B1414 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack {
+    width: 16.0185vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start;
+    flex-direction: column !important;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.3704vh;
+    background: rgba(30, 30, 30, 0.95);
+    padding: 0 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-text {
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 14px;
+    letter-spacing: 0.5%;
+    text-align: center;
+    background: none;
+    padding: 0 !important;
+    margin-top: 0.7407vh !important;
+    margin-bottom: 0.7407vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-number {
+    width: 8.7963vh;
+    height: 1.8519vh;
+    border: 0.0463vh solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.1852vh !important;
+    background: rgba(255, 255, 255, 0.01);
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .slider.box-slider {}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-between {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-number input.box-number-input {
+    margin: 0 !important;
+    background: none !important;
+    color: rgb(255, 255, 255);
+    font-family: SF Pro Display;
+    font-size: 0.9259vh !important;
+    font-weight: 600;
+    line-height: 1.1111vh;
+    letter-spacing: 0.5%;
+    text-align: center;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-between .btn-slap {
+    width: 100%;
+    height: 2.963vh !important;
+    box-sizing: border-box;
+    border: 0 !important;
+    background: none;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding-left: 1.3889vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-between .box-cancel {
+    width: 100%;
+    height: 2.963vh !important;
+    box-sizing: border-box;
+    border: 0 !important;
+    background: none;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding-left: 1.3889vh;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-between .box-cancel:hover {
+    box-sizing: border-box;
+    border-bottom: 0.1389vh solid rgba(0, 0, 0, 0.25) !important;
+    background: #FF9900 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-stack .box-between .btn-slap:hover {
+    box-sizing: border-box;
+    border-bottom: 0.1389vh solid rgba(0, 0, 0, 0.25) !important;
+    background: #FF9900 !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 31.6667vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 31.6667vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-between {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-input.margin-top-8 {
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 0.2778vh !important;
+    background: radial-gradient(99.01% 70.71% at 50% 50%,rgba(255, 255, 255, 0.05),rgba(255, 255, 255, 0) 100%) !important;
+    padding: 0vh;
+    width: 31.6667vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-input.margin-top-8 .box-icon {
+    margin-left: 0.6296vh !important;
+    height: 2.3611vh !important;
+    width: 2.3611vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-input.margin-top-8 .box-icon span.icon-dollar {
+    color: #CFF80B;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .btn-box-trade {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 31.6667vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .btn-box-trade .btn-trade {
+    width: 15.3704vh !important;
+    height: 3.8889vh !important;
+    border-radius: 0.2778vh !important;
+    background: rgb(0, 209, 0) !important;
+    border: none !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .btn-box-trade .btn-trade.red {
+    background: #8B1A1A !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .btn-box-trade .btn-trade:hover {
+    box-shadow: 0vh 0vh 0.6481vh 0.1852vh rgba(0, 209, 0, 0.25);
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .btn-box-trade .btn-trade.red:hover {
+    box-shadow: 0vh 0vh 0.6481vh 0.1852vh rgba(255, 0, 61, 0.25);
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-between .box-flex.inventory__text {
+    margin-top: 0 !important;
+    margin-bottom: 1.0111vh !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .trade-gotov {
+    position: absolute;
+    width: 100%;
+    height: 15.5556vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .trade-gotov p {
+    color: rgb(207 248 11);
+    font-family: SF Pro Display;
+    font-size: 2.7778vh;
+    font-weight: 600;
+    line-height: 1.6667vh;
+    letter-spacing: 2%;
+    text-align: left;
+    text-shadow: 0vh 0vh 3.7963vh rgba(207, 248, 11, 0.5);
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .trade-gotov.active {
+    display: flex !important;
+}
+
+.inventoryhax .invhax_menu div#box-menu .box-inventory .box-between .box-width-457.box-other-trade .box-width-356.trade .box-trade {
+    grid-gap: 1.1111vh 0.9259vh !important;
+    width: 31.6667vh !important;
+}

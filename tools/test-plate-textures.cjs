@@ -1,0 +1,12 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const events={},browsers=[],textures=[];let tick,plate='А000АА78';
+const vehicle={type:'vehicle',handle:1,position:{x:0,y:0,z:0},getVariable:()=>plate,setNumberPlateText:text=>assert.equal(text,' '),setNumberPlateTextIndex:i=>assert.equal(i,0),setNumberPlateTexture:(...args)=>textures.push(args)};
+const ctx={Map,Set,Date,JSON,Math,console,setInterval:f=>tick=f,mp:{players:{local:{position:{x:0,y:0,z:0}}},vehicles:{exists:()=>true,forEachInStreamRange:f=>f(vehicle)},game:{graphics:{requestStreamedTextureDict(){}}},events:{add:(n,f)=>events[n]=f,addDataHandler:(n,f)=>events[n]=f,callRemote(){}},browsers:{newHeadless(url,w,h){const b={url,headlessTextureDict:'cef'+browsers.length,headlessTextureName:'texture',execute(){},destroy(){b.destroyed=true;}};browsers.push(b);return b;}}}};
+vm.runInNewContext(fs.readFileSync('client_packages/legacy/plate-textures.js','utf8'),ctx);
+tick();assert.equal(browsers.length,1);assert.equal(browsers[0].active,true);assert.equal(textures.length,0,'wait for rendered font/frame ACK');
+events['legacy:plateTexture:ready'](plate);tick();assert.equal(textures.at(-1)[0],'cef0');
+plate='';events.legacyPlateVisual(vehicle);tick();assert.equal(browsers.length,2);
+events['legacy:plateTexture:ready']('');tick();assert.equal(textures.at(-1)[0],'cef1','removed plate uses transparent texture, never stock plate01');assert.equal(browsers[0].destroyed,true);
+plate='В123СС77';tick();events['legacy:plateTexture:ready'](plate);tick();assert.equal(textures.at(-1)[0],'cef2');
+console.log('PASS: plate texture/font ACK, active headless rendering, removal transparency, reinstall and unused browser cleanup.');

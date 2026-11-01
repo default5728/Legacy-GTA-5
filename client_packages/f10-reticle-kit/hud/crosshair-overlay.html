@@ -1,0 +1,12 @@
+<!-- Вставить в browsers/hud/index.html внутрь #hud (если прицела ещё нет) -->
+<div class="hud-crosshair-overlay" id="hud-crosshair-overlay" v-show="crosshairVisible && crosshairActive && crosshair" aria-hidden="true">
+  <div class="hud-ch-root" :style="chStyleRoot">
+    <div class="hud-ch-v" :style="chStyleVTop"></div>
+    <div class="hud-ch-mid" :style="chStyleMid">
+      <div class="hud-ch-h" :style="chStyleHLeft"></div>
+      <div class="hud-ch-dot" v-show="crosshairCenterDotVisible" :style="chStyleDot"></div>
+      <div class="hud-ch-h" :style="chStyleHRight"></div>
+    </div>
+    <div class="hud-ch-v" :style="chStyleVBot"></div>
+  </div>
+</div>

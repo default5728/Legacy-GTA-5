@@ -1,0 +1,1644 @@
+/* bloody-dm: мост между Calamity inventory.css и существующей логикой (family warehouse, paper doll). */
+
+html, body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+:root {
+    --inv-slot: clamp(82px, 15vmin, 178px);
+    --inv-slot-gap: clamp(9px, 1.1vmin, 18px);
+    --inv-slot-wh: clamp(42px, 7.5vmin, 68px);
+    --inv-slot-wh-gap: clamp(5px, 0.75vmin, 10px);
+    --inv-fast-slot-h: clamp(72px, min(15vmin, calc((100vh - 220px) / 5.2)), 148px);
+    --inv-panel-pad: clamp(6px, 0.85vmin, 14px);
+}
+
+.mode-family-warehouse {
+    --inv-fast-slot-h: clamp(52px, 7.5vmin, 88px);
+}
+
+body {
+    background: radial-gradient(ellipse 120% 80% at 50% 45%, rgba(15, 15, 15, 0.72) 0%, rgba(0, 0, 0, 0.55) 55%, rgba(0, 0, 0, 0.68) 100%);
+    color: #e8e8e8;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.box-inventory {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* Склад: колонка видна только в режиме склада (family-wh-visible без mode-family-warehouse ломала ширину инвентаря). */
+.magicinv .minvosn .leftinv {
+    display: none !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+}
+
+
+.mode-family-warehouse .magicinv .minvosn .centerinv {
+    display: none !important;
+}
+
+.leftinv.family-wh-visible .wh-col-title {
+    color: rgba(251, 251, 251, 0.92);
+}
+
+.wh-materials-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    border-radius: 0.85vh;
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0.98) 0%, rgba(18, 18, 18, 0.98) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.wh-materials-bar.hide {
+    display: none !important;
+}
+
+.wh-materials-bar__icon {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.wh-materials-bar__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.wh-materials-bar__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(187, 247, 208, 0.72);
+}
+
+.wh-materials-bar__val {
+    font-size: 18px;
+    font-weight: 800;
+    color: #22c55e;
+    font-variant-numeric: tabular-nums;
+}
+
+.wh-materials-bar--leader {
+    cursor: pointer;
+}
+
+.wh-materials-bar--leader:hover {
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.12);
+}
+
+.leftinv.family-wh-visible .itemlist.max {
+    max-height: 58vh;
+    overflow-y: auto;
+}
+
+.leftinv.family-wh-visible .itemlist.max::-webkit-scrollbar {
+    width: 4px;
+}
+
+.leftinv.family-wh-visible .itemlist.max::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.45);
+    border-radius: 2px;
+}
+
+/* Семейный склад: calamity задаёт .leftinv .itemlist.max { height: 26vh } — обрезает ряды пополам */
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible .itemlist {
+    width: 100% !important;
+    margin-top: 0 !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max {
+    display: grid !important;
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+    align-content: start !important;
+    justify-content: start !important;
+    justify-items: stretch !important;
+    grid-template-columns: repeat(10, var(--inv-slot)) !important;
+    grid-auto-rows: var(--inv-slot) !important;
+    gap: var(--inv-slot-gap) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: min(76vh, calc(100vh - 88px)) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    scrollbar-gutter: stable;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max .item {
+    width: 100% !important;
+    height: var(--inv-slot) !important;
+    min-width: 0 !important;
+    min-height: var(--inv-slot) !important;
+    max-width: var(--inv-slot) !important;
+    box-sizing: border-box !important;
+    flex: 0 0 auto !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max .item > img:not(.inv-item-img--weapon) {
+    max-height: calc(var(--inv-slot) * 0.82) !important;
+    max-width: calc(var(--inv-slot) * 1.01) !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max .item > img.inv-item-img--weapon {
+    max-height: calc(var(--inv-slot) * 0.62) !important;
+    max-width: calc(var(--inv-slot) * 0.82) !important;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar {
+    width: 10px;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar-track {
+    background: rgba(28, 28, 28, 0.95);
+    border-radius: 8px;
+    margin: 4px 0;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(239, 68, 68, 0.78) 0%, rgba(185, 28, 28, 0.88) 100%);
+    border-radius: 8px;
+    border: 2px solid rgba(18, 18, 18, 0.88);
+    min-height: 56px;
+}
+
+.magicinv .minvosn .rightinv .itemlist.max {
+    max-height: calc(72vh - 18vh);
+    overflow-y: auto;
+}
+
+.magicinv .minvosn .rightinv .itemlist.max::-webkit-scrollbar {
+    width: 4px;
+}
+
+.magicinv .minvosn .rightinv .itemlist.max::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.45);
+    border-radius: 2px;
+}
+
+/* Сетка предметов: зазор между ячейками, фикс. размер — не наезжают друг на друга */
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+    gap: 0.7vh 0.7vh !important;
+    margin-top: 1.2vh;
+    padding: 0.2vh 0.1vh 0.5vh;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item {
+    flex: 0 0 auto !important;
+    width: 6.75vh !important;
+    height: 6.75vh !important;
+    min-width: 6.75vh !important;
+    min-height: 6.75vh !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item > img {
+    margin-top: 0 !important;
+    object-fit: contain;
+}
+
+/* Ширина панели — в блоке «на весь экран» ниже; здесь только отступы колонок */
+.magicinv .minvosn {
+    align-items: stretch;
+    gap: 2vh;
+}
+
+/* Компакт: уменьшаем слоты, не сужаем панель (иначе пустая полоса справа) */
+body.inv-viewport-compact .magicinv .minvosn {
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 1.6vh;
+}
+
+body.inv-viewport-compact .magicinv .minvosn .inv-main-stack .centerinv {
+    width: 42vh;
+    min-width: 38vh;
+    max-width: 46vh;
+}
+
+body.inv-viewport-compact .magicinv .minvosn .inv-main-stack .rightinv {
+    margin-left: 1.8vh;
+}
+
+.inv-main-stack {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    gap: 0.55vh;
+}
+
+.inv-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 2.2vh;
+}
+
+.magicinv .minvosn .inv-main-stack .centerinv {
+    width: 48vh;
+    min-width: 44vh;
+    max-width: 52vh;
+    flex: 0 0 auto;
+    height: auto;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: auto;
+    margin-left: 2.4vh;
+}
+
+.equipment-panel {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 3.85vh;
+    padding-right: 0;
+    box-sizing: border-box;
+}
+
+/* Calamity задаёт .invpers { display:flex; row } — не использовать тот класс на сетке, иначе слоты в одну линию */
+.magicinv .minvosn .centerinv .equipment-grid.eq-paper-doll {
+    display: grid !important;
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+    align-items: start !important;
+    justify-content: end !important;
+    justify-items: center !important;
+    margin-top: 3.55vh;
+    margin-left: clamp(8px, 1.1vw, 18px);
+    width: 100%;
+    max-width: 100%;
+}
+
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(5.4vh, 6.1vh));
+    grid-template-rows: auto;
+    gap: 0.55vh 0.52vh;
+    grid-template-areas:
+        "headwear mask ears glasses"
+        "bracelet top watch bag"
+        "pants pants holster gloves"
+        "shoes shoes shoes shoes";
+    justify-items: center;
+    align-items: start;
+}
+
+.eq-grid-mask { grid-area: mask; }
+
+.eq-grid-headwear { grid-area: headwear; }
+
+.eq-grid-glasses { grid-area: glasses; }
+
+.eq-grid-ears { grid-area: ears; }
+
+.eq-grid-watch { grid-area: watch; }
+
+.eq-grid-bracelet { grid-area: bracelet; }
+
+.eq-grid-top { grid-area: top; }
+
+.eq-grid-pants { grid-area: pants; }
+
+.eq-grid-shoes { grid-area: shoes; }
+
+.eq-grid-bag { grid-area: bag; }
+
+.eq-grid-holster { grid-area: holster; }
+
+.eq-grid-gloves { grid-area: gloves; }
+
+.eq-grid-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.22vh;
+}
+
+.equip-slot-caption {
+    font-size: 1.05vh;
+    font-weight: 500;
+    line-height: 1.24;
+    text-align: center;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, system-ui, sans-serif;
+    color: rgba(248, 250, 252, 0.42);
+    max-width: 12vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+.equipment-panel .equip-slot {
+    width: 6.08vh;
+    height: 6.08vh;
+}
+
+.equipment-panel .equip-slot img {
+    width: 3.05vh;
+    height: 3.05vh;
+}
+
+.equipment-panel .equip-slot:not(.empty) img {
+    width: 4.95vh;
+    height: 4.95vh;
+}
+
+.inv-fast-bar {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.75vh;
+    padding: 1.05vh 1.35vw 0.25vh;
+    margin-top: 0.35vh;
+    border-top: none;
+    box-sizing: border-box;
+}
+
+.inv-fast-bar__label {
+    font-size: 1.45vh;
+    font-weight: 600;
+    letter-spacing: 0.065em;
+    color: rgba(237, 237, 237, 0.88);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 0.5vw 0 0.15vw;
+    margin: 0;
+    align-self: flex-start;
+}
+
+.mode-family-warehouse .inv-fast-bar {
+    display: none !important;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers {
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.magicinv .minvosn .centerinv .invpers .cpers .paper-doll {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 42vh;
+    border-radius: 0.463vh;
+    background: rgba(18, 18, 18, 0.45);
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.12);
+}
+
+.magicinv .minvosn .inv-fast-bar .slots,
+.magicinv .minvosn .centerinv .fastslot .slots {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 1.05vh;
+    padding: 0 0.45vw;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem {
+    position: relative;
+    box-sizing: border-box;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.22);
+    border-radius: 0.46vh;
+    background: rgba(22, 22, 22, 0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto !important;
+    height: var(--inv-fast-slot-h);
+    min-height: var(--inv-fast-slot-h);
+    max-height: var(--inv-fast-slot-h);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.magicinv .minvosn .inv-fast-bar .slot-number,
+.magicinv .minvosn .centerinv .fastslot .slot-number {
+    position: absolute;
+    top: 0.35vh;
+    right: 0.35vh;
+    margin: 0;
+    min-width: 1.35vh;
+    height: 1.35vh;
+    padding: 0 0.35vh;
+    border-radius: 0.28vh;
+    background: rgba(220, 38, 38, 0.28);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.95vh;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.35);
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem img,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem img {
+    height: auto;
+    max-height: 5.85vh;
+    width: auto;
+    max-width: 7.6vh;
+    margin-top: 0;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem img.inv-item-img--weapon,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem img.inv-item-img--weapon {
+    max-height: 5.25vh !important;
+    max-width: 6.85vh !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+}
+
+/* Основной список: иконки внутри ячейки без лишнего смещения */
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item > img.inv-item-img--weapon,
+.rightinv .itemlist .item > img.inv-item-img--weapon {
+    max-height: 3.02vh !important;
+    max-width: 4.5vh !important;
+    width: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    object-fit: contain !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item > img:not(.inv-item-img--weapon) {
+    max-height: min(124px, calc(var(--inv-slot) * 0.86)) !important;
+    max-width: min(148px, calc(var(--inv-slot) * 1.04)) !important;
+    width: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    object-fit: contain !important;
+}
+
+.wh-col-title + #warehouseInventory.itemlist .item > img.inv-item-img--weapon,
+.leftinv .itemlist.max .item > img.inv-item-img--weapon {
+    max-height: min(62px, calc(var(--inv-slot-wh, var(--inv-slot)) * 0.62)) !important;
+    max-width: min(78px, calc(var(--inv-slot-wh, var(--inv-slot)) * 0.8)) !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+/* Склады (семья / фракция): иконки по центру ячейки — без смещения calamity margin-top */
+.magicinv .minvosn .leftinv .itemlist .item,
+.leftinv.family-wh-visible .itemlist.max .item,
+.wh-col-title + #warehouseInventory.itemlist .item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.magicinv .minvosn .leftinv .itemlist .item > img,
+.leftinv.family-wh-visible .itemlist.max .item > img,
+.wh-col-title + #warehouseInventory.itemlist .item > img {
+    margin: 0 !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell img,
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-cell img {
+    margin: 0 !important;
+    object-position: center center !important;
+}
+
+/* Счётчик слотов справа в заголовке */
+.inv-cap-inline {
+    display: inline-block;
+    margin-left: 1.6667vh;
+    font-weight: 600;
+    font-size: 1.3889vh;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.inv-cap-inline b {
+    color: rgb(251, 251, 251);
+}
+
+.inv-cap-inline .cap-max {
+    color: rgba(220, 38, 38, 0.9);
+}
+
+.equip-slot {
+    backdrop-filter: none;
+}
+
+.magicinv .closedinv--bm {
+    font-size: 1.8519vh;
+    font-weight: 300;
+    color: rgb(251, 251, 251);
+    line-height: 1;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+}
+
+.closedinv.closedinv--bm svg {
+    display: none;
+}
+
+/* Тултип предметов */
+.weapon-tooltip {
+    display: none;
+    position: fixed;
+    z-index: 30000;
+    background: rgb(18, 18, 19);
+    color: rgb(251, 251, 251);
+    padding: 0.556vh 0.833vh;
+    border-radius: 0.556vh;
+    font-size: 1.287vh;
+    font-weight: 600;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+    opacity: 0;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.25);
+    max-width: min(340px, 70vw);
+    word-break: break-word;
+}
+
+/* Контекстное меню (bloody палитра) */
+.context-menu {
+    display: none;
+    position: fixed;
+    background: rgb(18, 18, 19);
+    border-radius: 0.5556vh;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.32);
+    z-index: 20000;
+    min-width: 188px;
+    max-width: min(260px, calc(100vw - 16px));
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu ul li {
+    padding: 11px 16px;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background 0.15s ease, padding-left 0.15s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.context-menu ul li:last-child {
+    border-bottom: none;
+}
+
+.context-menu ul li:hover {
+    background: rgba(220, 38, 38, 0.16);
+    padding-left: 18px;
+    color: #fff;
+}
+
+/* Модальное окно склада семьи */
+.wh-qty-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.wh-qty-modal.is-open {
+    display: flex;
+    pointer-events: auto;
+}
+
+.wh-qty-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.wh-qty-modal__box {
+    position: relative;
+    width: min(300px, 90vw);
+    padding: 20px 22px;
+    background: rgb(20, 20, 20);
+    border: 0.0926vh solid rgba(220, 38, 38, 0.4);
+    border-radius: 0.5556vh;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.wh-qty-modal__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 12px;
+    text-align: center;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wh-qty-modal__input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border-radius: 0.463vh;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.28);
+    background: rgb(12, 12, 12);
+    color: #fff;
+    text-align: center;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+.wh-qty-modal__input:focus {
+    border-color: rgba(220, 38, 38, 0.55);
+    outline: none;
+}
+
+.wh-qty-modal__btns {
+    display: flex;
+    gap: 10px;
+}
+
+.wh-qty-modal__btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 0.463vh;
+    border: none;
+    cursor: pointer;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wh-qty-modal__btn--cancel {
+    background: rgba(40, 40, 40, 0.95);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.wh-qty-modal__btn--ok {
+    background: #b91c1c;
+    color: #fff;
+}
+
+.wh-qty-modal__btn:hover {
+    filter: brightness(1.06);
+}
+
+/* Модалка: сколько перенести из сумки (спанк / алко) */
+.bag-cm-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.bag-cm-modal.is-open {
+    display: flex;
+    pointer-events: auto;
+}
+
+.bag-cm-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.bag-cm-modal__box {
+    position: relative;
+    width: min(320px, 92vw);
+    padding: 20px 22px;
+    background: rgb(20, 20, 20);
+    border: 0.0926vh solid rgba(220, 38, 38, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.bag-cm-modal__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 8px;
+    text-align: center;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.bag-cm-modal__hint {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0 0 14px;
+    text-align: center;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.bag-cm-modal__row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 14px;
+}
+
+.bag-cm-modal__input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.28);
+    background: rgb(12, 12, 12);
+    color: #fff;
+    box-sizing: border-box;
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: tabular-nums;
+}
+
+.bag-cm-modal__input:focus {
+    border-color: rgba(220, 38, 38, 0.55);
+    outline: none;
+}
+
+.bag-cm-modal__max {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 0.0926vh solid rgba(220, 38, 38, 0.45);
+    background: rgba(40, 40, 40, 0.95);
+    color: rgba(255, 255, 255, 0.88);
+    cursor: pointer;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.bag-cm-modal__max:hover {
+    background: rgba(220, 38, 38, 0.18);
+    color: #fff;
+}
+
+.bag-cm-modal__submit {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+    background: #b91c1c;
+    color: #fff;
+}
+
+.bag-cm-modal__submit:hover {
+    filter: brightness(1.06);
+}
+
+.bag-cm-modal__cancel {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    font-size: 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    font-family: SF Pro Display, 'Segoe UI', Roboto, sans-serif;
+}
+
+.bag-cm-modal__cancel:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* Полный экран: панель на весь viewport, быстрые слоты снизу, сумка со скроллом — без наезда на hotbar */
+.magicinv {
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    flex-direction: column !important;
+    padding: var(--inv-panel-pad) !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn {
+    align-self: stretch !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    box-sizing: border-box !important;
+    gap: clamp(0.75vh, 1.5vw, 1.75vh) !important;
+}
+
+.magicinv .minvosn .centerinv,
+.magicinv .minvosn .rightinv {
+    height: auto !important;
+}
+
+.magicinv .minvosn .inv-main-stack {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.inv-top-row {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    align-items: stretch !important;
+    padding-left: clamp(10px, 1.35vw, 22px) !important;
+    gap: clamp(1.8vh, 2.5vw, 3.4vh) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .centerinv {
+    width: auto !important;
+    min-width: min(280px, 32vw) !important;
+    max-width: min(520px, 42vw) !important;
+    flex: 0 0 auto !important;
+    align-self: stretch !important;
+    max-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(220, 38, 38, 0.45) rgba(20, 20, 20, 0.9) !important;
+    margin-left: clamp(14px, 2.1vw, 28px) !important;
+    margin-top: clamp(30px, 3.2vh, 52px) !important;
+    padding-left: clamp(4px, 0.55vw, 12px) !important;
+    padding-right: clamp(6px, 0.9vw, 14px) !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn .inv-main-stack .centerinv::-webkit-scrollbar {
+    width: 6px;
+}
+
+.magicinv .minvosn .inv-main-stack .centerinv::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.5);
+    border-radius: 6px;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin-left: clamp(1.1rem, 3.4vmin, 2.65rem) !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv > h1 {
+    flex-shrink: 0 !important;
+}
+
+.magicinv .minvosn .rightinv .itemlist.max,
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-wrap.itemlist.max {
+    max-height: none !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(10, var(--inv-slot)) !important;
+    grid-auto-rows: var(--inv-slot) !important;
+    gap: var(--inv-slot-gap) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell {
+    width: var(--inv-slot) !important;
+    height: var(--inv-slot) !important;
+    min-width: var(--inv-slot) !important;
+    min-height: var(--inv-slot) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell img,
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-cell img {
+    max-height: min(124px, calc(var(--inv-slot) * 0.86)) !important;
+    max-width: min(148px, calc(var(--inv-slot) * 1.04)) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell img.inv-item-img--weapon,
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-cell img.inv-item-img--weapon {
+    max-height: min(90px, calc(var(--inv-slot) * 0.64)) !important;
+    max-width: min(112px, calc(var(--inv-slot) * 0.84)) !important;
+    object-position: center center !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.magicinv .minvosn .inv-fast-bar {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    margin-top: 0 !important;
+    padding: clamp(8px, 0.95vh, 14px) clamp(10px, 1.1vw, 18px) clamp(6px, 0.45vh, 11px) !important;
+    border-top: none !important;
+    background: transparent !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem {
+    height: var(--inv-fast-slot-h) !important;
+    min-height: var(--inv-fast-slot-h) !important;
+    max-height: var(--inv-fast-slot-h) !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem img,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem img {
+    max-height: min(5.85vh, calc(var(--inv-fast-slot-h) * 0.62)) !important;
+    max-width: min(7.6vh, calc(var(--inv-fast-slot-h) * 0.8)) !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem img.inv-item-img--weapon,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem img.inv-item-img--weapon {
+    max-height: min(5.25vh, calc(var(--inv-fast-slot-h) * 0.55)) !important;
+    max-width: min(6.85vh, calc(var(--inv-fast-slot-h) * 0.71)) !important;
+}
+
+.inv-player-panel {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    align-self: stretch !important;
+}
+
+.inv-bag-cell {
+    width: var(--inv-slot) !important;
+    height: var(--inv-slot) !important;
+    min-width: var(--inv-slot) !important;
+    min-height: var(--inv-slot) !important;
+}
+
+/* —— Визуальное обновление инвентаря (bloody-dm: тёмная панель, красные акценты, без лишнего blur) —— */
+
+.magicinv .minvosn {
+    background: linear-gradient(165deg, #141414 0%, #0c0c0c 42%, #111111 100%) !important;
+    border: 1px solid rgba(220, 38, 38, 0.28) !important;
+    box-shadow:
+        0 28px 72px rgba(0, 0, 0, 0.72),
+        0 0 0 1px rgba(255, 255, 255, 0.045) inset,
+        0 0 48px rgba(220, 38, 38, 0.06);
+    border-radius: 1.2vh !important;
+}
+
+.magicinv .closedinv.closedinv--bm {
+    position: absolute;
+    right: 1.35vh;
+    top: 1.1vh;
+    z-index: 50;
+    width: 3.1vh;
+    height: 3.1vh;
+    min-width: 3.1vh;
+    min-height: 3.1vh;
+    border-radius: 50%;
+    border: 1px solid rgba(220, 38, 38, 0.42);
+    background: rgba(16, 16, 16, 0.96);
+    color: #f5f5f5;
+    font-size: 2vh;
+    font-weight: 300;
+    line-height: 1;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.magicinv .closedinv.closedinv--bm:hover {
+    background: rgba(220, 38, 38, 0.18);
+    border-color: rgba(239, 68, 68, 0.65);
+    color: #fff;
+    box-shadow: 0 0 22px rgba(220, 38, 38, 0.22);
+}
+
+.magicinv .minvosn .rightinv h1,
+.magicinv .minvosn .centerinv h1,
+.magicinv .minvosn #equipHeading,
+.leftinv .wh-col-title {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+    font-size: 1.38vh !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
+    color: rgba(245, 245, 245, 0.94) !important;
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-top: 1vh !important;
+    padding-bottom: 0 !important;
+    border-bottom: none !important;
+    text-shadow: none;
+}
+
+.magicinv .minvosn .centerinv h1,
+.magicinv .minvosn #equipHeading {
+    text-align: center !important;
+    width: 100%;
+    margin-top: clamp(36px, 4vh, 58px) !important;
+    padding-left: clamp(6px, 0.85vw, 14px) !important;
+}
+
+/* Колонки без отдельных плашек */
+.magicinv .minvosn .inv-top-row .rightinv {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 0 0 clamp(6px, 0.9vw, 16px) !important;
+    box-shadow: none !important;
+}
+
+.magicinv .minvosn .centerinv:not(:only-child) {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-top-row .rightinv {
+    border: none !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-right: 1px solid rgba(220, 38, 38, 0.14) !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible .wh-col-title {
+    margin-top: 0.5vh !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item,
+.leftinv.family-wh-visible .itemlist.max .item,
+.wh-col-title + #warehouseInventory.itemlist .item {
+    border-radius: 0.85vh !important;
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0.98) 0%, rgba(18, 18, 18, 0.98) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 2px 8px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item:hover,
+.leftinv.family-wh-visible .itemlist.max .item:hover {
+    border-color: rgba(220, 38, 38, 0.5) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 0 1px rgba(220, 38, 38, 0.12),
+        0 6px 20px rgba(220, 38, 38, 0.1);
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem {
+    border-radius: 0.85vh !important;
+    border: 1px solid rgba(220, 38, 38, 0.28) !important;
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.96) 0%, rgba(14, 14, 14, 0.98) 100%) !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    height: var(--inv-fast-slot-h) !important;
+    min-height: var(--inv-fast-slot-h) !important;
+    max-height: var(--inv-fast-slot-h) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem:hover,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem:hover {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        0 0 24px rgba(220, 38, 38, 0.12);
+}
+
+.equipment-panel .equip-slot {
+    border-radius: 0.75vh !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: linear-gradient(165deg, rgba(30, 30, 30, 0.95) 0%, rgba(16, 16, 16, 0.98) 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.equipment-panel .equip-slot:hover {
+    border-color: rgba(220, 38, 38, 0.45) !important;
+    background: rgba(220, 38, 38, 0.12) !important;
+    box-shadow: 0 0 18px rgba(220, 38, 38, 0.1);
+}
+
+.equip-slot-caption {
+    color: rgba(232, 232, 232, 0.52) !important;
+    font-size: 1.08vh !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.inv-cap-inline {
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.weapon-tooltip {
+    background: #141414 !important;
+    border: 1px solid rgba(220, 38, 38, 0.32) !important;
+    border-radius: 0.65vh !important;
+    padding: 0.65vh 1vh !important;
+    font-size: 1.22vh !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+}
+
+.context-menu {
+    border-radius: 0.75vh !important;
+    border: 1px solid rgba(220, 38, 38, 0.28) !important;
+    background: #121212 !important;
+}
+
+.context-menu ul li {
+    font-size: 13px !important;
+    padding: 12px 17px !important;
+}
+
+.wh-qty-modal__box {
+    background: #121212 !important;
+    border: 1px solid rgba(220, 38, 38, 0.35) !important;
+    border-radius: 1vh !important;
+}
+
+/* Спанк / Медовуха: счётчик в углу, без красного свечения слота */
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item.item--consum-stack,
+.magicinv .minvosn .leftinv.family-wh-visible .itemlist .item.item--consum-stack {
+    position: relative;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem.slot--consum-stack {
+    position: relative;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.28) !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem.slot--consum-stack:hover {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.32) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .itemlist .item.item--consum-stack:hover,
+.leftinv.family-wh-visible .itemlist.max .item.item--consum-stack:hover {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.inv-consumable-qty {
+    position: absolute;
+    right: 0.3vh;
+    bottom: 0.3vh;
+    z-index: 3;
+    padding: 0.12vh 0.4vh;
+    border-radius: 0.28vh;
+    background: rgba(10, 10, 10, 0.88);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 0.72vh;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: #f87171;
+    pointer-events: none;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.item--consum-medovukha .inv-consumable-qty {
+    color: #fb7185;
+}
+
+.item--consum-kit .inv-consumable-qty,
+.slot--consum-kit .inv-consumable-qty {
+    color: #ef4444;
+}
+
+.inv-consumable-qty--slot {
+    font-size: 0.78vh;
+    right: 0.25vh;
+    bottom: 0.35vh;
+}
+
+/* —— Инвентарь — на весь экран, содержимое строго по центру.
+   Внешняя панель (.magicinv) заливает 100vw × 100vh, а внутри
+   .inv-top-row кластер «экипировка + сетка инвентаря» центрирован
+   с разумной максимальной шириной — без пустого места слева. —— */
+
+.box-inventory {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+}
+
+.magicinv .minvosn {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    padding: clamp(6px, 1vh, 14px) clamp(10px, 1.4vw, 24px) clamp(6px, 0.9vh, 14px) !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn .inv-main-stack {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-items: center !important;
+}
+
+.magicinv .minvosn .inv-top-row {
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.magicinv .minvosn .inv-main-stack .centerinv {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv {
+    flex: 1 1 0 !important;
+    margin-left: clamp(0.9rem, 2.4vw, 2.4rem) !important;
+    margin-right: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    align-self: stretch !important;
+    overflow: hidden !important;
+}
+
+.magicinv .minvosn .rightinv .itemlist.max,
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-wrap.itemlist.max {
+    width: auto !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: center !important;
+    align-content: start !important;
+}
+
+.inv-bag-section {
+    align-self: stretch;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+}
+
+.inv-bag-grid {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: center;
+}
+
+/* Быстрые слоты — 3 равных слота, выровнены по центру панели */
+.magicinv .minvosn .inv-fast-bar {
+    align-self: center !important;
+    width: 100% !important;
+    max-width: min(94vh, 80vw) !important;
+    margin: 0 auto !important;
+    align-items: center !important;
+}
+
+.magicinv .minvosn .inv-fast-bar__label {
+    align-self: center !important;
+    text-align: center !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots,
+.magicinv .minvosn .centerinv .fastslot .slots {
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: min(72vh, 68vw) !important;
+    margin: 0 auto !important;
+}
+
+.magicinv .minvosn .inv-fast-bar .slots .slot.blockitem,
+.magicinv .minvosn .centerinv .fastslot .slots .slot.blockitem {
+    flex: 1 1 0 !important;
+    max-width: clamp(120px, 22vh, 200px) !important;
+    min-width: clamp(82px, 14vh, 160px) !important;
+}
+
+/* Чуть «громче» дизайн: тоньше радиусы, акцент-линии, аккуратные тени.
+   Без backdrop-filter (CEF на Windows быстро становится «лесенкой»). */
+
+.magicinv .minvosn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(120% 80% at 50% 0%, rgba(220, 38, 38, 0.07) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.magicinv .minvosn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.magicinv .minvosn .rightinv > h1,
+.magicinv .minvosn .centerinv > h1 {
+    position: relative !important;
+    padding-bottom: 0.6vh !important;
+    border-bottom: 1px solid rgba(220, 38, 38, 0.22) !important;
+    margin-bottom: 0.55vh !important;
+}
+
+.magicinv .minvosn .rightinv > h1::after,
+.magicinv .minvosn .centerinv > h1::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 4.6vh;
+    height: 1px;
+    background: linear-gradient(90deg, #ef4444 0%, rgba(239, 68, 68, 0) 100%);
+}
+
+.magicinv .minvosn .centerinv > h1::after {
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0) 0%, #ef4444 50%, rgba(239, 68, 68, 0) 100%);
+}
+
+.equipment-panel .equip-slot:not(.empty) {
+    border-color: rgba(220, 38, 38, 0.28) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 14px rgba(220, 38, 38, 0.06);
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell {
+    border-radius: 0.7vh !important;
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0.95) 0%, rgba(16, 16, 16, 0.95) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-cell:hover {
+    border-color: rgba(220, 38, 38, 0.45) !important;
+    background: linear-gradient(180deg, rgba(46, 22, 22, 0.85) 0%, rgba(20, 14, 14, 0.95) 100%) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 18px rgba(220, 38, 38, 0.18);
+}
+
+/* Безопасный скролл основной панели инвентаря — если на конкретном разрешении
+   контент чуть выше доступной высоты (5 строк сетки + сумка), последняя строка
+   ячеек не должна обрываться визуально. Делаем .inv-player-panel прокручиваемой
+   и подгоняем высоту .inv-grid-wrap, чтобы клетки рендерились ровно. */
+.magicinv .minvosn .inv-main-stack .rightinv .inv-player-panel {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    padding-right: 4px !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(220, 38, 38, 0.6) rgba(14, 14, 14, 0.95) !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-player-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-player-panel::-webkit-scrollbar-track {
+    background: rgba(10, 10, 10, 0.85);
+    border-radius: 6px;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-player-panel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+    border-radius: 6px;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-grid-wrap.itemlist.max {
+    flex: 0 0 auto !important;
+    min-height: max-content !important;
+    padding-bottom: 0.6vh !important;
+}
+
+/* Сумка: не делаем второй вложенный скролл внутри уже прокручиваемой панели —
+   контент сумки рендерится цельно, а скроллит её вместе с сеткой сама .inv-player-panel. */
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-section {
+    flex: 0 0 auto !important;
+    min-height: max-content !important;
+    overflow: visible !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-section .inv-bag-scroll {
+    overflow: visible !important;
+    flex: 0 0 auto !important;
+    min-height: max-content !important;
+    padding: 0 !important;
+}
+
+.magicinv .minvosn .inv-main-stack .rightinv .inv-bag-section .inv-bag-grid {
+    min-height: max-content !important;
+}
+
+/* Склад: левая половина — склад, правая — инвентарь + сумка */
+.mode-family-warehouse .magicinv .minvosn {
+    justify-content: stretch !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn {
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack {
+    width: 50% !important;
+    max-width: 50% !important;
+    flex: 1 1 50% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: clamp(10px, 1.2vh, 18px) clamp(14px, 1.5vw, 24px) !important;
+    align-items: stretch !important;
+    border-left: 1px solid rgba(220, 38, 38, 0.14) !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible {
+    flex: 1 1 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    padding: clamp(10px, 1.2vh, 18px) clamp(14px, 1.5vw, 24px) !important;
+    border-right: none !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-top-row {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 0 !important;
+    justify-content: flex-start !important;
+    max-width: 100% !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-top-row .rightinv {
+    width: 100% !important;
+    margin-left: 0 !important;
+    align-items: stretch !important;
+    flex: 1 1 auto !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible .wh-col-title,
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible .wh-materials-bar {
+    align-self: stretch !important;
+    max-width: 100% !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible .wh-col-title,
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv > h1 {
+    width: 100% !important;
+    text-align: center !important;
+    margin-top: 0.5vh !important;
+    margin-bottom: clamp(8px, 1vh, 14px) !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv .inv-player-panel {
+    max-height: min(76vh, calc(100vh - 72px)) !important;
+    width: 100% !important;
+    align-items: center !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv .inv-grid-wrap.itemlist.max {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv .inv-bag-section {
+    width: 100% !important;
+    align-items: stretch !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .inv-main-stack .rightinv .inv-bag-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}

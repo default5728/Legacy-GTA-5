@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>Фракции</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            width: 100vw; min-height: 100vh;
+            padding: 2.5vh 2vh 3vh;
+            background: radial-gradient(ellipse at 50% 0%, rgba(55, 25, 85, 0.55) 0%, rgba(8, 6, 16, 0.97) 55%);
+            color: #ede9fe;
+        }
+        .top {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 110vh; margin: 0 auto 2vh;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.35);
+            padding-bottom: 1.2vh;
+        }
+        h1 { font-size: 2.1vh; font-weight: 600; color: #ddd6fe; letter-spacing: 0.04em; }
+        .note { font-size: 1.2vh; color: rgba(196, 181, 253, 0.55); max-width: 52vh; text-align: right; line-height: 1.35; }
+        .grid {
+            display: flex; flex-wrap: wrap; gap: 1.8vh; justify-content: center;
+            max-width: 110vh; margin: 0 auto;
+        }
+        .card {
+            width: 28vh; border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.8vh;
+            background: rgba(18, 10, 32, 0.88);
+            overflow: hidden;
+            box-shadow: 0 0.4vh 1.2vh rgba(0,0,0,0.35);
+        }
+        .card img { width: 100%; height: 15vh; object-fit: cover; display: block; }
+        .card-body { padding: 1.4vh 1.6vh 1.6vh; }
+        .card-body p { font-size: 1.5vh; margin-bottom: 1vh; color: #c4b5fd; }
+        .card-body button {
+            width: 100%; padding: 1vh; border-radius: 0.5vh;
+            font-family: inherit; font-size: 1.25vh; font-weight: 600;
+            cursor: pointer; border: 1px solid rgba(167, 139, 250, 0.55);
+            color: #f5f3ff;
+            background: linear-gradient(180deg, rgba(91, 33, 182, 0.65), rgba(59, 21, 120, 0.85));
+        }
+        .card-body button:hover { border-color: #c4b5fd; }
+        .card-body button:disabled {
+            opacity: 0.45; cursor: default;
+            border-color: rgba(100, 80, 140, 0.4);
+            background: rgba(30, 25, 45, 0.6);
+        }
+        #confirmWrap {
+            display: none; position: fixed; inset: 0;
+            background: rgba(5, 3, 12, 0.82);
+            align-items: center; justify-content: center; z-index: 50;
+        }
+        #confirmWrap.show { display: flex; }
+        .confirm-box {
+            display: flex; max-width: 72vh; gap: 2vh; padding: 2.2vh;
+            border-radius: 1vh;
+            border: 1px solid rgba(167, 139, 250, 0.5);
+            background: rgba(22, 12, 38, 0.96);
+        }
+        .confirm-box img { width: 28vh; height: auto; object-fit: contain; border-radius: 0.5vh; }
+        .confirm-text h3 { font-size: 1.8vh; margin-bottom: 1vh; color: #e9d5ff; }
+        .confirm-text p { font-size: 1.2vh; color: rgba(196, 181, 253, 0.75); line-height: 1.45; margin-bottom: 1vh; }
+        .confirm-actions { display: flex; gap: 1vh; margin-top: 1.4vh; flex-wrap: wrap; }
+        .confirm-actions button {
+            padding: 1vh 1.6vh; border-radius: 0.5vh; font-family: inherit; font-size: 1.2vh; font-weight: 600;
+            cursor: pointer; border: 1px solid rgba(167, 139, 250, 0.55);
+            color: #faf5ff;
+            background: linear-gradient(180deg, rgba(109, 40, 217, 0.7), rgba(76, 29, 149, 0.9));
+        }
+        .confirm-actions .ghost {
+            background: transparent; border-color: rgba(148, 120, 200, 0.45);
+            color: rgba(196, 181, 253, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <h1>Смена фракции</h1>
+        <p class="note">Смена фракции с кулдауном 4 дня (как в основном меню).</p>
+    </div>
+    <div class="grid" id="fracGrid"></div>
+
+    <div id="confirmWrap">
+        <div class="confirm-box">
+            <img id="cfImg" src="" alt="">
+            <div class="confirm-text">
+                <h3 id="cfTitle"></h3>
+                <p>Подтверждение выбора фракции</p>
+                <p>После выбора вы не сможете сменить фракцию в течение 4 дней.</p>
+                <div class="confirm-actions">
+                    <button type="button" id="cfGo">Выбрать</button>
+                    <button type="button" class="ghost" onclick="closeConfirm()">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const IMG_BASE = 'package://browsers/menunew/img/';
+        const factions = [
+            { id: 1, name: 'Ballas', fracImg: 'FracBallas.png', cfName: 'The Ballas Gang', cfImg: 'product_ballas.png' },
+            { id: 2, name: 'The Families', fracImg: 'FracTheFamilies.png', cfName: 'The Families', cfImg: 'product_families.png' },
+            { id: 3, name: 'Bloods Street', fracImg: 'FracBloodsGang.png', cfName: 'Bloods Gang', cfImg: 'product_bloods.png' },
+            { id: 4, name: 'LS Vagos', fracImg: 'FracLSVagos.png', cfName: 'Los Santos Vagos', cfImg: 'product_lsvagos.png' },
+            { id: 5, name: 'Marabunta', fracImg: 'FracMarabunta.png', cfName: 'Marabunta Grande', cfImg: 'product_marabunta.png' }
+        ];
+        let currentFrac = 1;
+        let pendingId = null;
+
+        function closeConfirm() {
+            document.getElementById('confirmWrap').classList.remove('show');
+            pendingId = null;
+        }
+
+        function openConfirm(id) {
+            const f = factions.find(x => x.id === id);
+            if (!f) return;
+            pendingId = id;
+            document.getElementById('cfImg').src = IMG_BASE + f.cfImg;
+            document.getElementById('cfTitle').textContent = f.cfName;
+            document.getElementById('cfGo').onclick = function () {
+                mp.trigger('selectfraction', id);
+                mp.trigger('closeFractionMenu');
+                closeConfirm();
+            };
+            document.getElementById('confirmWrap').classList.add('show');
+        }
+
+        function renderGrid() {
+            const g = document.getElementById('fracGrid');
+            g.innerHTML = factions.map(f => {
+                const cur = f.id === currentFrac;
+                return '<div class="card">' +
+                    '<img src="' + IMG_BASE + f.fracImg + '" alt="">' +
+                    '<div class="card-body"><p>' + f.name + '</p>' +
+                    '<button type="button" ' + (cur ? 'disabled' : '') + ' onclick="openConfirm(' + f.id + ')">' +
+                    (cur ? 'Текущая' : 'Вступить') + '</button></div></div>';
+            }).join('');
+        }
+
+        function setCurrentFraction(n) {
+            const v = parseInt(n, 10);
+            currentFrac = (v >= 1 && v <= 5) ? v : 1;
+            renderGrid();
+        }
+    </script>
+</body>
+</html>

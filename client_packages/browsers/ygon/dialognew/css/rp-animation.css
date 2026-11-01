@@ -1,0 +1,139 @@
+.rp-animation_window {
+    position: absolute;
+    top: 50%;
+    left: 99%;
+    transform: translate(-99%, -50%);
+    display: flex;
+  }
+  
+  .rp-animation_window-left {
+    width: 260px;
+    height: 578px;
+    background: rgba(23, 24, 39, 0.9);
+    border-radius: 10px;
+    margin-right: 16px;
+  }
+  
+  .rp-animation_window-right {
+    position: relative;
+    width: 337px;
+    height: 578px;
+    background: rgba(23, 24, 39, 0.9);
+    border-radius: 10px;
+  }
+  
+  .rp-animation_window-left--heading {
+    font-weight: 500;
+    font-size: 18px;
+    color: #fff;
+    margin: 32px 0 6px 36px;
+  }
+  
+  .rp-animation_window-left--text {
+    font-weight: 500;
+    font-size: 14px;
+    color: #A1A3C2;
+    margin: 0;
+    margin-left: 36px;
+    margin-bottom: 21px;
+  }
+  
+  .rp-animation_category-list {
+    margin: 0;
+    height: 450px;
+    overflow: auto;
+  }
+  
+  .rp-animation_category-list::-webkit-scrollbar {
+    width: 3px;
+    background: none;
+  }
+  
+  .rp-animation_category-list li {
+    list-style: none;
+  }
+  
+  .rp-animation_category {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 75px;
+    padding-left: 45px;
+    font-weight: 500;
+    font-size: 15px;
+    color: #A1A3C2;
+    text-decoration: none;
+    border-left: 3px solid rgba(37, 38, 53, 0);
+  }
+  
+  .rp-animation_category-list li.active .rp-animation_category, .rp-animation_animation-list .rp-animation_category:hover {
+    background: rgba(37, 38, 53, 0.9);
+    color: #fff;
+    text-decoration: none;
+    border-left: 3px solid #006EFF;
+  }
+  
+  .rp-animation_category:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .rp-animation_close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    background: #252635;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .rp-animation_search {
+    position: relative;
+    margin-top: 56px;
+    margin-left: 48px;
+    margin-bottom: 8px;
+  }
+  
+  .rp-animation_search input {
+    width: 220px;
+    height: 40px;
+    border: 1px solid #3D3F53;
+    background: none;
+    outline: none;
+    padding-left: 38px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  .rp-animation_search input::placeholder {
+    color: #A1A3C2;
+  }
+  
+  .rp-animation_search img {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .rp-animation_animation-list {
+    margin: 0;
+    height: 450px;
+    overflow: auto;
+  }
+  
+  .rp-animation_animation-list::-webkit-scrollbar {
+    width: 3px;
+    background: none;
+  }
+  
+  .rp-animation_animation-list li {
+    list-style: none;
+  }
+  

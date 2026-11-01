@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Репорт</title>
+    <style>
+        :root {
+            --bg-deep: rgba(0,0,0,0);
+            --bg-panel: rgba(255,255,255,0.03);
+            --bg-msg: rgba(255,255,255,0.05);
+            --border-soft: rgba(255, 255, 255, 0.08);
+            --accent: #dc2626;
+            --accent-glow: rgba(220, 38, 38, 0.22);
+            --text: #e8e8e8;
+            --text-muted: rgba(255, 255, 255, 0.52);
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%; height: 100%;
+            background: transparent;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        body {
+            color: var(--text);
+            font-size: 15px;
+            letter-spacing: 0.01em;
+        }
+        .wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100%;
+            padding: 28px 20px;
+            box-sizing: border-box;
+        }
+        .panel {
+            width: 100%;
+            max-width: 620px;
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-panel);
+            border: 1px solid rgba(220, 38, 38, 0.42);
+            border-radius: var(--radius);
+            box-shadow:
+                0 24px 64px rgba(0, 0, 0, 0.75),
+                0 0 0 1px rgba(220, 38, 38, 0.1),
+                0 0 48px rgba(220, 38, 38, 0.08);
+            overflow: hidden;
+        }
+        .head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 22px 20px;
+            background: linear-gradient(180deg, #181818 0%, var(--bg-deep) 100%);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.28);
+        }
+        .head-main { min-width: 0; }
+        .head h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #f5f5f5;
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+        .head-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            max-width: 38ch;
+        }
+        .badge {
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(220, 38, 38, 0.2);
+            color: #fecaca;
+            border: 1px solid rgba(220, 38, 38, 0.45);
+        }
+        .badge.off {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.48);
+            border-color: var(--border-soft);
+            font-weight: 600;
+        }
+        .badge.open {
+            background: rgba(220, 38, 38, 0.28);
+            color: #fecaca;
+            border-color: rgba(248, 113, 113, 0.65);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.25);
+        }
+        .msgs {
+            flex: 1 1 auto;
+            min-height: 200px;
+            max-height: min(52vh, 520px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 18px 20px;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .msgs::-webkit-scrollbar { width: 4px; }
+        .msgs::-webkit-scrollbar-track { background: transparent; border-radius: 4px; }
+        .msgs::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.35);
+            border-radius: 4px;
+        }
+        .msg {
+            padding: 14px 16px;
+            border-radius: 14px;
+            max-width: 90%;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        .msg.user {
+            align-self: flex-end;
+            background: rgba(220, 38, 38, 0.14);
+            border: 1px solid rgba(220, 38, 38, 0.45);
+        }
+        .msg.admin {
+            align-self: flex-start;
+            background: var(--bg-msg);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .msg .who {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-variant-numeric: tabular-nums;
+        }
+        .msg.user .who { color: #f87171; }
+        .msg.admin .who { color: var(--text-muted); }
+        .media-badge {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #bbf7d0;
+            background: rgba(34, 197, 94, 0.16);
+            border: 1px solid rgba(34, 197, 94, 0.45);
+            vertical-align: middle;
+        }
+        .msg .body {
+            color: #f0f0f0;
+            font-size: 15px;
+            -webkit-user-select: text;
+            user-select: text;
+            cursor: text;
+        }
+        .msg .body::selection,
+        .msg .body *::selection {
+            background: rgba(220, 38, 38, 0.55);
+            color: #fff;
+        }
+        .empty {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.42);
+            font-size: 14px;
+            line-height: 1.55;
+            padding: 48px 20px;
+        }
+        .hint-wrap {
+            padding: 12px 22px 0;
+            background: var(--bg-deep);
+        }
+        .hint {
+            width: 100%;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+        }
+        .composer {
+            padding: 16px 22px 18px;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid var(--border-soft);
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .composer input {
+            flex: 1;
+            min-height: 48px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            background: var(--bg-deep);
+            color: var(--text);
+            font-size: 15px;
+        }
+        .composer input::placeholder { color: rgba(255, 255, 255, 0.38); }
+        .composer input:focus {
+            outline: none;
+            border-color: rgba(220, 38, 38, 0.65);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+        .btn {
+            min-height: 48px;
+            padding: 0 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            background: rgba(220, 38, 38, 0.18);
+            color: #fecaca;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, opacity 0.1s;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: rgba(220, 38, 38, 0.32);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-primary {
+            background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+            border-color: #ef4444;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+            border-color: #f87171;
+        }
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255, 255, 255, 0.14);
+            color: rgba(255, 255, 255, 0.82);
+            min-height: 46px;
+        }
+        .btn-ghost:hover {
+            border-color: rgba(220, 38, 38, 0.45);
+            color: #fff;
+            background: #222;
+        }
+        .foot {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px 22px 22px;
+            background: rgba(255,255,255,0.015);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .foot .btn-ghost { width: 100%; max-width: 100%; }
+        .kbd-hint {
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.38);
+            padding-top: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 22px;
+            background: #181818;
+            border: 1px solid rgba(220, 38, 38, 0.45);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+            z-index: 100;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+        }
+        .toast.show { opacity: 1; }
+
+        /* Во встроенном iframe F2 — на всю высоту панели */
+        html.embed-cef,
+        html.embed-cef body {
+            height: 100%;
+            overflow: hidden;
+        }
+        html.embed-cef .wrap {
+            min-height: 100%;
+            height: 100%;
+            padding: 0;
+            align-items: stretch;
+            justify-content: flex-start;
+        }
+        html.embed-cef .panel {
+            max-width: none;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+        html.embed-cef .msgs {
+            flex: 1 1 auto;
+            min-height: 80px;
+            height: auto;
+            max-height: none;
+        }
+        html.embed-cef .hint-wrap,
+        html.embed-cef .composer,
+        html.embed-cef .foot {
+            flex-shrink: 0;
+        }
+        html.embed-cef .foot {
+            padding-bottom: 16px;
+        }
+    </style>
+    <script>
+        (function () {
+            try {
+                if (/\bembed=1\b/.test(String(location.search || ''))) {
+                    document.documentElement.classList.add('embed-cef');
+                    return;
+                }
+            } catch (_e0) {}
+            try {
+                if (window.self !== window.top) document.documentElement.classList.add('embed-cef');
+            } catch (_e) {}
+        })();
+        (function () {
+            function isTextInputEl(el) {
+                if (!el || !el.tagName) return false;
+                var tag = el.tagName.toLowerCase();
+                if (tag === 'textarea') return true;
+                if (tag === 'input') {
+                    var type = String(el.type || 'text').toLowerCase();
+                    return type !== 'checkbox' && type !== 'radio' && type !== 'button' &&
+                        type !== 'submit' && type !== 'reset' && type !== 'file' && type !== 'range';
+                }
+                return !!el.isContentEditable;
+            }
+            document.addEventListener('selectstart', function (e) {
+                var t = e.target;
+                if (isTextInputEl(t)) return;
+                if (t && t.closest && t.closest('.msg .body')) return;
+                e.preventDefault();
+            }, true);
+            document.addEventListener('keydown', function (e) {
+                if (!(e.ctrlKey || e.metaKey) || (e.key !== 'a' && e.key !== 'A' && e.keyCode !== 65)) return;
+                if (isTextInputEl(e.target) || isTextInputEl(document.activeElement)) return;
+                e.preventDefault();
+                if (window.getSelection && window.getSelection().removeAllRanges) window.getSelection().removeAllRanges();
+            }, true);
+        })();
+    </script>
+</head>
+<body>
+    <div class="wrap">
+        <div class="panel">
+            <div class="head">
+                <div class="head-main">
+                    <h1>Помощь администрации</h1>
+                    <p class="head-sub">Жалоба и переписка с администрацией. Будьте конкретны: ID, ник, что произошло.</p>
+                </div>
+                <span class="badge off" id="badgeEl">—</span>
+            </div>
+            <div class="msgs" id="msgs"></div>
+            <div class="hint-wrap">
+                <div class="hint" id="hintEl">Напишите суть проблемы. Ответ придёт здесь же.</div>
+            </div>
+            <div class="composer">
+                <input type="text" id="inputEl" maxlength="600" placeholder="Текст сообщения…" autocomplete="off" />
+                <button type="button" class="btn btn-primary" id="btnSend">Отправить</button>
+            </div>
+            <div class="foot">
+                <button type="button" class="btn btn-ghost" id="btnClose">Закрыть тикет</button>
+                <p class="kbd-hint">Повторное нажатие клавиши репорта закрывает окно</p>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script>
+        var state = { open: false, messages: [] };
+
+        function cefMpTrigger() {
+            var args = Array.prototype.slice.call(arguments);
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                return mp.trigger.apply(mp, args);
+            }
+            try {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ __cefMp: 1, a: args }, '*');
+                }
+            } catch (_e) {}
+        }
+
+        function fmtTime(ts) {
+            if (!ts) return '';
+            var d = new Date(ts);
+            var h = d.getHours(), m = d.getMinutes();
+            return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+        }
+
+        function messagesSignature(list) {
+            if (!list || !list.length) return '';
+            return list.map(function (m) {
+                return String(m.role || '') + '\x00' + String(m.text || '') + '\x00' + String(m.ts || '') + '\x00' + String(m.author || '');
+            }).join('\x1e');
+        }
+
+        function render(force) {
+            var box = document.getElementById('msgs');
+            var badge = document.getElementById('badgeEl');
+            var hint = document.getElementById('hintEl');
+            var btnSend = document.getElementById('btnSend');
+            var btnClose = document.getElementById('btnClose');
+            var nextSig = messagesSignature(state.messages);
+            var skipMsgs = !force && box.dataset.msgSig === nextSig;
+            if (!state.open) {
+                badge.textContent = 'Нет тикета';
+                badge.className = 'badge off';
+                hint.textContent = 'Создайте репорт — опишите проблему одним или несколькими сообщениями.';
+                btnSend.textContent = 'Создать тикет';
+                btnClose.style.display = 'none';
+            } else {
+                badge.textContent = 'Тикет открыт';
+                badge.className = 'badge open';
+                hint.textContent = 'Справа — ваши сообщения, слева — ответы администрации.';
+                btnSend.textContent = 'Отправить';
+                btnClose.style.display = 'inline-block';
+            }
+
+            if (skipMsgs) return;
+
+            box.dataset.msgSig = nextSig;
+            if (!state.messages || !state.messages.length) {
+                box.innerHTML = '<div class="empty">Нет сообщений. Введите текст ниже и нажмите «' + (state.open ? 'Отправить' : 'Создать тикет') + '».</div>';
+            } else {
+                box.innerHTML = state.messages.map(function (m) {
+                    var cls = m.role === 'admin' ? 'admin' : 'user';
+                    var mediaBadge = m.isMedia ? '<span class="media-badge">MEDIA</span>' : '';
+                    var whoLine = m.role === 'admin'
+                        ? ('Ответ администратора' + (m.author ? ' · ' + m.author : ''))
+                        : (mediaBadge + 'Ваше сообщение' + (m.author ? ' · ' + m.author : ''));
+                    return '<div class="msg ' + cls + '"><div class="who">' + whoLine + ' · ' + fmtTime(m.ts) + '</div><div class="body">' + escapeHtml(m.text) + '</div></div>';
+                }).join('');
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function escapeHtml(s) {
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        function showToast(t) {
+            var el = document.getElementById('toast');
+            el.textContent = t;
+            el.classList.add('show');
+            setTimeout(function () { el.classList.remove('show'); }, 3500);
+        }
+
+        window.reportApp = {
+            setState: function (raw) {
+                try {
+                    var d = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                    state.open = !!d.open;
+                    if (Array.isArray(d.messages)) {
+                        state.messages = d.messages;
+                    } else if (!d.open) {
+                        state.messages = [];
+                    }
+                    render();
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            onClosed: function (reason) {
+                state.open = false;
+                if (reason === 'player') {
+                    state.messages = [];
+                }
+                render(true);
+                document.getElementById('inputEl').value = '';
+                if (reason === 'admin') {
+                    showToast('Администратор ответил и закрыл тикет.');
+                } else if (reason === 'admin_panel') {
+                    showToast('Администратор закрыл тикет из панели.');
+                } else if (reason === 'player') {
+                    showToast('Тикет закрыт.');
+                } else {
+                    showToast('Тикет закрыт.');
+                }
+            }
+        };
+
+        document.getElementById('btnSend').addEventListener('click', function () {
+            var v = document.getElementById('inputEl').value.trim();
+            if (!v) return;
+            if (!state.open) {
+                cefMpTrigger('report:ui:create', v);
+            } else {
+                cefMpTrigger('report:ui:send', v);
+            }
+            document.getElementById('inputEl').value = '';
+        });
+
+        document.getElementById('btnClose').addEventListener('click', function () {
+            cefMpTrigger('report:ui:close');
+        });
+
+        document.getElementById('inputEl').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('btnSend').click();
+            }
+        });
+
+        // Принимаем setState/onClosed от родительского меню через postMessage (CEF-safe)
+        window.addEventListener('message', function (ev) {
+            try {
+                var d = ev && ev.data;
+                if (!d || d.__bmReport == null) return;
+                if (d.__bmReport === 'sync' && d.payload != null) {
+                    window.reportApp.setState(d.payload);
+                } else if (d.__bmReport === 'pull') {
+                    cefMpTrigger('reportEmbedPull');
+                } else if (d.__bmReport === 'closed') {
+                    window.reportApp.onClosed(d.reason || 'admin');
+                }
+            } catch (_e) {}
+        });
+
+        render();
+    </script>
+</body>
+</html>

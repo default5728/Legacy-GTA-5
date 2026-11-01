@@ -1,0 +1,466 @@
+/*
+ * MOON DM F2 — оболочка + Магазин/Кейсы в духе GTA5RP
+ * Подключается ПОСЛЕ flow-menu-overrides.css
+ */
+
+:root {
+  --bm-font: 'Gilroy', 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+  --bm-font-display: 'Gilroy', 'Unbounded', sans-serif;
+
+  --bm-shell-w: min(1120px, 92vw);
+  --bm-shell-h: min(760px, 88vh);
+  --bm-nav-h: 64px;
+  --bm-r: 10px;
+  --bm-r2: 12px;
+
+  --bm-shell-fill: linear-gradient(165deg, #121a28 0%, #0e1420 42%, #101827 100%);
+  --bm-panel: rgba(255, 255, 255, 0.045);
+  --bm-panel2: rgba(255, 255, 255, 0.08);
+  --bm-card: rgba(18, 28, 44, 0.92);
+  --bm-line: rgba(120, 160, 220, 0.14);
+  --bm-line-soft: rgba(160, 190, 240, 0.18);
+
+  --bm-accent: #4c8dff;
+  --bm-accent-h: #6aa1ff;
+  --bm-accent-g: rgba(76, 141, 255, 0.28);
+  --bm-accent-s: rgba(76, 141, 255, 0.12);
+
+  --bm-text: #f2f6fc;
+  --bm-text2: rgba(242, 246, 252, 0.72);
+  --bm-muted: rgba(242, 246, 252, 0.42);
+}
+
+/* Короткие hover-переходы только для shell / shop / cases */
+#main-window .window.flow-menu-shell,
+#main-window .main-nav ul li a,
+#main-window #bm-topbar-dp-slot,
+#main-window #shop .product,
+#main-window #shop button.buy,
+#main-window #shop .buy,
+#main-window #shop .search,
+#main-window #shop .nav-tabs > li > a,
+#main-window #boxes .boxes_list a,
+#main-window #boxes .mid_buts a,
+#main-window #boxes .back_boxes {
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+
+/* ── Shell ── */
+#main-window .window.flow-menu-shell {
+  border-radius: var(--bm-r2) !important;
+  border: 1px solid var(--bm-line) !important;
+  background: var(--bm-shell-fill) !important;
+  background-color: #0e1420 !important;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(76, 141, 255, 0.06) inset !important;
+  overflow: hidden !important;
+}
+
+/* ── Top nav ── */
+#main-window .main-nav {
+  height: var(--bm-nav-h) !important;
+  min-height: var(--bm-nav-h) !important;
+  max-height: var(--bm-nav-h) !important;
+  padding: 0 20px 0 18px !important;
+  background: linear-gradient(180deg, rgba(22, 32, 48, 0.98) 0%, rgba(16, 24, 38, 0.98) 100%) !important;
+  background-image: linear-gradient(180deg, rgba(22, 32, 48, 0.98) 0%, rgba(16, 24, 38, 0.98) 100%) !important;
+  border-bottom: 1px solid var(--bm-line) !important;
+  border-top-left-radius: var(--bm-r2) !important;
+  border-top-right-radius: var(--bm-r2) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+.flow-nav-brand {
+  border-right: 1px solid var(--bm-line) !important;
+  padding: 0 20px 0 4px !important;
+  margin-right: 8px !important;
+}
+.flow-nav-brand__title,
+#main-window .flow-nav-brand__title {
+  font-family: var(--bm-font-display) !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--bm-text) !important;
+  text-shadow: 0 0 24px rgba(76, 141, 255, 0.25) !important;
+}
+#main-window .flow-nav-brand::after {
+  display: none !important;
+}
+
+#main-window .main-nav ul li a,
+#main-window .main-nav ul.flow-nav-list > li > a {
+  padding: 9px 16px !important;
+  border-radius: 8px !important;
+  font-family: var(--bm-font) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em !important;
+  color: var(--bm-muted) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  position: relative !important;
+}
+#main-window .main-nav ul li a:hover,
+#main-window .main-nav ul.flow-nav-list > li:hover > a {
+  color: var(--bm-text) !important;
+  background: var(--bm-panel) !important;
+}
+#main-window .main-nav ul li.active a,
+#main-window .main-nav ul.flow-nav-list > li.active > a,
+#main-window .main-nav ul.flow-nav-list > li.active > a:hover {
+  color: #fff !important;
+  background: var(--bm-accent-s) !important;
+  box-shadow: 0 0 0 1px rgba(76, 141, 255, 0.35) inset !important;
+}
+#main-window .main-nav ul li.active a::after,
+#main-window .main-nav ul.flow-nav-list > li.active > a::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  left: 16px !important;
+  right: 16px !important;
+  bottom: 4px !important;
+  width: auto !important;
+  height: 2px !important;
+  border-radius: 2px !important;
+  transform: none !important;
+  background: var(--bm-accent) !important;
+  box-shadow: 0 0 10px rgba(76, 141, 255, 0.55) !important;
+}
+
+/* DP badge в шапке */
+#main-window #bm-topbar-dp-slot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+  margin-right: 2px !important;
+  height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  background: rgba(76, 141, 255, 0.1) !important;
+  border: 1px solid rgba(106, 161, 255, 0.32) !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+  border-left: 1px solid rgba(106, 161, 255, 0.32) !important;
+}
+#main-window .bm-topbar-dp-line {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 5px !important;
+  line-height: 1 !important;
+}
+#main-window .bm-topbar-dp-line .dp-balance {
+  font-family: var(--bm-font) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  color: #fff !important;
+}
+#main-window .bm-topbar-dp-line .bm-dp-suffix {
+  font-family: var(--bm-font) !important;
+  font-weight: 700 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  padding-bottom: 0 !important;
+  color: var(--bm-accent-h) !important;
+  opacity: 1 !important;
+}
+
+/* Контент */
+#main-window .content {
+  background: transparent !important;
+}
+#main-window h1,
+#main-window h2,
+#main-window h3,
+#main-window #shop .top-block h3,
+#main-window #boxes .bm-cases-head h3 {
+  font-family: var(--bm-font-display) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--bm-text) !important;
+}
+
+/* ── Buttons (primary / secondary) ── */
+#main-window button.buy,
+#main-window .buy,
+#main-window #shop button.buy,
+#main-window #boxes .mid_buts a,
+#main-window #boxes .mid_buts .left_buts a {
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  background: linear-gradient(180deg, var(--bm-accent-h) 0%, var(--bm-accent) 100%) !important;
+  color: #fff !important;
+  font-family: var(--bm-font) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  box-shadow: 0 8px 20px rgba(76, 141, 255, 0.28) !important;
+  text-shadow: none !important;
+}
+#main-window button.buy:hover,
+#main-window .buy:hover,
+#main-window #shop button.buy:hover,
+#main-window #boxes .mid_buts a:hover,
+#main-window #boxes .mid_buts .left_buts a:hover {
+  background: linear-gradient(180deg, #7aafff 0%, var(--bm-accent-h) 100%) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 24px rgba(76, 141, 255, 0.38) !important;
+}
+
+#main-window #shop .top-block .update,
+#main-window #shop .top-block .replenish,
+#main-window #boxes .back_boxes,
+#main-window #boxes .case-dp-refresh,
+#main-window #boxes .case-dp-plus {
+  border-radius: 8px !important;
+  border: 1px solid var(--bm-line-soft) !important;
+  background: var(--bm-panel) !important;
+  color: var(--bm-text2) !important;
+  box-shadow: none !important;
+}
+#main-window #shop .top-block .update:hover,
+#main-window #shop .top-block .replenish:hover,
+#main-window #boxes .back_boxes:hover,
+#main-window #boxes .case-dp-refresh:hover,
+#main-window #boxes .case-dp-plus:hover {
+  border-color: rgba(76, 141, 255, 0.4) !important;
+  background: var(--bm-accent-s) !important;
+  color: var(--bm-text) !important;
+}
+
+/* ── Shop: search + tabs ── */
+#main-window #shop .top-block {
+  background: transparent !important;
+  border: none !important;
+  margin-bottom: 8px !important;
+}
+#main-window #shop .top-block .balance p {
+  color: var(--bm-muted) !important;
+  font-family: var(--bm-font) !important;
+}
+#main-window #shop .top-block .balance b.dp-balance {
+  color: var(--bm-text) !important;
+  font-weight: 800 !important;
+}
+#main-window #shop .search,
+#main-window .top-block .search {
+  border-radius: 10px !important;
+  background: rgba(12, 20, 34, 0.85) !important;
+  border: 1px solid var(--bm-line) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+}
+#main-window #shop .search:focus-within,
+#main-window .top-block .search:focus-within {
+  border-color: rgba(76, 141, 255, 0.45) !important;
+  background: rgba(16, 26, 42, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(76, 141, 255, 0.12) !important;
+}
+#main-window #shop .search input,
+#main-window .top-block .search input {
+  color: var(--bm-text) !important;
+  font-family: var(--bm-font) !important;
+}
+
+#main-window #shop .nav-tabs {
+  border-bottom: 1px solid var(--bm-line) !important;
+  gap: 6px !important;
+  margin-bottom: 20px !important;
+}
+#main-window #shop .nav-tabs > li > a {
+  padding: 10px 16px !important;
+  border-radius: 8px 8px 0 0 !important;
+  border: none !important;
+  color: var(--bm-muted) !important;
+  font-family: var(--bm-font) !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+}
+#main-window #shop .nav-tabs > li > a:hover {
+  color: var(--bm-text) !important;
+  background: var(--bm-panel) !important;
+}
+#main-window #shop .nav-tabs > li.active > a {
+  color: #fff !important;
+  background: var(--bm-accent-s) !important;
+  box-shadow: 0 -2px 0 var(--bm-accent) inset !important;
+}
+#main-window #shop .shop-line {
+  opacity: 0.25 !important;
+}
+
+/* ── Shop product cards ── */
+#main-window #shop .product,
+#main-window #shop .shop-list .product {
+  border-radius: var(--bm-r) !important;
+  border: 1px solid var(--bm-line) !important;
+  background:
+    linear-gradient(165deg, rgba(28, 40, 60, 0.95) 0%, rgba(14, 22, 36, 0.98) 100%) !important;
+  background-image:
+    linear-gradient(165deg, rgba(28, 40, 60, 0.95) 0%, rgba(14, 22, 36, 0.98) 100%) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+  overflow: hidden !important;
+}
+#main-window #shop .product:hover,
+#main-window #shop .shop-list .product:hover {
+  border-color: rgba(76, 141, 255, 0.4) !important;
+  background:
+    linear-gradient(165deg, rgba(34, 50, 76, 0.98) 0%, rgba(16, 26, 42, 0.98) 100%) !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(76, 141, 255, 0.12) !important;
+  transform: translateY(-2px) !important;
+}
+#main-window #shop .product::before,
+#main-window #shop .product::after {
+  display: none !important;
+}
+#main-window #shop .product .name,
+#main-window #shop .product p.name,
+#main-window #shop .product .product-name {
+  font-family: var(--bm-font) !important;
+  font-weight: 600 !important;
+  color: var(--bm-text) !important;
+}
+#main-window #shop .product .price,
+#main-window #shop .product b.price,
+#main-window #shop .product .product-price {
+  font-family: var(--bm-font-display) !important;
+  font-weight: 800 !important;
+  color: var(--bm-accent-h) !important;
+}
+#main-window #PrivilegeShopList .product .product-img-stack--mono .bm-prod-mono,
+#main-window .product-img-stack .bm-prod-mono {
+  border-radius: 10px !important;
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(76, 141, 255, 0.16) 0%, rgba(76, 141, 255, 0) 60%),
+    linear-gradient(160deg, #24344c 0%, #152033 100%) !important;
+  border: 1px solid var(--bm-line) !important;
+}
+
+/* ── Cases hub ── */
+#main-window #boxes .bm-cases-head h3 {
+  font-size: 20px !important;
+}
+#main-window #boxes .bm-cases-head .boxes_top_p,
+#main-window #boxes p.boxes_top_p {
+  color: var(--bm-muted) !important;
+  font-family: var(--bm-font) !important;
+}
+#main-window #boxes .boxes_list a {
+  border-radius: var(--bm-r2) !important;
+  border: 1px solid var(--bm-line) !important;
+  background:
+    linear-gradient(165deg, rgba(26, 38, 56, 0.96) 0%, rgba(12, 18, 30, 0.98) 100%) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+}
+#main-window #boxes .boxes_list a:hover {
+  border-color: rgba(76, 141, 255, 0.42) !important;
+  background:
+    linear-gradient(165deg, rgba(32, 48, 72, 0.98) 0%, rgba(14, 22, 36, 0.98) 100%) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(76, 141, 255, 0.14) !important;
+  transform: translateY(-3px) !important;
+}
+#main-window #boxes .boxes_list a .img_block {
+  border-bottom: 1px solid var(--bm-line) !important;
+}
+#main-window #boxes .boxes_list a .img_block.bm-case-art {
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(76, 141, 255, 0.1) 0%, rgba(76, 141, 255, 0) 55%),
+    linear-gradient(160deg, #1a2740 0%, #0f1624 100%) !important;
+}
+#main-window #boxes .boxes_list a .img_block.bm-case-art--silver,
+#main-window #boxes .boxes_list a .img_block.bm-case-art--gold,
+#main-window #boxes .boxes_list a .img_block.bm-case-art--armor,
+#main-window #boxes .boxes_list a .img_block.bm-case-art--gun {
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(76, 141, 255, 0.1) 0%, rgba(76, 141, 255, 0) 55%),
+    linear-gradient(160deg, #1a2740 0%, #0f1624 100%) !important;
+}
+#main-window #boxes .boxes_list a p.name {
+  color: var(--bm-text2) !important;
+  font-family: var(--bm-font) !important;
+  font-weight: 600 !important;
+}
+#main-window #boxes .boxes_list a:hover p.name {
+  color: var(--bm-text) !important;
+}
+
+/* ── Case open: roulette + prizes ── */
+#main-window #boxes .rouletteblock {
+  border-radius: var(--bm-r) !important;
+  border: 1px solid var(--bm-line) !important;
+  background: rgba(10, 16, 28, 0.72) !important;
+  box-shadow: inset 0 0 0 1px rgba(76, 141, 255, 0.05) !important;
+}
+#main-window #boxes .Slots li,
+#main-window #boxes .possible_prizes ul li,
+#main-window #boxes #ArmorCasePrizesList li,
+#main-window #boxes #ArmorCaseRouletteSlots li {
+  border-radius: 8px !important;
+  border: 1px solid var(--bm-line) !important;
+  background: linear-gradient(160deg, #1c2a40 0%, #121b2c 100%) !important;
+}
+#main-window #boxes .Slots li.bm-slot-accent,
+#main-window #boxes #ArmorCaseRouletteSlots li.bm-slot-accent {
+  border-color: rgba(76, 141, 255, 0.35) !important;
+  background: linear-gradient(160deg, #243652 0%, #152238 100%) !important;
+}
+#main-window #boxes .mid_buts .left_buts,
+#main-window #boxes .mid_buts .right_buts {
+  background: transparent !important;
+}
+#main-window #boxes .possible_prizes > p {
+  font-family: var(--bm-font-display) !important;
+  font-weight: 700 !important;
+  color: var(--bm-text) !important;
+}
+#main-window #boxes .case-prize-cell .prize-label,
+#main-window #boxes .case-prize-hint .prize-label {
+  color: var(--bm-text) !important;
+  font-family: var(--bm-font) !important;
+}
+#main-window #boxes .case-fast-toggle__label {
+  color: var(--bm-muted) !important;
+  font-family: var(--bm-font) !important;
+}
+#main-window #boxes .bm-case-open-bar .case-dp-balance-label {
+  color: var(--bm-muted) !important;
+}
+#main-window #boxes .bm-case-open-bar .case-dp-balance-label b {
+  color: var(--bm-text) !important;
+}
+
+/* Win overlay */
+#main-window .bm-case-prize-overlay .info_block,
+#CasesPrizeWindow.bm-case-prize-overlay .info_block {
+  border-radius: var(--bm-r2) !important;
+  border: 1px solid var(--bm-line-soft) !important;
+  background: linear-gradient(165deg, #1a2740 0%, #0e1626 100%) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55) !important;
+}
+#CasesPrizeWindow.bm-case-prize-overlay .info_block a {
+  border-radius: 8px !important;
+  background: linear-gradient(180deg, var(--bm-accent-h) 0%, var(--bm-accent) 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+#CasesPrizeWindow.bm-case-prize-overlay .info_block a:hover {
+  background: linear-gradient(180deg, #7aafff 0%, var(--bm-accent-h) 100%) !important;
+}

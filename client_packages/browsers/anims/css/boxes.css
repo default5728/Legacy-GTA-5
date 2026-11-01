@@ -1,0 +1,350 @@
+#boxes p.boxes_top_p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  margin-top: 10px;
+}
+
+.boxes_list {
+  display: flex;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.boxes_list a {
+  display: block;
+  width: 280px;
+  height: 227px;
+  border: 1px solid #252635;
+  text-decoration: none;
+  margin-right: 32px;
+  margin-bottom: 32px;
+}
+
+
+.boxes_list a .img_block {
+  position: relative;
+  height: 167px;
+  /* width: 226.47px; */
+  border-bottom: 1px solid #252635;
+  display: flex;
+  justify-content: center;
+}
+
+.boxes_list a p.name {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  text-align: center;
+  margin-top: 17px;
+}
+
+.boxes_list a:hover, .boxes_list a:hover .img_block {
+  border-color: #006EFF;
+}
+
+.boxes_list a:hover p {
+  color: #fff;
+}
+
+#boxes a.back_boxes {
+  display: flex;
+  width: 258px;
+  height: 47px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #252635;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  margin-top: 23px;
+  margin-left: 20px;
+  margin-bottom: 25px;
+}
+
+#boxes a.back_boxes img {
+  margin-right: 10px;
+}
+
+#boxes a.back_boxes:hover {
+  border-color: #006EFF;
+  color: #fff;
+}
+
+#boxes a.back_boxes:hover img {
+  -webkit-filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
+}
+
+
+.SlotsWindow {
+  overflow: hidden;
+  position: relative;
+  width: 25000px;
+  height: 143px;
+  right: 0px;
+}
+
+.roulet-main_SlotsWindow {
+  overflow: hidden;
+  position: relative;
+  width: 25000px;
+  height: 88px;
+  right: 0px;
+}
+
+.rouletteblock {
+  position: relative;
+  margin: auto;
+  width: 1287px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border: 1px solid #252635;
+  padding-top: 11px;
+  padding-bottom: 9px;
+  padding-left: 8px;
+  padding-right: 10px;
+}
+
+.roulet-main_rouletteblock {
+  position: relative;
+  margin: auto;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.Slots {
+  position: relative;
+  /* margin-left: 230; */
+  display: inline-block;
+}
+
+.Slots li {
+  list-style: none;
+  display: inline-block;
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(40% 40% at 50% 50%, rgb(0 110 255 / 29%) 0%, #252635 100%);
+  margin-right: 10px;
+}
+
+.roulet-main_Slots {
+  position: relative;
+  display: inline-block;
+}
+
+.roulet-main_Slots li {
+  list-style: none;
+  display: inline-block;
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin-right: 2px;
+  color: #fff;
+}
+
+.arrowup {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+.roulet-main_arrowup {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+.possible_prizes {
+  margin-top: 48px;
+}
+
+.possible_prizes p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.possible_prizes ul li {
+  position: relative;
+  list-style: none;
+  display: inline-flex;
+  float: left;
+  width: 118px;
+  height: 118px;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(37, 38, 53, 0) 0%, #252635 100%);
+  margin-right: 10px;
+  margin-top: 7px;
+}
+
+.possible_prizes ul li img {
+  width: 100px;
+}
+
+#boxes .mid_buts {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+#boxes .mid_buts p {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+}
+
+#boxes .mid_buts a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 228px;
+  height: 48px;
+  background: #252635;
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  cursor: pointer;
+}
+
+#boxes .mid_buts a:hover {
+  background: #006EFF;
+  color: #fff;
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+}
+
+#boxes .mid_buts .left_buts {
+  margin-right: 64px;
+}
+
+#boxes .mid_buts .left_buts a {
+  background: #006EFF;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+#boxes .mid_buts .left_buts .custom-radio>span::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border: 1px solid #252635;
+  background-color: #252635;
+  border-radius: 0;
+  margin-right: 0.5em;
+  background-repeat: no-repeat;
+  background-position:  50% 50%;
+}
+
+#boxes .mid_buts .left_buts .custom-radio>input:not(:disabled):not(:checked)+span:hover::before {
+  border-color: #006EFF;
+}
+
+#boxes .mid_buts .left_buts .custom-radio>input:not(:disabled):active+span::before {
+  background-color: #252635;
+  border-color: #252635;
+}
+
+#boxes .mid_buts .left_buts .custom-radio>input:checked+span::before {
+  border: 1px solid #006EFF;
+  background-color: #252635;
+  background-image: url(../img/rectangle.svg);
+}
+
+#boxes .mid_buts .left_buts .custom-radio>span b {
+  font-weight: 500;
+  font-size: 12px;
+  color: #A1A3C2;
+}
+
+.drop_item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background: rgba(23, 24, 39, 0.8);
+}
+
+.drop_item .info_block {
+  top: 50%;
+  position: absolute;
+  z-index: 99;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.drop_item .info_block p {
+  font-weight: 500;
+  font-size: 24px;
+  color: #fff;
+}
+
+.drop_item .info_block a {
+  width: 228px;
+  height: 48px;
+  background: #006EFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.drop_item .info_block a:hover {
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+}
+
+.drop_item .info_block img {
+  width: 170px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.drop_item .info_block p.or_p {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.drop_item  .back_shadow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  height: 260px;
+  background: rgba(0, 110, 255, 0.5);
+  filter: blur(250px);
+}

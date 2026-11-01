@@ -1,0 +1,13 @@
+{
+  "auto_role_id": "1532464933361684702",
+  "request_counter": 11,
+  "helper_counter": 373,
+  "media_counter": 185,
+  "leader_counter": 209,
+  "spam_protection": false,
+  "spam_limit": 5,
+  "spam_timeframe": 10,
+  "media_request_form_counter": 35,
+  "media_report_form_counter": 46,
+  "media_report_counter": 10
+}

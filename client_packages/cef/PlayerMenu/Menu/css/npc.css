@@ -1,0 +1,81 @@
+.messages-window {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 101px;
+}
+
+.messages-window a.heading {
+  line-height: 45px;
+  display: block;
+  font-weight: 600;
+  font-size: 32px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.messages-window a.who {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  text-decoration: none;
+  letter-spacing: 0px;
+}
+
+
+.messages-window .text-block {
+  margin-top: 35px;
+  position: relative;
+  width: 780px;
+  padding: 24px 32px;
+  background: rgba(23, 24, 39, 0.6);
+  border-radius: 10px;
+}
+
+.messages-window .text-block p {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 27px;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0px;
+}
+
+.messages-icno {
+  position: absolute;
+  top: -28px;
+  right: -28px;
+}
+
+.polygon-img {
+  position: absolute;
+  top: -25px;
+  left: 5px;
+}
+
+.messages-window .list-but {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.messages-window .list-but a {
+  width: 250px;
+  height: 56px;
+  background: rgba(23, 24, 39, 0.6);
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  letter-spacing: 0px;
+}
+
+.messages-window .list-but a:hover {
+  background: #006EFF;
+}

@@ -1,0 +1,87 @@
+/* Вставить в <style> playermenu.html (или подключить отдельным файлом) */
+
+.playerMenu-setting-reticle-type-item {
+    width: 155px;
+    padding: 10px 15px;
+    background: rgba(22, 26, 48, 0.5);
+    border-radius: 8px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    color: #71A4DF;
+}
+.playerMenu-setting-reticle-type-item:hover {
+    background: rgba(22, 26, 48, 0.26);
+}
+.playerMenu-setting-reticle-type-item.active {
+    background: rgba(75, 144, 248, 0.21);
+}
+.playerMenu-setting-reticle-param-item-block {
+    padding: 10px 15px;
+    background: rgba(22, 26, 48, 0.5);
+    border-radius: 8px;
+}
+.playerMenu-setting-reticle-param-item-progress .rangeslider.rangeslider--horizontal {
+    height: 9px;
+}
+.playerMenu-setting-reticle-param-item-progress .rangeslider__fill {
+    height: 9px;
+}
+.playerMenu-setting-reticle-param-item-progress .rangeslider__handle {
+    width: 15px;
+    height: 15px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome {
+    background: transparent;
+    box-shadow: none;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-alpha-wrap {
+    margin-top: 10px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-controls {
+    display: flex;
+    align-items: center;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-hue-wrap {
+    margin-bottom: 0px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-body {
+    position: relative;
+    background: transparent;
+    margin-top: 5px;
+    padding: 0px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-toggle-btn {
+    display: none;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-fields-wrap {
+    padding-top: 10px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-field {
+    padding-left: 40px;
+    width: 95px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-editable-input {
+    background: #435069;
+    border: none;
+    border-radius: 6px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-input__input {
+    background: #435069;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+    border-radius: 6px;
+}
+.playerMenu-setting-reticle-param-item-color .vc-input__label {
+    display: none;
+}
+.playerMenu-setting-reticle-param-item-color .vc-chrome-color-wrap {
+    position: absolute;
+    bottom: -5px;
+}
+.playerMenu-setting-reticle-param-item-color-disable-a .vc-chrome-alpha-wrap {
+    display: none;
+}

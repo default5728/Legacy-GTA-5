@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>Moon DM — Phone</title>
+    <link rel="stylesheet" href="fonts/gilroy.css">
+    <link rel="stylesheet" href="phone.css?v=28">
+</head>
+<body>
+    <div id="phone" class="np-shell" :class="{ 'np-shell--closing': isClosing }" v-if="phoneVisible">
+        <div class="np-device">
+            <div class="np-btn-side np-btn-side--power" aria-hidden="true"></div>
+            <div class="np-btn-side np-btn-side--vol-up" aria-hidden="true"></div>
+            <div class="np-btn-side np-btn-side--vol-down" aria-hidden="true"></div>
+            <div class="np-screen">
+                <div class="np-wall" aria-hidden="true"></div>
+                <div class="np-wall-scrim" :class="{ 'np-wall-scrim--on': currentApp !== 'home' }" aria-hidden="true"></div>
+                <div class="np-island" aria-hidden="true"></div>
+                <div class="np-status">
+                    <span class="np-status__time">{{ time }}</span>
+                    <div class="np-status__right">
+                        <div class="np-signal" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                        <span class="np-status__lte">LTE</span>
+                        <div class="np-battery" aria-hidden="true"><span class="np-battery__fill"></span></div>
+                    </div>
+                </div>
+
+                <div class="np-content">
+                    <div class="np-content__stage">
+                        <transition :name="viewTransitionName" mode="out-in">
+                            <div class="np-home-stage" v-if="currentApp === 'home'" key="home">
+                                <div class="np-grid np-scroll-hidden">
+                                    <div class="np-app" v-for="(app, i) in homeApps" :key="app.id" @click="openApp(app.id)" :style="{ animationDelay: (i * 0.04) + 's' }">
+                                        <div class="np-app-icon" :class="'np-app-icon--' + app.id">
+                                            <img v-if="appIcon(app.id)" class="np-app-icon__img" :src="appIcon(app.id)" alt="">
+                                            <span v-else class="np-app-icon__txt">{{ app.short }}</span>
+                                        </div>
+                                        <span class="np-app-name">{{ app.name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="np-app-screen" v-else :key="'app-' + currentApp">
+                                <div class="np-app-header">
+                                    <h1 class="np-app-title">{{ appTitle }}</h1>
+                                </div>
+                                <div class="np-app-body" :class="{ 'np-app-body--brawl': currentApp === 'brawl', 'np-app-body--sheet': currentApp === 'cars', 'np-app-body--bank': currentApp === 'bank', 'np-app-body--moonvito': currentApp === 'moonvito' }">
+
+                            <!-- Авто -->
+                            <template v-if="currentApp === 'cars'">
+                                <div class="np-cars">
+                                    <input type="text" class="np-field" v-model="carSearch" placeholder="Поиск…">
+                                    <transition-group name="np-car" tag="div" class="np-car-list np-scroll-hidden" v-if="carsFiltered.length">
+                                        <div class="np-car-card" v-for="car in carsFiltered" :key="Object.keys(car)[0]">
+                                            <div class="np-car-card__row">
+                                                <p class="np-car-card__title">{{ Object.values(car)[0] }}</p>
+                                                <div class="np-car-card__thumb">
+                                                    <img :src="carImageSrc(car)" class="np-car-card__img" :alt="Object.values(car)[0]" @error="onCarImgError($event, car)">
+                                                </div>
+                                            </div>
+                                            <div class="np-car-card__actions">
+                                                <button type="button" class="np-btn" @click="carUncall(car)">Эвакуировать</button>
+                                                <button type="button" class="np-btn np-btn--primary" @click="carCall(car)">Доставить</button>
+                                            </div>
+                                        </div>
+                                    </transition-group>
+                                    <div class="np-empty np-anim-in" v-else-if="carSearch.trim()">Ничего не найдено</div>
+                                    <div class="np-empty np-anim-in" v-else>Нет транспорта</div>
+                                </div>
+                            </template>
+
+                            <!-- Бравл -->
+                            <template v-else-if="currentApp === 'brawl'">
+                                <div class="np-brawl">
+                                    <div class="np-brawl-body np-scroll-hidden">
+                                        <transition :name="brawlTransitionName" mode="out-in">
+                                            <div class="np-brawl-pane" :class="'np-brawl-pane--' + brawlScreen" :key="brawlScreen">
+                                                <template v-if="brawlScreen === 'hub'">
+                                                    <input v-model="brawlGateName" class="np-field np-anim-in" placeholder="Название канала" maxlength="28" autocomplete="off">
+                                                    <input v-model="brawlGatePwd" type="password" class="np-field np-anim-in" style="animation-delay:0.04s" placeholder="Пароль" autocomplete="off">
+                                                    <div class="np-row-btns np-anim-in" style="animation-delay:0.08s">
+                                                        <button type="button" class="np-btn np-btn--primary" @click="brawlGateCreate">Создать</button>
+                                                        <button type="button" class="np-btn" @click="brawlGateJoin">Войти</button>
+                                                    </div>
+                                                </template>
+
+                                                <template v-else-if="brawlScreen === 'channel' && brawlData">
+                                                    <div class="np-row-btns np-row-btns--compact np-anim-in">
+                                                        <button type="button" class="np-btn" v-if="brawlIsOwner" @click="brawlOpenSettings">Настройки</button>
+                                                        <button type="button" class="np-btn np-btn--danger" @click="brawlDoLeave">Выйти</button>
+                                                    </div>
+                                                    <input v-model="brawlSearch" class="np-field np-anim-in" style="animation-delay:0.03s" placeholder="Поиск…" autocomplete="off">
+                                                    <button type="button" class="np-brawl-invite np-anim-in" style="animation-delay:0.06s" @click="brawlCopyInvite">
+                                                        {{ brawlData.invite }}
+                                                    </button>
+                                                    <div class="np-brawl-vol np-anim-in" style="animation-delay:0.12s">
+                                                        <div class="np-brawl-vol__head">
+                                                            <span>Громкость</span>
+                                                            <span>{{ brawlListenGlobal }}%</span>
+                                                        </div>
+                                                        <input
+                                                            type="range"
+                                                            class="np-range"
+                                                            min="0"
+                                                            max="100"
+                                                            v-model.number="brawlListenGlobal"
+                                                            @input="brawlOnGlobalVolInput(brawlListenGlobal)"
+                                                        >
+                                                    </div>
+                                                    <transition-group name="np-brawl-member" tag="div" class="np-brawl-members">
+                                                        <div v-for="(m, idx) in brawlMembersFiltered" :key="m.static" class="np-brawl-member" :class="{ 'np-brawl-member--live': brawlMemberSpeaking(m) }" :style="{ animationDelay: (idx * 0.03) + 's' }">
+                                                            <div class="np-brawl-member__head">
+                                                                <div class="np-brawl-member__name">
+                                                                    <span v-if="brawlMemberSpeaking(m)" class="np-brawl-member__dot" aria-hidden="true"></span>
+                                                                    <span class="np-brawl-member__login">{{ m.login }}</span>
+                                                                    <span v-if="m.isOwner" class="np-brawl-member__tag">влад</span>
+                                                                    <span v-if="m.assistant && !m.isOwner" class="np-brawl-member__tag">мод</span>
+                                                                    <span v-if="m.muted" class="np-brawl-member__tag np-brawl-member__tag--muted">мут</span>
+                                                                </div>
+                                                                <span class="np-brawl-member__vol">{{ m.volume }}%</span>
+                                                            </div>
+                                                            <input
+                                                                type="range"
+                                                                class="np-range"
+                                                                min="0"
+                                                                max="125"
+                                                                v-model.number="m.volume"
+                                                                @input="brawlMemberVol(m.static, m.volume)"
+                                                            >
+                                                            <div class="np-brawl-member__actions" v-if="brawlIsMod && Number(m.static) !== Number(brawlData.ownerStatic)">
+                                                                <button type="button" class="np-btn np-btn--xs" :class="{ 'np-btn--active': m.muted }" @click="brawlMemberMute(m.static)">{{ m.muted ? 'Размут' : 'Мут' }}</button>
+                                                                <button type="button" class="np-btn np-btn--xs" @click="brawlMemberKick(m.static)">Кик</button>
+                                                                <button type="button" class="np-btn np-btn--xs" v-if="brawlIsOwner" :class="{ 'np-btn--active': m.assistant }" @click="brawlMemberAssist(m.static)">Мод</button>
+                                                                <button type="button" class="np-btn np-btn--xs" v-if="brawlIsMod" :class="brawlMarkBtnClass(m)" @click="brawlMemberMarkToggle(m.static)">Метки</button>
+                                                            </div>
+                                                        </div>
+                                                    </transition-group>
+                                                    <div class="np-empty" v-if="!brawlMembersFiltered.length" key="empty">Никого не найдено</div>
+                                                </template>
+
+                                                <template v-else-if="brawlScreen === 'settings' && brawlData && brawlIsOwner">
+                                                    <div class="np-toggle-group np-anim-in" style="animation-delay:0.02s">
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Защита паролем</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.encrypted" @change="brawlToggle('encrypted', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <input v-model="brawlPwdChannel" type="password" class="np-field np-anim-in" style="animation-delay:0.05s" placeholder="Новый пароль">
+                                                    <button type="button" class="np-btn np-btn--primary np-btn--block np-anim-in" style="animation-delay:0.08s" @click="brawlApplyPwd">Сохранить пароль</button>
+                                                    <div class="np-toggle-group np-anim-in" style="animation-delay:0.11s">
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Участники на карте</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.mapVisible" @change="brawlToggle('mapVisible', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Голос только владельцам</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.ownersOnly" @change="brawlToggle('ownersOnly', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Закрыть вход</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.noNewJoins" @change="brawlToggle('noNewJoins', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Метки для всех</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.marksAll" @change="brawlToggle('marksAll', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                        <label class="np-toggle">
+                                                            <span class="np-toggle__label">Не затирать метки</span>
+                                                            <span class="np-switch">
+                                                                <input type="checkbox" class="np-switch__input" :checked="brawlData.replaceMarks" @change="brawlToggle('replaceMarks', $event)">
+                                                                <span class="np-switch__ui" aria-hidden="true"></span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <input
+                                                        type="text"
+                                                        inputmode="numeric"
+                                                        pattern="[0-9]*"
+                                                        autocomplete="off"
+                                                        class="np-field np-field--num np-anim-in"
+                                                        style="animation-delay:0.26s"
+                                                        placeholder="Макс. участников (0 — без лимита)"
+                                                        :value="brawlMaxInput"
+                                                        @input="brawlMaxDigits"
+                                                        @paste="brawlMaxPaste"
+                                                    >
+                                                    <button type="button" class="np-btn np-btn--primary np-btn--block np-anim-in" style="animation-delay:0.29s" @click="brawlApplyMax">Применить лимит</button>
+                                                </template>
+                                            </div>
+                                        </transition>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Банк -->
+                            <template v-else-if="currentApp === 'bank'">
+                                <div class="np-bank">
+                                    <div class="np-bank-balance np-anim-in">
+                                        <span class="np-bank-balance__label">Баланс</span>
+                                        <div class="np-bank-balance__value">${{ fmtMoney(bankData.cash) }}</div>
+                                    </div>
+
+                                    <div class="np-bank-segments np-anim-in" style="animation-delay:0.05s" role="tablist">
+                                        <button type="button" role="tab" :class="{ active: bankData.mode === 'transfer' }" @click="bankData.mode = 'transfer'">Перевод</button>
+                                        <button type="button" role="tab" :class="{ active: bankData.mode === 'epsilon' }" @click="bankData.mode = 'epsilon'">Epsilon</button>
+                                        <button type="button" role="tab" :class="{ active: bankData.mode === 'family' }" @click="bankData.mode = 'family'" :disabled="!bankData.hasFamily">Семья</button>
+                                        <button type="button" role="tab" :class="{ active: bankData.mode === 'fraction' }" @click="bankData.mode = 'fraction'" :disabled="!bankData.hasFraction">Фракция</button>
+                                    </div>
+
+                                    <div class="np-bank-sheet np-scroll-hidden">
+                                        <transition name="np-fade-slide" mode="out-in">
+                                            <div class="np-bank-panel" :key="bankData.mode">
+                                        <template v-if="bankData.mode === 'transfer'">
+                                            <div class="np-bank-field">
+                                                <label class="np-bank-field__label">Статик</label>
+                                                <input class="np-bank-field__input" v-model="bankData.transferStatic" placeholder="ID игрока" inputmode="numeric" pattern="[0-9]*" autocomplete="off" @input="bankInputDigits('transferStatic', $event)" @paste="bankPasteDigits('transferStatic', $event)">
+                                            </div>
+                                            <div class="np-bank-field">
+                                                <label class="np-bank-field__label">Сумма</label>
+                                                <input class="np-bank-field__input np-bank-field__input--amount" v-model="bankData.transferAmount" placeholder="0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" @input="bankInputDigits('transferAmount', $event)" @paste="bankPasteDigits('transferAmount', $event)">
+                                            </div>
+                                            <button type="button" class="np-bank-submit" @click="bankDoTransfer">Перевести</button>
+                                        </template>
+
+                                        <template v-else-if="bankData.mode === 'family'">
+                                            <p class="np-bank-note">Счёт семьи «{{ bankData.familyName }}»</p>
+                                            <div class="np-bank-field">
+                                                <label class="np-bank-field__label">Сумма</label>
+                                                <input class="np-bank-field__input np-bank-field__input--amount" v-model="bankData.familyAmount" placeholder="0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" @input="bankInputDigits('familyAmount', $event)" @paste="bankPasteDigits('familyAmount', $event)">
+                                            </div>
+                                            <button type="button" class="np-bank-submit" @click="bankDoFamilyDeposit">Пополнить</button>
+                                        </template>
+
+                                        <template v-else-if="bankData.mode === 'fraction'">
+                                            <p class="np-bank-note">Фракция #{{ bankData.fractionId }}</p>
+                                            <div class="np-bank-field">
+                                                <label class="np-bank-field__label">Сумма</label>
+                                                <input class="np-bank-field__input np-bank-field__input--amount" v-model="bankData.fractionAmount" placeholder="0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" @input="bankInputDigits('fractionAmount', $event)" @paste="bankPasteDigits('fractionAmount', $event)">
+                                            </div>
+                                            <button type="button" class="np-bank-submit" @click="bankDoFractionDeposit">Пополнить</button>
+                                        </template>
+
+                                        <template v-else-if="bankData.mode === 'epsilon'">
+                                            <div class="np-bank-epsilon">
+                                                <div class="np-bank-epsilon__head">
+                                                    <span>Накопление</span>
+                                                    <span>{{ fmtMoney(bankData.epsilonDonated) }} / {{ fmtMoney(bankData.epsilonGoal) }}$</span>
+                                                </div>
+                                                <div class="np-bank-epsilon__track">
+                                                    <div class="np-bank-epsilon__fill" :style="{ width: bankEpsilonProgress + '%' }"></div>
+                                                </div>
+                                                <p class="np-bank-epsilon__badge" v-if="bankData.epsilonUnlocked">Epsilon разблокирован</p>
+                                            </div>
+                                            <div class="np-bank-field">
+                                                <label class="np-bank-field__label">Сумма</label>
+                                                <input class="np-bank-field__input np-bank-field__input--amount" v-model="bankData.epsilonAmount" placeholder="0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" @input="bankInputDigits('epsilonAmount', $event)" @paste="bankPasteDigits('epsilonAmount', $event)">
+                                            </div>
+                                            <button type="button" class="np-bank-submit" @click="bankDoEpsilonDeposit">Пополнить Epsilon</button>
+                                        </template>
+                                            </div>
+                                        </transition>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- MoonVito открывается большим GUI -->
+                            <template v-else-if="currentApp === 'moonvito'">
+                                <div class="np-moonvito">
+                                    <div class="np-empty np-anim-in">Открытие MoonVito…</div>
+                                </div>
+                            </template>
+
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+
+                    <div class="np-dock" :class="{ 'np-dock--hidden': currentApp !== 'home' }" :aria-hidden="currentApp !== 'home'">
+                        <div class="np-dock-inner">
+                            <div class="np-app np-app--dock" v-for="app in dockApps" :key="'dock-' + app.id" @click="openApp(app.id)" :title="app.name">
+                                <div class="np-app-icon np-app-icon--dock" :class="'np-app-icon--' + app.id">
+                                    <img v-if="appIcon(app.id)" class="np-app-icon__img" :src="appIcon(app.id)" alt="">
+                                    <span v-else class="np-app-icon__txt">{{ app.short }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="np-home-bar" :class="{ 'np-home-bar--hidden': currentApp === 'home' }" @click="goHome" aria-label="Домой"></div>
+            </div>
+        </div>
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="main.js?v=28"></script>
+</body>
+</html>

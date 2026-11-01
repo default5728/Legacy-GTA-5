@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arena</title>
+<style>
+@font-face{font-family:Montserrat;src:url('package://browsers/hud/fonts/Montserrat-Regular.ttf') format('truetype');font-weight:400}
+@font-face{font-family:Montserrat;src:url('package://browsers/hud/fonts/Montserrat-Medium.ttf') format('truetype');font-weight:500}
+@font-face{font-family:Montserrat;src:url('package://browsers/hud/fonts/Montserrat-SemiBold.ttf') format('truetype');font-weight:600}
+@font-face{font-family:Montserrat;src:url('package://browsers/hud/fonts/Montserrat-Bold.ttf') format('truetype');font-weight:700}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-family:Montserrat,sans-serif;color:#e8e8e8;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
+input.input,textarea{-webkit-user-select:text;user-select:text}
+::selection,::-moz-selection{background:transparent;color:inherit}
+:root{--panel:#3a3a40;--panel-head:#2e2e33;--panel-left:#333338;--panel-right:#2a2a2f;--input:#252528;--line:rgba(255,255,255,.06);--muted:#7a7a82;--purple:#a39ab8;--orange:#ff6619;--text:#f2f2f4}
+#app{display:none;width:100%;height:100%;background:rgba(0,0,0,.52);align-items:center;justify-content:center}
+#app.show{display:flex}
+.wrap{
+  width:min(1140px,94vw);height:min(680px,84vh);
+  background:var(--panel);border-radius:10px;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.65)
+}
+.wrap.create-mode{width:min(1180px,96vw);height:min(720px,88vh)}
+.head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--panel-head);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;letter-spacing:.07em;color:#b4b4ba;text-transform:uppercase}
+.brand-ico{width:28px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:3px}
+.brand-bar{width:4px;height:18px;background:#8a8a92;border-radius:1px}
+.brand-bar:nth-child(2){height:14px;opacity:.85}
+.brand-bar:nth-child(3){height:20px;opacity:.95}
+.brand-bar:nth-child(4){height:12px;opacity:.75}
+.brand em{font-style:normal;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:.02em;margin-left:8px;font-size:13px}
+.head-actions{display:flex;gap:10px;align-items:center}
+.btn{border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;border-radius:4px;padding:10px 20px;color:#fff;background:#45454c;transition:filter .12s}
+.btn:hover{filter:brightness(1.07)}
+.btn-orange{background:var(--orange);color:#fff;padding:10px 22px}
+.btn-back{background:#3d3d44;color:#e0e0e4;border:1px solid rgba(255,255,255,.07);padding:10px 18px;font-weight:500;font-size:12px}
+.btn-x{width:36px;height:36px;padding:0;background:#3d3d44;border:1px solid rgba(255,255,255,.07);border-radius:4px;font-size:20px;line-height:34px;text-align:center;color:#aaa;cursor:pointer}
+.body{flex:1;display:flex;min-height:0;background:var(--panel)}
+.col{display:flex;flex-direction:column;min-height:0}
+.col-l{flex:1.12;border-right:1px solid var(--line);padding:14px 16px;background:var(--panel-left)}
+.col-r{flex:1;padding:18px 22px;background:var(--panel-right);position:relative}
+.search{display:flex;gap:10px;margin-bottom:12px;align-items:center}
+.search-ico{color:var(--muted);font-size:19px;flex-shrink:0;padding-left:2px;line-height:1;display:flex;align-items:center}
+.input{flex:1;background:var(--input);border:1px solid transparent;border-radius:4px;color:var(--text);padding:11px 12px;font:inherit;font-size:13px;font-weight:500;outline:none}
+.input:focus{border-color:rgba(255,102,25,.35)}
+.input::placeholder{color:#5e5e66}
+.input[type="number"]{-moz-appearance:textfield;appearance:textfield}
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.tabs{display:flex;gap:0;margin-bottom:12px;border-radius:4px;overflow:hidden}
+.tab{flex:1;text-align:center;padding:11px 8px;background:#3d3d44;cursor:pointer;color:var(--muted);font-size:13px;font-weight:600}
+.tab.active{background:var(--orange);color:#fff}
+.tab.dim{opacity:.55;cursor:not-allowed}
+.table-head,.row{display:grid;grid-template-columns:1.55fr 1.15fr 1.05fr .9fr .75fr;gap:8px;align-items:center;padding:10px 8px}
+.table-head{color:var(--muted);font-size:12px;font-weight:500;padding-bottom:6px}
+.row{border-top:1px solid var(--line);cursor:pointer;font-size:13px;color:#ddd;transition:background .1s}
+.row:hover,.row.active{background:rgba(255,102,25,.11)}
+.row-name{display:flex;align-items:center;gap:8px;color:#ececec;font-weight:500}
+.gun{width:17px;height:17px;opacity:.82;flex-shrink:0;color:#c8c8ce}
+.lock{color:var(--orange);margin-right:4px;font-size:12px}
+.scroll{overflow:auto;flex:1;padding-right:4px}
+.scroll::-webkit-scrollbar{width:6px}
+.scroll::-webkit-scrollbar-thumb{background:#4a4a52;border-radius:4px}
+.scroll::-webkit-scrollbar-track{background:transparent}
+.muted{color:var(--muted)}
+.cnt b{color:#fff;font-weight:600}
+.h1{font-size:22px;color:#fff;margin-bottom:6px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;display:flex;align-items:center;gap:10px;line-height:1.2}
+.h2{font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:500}
+.stats{display:flex;gap:28px;margin-bottom:18px;color:var(--muted);font-size:12px;font-weight:500}
+.stats b{display:block;color:#fff;font-size:16px;font-weight:600;margin-top:4px}
+.settings-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.field .input,.select-fake{width:100%}
+.select-wrap{position:relative}
+.select-fake{
+  background:var(--input);border:1px solid transparent;border-radius:4px;color:#fff;
+  padding:11px 12px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center
+}
+.select-fake:after{content:'▾';color:var(--muted);font-size:12px;margin-left:8px}
+.dd{
+  position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:8;
+  background:#323238;border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  box-shadow:0 10px 28px rgba(0,0,0,.5);max-height:220px;overflow-y:auto
+}
+.dd-item{padding:11px 12px;font-size:13px;cursor:pointer;color:#ddd;display:flex;justify-content:space-between}
+.dd-item:hover{background:rgba(255,102,25,.14)}
+.dd-item.on{color:#fff;background:rgba(255,102,25,.22)}
+.dd-item .chk{color:var(--orange);font-weight:700}
+.footer{margin-top:auto;padding-top:12px}
+.members{margin-top:8px;overflow:auto;flex:1}
+.member{padding:7px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px}
+.room-body{min-height:0}
+.room-teams{gap:12px;padding:16px 18px!important;flex-direction:column}
+.team-block{flex:1;display:flex;flex-direction:column;min-height:0;background:rgba(0,0,0,.12);border-radius:6px;padding:12px 14px;max-height:45%;position:relative}
+.team-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;min-height:28px}
+.team-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;line-height:1.2;padding-top:2px}
+.team-list{flex:1;overflow:auto;min-height:120px}
+.team-row{display:flex;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px;color:#e8e8ec}
+.team-row:first-child{border-top:none;padding-top:0}
+.team-row-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.team-switch{
+  flex-shrink:0;width:26px;height:26px;border:none;border-radius:4px;cursor:pointer;
+  background:var(--orange);color:#fff;font-size:17px;font-weight:600;line-height:26px;padding:0;
+  margin-top:-4px;margin-right:-2px
+}
+.team-switch:hover{filter:brightness(1.08)}
+.team-switch.on{box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.room-side{display:flex;flex-direction:column;min-height:0}
+.room-side .footer{margin-top:auto;padding-top:16px}
+.room-leave{align-self:flex-start;margin-bottom:10px}
+.modal{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:10;border-radius:12px}
+.modal-box{width:300px;background:#2a2a30;border-radius:10px;padding:18px}
+.modal-box h3{margin-bottom:10px;color:#fff;font-size:14px}
+.empty-r{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#6e6e76;font-size:15px;font-weight:500;pointer-events:none}
+.list-body{flex:1;display:flex;flex-direction:column;min-height:0;padding:16px 20px 18px}
+#hud{display:none;position:fixed;right:16px;top:16%;width:210px;pointer-events:none;z-index:20}
+#hud.show{display:block}
+.hud-card{background:rgba(20,20,24,.82);border-radius:8px;padding:11px 12px;border:1px solid rgba(255,255,255,.06)}
+.hud-title{font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:600}
+.hud-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0;color:#eee;font-weight:500}
+.hud-row .p{color:var(--orange);min-width:16px;font-weight:600}
+#results{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:30;align-items:center;justify-content:center}
+#results.show{display:flex}
+.res-box{width:min(480px,84vw);background:rgba(36,36,40,.92);border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.res-head{padding:14px 16px;background:rgba(20,20,24,.95);display:flex;justify-content:space-between;align-items:center}
+.res-head h2{color:#fff;font-size:15px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.res-x{background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer}
+.res-cols{display:grid;grid-template-columns:1.6fr .55fr .55fr .7fr .8fr;gap:6px;padding:10px 16px;color:#fff;font-size:12px;font-weight:600;border-bottom:1px solid var(--line)}
+.res-row{display:grid;grid-template-columns:1.6fr .55fr .55fr .7fr .8fr;gap:6px;padding:10px 16px;font-size:13px;color:#fff}
+.res-row:nth-child(odd){background:rgba(255,255,255,.04)}
+.res-row:nth-child(even){background:rgba(0,0,0,.12)}
+.res-foot{padding:14px 16px}
+.freeze{display:none;position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:25;font-size:44px;font-weight:700;color:#fff;text-shadow:0 2px 14px #000}
+.freeze.show{display:block}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="wrap" :class="{'create-mode': view==='create' || view==='room'}">
+    <div class="head">
+      <div class="brand">
+        <div class="brand-ico">
+          <span class="brand-bar"></span><span class="brand-bar"></span><span class="brand-bar"></span><span class="brand-bar"></span>
+        </div>
+        MAZE BANK ARENA<em v-if="view!=='list'">// {{ viewTitle }}</em>
+      </div>
+      <div class="head-actions">
+        <button class="btn btn-orange" v-if="view==='list'" @click="goCreate">Создать игру</button>
+        <button class="btn btn-back" v-if="view!=='list'" @click="backList">← Вернуться к списку лобби</button>
+        <button class="btn-x" @click="close">×</button>
+      </div>
+    </div>
+
+    <div class="body list-body" v-if="view==='list'">
+      <div class="col" style="flex:1;padding:0">
+        <div class="search">
+          <span class="search-ico">⌕</span>
+          <input class="input" v-model="search" placeholder="Поиск игрового лобби...">
+        </div>
+        <div class="table-head">
+          <div>Название</div><div>Игровой режим</div><div>Хост</div><div>Участники</div><div>Взнос</div>
+        </div>
+        <div class="scroll">
+          <div class="row" v-for="l in filteredLobbies" :key="l.id" @click="tryJoin(l)">
+            <div class="row-name">
+              <svg class="gun" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h11l3 4v2h-2l-1 5H9l-1-5H5V9l2-4zm2.2 2l-.8 2h8.2l-.8-2H9.2zM10 14h5l.4 2h-5.8L10 14z"/></svg>
+              {{ l.name }}
+            </div>
+            <div><span class="lock" v-if="l.hasPassword">🔒</span>Командный DM</div>
+            <div class="muted">{{ l.hostName }}</div>
+            <div class="cnt"><b>{{ l.membersCount }}</b> <span class="muted">/ {{ l.membersMax }}</span></div>
+            <div>{{ l.fee > 0 ? ('$' + formatNum(l.fee)) : '—' }}</div>
+          </div>
+          <div class="muted" style="padding:18px;font-size:12px" v-if="!filteredLobbies.length">Нет активных лобби</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body" v-else-if="view==='create'">
+      <div class="col col-l">
+        <div class="tabs">
+          <div class="tab" :class="{active: createMapTab==='dm'}" @click="setCreateMapTab('dm')">DM</div>
+          <div class="tab" :class="{active: createMapTab==='family'}" @click="setCreateMapTab('family')">Война семей</div>
+        </div>
+        <div class="table-head" style="grid-template-columns:2fr .8fr 1fr">
+          <div>Название</div><div>Команды</div><div>Участники</div>
+        </div>
+        <div class="scroll">
+          <div class="row" style="grid-template-columns:2fr .8fr 1fr" v-for="m in filteredCreateMaps" :key="m.id"
+               :class="{active: create.mapId===m.id}" @click="pickMap(m.id)">
+            <div class="row-name">
+              <svg class="gun" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h11l3 4v2h-2l-1 5H9l-1-5H5V9l2-4zm2.2 2l-.8 2h8.2l-.8-2H9.2zM10 14h5l.4 2h-5.8L10 14z"/></svg>
+              {{ m.name }}
+            </div>
+            <div>2</div>
+            <div>2 - {{ m.membersMax }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-r">
+        <template v-if="create.mapId==null">
+          <div class="empty-r">Выберите режим</div>
+        </template>
+        <template v-else>
+          <div class="h1">
+            <svg class="gun" style="width:22px;height:22px" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h11l3 4v2h-2l-1 5H9l-1-5H5V9l2-4zm2.2 2l-.8 2h8.2l-.8-2H9.2zM10 14h5l.4 2h-5.8L10 14z"/></svg>
+            {{ selectedMapName }}
+          </div>
+          <div class="stats">
+            <div>Раунды<b>8</b></div>
+            <div>Кол-во игроков<b>2 - {{ selectedMapMax }}</b></div>
+            <div>Команд<b>2</b></div>
+          </div>
+          <div class="settings-title">Настройки режима</div>
+          <div class="field">
+            <input class="input" v-model="create.name" maxlength="32" placeholder="Введите название лобби">
+          </div>
+          <div class="field">
+            <div class="select-wrap">
+              <div class="select-fake" @click="weaponOpen=!weaponOpen">Оружие - {{ selectedWeaponLabel }}</div>
+              <div class="dd" v-if="weaponOpen">
+                <div class="dd-item" v-for="w in weapons" :key="w.id" :class="{on: create.weaponId===w.id}" @click="pickWeapon(w.id)">
+                  <span>{{ w.label }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <input class="input" v-model="create.fee" type="text" inputmode="numeric" maxlength="9" placeholder="Взнос в призовой фонд, $" @input="onFeeInput">
+          </div>
+          <div class="field">
+            <input class="input" v-model="create.password" maxlength="24" placeholder="Пароль для входа">
+          </div>
+          <div class="footer">
+            <button class="btn btn-orange" style="width:100%;padding:13px;font-size:14px" @click="doCreate">Создать лобби</button>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <div class="body room-body" v-else-if="view==='room' && myLobby">
+      <div class="col col-l room-teams">
+        <div class="team-block">
+          <div class="team-head">
+            <div class="team-title">Команда #1</div>
+            <button type="button" class="team-switch" :class="{on: myLobby.myTeam===1}" @click="switchTeam(1)" title="Вступить в команду #1">+</button>
+          </div>
+          <div class="team-list">
+            <div class="team-row" v-for="m in team1Members" :key="'t1-'+m.static">
+              <span class="team-row-name">{{ m.name }}</span>
+            </div>
+            <div class="muted" style="font-size:12px;padding:8px 0" v-if="!team1Members.length">—</div>
+          </div>
+        </div>
+        <div class="team-block">
+          <div class="team-head">
+            <div class="team-title">Команда #2</div>
+            <button type="button" class="team-switch" :class="{on: myLobby.myTeam===2}" @click="switchTeam(2)" title="Вступить в команду #2">+</button>
+          </div>
+          <div class="team-list">
+            <div class="team-row" v-for="m in team2Members" :key="'t2-'+m.static">
+              <span class="team-row-name">{{ m.name }}</span>
+            </div>
+            <div class="muted" style="font-size:12px;padding:8px 0" v-if="!team2Members.length">—</div>
+          </div>
+        </div>
+        <button class="btn room-leave" @click="leaveRoom">Выйти из лобби</button>
+      </div>
+      <div class="col col-r room-side">
+        <div class="h1">{{ myLobby.name }}</div>
+        <div class="h2">{{ myLobby.mapName }} · {{ myLobby.weaponLabel }}</div>
+        <div class="stats">
+          <div>Игроки<b>{{ myLobby.membersCount }} / {{ myLobby.membersMax }}</b></div>
+          <div>Взнос<b>{{ myLobby.fee > 0 ? ('$' + formatNum(myLobby.fee)) : '—' }}</b></div>
+          <div>Хост<b>{{ myLobby.hostName }}</b></div>
+        </div>
+        <div class="footer">
+          <button class="btn btn-orange" style="width:100%;padding:13px;font-size:14px" v-if="myLobby.isHost" @click="startGame">Начать</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" v-if="joinModal" @click.self="joinModal=null">
+      <div class="modal-box">
+        <h3>Пароль лобби</h3>
+        <input class="input" v-model="joinPass" placeholder="Введите пароль" @keyup.enter="confirmJoin">
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" style="flex:1" @click="joinModal=null">Отмена</button>
+          <button class="btn btn-orange" style="flex:1" @click="confirmJoin">Войти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="hud">
+  <div class="hud-card">
+    <div class="hud-title">Раунд <span id="hudRound">1</span>/<span id="hudRounds">8</span></div>
+    <div id="hudRows"></div>
+  </div>
+</div>
+<div class="freeze" id="freeze">5</div>
+<div id="results">
+  <div class="res-box">
+    <div class="res-head">
+      <h2>Итоги матча</h2>
+      <button class="res-x" onclick="arenaUi.closeResults()">×</button>
+    </div>
+    <div class="res-cols">
+      <div>Имя</div><div>💀</div><div>🎯</div><div>⭐</div><div>$</div>
+    </div>
+    <div id="resRows"></div>
+    <div class="res-foot">
+      <button class="btn btn-orange" style="width:100%" onclick="arenaUi.closeResults()">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script src="package://Lib/js/vue.js?v=2"></script>
+<script>
+document.addEventListener('selectstart',function(e){
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
+  e.preventDefault();
+},true);
+function trigger(name){
+  var args=[].slice.call(arguments,1);
+  try{
+    if(typeof mp!=='undefined'&&mp.trigger){
+      if(args.length) mp.trigger.apply(mp,[name].concat(args));
+      else mp.trigger(name);
+    }
+  }catch(e){}
+}
+var app=new Vue({
+  el:'#app',
+  data:function(){
+    return{
+      view:'list',
+      search:'',
+      lobbies:[],
+      maps:[],
+      weapons:[],
+      myLobby:null,
+      create:{name:'',password:'',mapId:null,weaponId:'specialcarbine',fee:''},
+      createMapTab:'dm',
+      weaponOpen:false,
+      joinModal:null,
+      joinPass:'',
+      tick:0
+    };
+  },
+  computed:{
+    viewTitle:function(){
+      if(this.view==='create') return 'Создание лобби';
+      if(this.view==='room') return 'Лобби';
+      return '';
+    },
+    filteredLobbies:function(){
+      var q=(this.search||'').toLowerCase().trim();
+      if(!q) return this.lobbies;
+      return this.lobbies.filter(function(l){
+        return (l.name||'').toLowerCase().indexOf(q)>=0||(l.hostName||'').toLowerCase().indexOf(q)>=0;
+      });
+    },
+    filteredCreateMaps:function(){
+      var cat=this.createMapTab;
+      return (this.maps||[]).filter(function(m){ return m.category===cat; });
+    },
+    selectedMapName:function(){
+      var m=this.maps.find(function(x){return x.id===this.create.mapId;}.bind(this));
+      return m?m.name:'';
+    },
+    selectedMapMax:function(){
+      var m=this.maps.find(function(x){return x.id===this.create.mapId;}.bind(this));
+      return m?m.membersMax:20;
+    },
+    selectedWeaponLabel:function(){
+      var w=this.weapons.find(function(x){return x.id===this.create.weaponId;}.bind(this));
+      return w?w.label:'Special Rifle';
+    },
+    team1Members:function(){
+      if(!this.myLobby||!this.myLobby.members) return [];
+      return this.myLobby.members.filter(function(m){ return Number(m.team)===1; });
+    },
+    team2Members:function(){
+      if(!this.myLobby||!this.myLobby.members) return [];
+      return this.myLobby.members.filter(function(m){ return Number(m.team)===2; });
+    }
+  },
+  methods:{
+    formatNum:function(n){
+      try{return Number(n).toLocaleString('ru-RU');}catch(e){return String(n);}
+    },
+    pickMap:function(id){ this.create.mapId=id; this.weaponOpen=false; },
+    setCreateMapTab:function(tab){
+      this.createMapTab=tab;
+      this.weaponOpen=false;
+      var m=this.maps.find(function(x){ return x.id===this.create.mapId; }.bind(this));
+      if(!m||m.category!==tab) this.create.mapId=null;
+    },
+    pickWeapon:function(id){ this.create.weaponId=id; this.weaponOpen=false; },
+    onFeeInput:function(){
+      var raw=String(this.create.fee||'').replace(/\D/g,'');
+      if(raw.length>9) raw=raw.slice(0,9);
+      this.create.fee=raw;
+    },
+    goCreate:function(){ this.view='create'; this.createMapTab='dm'; this.create.mapId=null; this.weaponOpen=false; },
+    backList:function(){ this.weaponOpen=false; trigger('arena:list:CLIENT'); this.view='list'; },
+    close:function(){ trigger('arena:close:CLIENT'); },
+    doCreate:function(){
+      if(this.create.mapId==null) return;
+      trigger('arena:create:CLIENT', JSON.stringify({
+        name:this.create.name,
+        password:this.create.password,
+        mapId:this.create.mapId,
+        weaponId:this.create.weaponId,
+        fee:parseInt(this.create.fee,10)||0,
+        membersMax:20
+      }));
+    },
+    tryJoin:function(l){
+      if(l.hasPassword){ this.joinModal=l; this.joinPass=''; return; }
+      trigger('arena:join:CLIENT', String(l.id), '');
+    },
+    confirmJoin:function(){
+      if(!this.joinModal) return;
+      trigger('arena:join:CLIENT', String(this.joinModal.id), this.joinPass||'');
+      this.joinModal=null;
+    },
+    leaveRoom:function(){ trigger('arena:leave:CLIENT'); },
+    startGame:function(){ trigger('arena:start:CLIENT'); },
+    isMe:function(m){
+      if(!this.myLobby||!m) return false;
+      return Number(m.static)===Number(this.myLobby.myStatic);
+    },
+    switchTeam:function(team){
+      trigger('arena:team:CLIENT', String(team));
+    },
+    applySync:function(payload){
+      try{
+        var d=typeof payload==='string'?JSON.parse(payload):payload;
+        if(!d) return;
+        this.lobbies=d.lobbies||[];
+        this.maps=d.maps||this.maps;
+        this.weapons=d.weapons||this.weapons;
+        this.myLobby=d.myLobby||null;
+        if(d.view==='room') this.view='room';
+        else if(d.view==='list') this.view='list';
+        else if(d.view==='ingame'){ document.getElementById('app').classList.remove('show'); }
+        if(this.weapons[0]&&!this.create.weaponId) this.create.weaponId=this.weapons[0].id;
+      }catch(e){}
+    }
+  },
+  mounted:function(){
+    var self=this;
+    setInterval(function(){
+      if(self.myLobby&&self.myLobby.startInMs>0){
+        self.myLobby.startInMs=Math.max(0,self.myLobby.startInMs-250);
+        if(self.myLobby.startInMs===0) self.myLobby.canStart=true;
+        self.tick++;
+      }
+    },250);
+  }
+});
+
+window.arenaUi={
+  setVisible:function(on){
+    var el=document.getElementById('app');
+    if(on) el.classList.add('show'); else el.classList.remove('show');
+  },
+  sync:function(json){ app.applySync(json); },
+  setScoreboard:function(json){
+    var hud=document.getElementById('hud');
+    if(!json||json==='null'){ hud.classList.remove('show'); return; }
+    try{
+      var d=typeof json==='string'?JSON.parse(json):json;
+      document.getElementById('hudRound').textContent=d.round||1;
+      document.getElementById('hudRounds').textContent=d.rounds||8;
+      var html='';
+      (d.top||[]).forEach(function(r){
+        html+='<div class="hud-row"><span><span class="p">'+r.place+'.</span> '+r.name+'</span><span>'+r.kills+'</span></div>';
+      });
+      document.getElementById('hudRows').innerHTML=html||'<div class="muted">—</div>';
+      hud.classList.add('show');
+    }catch(e){}
+  },
+  setFreeze:function(sec){
+    var el=document.getElementById('freeze');
+    if(sec<=0){ el.classList.remove('show'); return; }
+    el.textContent=String(sec);
+    el.classList.add('show');
+  },
+  showResults:function(json){
+    try{
+      var d=typeof json==='string'?JSON.parse(json):json;
+      var html='';
+      (d.rows||[]).forEach(function(r){
+        var prize=r.prize?('$'+Number(r.prize).toLocaleString('ru-RU')):'—';
+        html+='<div class="res-row"><div>'+r.name+'</div><div>'+r.kills+'</div><div>—</div><div>'+r.damage+'</div><div>'+prize+'</div></div>';
+      });
+      document.getElementById('resRows').innerHTML=html;
+      document.getElementById('results').classList.add('show');
+    }catch(e){}
+  },
+  closeResults:function(){
+    document.getElementById('results').classList.remove('show');
+    trigger('arena:closeResults:CLIENT');
+  }
+};
+</script>
+</body>
+</html>

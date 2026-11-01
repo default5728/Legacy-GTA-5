@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+let now=0,tick;const events={},vehicles=[],players=[],removed=[];
+const ctx={module:{exports:{}},Date:{now:()=>now},Map,Number,String,Math,setInterval:fn=>(tick=fn,{unref(){}}),global:{deleteVeh:v=>{removed.push(v);v.exists=false;}},mp:{events:{add:(n,f)=>events[n]=f},players:{toArray:()=>players},vehicles:{exists:v=>v.exists,toArray:()=>vehicles},Vector3:function(x,y,z){Object.assign(this,{x,y,z});}}};
+vm.runInNewContext(fs.readFileSync('packages/server/legacy/personal-fleet.js','utf8'),ctx);const fleet=ctx.module.exports;
+const car=()=>{const v={exists:true,dimension:0,position:{x:0,y:0,z:0},setVariable(){}};vehicles.push(v);return v;};
+const a=car(),b=car();fleet.register(a,1,'divo');fleet.register(b,1,'gemera');assert.equal(fleet.find(1,'DIVO'),a);assert.equal(fleet.find(1,'gemera'),b);assert.equal(removed.length,0);
+players.push({vehicle:a});now=fleet.IDLE_MS-1;tick();assert.equal(removed.length,0);now=fleet.IDLE_MS+1;tick();assert.deepEqual(removed,[b]);
+players[0].vehicle=null;events.playerExitVehicle(players[0],a);now+=fleet.IDLE_MS-1;tick();assert.equal(a.exists,true);now+=2;tick();assert.equal(a.exists,false);assert.equal(fleet.find(1,'divo'),null);
+const source=fs.readFileSync('client_packages/disable.js','utf8');assert(!source.includes('setNoCollisionEntity'));
+console.log('PASS: simultaneous owned models, no duplicates, occupied cars retained, ten-minute empty cleanup and regular player/vehicle collision.');

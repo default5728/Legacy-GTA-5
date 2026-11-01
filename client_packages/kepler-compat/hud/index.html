@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script><script>window.addEventListener("error",function(e){if(window.mp)mp.trigger("kepler:ui:error",String(e.filename||"inline"),Number(e.lineno)||0);});</script>
+<base href="package://hud/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legacy Roleplay — HUD & Chat</title>
+  
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    :root {
+      --radar-left: 28px;
+      --radar-bottom: 28px;
+      --radar-width: 270px;
+      --radar-height: 190px;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       1. TOP LEFT RP CHAT (Transparent by default, rounded dark gray on hover/active)
+       ============================================================ */
+    .hud-chat {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      width: 530px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: transparent;
+      border: 1px solid transparent;
+      box-shadow: none;
+      pointer-events: none;
+      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      z-index: 100;
+    }
+
+    /* Dark gray with rounded corners on T (active) or mouse hover */
+    .hud-chat.chat-active {
+      pointer-events: auto;
+      background: rgba(22, 25, 34, 0.90);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    }
+
+    .chat-messages {
+      max-height: 290px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 3px;
+      overflow-y: hidden;
+      overscroll-behavior: contain;
+      overflow-anchor: none;
+      padding-bottom: 4px;
+    }
+
+    .hud-chat.chat-active .chat-messages {
+      overflow-y: auto;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+
+    .chat-line {
+      flex-shrink: 0;
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: #ffffff;
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 3px rgba(0, 0, 0, 0.95);
+      word-wrap: break-word;
+      animation: fadeInChat 0.15s ease-out;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .chat-time {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.65);
+      flex-shrink: 0;
+    }
+
+    .chat-msg-body {
+      flex: 1;
+    }
+
+    @keyframes fadeInChat {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-input-wrapper {
+      margin-top: 8px;
+      display: none;
+      pointer-events: auto;
+      background: rgba(14, 16, 22, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px;
+      padding: 7px 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-input-wrapper.active {
+      display: flex;
+    }
+
+    .chat-prefix-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    .chat-input::placeholder {
+      color: #64748b;
+    }
+
+    /* Self-contained dark HUD: no blur or remote icon/font dependencies. */
+    .hud-top-right {position:absolute;top:26px;right:30px;display:none;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none;z-index:90;font-family:'Segoe UI Variable', 'Segoe UI',sans-serif;}
+    .hud-top-right.visible{display:flex;}
+    .project-brand{font-size:17px;font-weight:650;letter-spacing:3.4px;color:#f3f3f4;text-shadow:0 2px 8px #0008;line-height:1.2;}
+    .project-brand span{color:#b5b5bc;font-weight:500;}
+    .player-meta{display:flex;align-items:center;gap:10px;max-width:360px;padding:7px 9px 7px 12px;background:rgba(18,19,22,.83);border:1px solid #ffffff10;border-radius:7px;}
+    .player-name{font-size:12px;font-weight:550;color:#d8d8dd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:245px;letter-spacing:.15px;}
+    .online-badge{display:flex;align-items:center;gap:6px;padding-left:10px;border-left:1px solid #ffffff16;color:#b0b0b8;font-size:11px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;}
+    .online-badge svg{width:14px;height:14px;color:#787880;}
+    #onlineCount{color:#ededf0;min-width:12px;text-align:center;}
+    .hud-money-container{position:absolute;left:var(--radar-left);bottom:calc(var(--radar-bottom) + var(--radar-height) + 10px);width:var(--radar-width);display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;background:rgba(18,19,22,.89);border:1px solid #ffffff10;border-radius:8px;pointer-events:none;z-index:90;font-family:'Segoe UI Variable','Segoe UI',sans-serif;}
+    .hud-money-container.visible{display:flex;}
+    .money-left-group{display:flex;flex-direction:column;gap:6px;min-width:0;}
+    .money-item{display:flex;align-items:center;gap:9px;line-height:1.1;}
+    .money-item svg{width:15px;height:15px;flex-shrink:0;color:#797980;}
+    .money-item .money-val{font-size:14px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:.25px;color:#f2f2f4;white-space:nowrap;}
+    .green-zone .money-item svg{color:#8bdc91;}
+    .green-zone .hud-location{border-left-color:#8bdc91;}
+    .green-zone .hud-location-label::before{content:'⌖';margin-right:5px;color:#8bdc91;}
+    .money-item.bank .money-val{font-size:12px;font-weight:550;color:#a8a8b0;}
+    .mic-status-badge{display:flex;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0;color:#616169;border-left:1px solid #ffffff12;padding-left:11px;transition:color .1s ease;}
+    .mic-status-badge svg{width:19px;height:21px;overflow:visible;}
+    .mic-status-badge.active{color:#f1f1ed;}
+    .mic-status-badge.active svg{animation:mic-transmit 900ms ease-in-out infinite alternate;}
+    @keyframes mic-transmit{from{opacity:.55;transform:scale(.94)}to{opacity:1;transform:scale(1.08)}}
+    .hud-location{position:fixed;left:calc(var(--radar-left) + var(--radar-width) + 12px);right:auto;bottom:var(--radar-bottom);display:none;max-width:320px;text-align:left;padding:10px 14px;border-left:2px solid #dfdfdb80;background:rgba(17,17,19,.52);border-radius:0 8px 8px 0;pointer-events:none;z-index:90;}
+    .hud-location.visible{display:block;}
+    .hud-location-label{font-size:9px;letter-spacing:2px;color:#a0a0a5;margin-bottom:6px;}
+    .hud-location-zone{font-size:15px;font-weight:600;letter-spacing:.3px;color:#ededed;}
+    .hud-location-street{font-size:12px;color:#a0a0a5;margin-top:4px;}
+    @media(max-width:1280px){.hud-location{max-width:220px;}}
+
+    /* ============================================================
+       4. PLAYER ID & TIME (Directly right of minimap - Clean white)
+       ============================================================ */
+    .hud-bottom-info {
+      position: absolute;
+      left: calc(var(--radar-left) + var(--radar-width) + 12px);
+      bottom: calc(var(--radar-bottom) + 6px);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.95), 0 0 1px #000;
+      pointer-events: none;
+      z-index: 90;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .hud-bottom-info.visible {
+      display: flex;
+    }
+
+    .id-item {
+      color: rgba(255, 255, 255, 0.75);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 600;
+    }
+
+    .id-item b {
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 700;
+      margin-left: 2px;
+    }
+
+    .time-item {
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .info-sep {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      margin: 0 3px;
+    }
+
+    @font-face{font-family:'HUD Geometry';src:url('fonts/Raleway.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap;}
+    html,body,.hud-top-right,.hud-money-container,.hud-bottom-info,.id-item,.id-item b,.time-item,.chat-input{font-family:'HUD Geometry','Century Gothic','Segoe UI Light',sans-serif;font-weight:300;}
+    .project-brand{display:flex;align-items:center;gap:8px;font-family:inherit;font-size:18px;font-weight:300;letter-spacing:2.7px;line-height:1.15;}
+    .project-brand span{color:#e9e9ec;font-weight:300;}
+    .hud-emblem{display:inline-flex;width:27px;height:31px;align-items:center;letter-spacing:0;}
+    .hud-emblem svg{width:100%;height:100%;}
+    .hud-top-right{gap:7px;}
+    .player-meta{background:transparent;border:0;border-radius:0;padding:0;gap:13px;}
+    .player-name{font-size:12px;font-weight:300;letter-spacing:.35px;}
+    .online-badge{border:0;padding:0;font-weight:300;font-size:12px;gap:5px;}
+    .online-badge svg{display:none;}
+    #onlineCount{font-weight:300;min-width:0;}
+    .hud-bottom-info{position:static;left:auto;bottom:auto;gap:4px;font-size:11px;font-weight:300;letter-spacing:.25px;text-shadow:0 1px 3px #0009;}
+    .id-item,.id-item b,.time-item{font-family:inherit;font-size:11px;font-weight:300;}
+    .info-sep{margin:0 3px;font-size:10px;}
+    .hud-money-container{background:rgba(15,16,19,.42);border-color:#ffffff0b;box-shadow:none;}
+    .money-item .money-val,.money-item.bank .money-val{font-family:inherit;font-weight:300;letter-spacing:.45px;}
+    .money-item .money-val{font-size:15px;}
+    .money-item.bank .money-val{font-size:13px;}
+    .chat-line{font-family:inherit;font-weight:300;font-size:14px;text-shadow:0 1px 3px #000d;}
+    .chat-time{font-weight:300;}
+    .chat-tabs{display:none;gap:2px;align-items:center;margin:0 0 11px;}
+    .chat-tab{border:0;border-bottom:1px solid transparent;background:rgba(20,21,24,.33);padding:8px 14px;color:#999aa2;cursor:pointer;font:300 12px 'HUD Geometry',sans-serif;letter-spacing:.25px;transition:color .12s,background .12s;}
+    .chat-tab:hover{color:#e0e0e5;background:#ffffff0b;}
+    .chat-tab[aria-selected="true"]{color:#fff;border-bottom-color:#dddde4;background:#ffffff17;}
+    .chat-line[hidden]{display:none;}
+.legacy-speed{position:fixed;right:28px;bottom:28px;width:clamp(300px,23vw,370px);height:112px;display:grid;grid-template-columns:60px minmax(0,1fr) 76px;align-items:center;gap:12px;padding:13px 15px;color:#f4f5f7;background:rgba(14,15,17,.86);border:1px solid rgba(255,255,255,.07);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.16);pointer-events:none;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity 250ms cubic-bezier(.25,1,.5,1),transform 250ms cubic-bezier(.25,1,.5,1),visibility 250ms}.legacy-speed.visible{opacity:1;visibility:visible;transform:none}.speed-dial{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:3px}.speed-dial svg{width:60px;height:49px}.speed-dial-track,.speed-dial-power{fill:none;stroke-width:4;stroke-linecap:round}.speed-dial-track{stroke:#ffffff12}.speed-dial-power{stroke:#61ef98;transition:stroke-dashoffset 100ms linear}.speed-dial-needle{stroke:#e8f3ec;stroke-width:2;stroke-linecap:round;transform-origin:30px 29px;transition:transform 100ms linear}.speed-fuel-label{display:flex;align-items:center;gap:3px;font:600 10px/1.2 Inter,"Segoe UI",sans-serif;color:#d1d3d7}.speed-fuel-bar{height:5px;background:#ffffff12;overflow:hidden;border-radius:1px}.speed-fuel-bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(115deg,#d9dee1 0 2px,transparent 2px 4px);transition:width 150ms linear}.speed-reading{display:grid;grid-template-columns:minmax(0,1fr) 24px;align-items:end;gap:4px 5px}.legacy-speed .speed-value{font:800 italic 49px/.95 Inter,"Segoe UI",Arial,sans-serif!important;letter-spacing:-2px;white-space:nowrap;font-variant-numeric:tabular-nums}.speed-unit{font:600 9px/1.2 Inter,"Segoe UI",sans-serif;color:#a2a5ad;padding-bottom:4px}.speed-trip{grid-column:1/-1;display:flex;align-items:center;gap:5px;font:600 10px/1.2 Inter,"Segoe UI",sans-serif;letter-spacing:1.8px;font-variant-numeric:tabular-nums;color:#989ca6}.speed-trip small{font-size:8px;letter-spacing:.6px;color:#737881}.speed-statuses{display:grid;grid-template-columns:repeat(3,20px);gap:8px}.speed-status{width:20px;height:20px;display:grid;place-items:center;border-radius:3px;color:#777e86;background:#ffffff04;transition:color 150ms,background 150ms}.speed-status svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.speed-status.on{color:#62e99a;background:#62e99a10}.speed-status.warning{color:#f35d61;background:#f35d6110}.speed-status.danger{color:#ff4048}.speed-gear{fill:#d4d9df;font:700 10px Inter,"Segoe UI",sans-serif}
+  </style>
+<style id="apathy-typography">/* Ordinary medium-weight type across the UI. Never use old-style figures. */
+html,body,body *:not(i):not([class*="fa-"]){font-family:'Segoe UI',Arial,sans-serif!important;font-weight:600!important;font-style:normal!important;font-variant-numeric:lining-nums tabular-nums!important;font-feature-settings:"lnum" 1,"tnum" 1!important;}
+</style>
+<style id="kepler-wordmark-v2">
+.project-brand{display:block;font-size:20px;line-height:1.3;letter-spacing:1.6px;white-space:nowrap;text-shadow:none;}
+body .project-brand .project-wordmark{font-family:'HUD Geometry','Century Gothic',sans-serif!important;font-size:20px!important;font-weight:750!important;font-style:normal!important;text-transform:uppercase;letter-spacing:1.6px;display:inline-block;background:linear-gradient(115deg,#999 0%,#eee 22%,#fff 35%,#a0a0a0 50%,#eee 68%,#fff 80%,#999 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#eee;animation:keplerShimmer 9s ease-in-out infinite;filter:drop-shadow(0 2px 3px #0008);}
+@keyframes keplerShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@media(prefers-reduced-motion:reduce){body .project-brand .project-wordmark{animation:none}}
+</style></head>
+<body>
+
+  <!-- 1. RP CHAT -->
+  <div class="hud-chat" id="hudChat">
+    <div class="chat-tabs" id="chatTabs" role="tablist" aria-label="Каналы чата">
+      <button type="button" class="chat-tab" role="tab" data-channel="all" aria-selected="true">Все</button>
+      <button type="button" class="chat-tab" role="tab" data-channel="faction" aria-selected="false">Фракция</button>
+      <button type="button" class="chat-tab" role="tab" data-channel="group" aria-selected="false">Группировка</button>
+      <button type="button" class="chat-tab" role="tab" data-channel="department" aria-selected="false">Департамент</button>
+      <button type="button" class="chat-tab" role="tab" data-channel="admin" aria-selected="false" hidden>Админ чат</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-wrapper" id="chatInputWrapper">
+      <span class="chat-prefix-tag"> Чат:</span>
+      <input type="text" id="chatInput" class="chat-input" placeholder="Введите сообщение или команду..." maxlength="140" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="hud-top-right" id="hudTopRight">
+    <div class="project-brand"><span class="project-wordmark">Legacy Roleplay</span></div>
+    <div class="player-meta"><span class="player-name" id="playerName">—</span><div class="online-badge" title="Игроков на сервере"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3"/><path d="M4 20v-2a6 6 0 0112 0v2m1-15a3 3 0 010 6m3 9v-2a6 6 0 00-2-4"/></svg><span id="onlineCount">0</span><span>in game</span></div></div>
+  <div class="hud-bottom-info" id="hudBottomInfo">
+    <span class="id-item">ID <b id="playerIdVal">0</b></span>
+    <span class="info-sep">|</span>
+    <span class="id-item">CID <b id="playerCidVal">—</b></span>
+    <span class="info-sep">|</span>
+    <span class="time-item" id="mskTimeVal">00:00:00</span>
+    <span class="info-sep">|</span>
+    <span class="time-item" id="hudDateVal">00.00.0000</span>
+  </div>
+  </div>
+  <div class="hud-money-container" id="hudMoney">
+    <div class="money-left-group">
+      <div class="money-item bank" title="Банковский счёт"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/></svg><span class="money-val" id="bankAmount">0 $</span></div>
+      <div class="money-item" title="Наличные"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><circle cx="12" cy="12" r="3"/><path d="M6 9v6m12-6v6"/></svg><span class="money-val" id="cashAmount">0 $</span></div>
+    </div>
+    <div class="mic-status-badge" id="micIndicator" title="Голосовой чат — удерживайте B" aria-label="Микрофон выключен"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0014 0v-2M12 19v3m-4 0h8"/></svg></div>
+  </div>
+
+<aside id="legacySpeed" class="legacy-speed" aria-label="Спидометр">
+  <div class="speed-dial"><svg viewBox="0 0 60 49" aria-hidden="true"><path class="speed-dial-track" d="M10 43 A23 23 0 1 1 50 43"/><path id="speedRpm" class="speed-dial-power" d="M10 43 A23 23 0 1 1 50 43" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/><path id="speedNeedle" class="speed-dial-needle" d="M30 29 17 36"/><text id="speedGear" class="speed-gear" x="30" y="46" text-anchor="middle">N</text></svg><div class="speed-fuel-label"><span id="speedFuelText">—</span><span>Л</span></div><div class="speed-fuel-bar"><i id="speedFuel"></i></div></div>
+  <div class="speed-reading"><strong id="speedValue" class="speed-value">0</strong><span class="speed-unit">km<br>/h</span><div class="speed-trip"><span id="speedTrip">000000</span><small>KM</small></div></div>
+  <div class="speed-statuses">
+    <span id="speedLock" class="speed-status" title="Замок"><svg viewBox="0 0 24 24"><rect x="6" y="10" width="12" height="11" rx="2"/><path d="M9 10V6a3 3 0 0 1 6 0v4M12 14v3"/></svg></span>
+    <span id="speedFuelStatus" class="speed-status" title="Топливо"><svg viewBox="0 0 24 24"><path d="M4 21V3h10v18M2 21h14M7 6h4v5H7ZM14 8h3v9a2 2 0 0 0 4 0V7l-3-3"/></svg></span>
+    <span id="speedBelt" class="speed-status" title="Ремень"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="m8 10 7-1 3 12M8 10l-2 11M4 16l16-7M7 19h10"/></svg></span>
+    <span id="speedLights" class="speed-status" title="Фары"><svg viewBox="0 0 24 24"><path d="M12 5Q2 5 2 12t10 7ZM16 5h6M16 10h6M16 15h6M16 20h6"/></svg></span>
+    <span id="speedEngine" class="speed-status" title="Двигатель"><svg viewBox="0 0 24 24"><path d="M5 8h4l2-3h6l3 4h2v10H5v-4H2v-5h3ZM10 2h6M13 2v3"/></svg></span>
+    <span id="speedBrake" class="speed-status" title="Ручной тормоз"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M4 5a10 10 0 0 0 0 14M20 5a10 10 0 0 1 0 14M12 8v5M12 16v.1"/></svg></span>
+  </div>
+</aside>
+  <aside class="hud-location" id="hudLocation"><div class="hud-location-label">ЛОКАЦИЯ</div><div class="hud-location-zone" id="hudZone">Лос-Сантос</div><div class="hud-location-street" id="hudStreet"></div></aside>
+
+
+  <script>
+    // State
+    let isChatOpen = false;
+    let chatHistory = [];
+    let historyIndex = -1;
+
+    // RAGE:MP color formatter !{#RRGGBB}
+    function formatRageColors(str) {
+      if (!str) return '';
+      let safe = String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      
+      const named = { purple:'#a855f7', red:'#ef4444', green:'#22c55e', blue:'#3b82f6', orange:'#f97316', yellow:'#eab308', white:'#ffffff', black:'#000000' };
+      let formatted = safe.replace(/!\{#?([A-Fa-f0-9]{3,8}|[A-Za-z]+)\}/g, (_tag, token) => {
+        const color = /^[A-Fa-f0-9]{3,8}$/.test(token)
+          ? (token.length === 3 ? '#' + token.split('').map(ch => ch + ch).join('') : '#' + token.slice(0, 6))
+          : named[token.toLowerCase()];
+        return color ? `</span><span style="color:${color}">` : _tag;
+      });
+      return '<span>' + formatted + '</span>';
+    }
+
+    function getCurrentTimeStr(now = new Date()) {
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const msk = new Date(utc + (3600000 * 3));
+      const h = String(msk.getHours()).padStart(2, '0');
+      const m = String(msk.getMinutes()).padStart(2, '0');
+      const s = String(msk.getSeconds()).padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    let chatChannel='all';
+    function selectChatChannel(channel){
+      if(!['all','faction','group','department','admin'].includes(channel))return;
+      chatChannel=channel;
+      window.keplerChatChannel={all:'all',faction:'fraction',group:'family',department:'department',admin:'admin'}[channel];
+      document.querySelectorAll('.chat-tab').forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.channel===channel)));
+      document.querySelectorAll('.chat-line').forEach(line=>{line.hidden=channel!=='all'&&line.dataset.channel!==channel;});
+      const box=document.getElementById('chatMessages');box.scrollTop=box.scrollHeight;
+    }
+    window.__chatSetChannels = function (channels) {
+      const state = typeof channels === 'string' ? JSON.parse(channels) : (channels || {});
+      const adminTab = document.querySelector('.chat-tab[data-channel="admin"]');
+      if (adminTab) adminTab.hidden = !state.admin;
+      if (!state.admin && chatChannel === 'admin') selectChatChannel('all');
+    };
+    document.querySelectorAll('.chat-tab').forEach(tab=>tab.addEventListener('click',()=>selectChatChannel(tab.dataset.channel)));
+    function addChatMessage(message) {
+      const box = document.getElementById('chatMessages');
+      if (!box) return;
+      const follow=!isChatOpen||box.scrollHeight-box.clientHeight-box.scrollTop<=12;
+      const previousTop=box.scrollTop;
+
+      const line = document.createElement('div');
+      line.className = 'chat-line';
+      let channel=message&&typeof message==='object'?message.channel:null;
+      const text=message&&typeof message==='object'?String(message.text||''):String(message||'');
+      if(!channel){if(/\[(Админ|ADMIN)\]/i.test(text))channel='admin';else if(/\[(Фракция|F)\]/i.test(text))channel='faction';else if(/\[(Группировка|G|Организация)\]/i.test(text))channel='group';else if(/\[(Департамент|D)\]/i.test(text))channel='department';}
+      line.dataset.channel=['faction','group','department','admin'].includes(channel)?channel:'all';
+      line.hidden=chatChannel!=='all'&&line.dataset.channel!==chatChannel;
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'chat-time';
+      timeSpan.textContent = getCurrentTimeStr();
+
+      const bodySpan = document.createElement('span');
+      bodySpan.className = 'chat-msg-body';
+      bodySpan.innerHTML = formatRageColors(text);
+
+      line.appendChild(timeSpan);
+      line.appendChild(bodySpan);
+      box.appendChild(line);
+
+      let removedHeight=0;
+      while(box.children.length>500){const first=box.firstChild;removedHeight+=first.getBoundingClientRect().height+(first.hidden?0:3);box.removeChild(first);}
+      box.scrollTop=follow?box.scrollHeight:Math.max(0,previousTop-removedHeight);
+    }
+
+    function openChat() {
+      if (isChatOpen) return;
+      isChatOpen = true;
+      const wrap = document.getElementById('chatInputWrapper');
+      const input = document.getElementById('chatInput');
+      wrap.classList.add('active');
+      document.getElementById('hudChat').classList.add('chat-active');
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      historyIndex = chatHistory.length;
+
+      if (typeof mp !== 'undefined' && mp.trigger) {
+        mp.trigger('client:hud:chatActive', true);
+      }
+    }
+
+    function closeChat() {
+      const wasOpen = isChatOpen;
+      isChatOpen = false;
+      const wrap = document.getElementById('chatInputWrapper');
+      const input = document.getElementById('chatInput');
+      wrap.classList.remove('active');
+      document.getElementById('hudChat').classList.remove('chat-active');
+      input.blur();
+      input.disabled = true;
+      const messages = document.getElementById('chatMessages');
+      messages.scrollTop = messages.scrollHeight;
+
+      if (wasOpen && typeof mp !== 'undefined' && mp.trigger) {
+        mp.trigger('client:hud:chatActive', false);
+      }
+    }
+
+
+    const chatInput = document.getElementById('chatInput');
+    chatInput.disabled = true;
+    chatInput.addEventListener('keydown', (e) => {
+      if (!isChatOpen) return;
+      e.stopPropagation();
+      if(['PageUp','PageDown','End'].includes(e.key)){
+        e.preventDefault();const box=document.getElementById('chatMessages');
+        box.scrollTop=e.key==='End'?box.scrollHeight:box.scrollTop+(e.key==='PageUp'?-1:1)*box.clientHeight*.85;return;
+      }
+      if (e.key === 'Enter') {
+        const val = chatInput.value.trim();
+        if (val.length > 0) {
+          chatHistory.push(val);
+          if (typeof mp !== 'undefined' && mp.trigger) {
+            mp.trigger('chatSendChannel', window.keplerChatChannel || 'all', val);
+          }
+        }
+        closeChat();
+      } else if (e.key === 'Escape') {
+        closeChat();
+      } else if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          chatInput.value = chatHistory[historyIndex] || '';
+          chatInput.setSelectionRange(chatInput.value.length, chatInput.value.length);
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < chatHistory.length - 1) {
+          historyIndex++;
+          chatInput.value = chatHistory[historyIndex] || '';
+        } else {
+          historyIndex = chatHistory.length;
+          chatInput.value = '';
+        }
+      }
+    });
+
+    // Formatting money
+    function formatMoney(amount) {
+      const value=Number(amount);
+      return (Number.isFinite(value)?Math.trunc(value):0).toLocaleString('ru-RU').replace(/\u00a0/g,' ') + ' $';
+    }
+
+    function updateMoney(cash, bank) {
+      const cashEl = document.getElementById('cashAmount');
+      const bankEl = document.getElementById('bankAmount');
+      if (cashEl) cashEl.textContent = formatMoney(cash);
+      if (bankEl) bankEl.textContent = formatMoney(bank);
+    }
+
+    function updatePlayerId(id) {
+      const el = document.getElementById('playerIdVal');
+      if (el) el.textContent = id;
+    }
+
+    function updateCid(cid) {
+      const el = document.getElementById('playerCidVal');
+      if (el) el.textContent = Number(cid) > 0 ? cid : '—';
+    }
+
+    function updatePlayerName(name) {
+      const el=document.getElementById('playerName');
+      if(el)el.textContent=String(name||'—').replace(/_/g,' ');
+    }
+    function updateOnline(count) {
+      const el = document.getElementById('onlineCount');
+      if (el) el.textContent = Math.max(0,Math.trunc(Number(count)||0));
+    }
+
+    function getCurrentDateStr(now = new Date()) {
+      const utc=now.getTime()+now.getTimezoneOffset()*60000;
+      const date=new Date(utc+3*3600000);
+      return String(date.getDate()).padStart(2,'0')+'.'+String(date.getMonth()+1).padStart(2,'0')+'.'+date.getFullYear();
+    }
+    function updateClock() {
+      const now=new Date();
+      const dateEl=document.getElementById('hudDateVal');
+      if(dateEl)dateEl.textContent=getCurrentDateStr(now);
+      const el = document.getElementById('mskTimeVal');
+      if (el) el.textContent = getCurrentTimeStr(now);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function setRadarBounds(left, bottom, width, height) {
+      document.documentElement.style.setProperty('--radar-left', `${left}px`);
+      document.documentElement.style.setProperty('--radar-bottom', `${bottom}px`);
+      document.documentElement.style.setProperty('--radar-width', `${width}px`);
+      document.documentElement.style.setProperty('--radar-height', `${height}px`);
+    }
+
+    function setHudVisibility(visible) {
+      document.getElementById('hudLocation').classList.toggle('visible',!!visible);
+      if(!visible)document.getElementById('legacySpeed').classList.remove('visible');
+      const m = document.getElementById('hudMoney');
+      const b = document.getElementById('hudBottomInfo');
+      const t = document.getElementById('hudTopRight');
+      document.getElementById('chatTabs').style.display=visible?'flex':'none';
+
+      if (visible) {
+        if (m) m.classList.add('visible');
+        if (b) b.classList.add('visible');
+        if (t) t.classList.add('visible');
+      } else {
+        if (m) m.classList.remove('visible');
+        if (b) b.classList.remove('visible');
+        if (t) t.classList.remove('visible');
+      }
+    }
+
+    window.HUD_UI = {
+      setVehicle(data){
+        const visible=!!data&&document.getElementById('hudMoney').classList.contains('visible');
+        if(window.LegacyGauge)window.LegacyGauge.update(data,visible);
+      },
+      setLocation: (street,area) => {
+        document.getElementById('hudZone').textContent=String(area||'Лос-Сантос');
+        document.getElementById('hudStreet').textContent=String(street||'');
+      },
+      setMic: (active) => {
+        const el = document.getElementById('micIndicator');
+        if (el) {
+          el.setAttribute('aria-label',active?'Микрофон включён':'Микрофон выключен');
+          if (active) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        }
+      },
+      selectChatChannel,
+      addChatMessage,
+      openChat,
+      closeChat,
+      updateMoney,
+      updatePlayerId,
+      updateCid,
+      updateOnline,
+      updatePlayerName,
+      setRadarBounds,
+      setHudVisibility
+    };
+  </script>
+<script src="package://controls/cef-input.js"></script><script src="hints.js"></script><script src="death.js"></script><script src="package://kepler-compat/hud/gauge.js"></script><script src="package://kepler-compat/hud/bridge.js"></script><script src="package://kepler-compat/hud/layout-editor.js"></script></body>
+</html>

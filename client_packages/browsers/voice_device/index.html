@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>voice device</title>
+    <style>
+        html, body {
+            margin: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            background: transparent;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<script>
+(function () {
+    var debounceTimer = null;
+    function notifyDeviceChange() {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('voice:deviceChanged');
+        } catch (_e) {}
+    }
+    function scheduleNotify() {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+            debounceTimer = null;
+            notifyDeviceChange();
+        }, 700);
+    }
+    try {
+        if (navigator.mediaDevices) {
+            if (typeof navigator.mediaDevices.addEventListener === 'function') {
+                navigator.mediaDevices.addEventListener('devicechange', scheduleNotify);
+            } else {
+                navigator.mediaDevices.ondevicechange = scheduleNotify;
+            }
+        }
+    } catch (_e) {}
+
+    var lastDeviceSig = '';
+    function pollDevices() {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+            navigator.mediaDevices.enumerateDevices().then(function (devs) {
+                var sig = '';
+                for (var i = 0; i < devs.length; i++) {
+                    sig += devs[i].kind + ':' + devs[i].deviceId + ';';
+                }
+                if (lastDeviceSig && sig !== lastDeviceSig) scheduleNotify();
+                lastDeviceSig = sig;
+            }).catch(function () {});
+        } catch (_e2) {}
+    }
+    setInterval(pollDevices, 3500);
+    setTimeout(pollDevices, 1200);
+})();
+</script>
+</body>
+</html>

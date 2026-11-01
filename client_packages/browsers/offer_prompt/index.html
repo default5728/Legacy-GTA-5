@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="UTF-8">
+<title>Превью: окно предложения Y/N</title>
+<style>
+    html, body { margin: 0; height: 100%; font-family: 'Montserrat', system-ui, sans-serif; overflow: hidden; background: transparent; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    body { min-height: 100vh; }
+    #offerLayer {
+        position: fixed;
+        bottom: 2.2%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .18s ease;
+    }
+    #offerLayer.show {
+        opacity: 1;
+    }
+    .offer {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-width: 460px;
+        max-width: 640px;
+        padding: 14px 26px;
+        background: linear-gradient(270deg, rgba(7, 16, 48, 0.62) 0%, rgba(7, 16, 48, 0.6) 60.94%, rgba(33, 39, 61, 0.53) 100%);
+        border-radius: 999px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    .offer__key {
+        flex: 0 0 auto;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 24px;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    .offer__key--y {
+        margin-left: -18px;
+        margin-right: 18px;
+        background: radial-gradient(circle at 38% 32%, #c8f24f 0%, #79d12e 48%, #3f9c22 100%);
+        box-shadow: 0 0 18px rgba(122, 209, 46, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+    }
+    .offer__key--n {
+        margin-right: -18px;
+        margin-left: 18px;
+        background: radial-gradient(circle at 38% 32%, #9a7bff 0%, #6b4bf0 48%, #3f2bd0 100%);
+        box-shadow: 0 0 18px rgba(107, 75, 240, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+    .offer__body {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 0 6px;
+    }
+    .offer__title {
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #ffffff;
+        margin: 0 0 4px;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+    .offer__text {
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 1.35;
+        color: rgba(235, 238, 245, 0.95);
+        margin: 0;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+</style>
+</head>
+<body>
+<div id="offerLayer">
+    <div class="offer">
+        <div class="offer__key offer__key--y">Y</div>
+        <div class="offer__body">
+            <p class="offer__title" id="offerTitle">ПРЕДЛОЖЕНИЕ</p>
+            <p class="offer__text" id="offerText">Игрок отправил предложение.</p>
+        </div>
+        <div class="offer__key offer__key--n">N</div>
+    </div>
+</div>
+
+<script>
+    const offerLayer = document.getElementById('offerLayer');
+    const titleEl = document.getElementById('offerTitle');
+    const textEl = document.getElementById('offerText');
+
+    function safeOfferHtml(text) {
+        return String(text || 'Игрок отправил предложение.')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+    }
+
+    function show(title, text) {
+        titleEl.textContent = title || 'ПРЕДЛОЖЕНИЕ';
+        textEl.innerHTML = safeOfferHtml(text);
+        offerLayer.classList.add('show');
+    }
+
+    function hide() {
+        offerLayer.classList.remove('show');
+    }
+</script>
+</body>
+</html>

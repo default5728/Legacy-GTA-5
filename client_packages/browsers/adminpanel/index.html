@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGACY ADMIN PANEL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-panel: #0f0f12;
+            --bg-sidebar: #0c0c0f;
+            --bg-card: #131316;
+            --bg-elevated: #18181c;
+            --bg-hover: #1f1f24;
+            --bg-input: #0e0e11;
+            --accent: #ffffff;
+            --accent-dim: #d4d4d8;
+            --accent-muted: rgba(255, 255, 255, 0.06);
+            --accent-glow: rgba(255, 255, 255, 0.12);
+            --border: rgba(255, 255, 255, 0.07);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-dim: #71717a;
+            --green: #34d399;
+            --red: #f87171;
+            --amber: #fbbf24;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --shadow: 0 32px 64px rgba(0, 0, 0, 0.55);
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            background: transparent !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+        }
+
+        input, textarea, select {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: transparent !important;
+        }
+
+        .container {
+            width: 1280px;
+            height: 760px;
+            display: flex;
+            border-radius: 20px;
+            overflow: hidden;
+            position: absolute;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-strong);
+            box-shadow: var(--shadow);
+        }
+
+        /* Sidebar */
+        .menu {
+            width: 220px;
+            flex-shrink: 0;
+            background: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 14px;
+            border-right: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 8px 10px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #09090b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            min-width: 0;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand span {
+            display: block;
+            margin-top: 2px;
+            color: var(--text-dim);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-section {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            padding: 0 12px;
+            margin: 8px 0 8px;
+        }
+
+        .menu button {
+            background: transparent;
+            color: var(--text-muted);
+            width: 100%;
+            padding: 10px 12px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            border-radius: var(--radius);
+            margin-bottom: 2px;
+            font-weight: 500;
+            font-size: 13px;
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.55;
+            flex-shrink: 0;
+        }
+
+        .nav-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-label { flex: 1; }
+
+        .menu button:hover {
+            color: var(--text);
+            background: var(--bg-hover);
+        }
+
+        .menu button:hover .nav-icon { opacity: 0.9; }
+
+        .menu button.active {
+            background: var(--accent-muted);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .menu button.active .nav-icon { opacity: 1; }
+
+        .badge {
+            background: var(--accent);
+            color: #09090b;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-weight: 700;
+            min-width: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Main content */
+        .main-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            position: relative;
+            background: var(--bg);
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px 32px 24px;
+            color: var(--text);
+            display: none;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .content.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header {
+            margin-bottom: 22px;
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .page-sub {
+            margin-top: 4px;
+            font-size: 13px;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        /* Teleports */
+        .teleport-layout {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .teleport-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-right: 188px;
+            align-content: start;
+        }
+
+        .teleport-buttons button {
+            padding: 14px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: background 0.15s, border-color 0.15s, transform 0.12s;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        .teleport-buttons button:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-strong);
+            transform: translateY(-1px);
+        }
+
+        .right-menu {
+            width: 180px;
+            background: var(--bg-sidebar);
+            display: none;
+            flex-direction: column;
+            padding: 28px 12px;
+            border-left: 1px solid var(--border);
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .right-menu-title {
+            color: var(--text-dim);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .right-menu button {
+            background: transparent;
+            color: var(--text-muted);
+            width: 100%;
+            padding: 9px 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            margin-bottom: 2px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+
+        .right-menu button:hover {
+            color: var(--text);
+            background: var(--bg-hover);
+        }
+
+        .right-menu button.active {
+            background: var(--accent-muted);
+            color: var(--text);
+        }
+
+        /* Reports */
+        .reports-layout {
+            flex: 1;
+            display: flex;
+            gap: 16px;
+            min-height: 0;
+        }
+
+        .reports-list {
+            flex: 0 0 260px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .report-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+        }
+
+        .report-item:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-hover);
+        }
+
+        .report-item.active {
+            border-color: var(--border-strong);
+            background: var(--bg-elevated);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .report-id {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .report-media-badge {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-size: 9px;
+            font-weight: 800;
+            color: #bbf7d0;
+            background: rgba(34, 197, 94, 0.16);
+            border: 1px solid rgba(34, 197, 94, 0.45);
+            vertical-align: middle;
+        }
+
+        .report-time { font-size: 11px; color: var(--text-muted); }
+        .report-preview {
+            font-size: 12px;
+            color: #d4d4d4;
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .report-chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .report-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 24px;
+        }
+
+        .report-empty svg { opacity: 0.35; margin-bottom: 16px; }
+
+        .chat-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+
+        .chat-header-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .chat-header-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            max-width: 78%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chat-msg.user { align-self: flex-start; }
+        .chat-msg.admin { align-self: flex-end; align-items: flex-end; }
+
+        .chat-msg-nick {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .chat-msg.admin .chat-msg-nick { color: var(--text-muted); }
+
+        .chat-msg-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .chat-msg.user .chat-msg-bubble {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-msg.admin .chat-msg-bubble {
+            background: var(--accent);
+            color: #09090b;
+            border: none;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-footer {
+            border-top: 1px solid var(--border);
+            padding: 12px 16px 16px;
+            background: var(--bg-card);
+        }
+
+        .quick-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .quick-chip {
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .quick-chip:hover {
+            color: var(--text);
+            border-color: var(--border-strong);
+            background: var(--bg-hover);
+        }
+
+        .chat-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 11px 14px;
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.45;
+            resize: none;
+            height: 72px;
+            margin-bottom: 10px;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .chat-actions-primary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .chat-actions-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 11px 14px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.12s;
+            color: #fff;
+        }
+
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--accent); color: #09090b; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { border-color: var(--border-strong); background: var(--bg-hover); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+
+        /* Player tab */
+        .player-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px 24px;
+        }
+
+        .player-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px 32px;
+        }
+
+        .player-actions { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+        .player-row-triple {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .player-row-double {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .player-row-double .btn,
+        .player-row-triple .btn { padding: 14px 10px; font-size: 13px; }
+        .player-actions > .btn { padding: 14px 16px; font-size: 14px; }
+        .player-spec-wide {
+            width: calc((100% - 10px) * 2 / 3);
+            margin: 4px auto 0;
+            padding: 14px 16px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        input[type="text"], input[type="number"], select {
+            padding: 12px 14px;
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .input-group { margin-bottom: 24px; }
+
+        /* Keybinds (как F2) */
+        .keybind-list { display: flex; flex-direction: column; gap: 4px; max-height: 520px; overflow-y: auto; padding-right: 6px; }
+        .keybind-cat {
+            margin: 14px 0 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+        .keybind-cat:first-child { margin-top: 0; }
+        .keybind-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        .keybind-btn {
+            min-width: 88px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .keybind-btn:hover { background: var(--bg-hover); border-color: var(--border-strong); }
+        .keybind-btn.capturing { animation: kb-pulse 0.8s ease infinite; border-color: var(--accent); }
+        @keyframes kb-pulse { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); } 50% { box-shadow: 0 0 0 6px transparent; } }
+        .settings-bind-scroll { max-height: 560px; overflow-y: auto; padding-right: 4px; }
+
+        /* Punishments */
+        .punish-sections {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .punish-section {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .punish-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .punish-section.give .punish-section-title { color: var(--red); }
+        .punish-section.lift .punish-section-title { color: var(--green); }
+
+        .punish-scroll {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 6px;
+        }
+
+        .punish-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .punish-card h4 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .punish-card input {
+            padding: 9px 11px;
+            font-size: 12px;
+        }
+
+        .punish-btn {
+            margin-top: 2px;
+            padding: 9px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: filter 0.15s;
+        }
+
+        .punish-btn:hover { opacity: 0.88; }
+        .btn-ban { background: #7f1d1d; }
+        .btn-jail { background: #78350f; }
+        .btn-mute { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text); }
+        .btn-kick { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-lift { background: #14532d; }
+
+        /* Help */
+        .help-intro {
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .commands-search-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .commands-search {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .commands-search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .commands-search-wrap::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            opacity: 0.45;
+            background: no-repeat center / contain;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .commands-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            min-height: 0;
+        }
+
+        .lvl-header {
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .lvl-count {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--accent-muted);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .command-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 4px 0;
+            padding: 11px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            cursor: pointer;
+            transition: background 0.18s, border-color 0.18s;
+        }
+
+        .command-item:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-strong);
+        }
+
+        .cmd-name {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 140px;
+        }
+
+        .cmd-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: right;
+            line-height: 1.4;
+        }
+
+        .lvl-8 { color: #fdba74; }
+        .lvl-7 { color: #fca5a5; }
+        .lvl-6 { color: #f87171; }
+        .lvl-5 { color: #ef4444; }
+        .lvl-4 { color: #dc2626; }
+        .lvl-3 { color: #b91c1c; }
+        .lvl-2 { color: #a3a3a3; }
+        .lvl-1 { color: #d4d4d4; }
+        .lvl-keys { color: var(--text-muted); margin-top: 24px; }
+
+        /* Settings */
+        .settings-subtabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .settings-subtab {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .settings-subtab.active {
+            background: var(--accent-muted);
+            border-color: var(--border-strong);
+            color: var(--text);
+        }
+
+        .settings-pane { display: none; flex: 1; }
+        .settings-pane.active { display: block; }
+
+        .settings-card {
+            max-width: 480px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .bind-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .bind-row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .bind-row select, .bind-row input {
+            width: 200px;
+            flex-shrink: 0;
+        }
+
+        .settings-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        .copy-toast {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.28s, transform 0.28s, visibility 0.28s;
+            box-shadow: var(--shadow);
+            z-index: 200;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .copy-toast.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+    </style>
+<link rel="stylesheet" href="legacy-panel.css"><link rel="stylesheet" href="package://controls/obsidian-select.css?v=2"><link rel="stylesheet" href="obsidian-controls.css?v=2">
+</head>
+<body>
+
+<div class="container" id="draggable-panel">
+<div class="menu"><div class="brand"><div class="brand-title">LEGACY<br><span>ADMIN PANEL</span></div></div><div class="nav-section">Модерация</div><button class="tab-button" data-tab="reports" onclick="showTab('reports')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+            <span class="nav-label">Репорты</span>
+            <span class="badge" id="rep-badge">0</span>
+        </button><button class="tab-button" data-tab="player" onclick="showTab('player')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span class="nav-label">Игрок</span>
+        </button><button class="tab-button" data-tab="punishments" onclick="showTab('punishments')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-label">Наказания</span>
+        </button><div class="nav-section">Управление</div><button class="tab-button active" data-tab="teleports" onclick="showTab('teleports')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>
+            <span class="nav-label">Телепорты</span>
+        </button><button class="tab-button" data-tab="grants" onclick="showTab('grants')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+            <span class="nav-label">Выдача</span>
+        </button><button class="tab-button" data-tab="staff" onclick="showTab('staff')"><span class="nav-icon">◇</span><span class="nav-label">Администрация</span></button><button class="tab-button" data-tab="rankrights" onclick="showTab('rankrights');LegacyAdmin.loadRankRights()"><span class="nav-icon">◇</span><span class="nav-label">Права рангов</span></button><button class="tab-button" data-tab="business" onclick="showTab('business')"><span class="nav-icon">◇</span><span class="nav-label">Бизнесы и цены</span></button><div class="nav-section">Система</div><button class="tab-button" data-tab="tools" onclick="showTab('tools')"><span class="nav-icon">◇</span><span class="nav-label">Все действия</span></button><button class="tab-button" data-tab="commands" onclick="showTab('commands')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <span class="nav-label">Справка</span>
+        </button><button class="tab-button" data-tab="settings" onclick="showTab('settings')">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+            <span class="nav-label">Настройки</span>
+        </button><footer class="sidebar-footer"><button id="panelLogout" type="button" hidden onclick="LegacyAdmin.logout()">Завершить сессию</button>Клавиша меню · ESC — закрыть</footer></div>
+    <div class="main-wrap"><div class="content" id="rankrights-tab"><div class="page-header"><h3>Права рангов</h3><p class="page-sub">Ранги 1–8 · изменения сохраняются и применяются сразу</p></div><select id="rankRightsLevel"></select><div id="rankRightsGrid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px"></div></div>
+        <!-- Телепорты -->
+        <div class="content active" id="teleports-tab">
+            <div class="page-header">
+                <h3>Телепорты</h3>
+                <p class="page-sub">Быстрое перемещение по серверу</p>
+            </div>
+            <div class="teleport-layout">    <div class="right-menu" id="teleports-right-menu">
+        
+        <button class="right-menu-button active" onclick="showTeleportCategory('faction1')">Организации</button>
+        <button class="right-menu-button" onclick="showTeleportCategory('faction2')">Основные места</button>
+        <button class="right-menu-button" onclick="showTeleportCategory('faction3')">Трассы / Гетто</button>
+        <button class="right-menu-button" onclick="showTeleportCategory('faction4')">Интерьеры</button>
+        <button class="right-menu-button" onclick="showTeleportCategory('faction5')">Мероприятия</button>
+    </div>
+                <div class="teleport-buttons" id="teleport-buttons"></div>
+            </div>
+        </div>
+
+        <!-- Репорты -->
+        <div class="content" id="reports-tab">
+            <div class="page-header">
+                <h3>Репорты</h3>
+                <p class="page-sub">Обращения игроков</p>
+            </div>
+            <div style="margin-bottom:15px"><button class="btn" onclick="LegacyAdmin.history()">История за 24 часа</button></div><div id="reportHistory" hidden style="max-height:60vh;overflow:auto"></div><div class="reports-layout">
+                <div class="reports-list" id="reports-list"></div>
+                <div class="report-chat-panel" id="report-chat-panel">
+                    <div id="report-empty" class="report-empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                        <p>Выберите тикет слева</p>
+                    </div>
+                    <div id="report-content" style="display:none; flex-direction:column; flex:1; min-height:0;">
+                        <div class="chat-header">
+                            <div class="chat-header-title">Репорт #<span id="view-static">0</span></div>
+                            <div class="chat-header-sub"><span id="view-login">—</span></div>
+                        </div>
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-footer">
+                            <div class="quick-chips">
+                                <button type="button" class="quick-chip" data-reply="Сейчас займусь вашим репортом!">Сейчас займусь вашим репортом!</button>
+                                <button type="button" class="quick-chip" data-reply="Здравствуйте">Здравствуйте</button>
+                                <button type="button" class="quick-chip" data-reply="Лечу!">Лечу!</button>
+                                <button type="button" class="quick-chip" data-reply="Слежу!">Слежу!</button>
+                                <button type="button" class="quick-chip" data-reply="Приятной игры!">Приятной игры!</button>
+                                <button type="button" class="quick-chip" data-reply="Хорошего дня!">Хорошего дня!</button>
+                            </div>
+                            <textarea id="reply-text" class="chat-input" placeholder="Введите ответ игроку…"></textarea>
+                            <div class="chat-actions-primary">
+                                <button type="button" class="btn btn-secondary" onclick="sendReportReplyOnly()">Ответить</button>
+                                <button type="button" class="btn btn-secondary legacy-take-report" onclick="LegacyAdmin.takeReport()">Принять</button><button type="button" class="btn btn-primary" onclick="closeReportTicket()">Закрыть</button>
+                            </div>
+                            <div class="chat-actions-secondary">
+                                <button type="button" class="btn btn-secondary" onclick="reportGoto()">К игроку</button>
+                                <button type="button" class="btn btn-primary" onclick="reportSpec()">Следить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Игрок -->
+        <div class="content" id="player-tab">
+            <div class="page-header">
+                <h3>Игрок</h3>
+                <p class="page-sub">Действия по Static ID</p>
+            </div>
+            <div class="player-center">
+                <div class="player-card">
+                    <div class="input-group">
+                        <span class="input-label">Static ID</span>
+                        <input type="text" id="static" placeholder="12345" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                    <div class="player-actions">
+                        <div class="player-row-double">
+                            <button type="button" class="btn btn-secondary" onclick="teleportMeToPlayer()">Перейти к игроку</button>
+                            <button type="button" class="btn btn-secondary" onclick="teleportPlayerToMe()">Телепорт к себе</button>
+                        </div>
+                        <div class="player-row-double">
+                            <button type="button" class="btn btn-primary" onclick="adminFreeze()">Заморозка</button>
+                            <button type="button" class="btn btn-primary" onclick="adminUnfreeze()">Разморозка</button>
+                        </div>
+                        <button type="button" class="btn btn-primary player-spec-wide" onclick="playerSpec()">Следить за игроком</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Наказания -->
+        <div class="content" id="punishments-tab">
+            <div class="page-header">
+                <h3>Наказания</h3>
+                <p class="page-sub">Выдача и снятие санкций</p>
+            </div>
+            <div class="punish-sections">
+                <div class="punish-section give">
+                    <div class="punish-section-title">Выдать</div>
+                    <div class="punish-scroll">
+                        <div class="punish-card">
+                            <h4>Ban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="ban_static" placeholder="Статик">
+                            <input type="text" id="ban_time" placeholder="Дней">
+                            <input type="text" id="ban_reason" placeholder="Причина">
+                            <button class="punish-btn btn-ban" onclick="executePunishment('ban')">Выдать ban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Hardban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="hardban_static" placeholder="Статик / Social">
+                            <input type="text" id="hardban_reason" placeholder="Причина">
+                            <button class="punish-btn btn-ban" onclick="executePunishment('hardban')">Hardban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Shardban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="shardban_static" placeholder="Статик / Social">
+                            <input type="text" id="shardban_reason" placeholder="Причина">
+                            <button class="punish-btn btn-ban" onclick="executePunishment('shardban')">Shardban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Jail</h4>
+                            <input type="text" id="jail_static" placeholder="Статик">
+                            <input type="text" id="jail_time" placeholder="Минут">
+                            <input type="text" id="jail_reason" placeholder="Причина">
+                            <button class="punish-btn btn-jail" onclick="executePunishment('jail')">Jail</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Mute</h4>
+                            <input type="text" id="mute_static" placeholder="Статик">
+                            <input type="text" id="mute_time" placeholder="Минут">
+                            <input type="text" id="mute_reason" placeholder="Причина">
+                            <button class="punish-btn btn-mute" onclick="executePunishment('mute')">Mute</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Kick</h4>
+                            <input type="text" id="kick_static" placeholder="Статик">
+                            <input type="text" id="kick_reason" placeholder="Причина">
+                            <button class="punish-btn btn-kick" onclick="executePunishment('kick')">Kick</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Freeze</h4>
+                            <input type="text" id="freeze_static" placeholder="Статик">
+                            <button class="punish-btn btn-mute" onclick="executePunishment('freeze')">Freeze</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="punish-section lift">
+                    <div class="punish-section-title">Снять</div>
+                    <div class="punish-scroll">
+                        <div class="punish-card">
+                            <h4>Unban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="unban_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('unban')">Unban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Unjail</h4>
+                            <input type="text" id="unjail_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('unjail')">Unjail</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Unmute</h4>
+                            <input type="text" id="unmute_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('unmute')">Unmute</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Hardunban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="hardunban_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('hardunban')">Hardunban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Shardunban <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 5 lvl</span></h4>
+                            <input type="text" id="shardunban_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('shardunban')">Shardunban</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Unfreeze</h4>
+                            <input type="text" id="unfreeze_static" placeholder="Статик">
+                            <button class="punish-btn btn-lift" onclick="executePunishment('unfreeze')">Unfreeze</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Выдача -->
+        <div class="content" id="grants-tab">
+            <div class="page-header">
+                <h3>Выдача</h3>
+                <p class="page-sub">Деньги и DP</p>
+            </div>
+            <div class="punish-sections">
+                <div class="punish-section give">
+                    <div class="punish-section-title">Игроку</div>
+                    <div class="punish-scroll">
+                        <div class="punish-card">
+                            <h4>Деньги <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 6 lvl</span></h4>
+                            <input type="text" id="grant_money_static" placeholder="Статик">
+                            <input type="text" id="grant_money_amount" placeholder="До 10 млрд $">
+                            <button class="punish-btn btn-jail" data-admin-permission="money" disabled onclick="executeGrant('givemoney')">Выдать $</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Забрать $ <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 6 lvl</span></h4>
+                            <input type="text" id="take_money_static" placeholder="Статик">
+                            <input type="text" id="take_money_amount" placeholder="До 10 млрд $">
+                            <button class="punish-btn btn-ban" data-admin-permission="money" disabled onclick="executeGrant('takemoney')">Забрать $</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>DP <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 8 lvl</span></h4>
+                            <input type="text" id="grant_dp_static" placeholder="Статик">
+                            <input type="text" id="grant_dp_amount" placeholder="Кол-во DP">
+                            <button class="punish-btn btn-jail" data-admin-permission="dp" disabled onclick="executeGrant('givedp')">Выдать DP</button>
+                        </div>
+                        <div class="punish-card">
+                            <h4>Забрать DP <span style="font-size:11px;color:rgba(255,255,255,0.45)">· 8 lvl</span></h4>
+                            <input type="text" id="take_dp_static" placeholder="Статик">
+                            <input type="text" id="take_dp_amount" placeholder="Кол-во DP">
+                            <button class="punish-btn btn-ban" data-admin-permission="dp" disabled onclick="executeGrant('takedp')">Забрать DP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Справка -->
+        <div class="content" id="commands-tab">
+            <div class="page-header">
+                <h3>Справка</h3>
+                <p class="page-sub">Команды и горячие клавиши</p>
+            </div>
+            <div class="help-intro command-help-intro" id="help-intro-block">
+                Для рангов 1–7 вход в админ-сессию выполняется здесь, в F6. Все действия доступны в разделе «Все действия». Права проверяются сервером; для рангов 8–10 пароль сессии не требуется.
+            </div>
+            <div class="commands-search-wrap">
+                <input type="search" id="commandsSearch" class="commands-search" placeholder="Поиск команды или описания…" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="commands-container" id="commandsHelpList"></div>
+        </div>
+
+        <!-- Настройки -->
+        <div class="content" id="settings-tab">
+            <div class="page-header">
+                <h3>Настройки</h3>
+                <p class="page-sub">Бинды и аккаунт</p>
+            </div>
+            <div class="settings-subtabs">
+                <button type="button" class="settings-subtab active" data-settings="binds" onclick="showSettingsPane('binds')">Бинды</button>
+                <button type="button" class="settings-subtab" data-settings="account" onclick="showSettingsPane('account')">Аккаунт</button>
+            </div>
+            <div class="settings-pane active" id="settings-binds">
+                <p class="settings-note" style="margin-bottom:12px;">Клавиша открытия админ-меню. По умолчанию F6. Если назначите другую — F6 перестанет открывать меню. Esc — сброс на F6.</p>
+                <div class="settings-bind-scroll">
+                    <div class="keybind-list" id="admin-keybind-list">
+                        <div class="keybind-line">
+                            <span>Админ-меню</span>
+                            <button type="button" class="keybind-btn" data-admin-bind="admin_menu"><span class="kb-label">F6</span></button>
+                        </div>
+                        <div class="keybind-line">
+                            <span>ESP (информация)</span>
+                            <button type="button" class="keybind-btn" data-admin-bind="admin_esp"><span class="kb-label">F12</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-pane" id="settings-account">
+                <div class="settings-card">
+                    <p class="settings-note" id="settings-account-note">
+                        Одноразовый сброс пароля админ-сессии. После сброса задайте новый пароль при входе в панель F6. Повторный сброс недоступен.
+                    </p>
+                    <button type="button" class="btn btn-ghost" id="btn-reset-admin-pass" style="width:100%;" onclick="resetAdminPassword()">Сбросить пароль сессии</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="content" id="staff-tab"><div class="page-header"><h3>Администрация</h3><p class="page-sub">Ранги и персональные разрешения</p></div><div class="admin-form-grid"><label>CID игрока<input id="staffCid" inputmode="numeric" placeholder="CID"></label><label>Ранг<select id="staffRank"></select></label><button class="btn" onclick="LegacyAdmin.loadStaff()">Загрузить</button><button class="btn btn-primary" onclick="LegacyAdmin.saveRank()">Сохранить ранг</button></div><div id="staffProfile" class="legacy-status"></div><div id="permissionsGrid" class="permission-grid"></div></section>
+<section class="content" id="business-tab"><div class="page-header"><h3>Бизнесы и цены</h3><p class="page-sub">Цены подключённых каталогов · список обновляется автоматически</p></div><input id="businessSearch" placeholder="Найти товар…" oninput="LegacyAdmin.renderPrices()"><div id="pricesGrid" class="prices-grid"></div></section>
+<section class="content" id="tools-tab"><div class="page-header"><h3>Центр действий</h3><p class="page-sub">Действия панели доступны также через команды /</p></div><input id="toolSearch" placeholder="Поиск действия…" oninput="LegacyAdmin.renderTools()"><div class="tool-executor"><label>Действие<select id="toolCommand"></select></label><label>Параметры<input id="toolArgs" placeholder="CID, значение или причина — по подсказке ниже"></label><p id="toolDescription" class="page-sub"></p><button class="btn btn-primary" onclick="LegacyAdmin.execute()">Выполнить</button></div><div id="toolResults" class="legacy-status" role="status"></div></section>
+<div id="legacyLogin" hidden><div><h3>Админ-сессия</h3><p>Введите пароль сессии. При первом входе он будет сохранён.</p><input id="panelPassword" type="password" autocomplete="off" maxlength="128"><button class="btn btn-primary" onclick="LegacyAdmin.login()">Войти</button></div></div>
+<div id="copy-toast" class="copy-toast" role="status" aria-live="polite"></div>
+    </div>
+
+
+</div>
+
+<script>
+    let reports = [];
+    let currentRepId = null;
+
+    function escHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function findReportByStatic(staticId) {
+        const sid = parseInt(staticId, 10);
+        return reports.find(function (r) { return r.static === sid; });
+    }
+
+    function getActiveReport() {
+        if (currentRepId == null) return null;
+        return reports.find(function (r) { return r.id === currentRepId; }) || null;
+    }
+
+    function reportPreviewText(r) {
+        if (r.messages && r.messages.length) {
+            const last = r.messages[r.messages.length - 1];
+            return String(last.text || '').trim();
+        }
+        return String(r.text || '').trim();
+    }
+
+    function normalizeMessages(messages, fallbackText, fallbackAuthor) {
+        if (messages && messages.length) return messages.slice();
+        if (fallbackText) {
+            return [{ role: 'user', text: fallbackText, author: fallbackAuthor || 'Игрок', ts: Date.now() }];
+        }
+        return [];
+    }
+
+    function addReport(arg1, arg2, arg3) {
+        let obj;
+        if (typeof arg1 === 'object' && arg1 !== null) {
+            obj = arg1;
+        } else {
+            obj = { static: arg1, text: arg2, isMedia: arg3 };
+        }
+        const playerStatic = parseInt(obj.static, 10);
+        const text = String(obj.text || '').trim();
+        const isMedia = !!obj.isMedia;
+        if (!Number.isFinite(playerStatic) || !text) return;
+
+        let r = findReportByStatic(playerStatic);
+        if (r) {
+            r.text = text;
+            r.isMedia = isMedia;
+            if (obj.login) r.login = obj.login;
+            if (obj.time) r.time = obj.time;
+            if (obj.messages) r.messages = normalizeMessages(obj.messages);
+            else if (!r.messages || !r.messages.length) {
+                r.messages = [{ role: 'user', text: text, author: r.login || 'Игрок', ts: Date.now() }];
+            }
+        } else {
+            const id = Date.now() + Math.floor(Math.random() * 1000);
+            reports.push({
+                id: id,
+                static: playerStatic,
+                text: text,
+                login: obj.login || ('#' + playerStatic),
+                time: obj.time || 'Сейчас',
+                isMedia: isMedia,
+                messages: normalizeMessages(obj.messages, text, obj.login || 'Игрок')
+            });
+        }
+        updateReportsUI();
+    }
+
+    function removeReportByStatic(staticId) {
+        const sid = parseInt(staticId, 10);
+        const removed = reports.find(function (r) { return r.static === sid; });
+        reports = reports.filter(function (r) { return r.static !== sid; });
+        if (removed && currentRepId === removed.id) {
+            currentRepId = null;
+            hideReportChat();
+        }
+        updateReportsUI();
+    }
+
+    function setReportThread(obj) {
+        if (!obj) return;
+        let data = obj;
+        if (typeof obj === 'string') {
+            try { data = JSON.parse(obj); } catch (_e) { return; }
+        }
+        const st = parseInt(data.static, 10);
+        if (!Number.isFinite(st)) return;
+        let r = findReportByStatic(st);
+        const msgs = data.messages || [];
+        const preview = msgs.length ? String(msgs[msgs.length - 1].text || '') : '';
+        if (!r) {
+            addReport({
+                static: st,
+                text: preview || 'Репорт',
+                login: data.login || ('#' + st),
+                time: 'Сейчас',
+                isMedia: false,
+                messages: msgs
+            });
+            r = findReportByStatic(st);
+        } else {
+            r.login = data.login || r.login;
+            r.messages = msgs.slice();
+            if (preview) r.text = preview.length > 200 ? preview.slice(0, 200) + '…' : preview;
+        }
+        if (r && currentRepId === r.id) renderReportChat(r);
+        updateReportsUI();
+    }
+
+    function appendReportMessage(staticId, msg) {
+        let m = msg;
+        if (typeof msg === 'string') {
+            try { m = JSON.parse(msg); } catch (_e) { return; }
+        }
+        const st = parseInt(staticId, 10);
+        const r = findReportByStatic(st);
+        if (!r) return;
+        if (!r.messages) r.messages = normalizeMessages(null, r.text, r.login);
+        r.messages.push({
+            role: m.role || 'user',
+            text: String(m.text || ''),
+            author: m.author || (m.role === 'admin' ? 'Админ' : r.login),
+            ts: m.ts || Date.now()
+        });
+        const t = String(m.text || '');
+        r.text = t.length > 200 ? t.slice(0, 200) + '…' : t;
+        if (currentRepId === r.id) renderReportChat(r);
+        updateReportsUI();
+    }
+
+    function hideReportChat() {
+        const rc = document.getElementById('report-content');
+        const re = document.getElementById('report-empty');
+        if (rc) rc.style.display = 'none';
+        if (re) re.style.display = 'flex';
+    }
+
+    function updateReportsUI() {
+        const list = document.getElementById('reports-list');
+        const badge = document.getElementById('rep-badge');
+        if (badge) badge.innerText = String(reports.length);
+
+        if (!list) return;
+        if (reports.length === 0) {
+            list.innerHTML = '<div style="text-align:center;color:#737373;margin-top:24px;font-size:13px;">Новых жалоб нет</div>';
+            return;
+        }
+
+        list.innerHTML = reports.map(function (r) {
+            const prev = escHtml(reportPreviewText(r) || '—');
+            const media = r.isMedia ? '<span class="report-media-badge">MEDIA</span>' : '';
+            return '<div class="report-item' + (currentRepId === r.id ? ' active' : '') + '" onclick="selectReport(' + r.id + ')">' +
+                '<div class="report-header">' +
+                '<span class="report-id">#' + r.static + media + '</span>' +
+                '<span class="report-time">' + escHtml(r.time) + '</span>' +
+                '</div>' +
+                '<div class="report-preview">' + prev + '</div>' +
+                '</div>';
+        }).join('');
+    }
+
+    function renderReportChat(r) {
+        const box = document.getElementById('chat-messages');
+        if (!box) return;
+        const msgs = normalizeMessages(r.messages, r.text, r.login);
+        r.messages = msgs;
+        box.innerHTML = msgs.map(function (m) {
+            const role = m.role === 'admin' ? 'admin' : 'user';
+            const nick = escHtml(m.author || (role === 'admin' ? 'Админ' : r.login));
+            const text = escHtml(m.text || '');
+            return '<div class="chat-msg ' + role + '">' +
+                '<span class="chat-msg-nick">' + nick + '</span>' +
+                '<div class="chat-msg-bubble">' + text + '</div></div>';
+        }).join('');
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function selectReport(id) {
+        currentRepId = id;
+        const r = reports.find(function (rep) { return rep.id === id; });
+        if (!r) return;
+
+        document.getElementById('report-empty').style.display = 'none';
+        const content = document.getElementById('report-content');
+        content.style.display = 'flex';
+
+        document.getElementById('view-static').innerText = String(r.static);
+        document.getElementById('view-login').innerText = (r.login || '—') + (r.isMedia ? ' · MEDIA' : '');
+
+        renderReportChat(r);
+        document.getElementById('reply-text').value = '';
+        updateReportsUI();
+        if (typeof mp !== 'undefined' && mp.trigger) {
+            mp.trigger('adminPanel:loadReportThread', r.static);
+        }
+    }
+
+    function sendReportReplyText(text) {
+        const r = getActiveReport();
+        const reply = String(text || '').trim();
+        if (!r || !reply) return;
+        if (typeof mp !== 'undefined') {
+            mp.trigger('report:adminReplyOnly', JSON.stringify({ s: r.static, t: reply }));
+        }
+    }
+
+    function sendReportReplyOnly() {
+        const reply = document.getElementById('reply-text').value;
+        sendReportReplyText(reply);
+        document.getElementById('reply-text').value = '';
+    }
+
+    function closeReportTicket() {
+        const r = getActiveReport();
+        if (!r) return;
+        if (typeof mp !== 'undefined') {
+            mp.trigger('report:adminCloseTicket', r.static);
+        }
+        // Wait for the server's removeReport acknowledgement.
+    }
+
+    function reportGoto() {
+        const r = getActiveReport();
+        if (!r) return;
+        if (typeof mp !== 'undefined') mp.trigger('goto', r.static);
+    }
+
+    function invokeAdminSpec(staticId) {
+        const sid = parseInt(staticId, 10);
+        if (!Number.isFinite(sid) || sid <= 0) return;
+        if (typeof mp === 'undefined') return;
+        if (typeof mp.trigger === 'function') {
+            mp.trigger('adminPanel:execCommand', 'spec '+sid);
+            return;
+        }
+        if (typeof mp.trigger === 'function') {
+            mp.trigger('adminPanel:spec', sid);
+        }
+    }
+
+    function reportSpec() {
+        const r = getActiveReport();
+        if (!r) return;
+        invokeAdminSpec(r.static);
+    }
+
+    function playerSpec() {
+        const id = document.getElementById('static').value;
+        if (!id) return;
+        invokeAdminSpec(id);
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.content').forEach(function (tab) { tab.classList.remove('active'); });
+        document.querySelectorAll('.menu .tab-button').forEach(function (btn) { btn.classList.remove('active'); });
+        const tabEl = document.getElementById(tabName + '-tab');
+        if (tabEl) tabEl.classList.add('active');
+        const btn = document.querySelector('.menu .tab-button[data-tab="' + tabName + '"]');
+        if (btn) btn.classList.add('active');
+
+        const rightMenu = document.getElementById('teleports-right-menu');
+        if (rightMenu) rightMenu.style.display = (tabName === 'teleports') ? 'flex' : 'none';
+
+        if (tabName !== 'commands') {
+            var cs = document.getElementById('commandsSearch');
+            if (cs) cs.blur();
+        }
+    }
+
+    function showSettingsPane(name) {
+        document.querySelectorAll('.settings-subtab').forEach(function (b) {
+            b.classList.toggle('active', b.getAttribute('data-settings') === name);
+        });
+        document.querySelectorAll('.settings-pane').forEach(function (p) { p.classList.remove('active'); });
+        const pane = document.getElementById('settings-' + name);
+        if (pane) pane.classList.add('active');
+    }
+
+    var KEYBIND_STORAGE = {};
+
+    function vkToLabel(vk) {
+        vk = parseInt(vk, 10);
+        if (!vk || isNaN(vk)) return '—';
+        if (vk === 0x01) return 'ЛКМ';
+        if (vk === 0x02) return 'ПКМ';
+        if (vk === 0x04) return 'СКМ';
+        if (vk === 0x05) return 'Mouse4';
+        if (vk === 0x06) return 'Mouse5';
+        if (vk === 0x08) return 'Backspace';
+        if (vk === 0x09) return 'Tab';
+        if (vk === 0x0d) return 'Enter';
+        if (vk === 0x10) return 'Shift';
+        if (vk === 0x11) return 'Ctrl';
+        if (vk === 0x12) return 'Alt';
+        if (vk === 0x14) return 'Caps Lock';
+        if (vk === 0x1b) return 'Esc';
+        if (vk === 0x20) return 'Пробел';
+        if (vk === 0x21) return 'Page Up';
+        if (vk === 0x22) return 'Page Down';
+        if (vk === 0x23) return 'End';
+        if (vk === 0x24) return 'Home';
+        if (vk === 0x25) return '←';
+        if (vk === 0x26) return '↑';
+        if (vk === 0x27) return '→';
+        if (vk === 0x28) return '↓';
+        if (vk === 0x2d) return 'Insert';
+        if (vk === 0x2e) return 'Delete';
+        if (vk === 0x90) return 'Num Lock';
+        if (vk === 0x91) return 'Scroll Lock';
+        if (vk === 0xba) return ';';
+        if (vk === 0xbb) return '=';
+        if (vk === 0xbc) return ',';
+        if (vk === 0xbd) return '-';
+        if (vk === 0xbe) return '.';
+        if (vk === 0xbf) return '/';
+        if (vk === 0xc0) return '`';
+        if (vk === 0xdb) return '[';
+        if (vk === 0xdc) return '\\';
+        if (vk === 0xdd) return ']';
+        if (vk === 0xde) return "'";
+        if (vk === 0x6a) return 'Num *';
+        if (vk === 0x6b) return 'Num +';
+        if (vk === 0x6d) return 'Num -';
+        if (vk === 0x6e) return 'Num .';
+        if (vk === 0x6f) return 'Num /';
+        if (vk >= 0x60 && vk <= 0x69) return 'Num ' + (vk - 0x60);
+        if (vk >= 0x30 && vk <= 0x39) return String.fromCharCode(vk);
+        if (vk >= 0x41 && vk <= 0x5a) return String.fromCharCode(vk);
+        if (vk >= 0x70 && vk <= 0x87) return 'F' + (vk - 0x6f);
+        if (vk >= 0xa0 && vk <= 0xa5) {
+            var n = ['LShift', 'RShift', 'LCtrl', 'RCtrl', 'LAlt', 'RAlt'];
+            return n[vk - 0xa0] || ('VK ' + vk);
+        }
+        return 'VK ' + vk;
+    }
+
+    window.setAdminKeybindLabel = function (bindId, text) {
+        var sel = bindId.indexOf('admin_') === 0 ? '[data-admin-bind="' + bindId + '"]' : '[data-bind="' + bindId + '"]';
+        document.querySelectorAll('.keybind-btn' + sel + ' .kb-label').forEach(function (el) {
+            el.textContent = text || '—';
+        });
+        document.querySelectorAll('.keybind-btn' + sel).forEach(function (btn) {
+            btn.classList.remove('capturing');
+        });
+    };
+
+    window.applyAdminPanelKeybindLabels = function () {};
+
+    window.applyAdminBindLabels = function (binds) {
+        if (!binds) return;
+        if (typeof binds === 'string') {
+            try { binds = JSON.parse(binds); } catch (_e) { return; }
+        }
+        var extra = binds.menuKeyExtra;
+        if (extra === undefined || extra === null) extra = binds.menuKey;
+        var mk = parseInt(extra, 10);
+        if (!Number.isFinite(mk) || mk <= 0 || mk === 0x75) {
+            window.setAdminKeybindLabel('admin_menu', 'F6');
+        } else {
+            window.setAdminKeybindLabel('admin_menu', vkToLabel(mk));
+        }
+        if (binds.espKey != null) window.setAdminKeybindLabel('admin_esp', vkToLabel(binds.espKey));
+    };
+
+    window.setAdminKeybindCapturing = function (bindId, active) {
+        var sel = bindId.indexOf('admin_') === 0 ? '[data-admin-bind="' + bindId + '"]' : '[data-bind="' + bindId + '"]';
+        document.querySelectorAll('.keybind-btn' + sel).forEach(function (btn) {
+            btn.classList.toggle('capturing', !!active);
+        });
+    };
+
+    function resetAdminPassword() {
+        if (typeof mp !== 'undefined') mp.trigger('adminPanel:resetPass');
+    }
+
+    function setSettingsInfo(obj) {
+        if (!obj) return;
+        let data = obj;
+        if (typeof obj === 'string') {
+            try { data = JSON.parse(obj); } catch (_e) { return; }
+        }
+        if (data.menuKey != null || data.espKey != null) {
+            window.applyAdminBindLabels(data);
+        }
+        if (data.accountNote) {
+            const note = document.getElementById('settings-account-note');
+            if (note) note.textContent = data.accountNote;
+        }
+        const resetBtn = document.getElementById('btn-reset-admin-pass');
+        if (resetBtn && data.passResetAvailable !== undefined) {
+            resetBtn.disabled = data.passResetAvailable !== true;
+            resetBtn.style.opacity = resetBtn.disabled ? '0.45' : '1';
+            resetBtn.style.cursor = resetBtn.disabled ? 'not-allowed' : 'pointer';
+        }
+    }
+
+    window.__adminPanelLvl = 0;
+    window.__adminPanelSetLevel = function (lvl) {
+        window.__adminPanelLvl = Number(lvl) || 0;
+    };
+
+    function adminPanelNeedLvl(min, label) {
+        if (window.__adminPanelLvl >= min) return true;
+        if (typeof mp !== 'undefined') {
+            mp.trigger('adminPanel:notify', 'Нужен уровень админки ' + min + '+ (' + (label || '') + ').');
+        }
+        return false;
+    }
+
+    window.__adminPanelCapabilities = {money:false,dp:false};
+    window.__adminPanelSetCapabilities = function(caps) {
+        window.__adminPanelCapabilities = {money:!!(caps&&caps.money),dp:!!(caps&&caps.dp)};
+        document.querySelectorAll('[data-admin-permission]').forEach(function(button){
+            button.disabled = window.__adminPanelCapabilities[button.dataset.adminPermission] !== true;
+            button.title = button.disabled ? 'Недостаточно прав по текущему рангу или админ-сессии.' : '';
+        });
+    };
+    function adminPanelNeedPermission(permission) {
+        if(window.__adminPanelCapabilities[permission]===true)return true;
+        if(typeof mp!=='undefined')mp.trigger('adminPanel:notify','Недостаточно прав по текущему рангу или админ-сессии.');
+        return false;
+    }
+
+    function executeGrant(type) {
+        const getVal = function (id) { return (document.getElementById(id) && document.getElementById(id).value.trim()) || ''; };
+        let cmd = '';
+        if (type === 'givemoney') {
+            if (!adminPanelNeedPermission('money')) return;
+            cmd = 'givemoney ' + getVal('grant_money_static') + ' ' + getVal('grant_money_amount');
+        } else if (type === 'takemoney') {
+            if (!adminPanelNeedPermission('money')) return;
+            cmd = 'takemoney ' + getVal('take_money_static') + ' ' + getVal('take_money_amount');
+        } else if (type === 'givedp') {
+            if (!adminPanelNeedPermission('dp')) return;
+            cmd = 'givedp ' + getVal('grant_dp_static') + ' ' + getVal('grant_dp_amount');
+        } else if (type === 'takedp') {
+            if (!adminPanelNeedPermission('dp')) return;
+            cmd = 'takedp ' + getVal('take_dp_static') + ' ' + getVal('take_dp_amount');
+        }
+        if (cmd.trim() && typeof mp !== 'undefined') mp.trigger('adminPanel:execCommand', cmd.trim());
+    }
+
+    function executePunishment(type) {
+        const getVal = function (id) { return (document.getElementById(id) && document.getElementById(id).value) || ''; };
+        if (type === 'ban' || type === 'hardban' || type === 'shardban' || type === 'unban' || type === 'hardunban' || type === 'shardunban') {
+            if (!adminPanelNeedLvl(5, 'баны')) return;
+        }
+        let cmd = '';
+        if (type === 'ban') cmd = 'ban ' + getVal('ban_static') + ' ' + getVal('ban_time') + ' ' + getVal('ban_reason');
+        else if (type === 'hardban') cmd = 'hardban ' + getVal('hardban_static') + ' ' + getVal('hardban_reason');
+        else if (type === 'shardban') cmd = 'shardban ' + getVal('shardban_static') + ' ' + getVal('shardban_reason');
+        else if (type === 'jail') cmd = 'jail ' + getVal('jail_static') + ' ' + getVal('jail_time') + ' ' + getVal('jail_reason');
+        else if (type === 'mute') cmd = 'mute ' + getVal('mute_static') + ' ' + getVal('mute_time') + ' ' + getVal('mute_reason');
+        else if (type === 'kick') cmd = 'kick ' + getVal('kick_static') + ' ' + getVal('kick_reason');
+        else if (type === 'freeze') cmd = 'freeze ' + getVal('freeze_static');
+        else if (type === 'unban') cmd = 'unban ' + getVal('unban_static');
+        else if (type === 'unjail') cmd = 'unjail ' + getVal('unjail_static');
+        else if (type === 'unmute') cmd = 'unmute ' + getVal('unmute_static');
+        else if (type === 'hardunban') cmd = 'hardunban ' + getVal('hardunban_static');
+        else if (type === 'shardunban') cmd = 'shardunban ' + getVal('shardunban_static');
+        else if (type === 'unfreeze') cmd = 'unfreeze ' + getVal('unfreeze_static');
+
+        if (cmd.trim() && typeof mp !== 'undefined') mp.trigger('adminPanel:execCommand', cmd.trim());
+    }
+
+    function showTeleportCategory(category) {
+        const container = document.getElementById('teleport-buttons');
+        let buttonsHTML = '';
+        const data = {
+            'faction1': [{name: 'Ballas', id: 1}, {name: 'Families', id: 2}, {name: 'Bloods', id: 3}, {name: 'Vagos', id: 4}, {name: 'Marabunta', id: 5}, {name: 'FIB Tower', id: 6}],
+            'faction2': [{name: 'Автосалон', id: 7}, {name: 'Барбершоп', id: 8}, {name: 'Gunshop 1', id: 9}, {name: 'Gunshop 2', id: 10}, {name: 'Казино', id: 11}, {name: 'Чёрный Рынок', id: 13}, {name: 'EMS', id: 23}, {name: 'Чёрный заработок', id: 24}],
+            'faction3': [{name: 'Arcadius', id: 14}, {name: 'Муравейник', id: 15}, {name: 'Трасса', id: 21}, {name: 'Аэропорт ЛС', id: 22}],
+            'faction4': [{name: 'Интерьер Казино', id: 16}],
+            'faction5': [{name: 'Дерби', id: 18}, {name: 'Мясорубка', id: 19}, {name: 'Дуэли', id: 20}]
+        };
+        if (data[category]) {
+            data[category].forEach(function (item) {
+                buttonsHTML += '<button onclick="tp(' + item.id + ')">' + escHtml(item.name) + '</button>';
+            });
+        }
+        container.innerHTML = buttonsHTML;
+        document.querySelectorAll('.right-menu-button').forEach(function (btn) { btn.classList.remove('active'); });
+        const activeBtn = document.querySelector('button[onclick="showTeleportCategory(\'' + category + '\')"]');
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function tp(id) {
+        if (typeof mp !== 'undefined') mp.trigger('teleportToInterior', id);
+    }
+
+    function teleportMeToPlayer() {
+        const id = document.getElementById('static').value;
+        if (id && typeof mp !== 'undefined') mp.trigger('goto', id);
+    }
+
+    function teleportPlayerToMe() {
+        const id = document.getElementById('static').value;
+        if (id && typeof mp !== 'undefined') mp.trigger('gethere', id);
+    }
+
+    function adminFreeze() {
+        const id = document.getElementById('static').value;
+        if (id && typeof mp !== 'undefined') mp.trigger('adminPanel:execCommand', 'freeze ' + id);
+    }
+
+    function adminUnfreeze() {
+        const id = document.getElementById('static').value;
+        if (id && typeof mp !== 'undefined') mp.trigger('adminPanel:execCommand', 'unfreeze ' + id);
+    }
+
+    let copyToastTimer = null;
+
+    function showCopyToast(text) {
+        const el = document.getElementById('copy-toast');
+        if (!el) return;
+        el.textContent = 'Скопировано: ' + text;
+        el.classList.add('visible');
+        clearTimeout(copyToastTimer);
+        copyToastTimer = setTimeout(function () { el.classList.remove('visible'); }, 2400);
+    }
+
+    function fallbackCopyText(str) {
+        const ta = document.createElement('textarea');
+        ta.value = str;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-2000px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_e) {}
+        document.body.removeChild(ta);
+    }
+
+    function copyToClipboard(str) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            return navigator.clipboard.writeText(str).catch(function () { fallbackCopyText(str); });
+        }
+        fallbackCopyText(str);
+        return Promise.resolve();
+    }
+
+    function rebuildAdminCommandsHelp(hints) {
+        var container = document.getElementById('commandsHelpList');
+        if (!container) return;
+
+        var rows = [];
+        if (hints && hints.length) {
+            for (var i = 0; i < hints.length; i++) {
+                var h = hints[i];
+                var cmd = String(h.cmd || '').replace(/^\/+/, '').trim();
+                if (!cmd) continue;
+                var lv = h.minLvl !== undefined && h.minLvl !== null ? Number(h.minLvl) : 0;
+                if (isNaN(lv)) lv = 0;
+                rows.push({ cmd: cmd, desc: String(h.desc || ''), minLvl: lv });
+            }
+        }
+        rows.sort(function (a, b) {
+            if (b.minLvl !== a.minLvl) return b.minLvl - a.minLvl;
+            return a.cmd.localeCompare(b.cmd);
+        });
+
+        var levelCounts = {};
+        rows.forEach(function (r) {
+            var k = r.minLvl;
+            levelCounts[k] = (levelCounts[k] || 0) + 1;
+        });
+
+        var html = '';
+        html += '<div class="lvl-header lvl-keys">Админ-сессия (1–7 lvl)</div>';
+
+        var curLv = null;
+        for (var j = 0; j < rows.length; j++) {
+            var r = rows[j];
+            if (r.minLvl !== curLv) {
+                curLv = r.minLvl;
+                var hdrClass = 'lvl-header ';
+                var hdrText = '';
+                var count = levelCounts[curLv] || 0;
+                if (curLv <= 0) {
+                    hdrClass += 'lvl-keys';
+                    hdrText = 'Общие команды игроков';
+                } else {
+                    hdrClass += 'lvl-' + (curLv > 8 ? 8 : curLv);
+                    hdrText = curLv + ' уровень';
+                }
+                html += '<div class="' + hdrClass + '"><span>' + escHtml(hdrText) + '</span><span class="lvl-count">' + count + '</span></div>';
+            }
+            html += '<div class="command-item"><span class="cmd-name">/' + escHtml(r.cmd) + '</span><span class="cmd-desc">' + escHtml(r.desc) + '</span></div>';
+        }
+
+        html += '<div class="lvl-header lvl-keys"><span>Горячие клавиши</span><span class="lvl-count">2</span></div>';
+        html += '<div class="command-item"><span class="cmd-name">F6</span><span class="cmd-desc">Админ-панель (при активной сессии для 1–7 lvl)</span></div>';
+        html += '<div class="command-item"><span class="cmd-name">F12</span><span class="cmd-desc">Информация (ESP)</span></div>';
+
+        container.innerHTML = html;
+    }
+
+    window.__adminPanelSetCmdHints = function (raw) {
+        try {
+            var hints = JSON.parse(typeof raw === 'string' ? raw : '[]') || [];
+            rebuildAdminCommandsHelp(hints);
+            var inp = document.getElementById('commandsSearch');
+            if (inp && inp.value) filterCommandsHelp(inp.value);
+        } catch (_e) {}
+    };
+
+    function filterCommandsHelp(raw) {
+        const container = document.getElementById('commandsHelpList');
+        if (!container) return;
+        const q = (raw || '').trim().toLowerCase();
+        const tokens = q.split(/\s+/).filter(Boolean);
+        const kids = Array.from(container.children);
+
+        if (tokens.length === 0) {
+            kids.forEach(function (el) { el.style.display = ''; });
+            return;
+        }
+
+        kids.forEach(function (el) {
+            if (el.classList.contains('command-item')) {
+                var name = (el.querySelector('.cmd-name') && el.querySelector('.cmd-name').textContent) || '';
+                var desc = (el.querySelector('.cmd-desc') && el.querySelector('.cmd-desc').textContent) || '';
+                var hay = (name + '\n' + desc).toLowerCase();
+                var ok = tokens.every(function (t) { return hay.indexOf(t) !== -1; });
+                el.style.display = ok ? '' : 'none';
+            }
+        });
+
+        var i = 0;
+        while (i < kids.length) {
+            var el = kids[i];
+            if (el.classList.contains('lvl-header')) {
+                var j = i + 1;
+                var sectionHasMatch = false;
+                while (j < kids.length && !kids[j].classList.contains('lvl-header')) {
+                    var c = kids[j];
+                    if (c.classList.contains('command-item') && c.style.display !== 'none') sectionHasMatch = true;
+                    else if (c.classList.contains('command-help-intro')) {
+                        var introText = (c.textContent || '').toLowerCase();
+                        if (tokens.every(function (t) { return introText.indexOf(t) !== -1; })) sectionHasMatch = true;
+                    }
+                    j++;
+                }
+                el.style.display = sectionHasMatch ? '' : 'none';
+            }
+            i++;
+        }
+    }
+
+    window.AdminPanelAPI = {
+        addReport: addReport,
+        removeReportByStatic: removeReportByStatic,
+        setReportThread: setReportThread,
+        appendReportMessage: appendReportMessage,
+        __adminPanelSetCmdHints: window.__adminPanelSetCmdHints,
+        setSettingsInfo: setSettingsInfo
+    };
+
+    window.addReport = addReport;
+    window.removeReportByStatic = removeReportByStatic;
+    window.setReportThread = setReportThread;
+    window.appendReportMessage = appendReportMessage;
+
+    window.onload = function () {
+        showTab('teleports');
+        showTeleportCategory('faction1');
+        updateReportsUI();
+    };
+
+    (function initAdminKeybindButtons() {
+        document.querySelectorAll('.keybind-btn[data-admin-bind]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var id = this.getAttribute('data-admin-bind');
+                if (!id || typeof mp === 'undefined' || !mp.trigger) return;
+                window.setAdminKeybindCapturing(id, true);
+                mp.trigger('adminBindCaptureStart', id);
+            });
+        });
+    })();
+
+    (function initQuickChips() {
+        document.querySelectorAll('.quick-chip[data-reply]').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                sendReportReplyText(chip.getAttribute('data-reply') || '');
+            });
+        });
+    })();
+
+    (function initCommandsHelpSearch() {
+        var inp = document.getElementById('commandsSearch');
+        if (!inp) return;
+        inp.addEventListener('input', function () { filterCommandsHelp(inp.value); });
+        inp.addEventListener('focus', function () {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('adminPanel:helpSearchKeys', true);
+        });
+        inp.addEventListener('blur', function () {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('adminPanel:helpSearchKeys', false);
+        });
+        inp.addEventListener('keydown', function (ev) { ev.stopPropagation(); });
+        inp.addEventListener('keyup', function (ev) { ev.stopPropagation(); });
+    })();
+
+    window.__adminPanelSetCmdHints('[]');
+
+    (function initAdminPanelFormFocus() {
+        var panel = document.getElementById('draggable-panel');
+        if (!panel || typeof mp === 'undefined' || !mp.trigger) return;
+
+        function isFormElement(el) {
+            if (!el || !el.tagName) return false;
+            var t = el.tagName;
+            if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return true;
+            if (el.isContentEditable) return true;
+            return false;
+        }
+
+        function syncFormFocus() {
+            var a = document.activeElement;
+            var on = !!(a && panel.contains(a) && isFormElement(a));
+            mp.trigger('adminPanel:formFocus', on);
+        }
+
+        panel.addEventListener('focusin', syncFormFocus);
+        panel.addEventListener('focusout', function () { setTimeout(syncFormFocus, 0); });
+
+        // T/клавиши не уходят в клиентский бинд чата, пока печатаем в любом поле панели
+        panel.addEventListener('keydown', function (ev) {
+            if (!isFormElement(ev.target)) return;
+            ev.stopPropagation();
+        }, true);
+        panel.addEventListener('keyup', function (ev) {
+            if (!isFormElement(ev.target)) return;
+            ev.stopPropagation();
+        }, true);
+    })();
+
+    (function initReportReplyKeys() {
+        var ta = document.getElementById('reply-text');
+        if (!ta) return;
+        ta.addEventListener('keydown', function (ev) {
+            ev.stopPropagation();
+            if (ev.key === 'Enter' && !ev.shiftKey) {
+                ev.preventDefault();
+                if (typeof sendReportReplyOnly === 'function') sendReportReplyOnly();
+            }
+        });
+        ta.addEventListener('keyup', function (ev) { ev.stopPropagation(); });
+        ta.addEventListener('focus', function () {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('adminPanel:formFocus', true);
+        });
+        ta.addEventListener('blur', function () {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('adminPanel:formFocus', false);
+        });
+    })();
+
+    (function initCommandsCopy() {
+        var container = document.querySelector('.commands-container');
+        if (!container) return;
+        container.addEventListener('click', function (e) {
+            var row = e.target.closest('.command-item');
+            if (!row) return;
+            var nameEl = row.querySelector('.cmd-name');
+            if (!nameEl) return;
+            var cmd = nameEl.textContent.trim();
+            if (!cmd) return;
+            copyToClipboard(cmd).then(function () { showCopyToast(cmd); });
+        });
+    })();
+
+    var isDragging = false;
+    var offsetX = 0;
+    var offsetY = 0;
+    var panel = document.getElementById('draggable-panel');
+    if (panel) {
+        panel.addEventListener('mousedown', function (e) {
+            if (['INPUT', 'BUTTON', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+            if (e.target.closest('.command-item')) return;
+            isDragging = true;
+            offsetX = e.clientX - panel.getBoundingClientRect().left;
+            offsetY = e.clientY - panel.getBoundingClientRect().top;
+        });
+    }
+    document.addEventListener('mousemove', function (e) {
+        if (isDragging && panel) {
+            panel.style.left = (e.clientX - offsetX) + 'px';
+            panel.style.top = (e.clientY - offsetY) + 'px';
+        }
+    });
+    document.addEventListener('mouseup', function () { isDragging = false; });
+</script>
+<script src="legacy-panel.js"></script><script src="package://controls/obsidian-select.js?v=2"></script></body>
+</html>

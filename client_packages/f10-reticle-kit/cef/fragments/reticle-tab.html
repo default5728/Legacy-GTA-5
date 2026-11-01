@@ -1,0 +1,46 @@
+<!-- F10 → Настройки (currentTab === 5) → боковая кнопка -->
+<button @click="openReticleSetting" :class="{'orange': currentSettingTab === 4}" class="yk-btn s-14 p-10 w-100 list-mt-10">ПРИЦЕЛ</button>
+
+<!-- F10 → Настройки → вкладка прицела (currentSettingTab === 4) -->
+<div v-if="currentSettingTab === 4" class="d-flex flex-1 playerMenu-settings-reticle">
+    <div class="d-flex column center" style="width: 185px;">
+        <div class="yk-text w-5 s-14 text-center" style="text-shadow: 0px 1px 2px #2C2C2C;">ТИП ПРИЦЕЛА</div>
+        <div @click="selectReticleType(null)" class="playerMenu-setting-reticle-type-item list-mt-5" :class="{'active': settingReticleCurrent === null}">Стандартный</div>
+        <div v-for="type in settingReticleTypeList" @click="selectReticleType(type)" class="playerMenu-setting-reticle-type-item list-mt-5" :class="{'active': settingReticleCurrent === type}">{{ type.name }}</div>
+    </div>
+    <div style="position: absolute; top: calc(50% + 110px); left: 50%; transform: translate(-50%, -50%);">
+        <button @click="settingReticleSave" class="yk-btn green s-15" style="width: 166px;">СОХРАНИТЬ</button>
+    </div>
+    <div style="position: absolute; bottom: -40px; left: 50%; transform: translate(-50%, -50%);">
+        <div class="yk-input-block" style="width: 166px; padding: 8px 5px; box-sizing: border-box; background: #111E37; border-radius: 4px;">
+            <input v-model="settingReticleCode" class="yk-input">
+        </div>
+        <div class="mt-5">
+            <button @click="settingReticleSaveCode" class="yk-btn s-15" style="width: 166px; box-sizing: border-box; padding: 5px 5px;">ПОДЕЛИТЬСЯ</button>
+        </div>
+        <div class="mt-5">
+            <button @click="settingReticleLoadCode" class="yk-btn purple s-15" style="width: 166px; box-sizing: border-box; padding: 5px 5px;">ПРИМЕНИТЬ</button>
+        </div>
+    </div>
+    <div v-if="settingReticleCurrent" class="yk-scroll playerMenu-scroll ml-auto" style="width: 360px; height: 480px;">
+        <div v-for="(p, pIndex) in settingReticleCurrent.params" :key="settingReticleCurrent.type + '_' + pIndex" class="list-mt-10">
+            <div v-if="p.type === 'progress'" class="playerMenu-setting-reticle-param-item-block">
+                <div class="yk-text w-5 s-14" style="text-shadow: 0px 1px 2px #2C2C2C;">{{ p.name }}</div>
+                <div class="yk-slider orange playerMenu-setting-reticle-param-item-progress mt-10">
+                    <input :reticle="pIndex" :id="'reticleInput' + pIndex" reticle-rangeslider type="range" :value="p.value" step="1" :min="p.min" :max="p.max">
+                </div>
+                <div class="yk-input-block mt-10" style="width: 80px; background: #111E37; border-radius: 4px; padding: 5px 0px;">
+                    <input class="yk-input center" v-model.number="p.value" @input="settingReticleUpdate(p, pIndex)">
+                </div>
+            </div>
+            <div v-if="p.type === 'color'" class="playerMenu-setting-reticle-param-item-block">
+                <div class="yk-text w-5 s-14" style="text-shadow: 0px 1px 2px #2C2C2C;">{{ p.name }}</div>
+                <div class="mt-10">
+                    <div class="playerMenu-setting-reticle-param-item-color">
+                        <chrome-picker style="width: 270px;" v-model="p.value" @input="settingReticleUpdate(p, pIndex)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

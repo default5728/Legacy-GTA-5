@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="calamity-inventory.css" />
+    <link rel="stylesheet" href="inventory-bloody-bridge.css" />
+    <style>
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+        /* Клик по тултипу не нужен — оставляем только для позиционирования из скрипта */
+        #weaponTooltip {
+            transform: none;
+            left: 0;
+            top: 0;
+        }
+        /* Calamity-style: квадратные слоты экипировки 6.4815vh, как в .blockitem;
+           layout: lpers (3 col) + cpers (тело + ниже обувь и штаны) + rpers (3 col) */
+        .magicinv .minvosn .centerinv .invpers .lpers,
+        .magicinv .minvosn .centerinv .invpers .rpers {
+            gap: 0.7407vh;
+        }
+        .magicinv .minvosn .centerinv .invpers .cpers .listitem {
+            gap: 0.7407vh;
+        }
+        .equip-slot {
+            position: relative;
+            width: 6.4815vh;
+            height: 6.4815vh;
+            box-sizing: border-box;
+            border: 0.0926vh solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.3704vh;
+            background: rgba(34, 34, 34, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.18s ease, border-color 0.18s ease;
+            overflow: hidden;
+        }
+        .equip-slot:hover {
+            background: rgba(220, 38, 38, 0.18);
+            border-color: rgba(220, 38, 38, 0.45);
+        }
+        .equip-slot img {
+            width: 3.3333vh;
+            height: 3.3333vh;
+            object-fit: contain;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .equip-slot:not(.empty) img {
+            width: 5.3333vh;
+            height: 5.3333vh;
+            opacity: 1;
+        }
+        .equip-slot .eq-meta {
+            display: none;
+        }
+        .equip-slot.empty {
+            background: rgba(34, 34, 34, 0.5);
+        }
+        .equip-slot.empty img {
+            filter: grayscale(1) brightness(0.85);
+        }
+        .equip-slot.eq-bag-unequip-blocked:not(.empty) {
+            cursor: not-allowed;
+            border-color: rgba(220, 38, 38, 0.55);
+            box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.25);
+        }
+        .equip-slot.eq-bag-unequip-blocked:not(.empty):hover {
+            background: rgba(220, 38, 38, 0.22);
+        }
+        /* Кастомная подсказка под выбранный слот */
+        .equip-slot[data-eq]::after {
+            content: attr(data-eq-tip);
+            position: absolute;
+            bottom: -1.6667vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: SF Pro Display, system-ui, sans-serif;
+            font-size: 0.9259vh;
+            color: rgba(255, 255, 255, 0.55);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        .equipment-panel .equip-slot[data-eq]::after {
+            display: none;
+        }
+        .magicinv .minvosn .inv-main-stack .rightinv .inv-grid-wrap.itemlist {
+            display: grid !important;
+            flex-direction: unset !important;
+            flex-wrap: unset !important;
+            align-content: start !important;
+        }
+        /* Сетка инвентаря 50 слотов — размер ячеек как у старых .item (inventory-bloody-bridge 6.75vh) */
+        .inv-player-panel {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 0.9vmin, 12px);
+            width: 100%;
+            max-width: none;
+            align-items: stretch;
+            padding-bottom: 0;
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: visible;
+        }
+        .inv-grid-wrap {
+            display: grid;
+            grid-template-columns: repeat(10, var(--inv-slot, 6.75vh));
+            grid-auto-rows: var(--inv-slot, 6.75vh);
+            gap: var(--inv-slot-gap, 0.7vh);
+            padding: 0.2vh 0.1vh 0.35vh;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+            flex-shrink: 0;
+            border-radius: 0.3704vh;
+            background: transparent;
+            border: none;
+            min-height: unset;
+        }
+        .inv-grid-cell {
+            position: relative;
+            flex: 0 0 auto;
+            width: var(--inv-slot, 6.75vh) !important;
+            height: var(--inv-slot, 6.75vh) !important;
+            min-width: var(--inv-slot, 6.75vh) !important;
+            min-height: var(--inv-slot, 6.75vh) !important;
+            box-sizing: border-box;
+            border-radius: 0.3704vh;
+            border: 0.0926vh solid rgba(255, 255, 255, 0.03);
+            background: rgba(34, 34, 34, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        .inv-grid-cell:hover {
+            border-color: rgba(220, 38, 38, 0.38);
+            background: rgba(220, 38, 38, 0.11);
+        }
+        /* Подпись предмета снизу ячейки при наведении (без «плавающего» тултипа) */
+        .inv-slot-label {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0.2vh 0.28vh 0.32vh;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: clamp(10px, 0.76vh, 13px);
+            font-weight: 600;
+            line-height: 1.18;
+            letter-spacing: 0.02em;
+            text-align: center;
+            color: rgba(242, 242, 242, 0.96);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92);
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.94) 0%, rgba(10, 10, 10, 0.72) 55%, transparent 100%);
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            word-break: break-word;
+            hyphens: auto;
+            opacity: 0;
+            transition: opacity 0.16s ease;
+            pointer-events: none;
+            z-index: 2;
+            -webkit-font-smoothing: antialiased;
+        }
+        .inv-grid-cell:hover .inv-slot-label,
+        .inv-bag-cell:hover .inv-slot-label {
+            opacity: 1;
+        }
+        .inv-grid-cell.item--consum-stack .inv-consumable-qty,
+        .inv-bag-cell.item--consum-stack .inv-consumable-qty {
+            top: 0.22vh;
+            bottom: auto;
+            right: 0.22vh;
+        }
+        .inv-grid-cell img {
+            margin-top: 0;
+            object-fit: contain;
+            pointer-events: none;
+            width: auto !important;
+            height: auto !important;
+            max-height: min(90px, calc(var(--inv-slot, 74px) * 0.82)) !important;
+            max-width: min(112px, calc(var(--inv-slot, 74px) * 1.01)) !important;
+        }
+        .inv-grid-cell img.inv-item-img--weapon {
+            max-height: min(63px, calc(var(--inv-slot, 74px) * 0.58)) !important;
+            max-width: min(82px, calc(var(--inv-slot, 74px) * 0.78)) !important;
+        }
+        .inv-slot-bind {
+            position: absolute;
+            left: 0.25vh;
+            top: 0.2vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: clamp(10px, 0.82vh, 14px);
+            font-weight: 800;
+            color: rgba(252, 252, 252, 0.98);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92), 0 0 10px rgba(220, 38, 38, 0.22);
+            line-height: 1;
+            pointer-events: none;
+            letter-spacing: 0.03em;
+        }
+        .inv-bag-section {
+            padding: 0.55vh 0.45vh 0.5vh;
+            margin-bottom: 0;
+            border-radius: 0.3704vh;
+            background: rgba(14, 14, 14, 0.85);
+            border: none;
+            box-shadow: none;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .inv-bag-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 0 4px 2px 0;
+            margin-right: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(220, 38, 38, 0.72) rgba(14, 14, 14, 0.95);
+        }
+        .inv-bag-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .inv-bag-scroll::-webkit-scrollbar-track {
+            background: rgba(10, 10, 10, 0.95);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .inv-bag-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.35);
+        }
+        .inv-bag-scroll::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+        }
+        .inv-bag-title {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            font-size: clamp(12px, 1.35vh, 15px);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: #f5f5f5;
+            margin-bottom: 0.45vh;
+            flex-shrink: 0;
+            line-height: 1.35;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.88);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        .inv-bag-grid {
+            display: grid;
+            gap: var(--inv-slot-gap, 0.55vh);
+            width: fit-content;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding-bottom: 12px;
+        }
+        .inv-bag-cell {
+            position: relative;
+            width: var(--inv-slot, 6.75vh) !important;
+            height: var(--inv-slot, 6.75vh) !important;
+            min-width: var(--inv-slot, 6.75vh) !important;
+            min-height: var(--inv-slot, 6.75vh) !important;
+            box-sizing: border-box;
+            border-radius: 0.3704vh;
+            border: 0.0926vh solid rgba(255, 255, 255, 0.08);
+            background: rgba(34, 34, 34, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        .inv-bag-cell:hover {
+            border-color: rgba(255, 255, 255, 0.22);
+            background: rgba(40, 40, 40, 0.55);
+        }
+        .inv-bag-cell img {
+            margin-top: 0;
+            object-fit: contain;
+            pointer-events: none;
+            width: auto !important;
+            height: auto !important;
+            max-height: min(90px, calc(var(--inv-slot, 74px) * 0.82)) !important;
+            max-width: min(112px, calc(var(--inv-slot, 74px) * 1.01)) !important;
+        }
+        .inv-bag-cell img.inv-item-img--weapon {
+            max-height: min(63px, calc(var(--inv-slot, 74px) * 0.58)) !important;
+            max-width: min(82px, calc(var(--inv-slot, 74px) * 0.78)) !important;
+        }
+        #invBindToast {
+            position: fixed;
+            left: 50%;
+            top: 22%;
+            transform: translateX(-50%);
+            padding: 12px 18px;
+            border-radius: 12px;
+            background: rgba(12, 12, 12, 0.94);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+            color: #ececec;
+            font-size: 14px;
+            z-index: 99999;
+            display: none;
+            pointer-events: none;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body>
+    <div class="box-inventory">
+        <div class="magicinv">
+            <button type="button" class="closedinv closedinv--bm inv-close-trigger" aria-label="Закрыть" title="Закрыть">×</button>
+            <div id="weaponTooltip" class="weapon-tooltip"></div>
+
+            <div class="minvosn">
+                <div class="leftinv" id="familyWhLeft">
+                    <h1 class="wh-col-title">Склад семьи</h1>
+                    <div class="itemlist max" id="warehouseInventory"></div>
+                </div>
+
+                <div class="inv-main-stack">
+                    <div class="inv-top-row">
+                        <div class="centerinv">
+                            <h1 id="equipHeading">Экипировка</h1>
+                            <div class="equipment-panel">
+                                <div class="equipment-grid eq-paper-doll" id="paperDoll">
+                                    <div class="eq-grid-cell eq-grid-headwear">
+                                        <div class="equip-slot empty" data-eq="headwear" data-eq-tip="Головной убор / шляпа" title="Головной убор">
+                                            <img alt="" src="package://browsers/inventory/img/head.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Головной убор</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-mask">
+                                        <div class="equip-slot empty" data-eq="mask" data-eq-tip="Маска" title="Маска">
+                                            <img alt="" src="package://browsers/inventory/img/mask.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Маска</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-ears">
+                                        <div class="equip-slot empty" data-eq="ears" data-eq-tip="Серьги" title="Серьги">
+                                            <img alt="" src="package://browsers/inventory/img/head.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Серьги</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-glasses">
+                                        <div class="equip-slot empty" data-eq="glasses" data-eq-tip="Очки" title="Очки">
+                                            <img alt="" src="package://browsers/inventory/img/head.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Очки</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-bracelet">
+                                        <div class="equip-slot empty" data-eq="bracelet" data-eq-tip="Браслет (запястье)" title="Браслет">
+                                            <img alt="" src="package://browsers/inventory/img/body.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Браслет</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-top">
+                                        <div class="equip-slot empty" data-eq="top" data-eq-tip="Рубашка / верх" title="Верх">
+                                            <img alt="" src="package://browsers/inventory/img/body.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Торс / верх</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-watch">
+                                        <div class="equip-slot empty" data-eq="watch" data-eq-tip="Часы" title="Часы">
+                                            <img alt="" src="package://browsers/inventory/img/body.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Часы</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-bag">
+                                        <div class="equip-slot empty" data-eq="bag" data-eq-tip="Сумка" title="Сумка">
+                                            <img alt="" src="package://browsers/anims/img/svg/bascket.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Сумка</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-pants">
+                                        <div class="equip-slot empty" data-eq="pants" data-eq-tip="Штаны / низ" title="Штаны">
+                                            <img alt="" src="package://browsers/inventory/img/trousers.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Штаны</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-holster">
+                                        <div class="equip-slot empty" data-eq="holster" data-eq-tip="Аксессуар на торсе" title="Аксессуар">
+                                            <img alt="" src="package://browsers/inventory/img/body.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Аксессуар</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-gloves">
+                                        <div class="equip-slot empty" data-eq="gloves" data-eq-tip="Перчатки" title="Перчатки">
+                                            <img alt="" src="package://browsers/inventory/img/body.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Перчатки</span>
+                                    </div>
+                                    <div class="eq-grid-cell eq-grid-shoes">
+                                        <div class="equip-slot empty" data-eq="shoes" data-eq-tip="Обувь" title="Обувь">
+                                            <img alt="" src="package://browsers/inventory/img/shoe.svg" />
+                                        </div>
+                                        <span class="equip-slot-caption">Обувь</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rightinv">
+                            <h1><span id="playerInvTitle">Инвентарь</span> <span class="inv-cap-inline" id="invSlotCounter">—</span></h1>
+                            <div class="inv-player-panel">
+                                <div class="inv-grid-wrap itemlist max" id="inventory"></div>
+                                <div class="inv-bag-section" id="invBagSection" style="display:none;">
+                                    <div class="inv-bag-title" id="invBagTitle"></div>
+                                    <div class="inv-bag-scroll">
+                                        <div class="inv-bag-grid" id="invBagGrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inv-fast-bar fastslot">
+                        <span class="inv-fast-bar__label">Быстрые слоты</span>
+                        <div class="slots">
+                            <div class="slot blockitem" id="slot0"><div class="slot-number">1</div></div>
+                            <div class="slot blockitem" id="slot1"><div class="slot-number">2</div></div>
+                            <div class="slot blockitem" id="slot2"><div class="slot-number">3</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="invBindToast" role="status" style="display: none !important; visibility: hidden;" aria-hidden="true">Нажмите любую клавишу</div>
+    <div id="contextMenu" class="context-menu">
+        <ul id="contextMenuList">
+            <li id="wearClothBtn" style="display: none;">Надеть</li>
+            <li id="unequipSlotBtn" style="display: none;">Снять</li>
+            <li id="fastSlotBtn">Поместить в быстрый слот</li>
+            <li id="removeFastSlotBtn">Убрать из быстрого слота</li>
+            <li id="putWarehouseBtn" style="display: none;">положить на склад семьи</li>
+            <li id="takeWarehouseBtn" style="display: none;">забрать со склада</li>
+            <li id="useItemBtn">Использовать</li>
+            <li id="bindSlotBtn">Назначить клавишу</li>
+            <li id="clearBindSlotBtn">Убрать привязку</li>
+            <li id="dropItemBtn">Выкинуть</li>
+        </ul>
+    </div>
+
+    <div id="whQtyModal" class="wh-qty-modal" aria-hidden="true">
+        <div class="wh-qty-modal__backdrop" id="whQtyBackdrop"></div>
+        <div class="wh-qty-modal__box" id="whQtyBox">
+            <p class="wh-qty-modal__title" id="whQtyTitle">Количество</p>
+            <input type="text" class="wh-qty-modal__input" id="whQtyInput" maxlength="6" autocomplete="off" />
+            <div class="wh-qty-modal__btns">
+                <button type="button" class="wh-qty-modal__btn wh-qty-modal__btn--cancel" id="whQtyCancel">Отмена</button>
+                <button type="button" class="wh-qty-modal__btn wh-qty-modal__btn--ok" id="whQtyOk">Ок</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bagConsumMoveModal" class="bag-cm-modal" aria-hidden="true">
+        <div class="bag-cm-modal__backdrop" id="bagConsumBackdrop"></div>
+        <div class="bag-cm-modal__box" id="bagConsumBox">
+            <p class="bag-cm-modal__title" id="bagConsumTitle">Перенести в инвентарь</p>
+            <p class="bag-cm-modal__hint" id="bagConsumHint"></p>
+            <div class="bag-cm-modal__row">
+                <input type="text" class="bag-cm-modal__input" id="bagConsumInput" maxlength="6" autocomplete="off" />
+                <button type="button" class="bag-cm-modal__max" id="bagConsumMax">Max</button>
+            </div>
+            <button type="button" class="bag-cm-modal__submit" id="bagConsumOk">Перенести</button>
+            <button type="button" class="bag-cm-modal__cancel" id="bagConsumCancel">Отмена</button>
+        </div>
+    </div>
+    
+    <script src="cloth_category_icons.js"></script>
+    <script>
+        function humanizeWeaponIdClient(id) {
+            if (!id || typeof id !== 'string' || !id.startsWith('weapon_')) return id;
+            var s = id.slice(7);
+            return s.split('_').map(function(part) {
+                if (part.toLowerCase() === 'mk2') return 'MKII';
+                return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+            }).join(' ');
+        }
+
+        function decodeIc1Payload(full) {
+            if (!full || typeof full !== 'string' || !full.startsWith('ic1.')) return null;
+            try {
+                var json = decodeURIComponent(escape(atob(full.slice(4))));
+                return JSON.parse(json);
+            } catch (e1) {
+                try {
+                    return JSON.parse(atob(full.slice(4)));
+                } catch (e2) {
+                    return null;
+                }
+            }
+        }
+
+        function invResolveClothIconUrl(cid) {
+            if (typeof window.clothCategoryIconSrc === 'function') return window.clothCategoryIconSrc(Number(cid));
+            return 'package://browsers/inventory/img/body.svg';
+        }
+
+        /** Calamity CDN layout: inventoryItems/clothes/<male|female>/<folder>/drawable_texture.png */
+        var CALAM_CLOTH_CID_FOLDER = {
+            1: 'hats',
+            2: 'masks',
+            3: 'tops',
+            4: 'legs',
+            5: 'shoes',
+            6: 'accessories',
+            7: 'glasses',
+            8: 'bags'
+        };
+
+        function invClothGenderDir() {
+            return window.__invClothMale === false ? 'female' : 'male';
+        }
+
+        function invPkgClothesBase() {
+            return 'package://browsers/inventory/clothes_assets/';
+        }
+
+        function invCalclothTokenFromIc1Payload(po) {
+            if (!po || po.cid == null || po.d == null || po.t == null) return null;
+            var cid = Number(po.cid);
+            var d = Number(po.d);
+            var t = Number(po.t);
+            if (!CALAM_CLOTH_CID_FOLDER[cid] || !Number.isFinite(d) || !Number.isFinite(t)) return null;
+            return 'CALCLOTHPNG|' + cid + '|' + d + '|' + t;
+        }
+
+
+
+        /** resolvedSrc уже package:// или http; logical — токен от getImageForItem (CALCLOTHPNG|… если одежда). */
+        function invBindResolvedItemImg(imgEl, logical, resolvedSrc) {
+            if (!imgEl || !imgEl.addEventListener) return;
+            if (imgEl._invImgErrCb) {
+                imgEl.removeEventListener('error', imgEl._invImgErrCb);
+                imgEl._invImgErrCb = null;
+            }
+            imgEl.dataset.invCloudTry = '';
+            imgEl.dataset.invCloudRel = '';
+            if (typeof logical === 'string' && logical.indexOf('CALCLOTHPNG|') === 0) {
+                var p = logical.split('|');
+                var cid = Number(p[1]);
+                var d = Number(p[2]);
+                var t = Number(p[3]);
+                var fd = CALAM_CLOTH_CID_FOLDER[cid];
+                var gen = invClothGenderDir();
+                if (fd && Number.isFinite(d) && Number.isFinite(t)) {
+                    imgEl.dataset.invCloudRel = 'inventoryItems/clothes/' + gen + '/' + fd + '/' + d + '_' + t + '.png';
+                }
+            }
+            imgEl.src = resolvedSrc;
+            var cb = function onInvImgErr() {
+                imgEl.removeEventListener('error', cb);
+                imgEl._invImgErrCb = null;
+                if (imgEl.dataset.invCloudTry !== '1' && typeof window.__INV_CLOUD_BASE === 'string' && window.__INV_CLOUD_BASE.length) {
+                    var rel = imgEl.dataset.invCloudRel || '';
+                    if (rel.indexOf('/') !== -1) {
+                        imgEl.dataset.invCloudTry = '1';
+                        imgEl.src = window.__INV_CLOUD_BASE.replace(/\/+$/, '') + '/' + rel.replace(/^\/+/, '');
+                        imgEl.addEventListener('error', cb);
+                        imgEl._invImgErrCb = cb;
+                        return;
+                    }
+                }
+                var icid = logical && String(logical).indexOf('CALCLOTHPNG|') === 0 ? Number(String(logical).split('|')[1]) : NaN;
+                imgEl.src = Number.isFinite(icid) ? invResolveClothIconUrl(icid) : invResolveClothIconUrl(3);
+            };
+            imgEl._invImgErrCb = cb;
+            imgEl.addEventListener('error', cb);
+        }
+
+        /** Без суффикса (n) — иначе ivhol:cobura(1) не совпадает с префиксом и падает в default. */
+        function invItemBaseId(itemName) {
+            var s = typeof itemName === 'string' ? itemName : '';
+            s = s.replace(/^\uFEFF/, '').trim();
+            return s.split('(')[0].trim();
+        }
+
+        function invConsumableStackQty(itemStr) {
+            var m = /\((\d+)\)\s*$/.exec(String(itemStr == null ? '' : itemStr));
+            if (!m) return 1;
+            var n = parseInt(m[1], 10);
+            return Number.isFinite(n) && n > 0 ? n : 1;
+        }
+
+        function invIsConsumableStackBase(baseId) {
+            var b = String(baseId || '').trim();
+            return b === 'item_spank' || b === 'item_alco' || b === 'Бронежилет' || b === 'Аптечка';
+        }
+
+        /** mode: 'grid' | 'slot' — красный счётчик ×N шт. для спанка, Asti, брони и аптечек */
+        function invApplyConsumableStackUi(hostEl, invItem, mode) {
+            if (!hostEl || !invItem) return;
+            var baseId = invItemBaseId(invItem);
+            if (!invIsConsumableStackBase(baseId)) return;
+            var qty = invConsumableStackQty(invItem);
+            if (mode === 'slot') {
+                hostEl.classList.add('slot--consum-stack');
+                hostEl.classList.add(baseId === 'item_spank' ? 'slot--consum-spank' : baseId === 'item_alco' ? 'slot--consum-asti' : 'slot--consum-kit');
+            } else {
+                hostEl.classList.add('item--consum-stack');
+                hostEl.classList.add(baseId === 'item_spank' ? 'item--consum-spank' : baseId === 'item_alco' ? 'item--consum-asti' : 'item--consum-kit');
+            }
+            var badge = document.createElement('div');
+            badge.className = 'inv-consumable-qty' + (mode === 'slot' ? ' inv-consumable-qty--slot' : '');
+            badge.textContent = '\u00d7' + qty + ' \u0448\u0442.';
+            hostEl.appendChild(badge);
+        }
+
+        /** Имена и файлы как в menunew/index.js (GangwarClothesShopItems / ItemsBuyForm) */
+        var F3_HOLSTER = {
+            cobura: { title: 'Чёрная Кобура', file: 'clothes/cobura.png' },
+            coburaw: { title: 'Белая Кобура', file: 'clothes/coburaw.png' }
+        };
+        var F3_BAG = {
+            bag_antisocial: { title: 'Antisocial', file: 'bags/antisocial.png' },
+            bag_anime: { title: 'Anime', file: 'bags/anime.png' },
+            bag_grob: { title: 'Гроб', file: 'bags/grob.png' },
+            bag_big_black: { title: 'Большой рюкзак черный', file: 'bags/big_black.png' },
+            bag_big_white: { title: 'Большой рюкзак белый', file: 'bags/big_white.png' },
+            bag_waist: { title: 'Сумка поясная', file: 'bags/waist.png' }
+        };
+
+        function getImageForItem(itemName) {
+            var raw = typeof itemName === 'string' ? itemName : '';
+            raw = raw.replace(/^\uFEFF/, '').trim();
+            if (raw.indexOf('ic1.') === 0) {
+                var ic1s = invItemBaseId(raw);
+                var po = decodeIc1Payload(ic1s);
+                var calam = po ? invCalclothTokenFromIc1Payload(po) : null;
+                if (calam) return calam;
+                var cidFallback = po && po.cid != null ? Number(po.cid) : NaN;
+                var fn = !Number.isNaN(cidFallback) ? invResolveClothIconUrl(cidFallback) : invResolveClothIconUrl(3);
+                return 'INVPIC|' + fn;
+            }
+            var s = invItemBaseId(raw);
+            if (s.indexOf('ivhol:') === 0) {
+                var hk = s.slice(6);
+                if (F3_HOLSTER[hk]) return 'F3IMG|' + F3_HOLSTER[hk].file;
+            }
+            if (s.indexOf('ivbag:') === 0) {
+                var bkk = s.slice(6);
+                if (F3_BAG[bkk]) return 'F3IMG|' + F3_BAG[bkk].file;
+                return 'F3IMG|bags/antisocial.png';
+            }
+            if (s.indexOf('frdef:') === 0) {
+                var frp = s.split(':');
+                if (frp[1] === 'top') return 'INVPIC|' + invResolveClothIconUrl(3);
+                if (frp[1] === 'bottom') return 'INVPIC|' + invResolveClothIconUrl(4);
+                if (frp[1] === 'shoes') return 'INVPIC|' + invResolveClothIconUrl(5);
+                return 'INVPIC|' + invResolveClothIconUrl(3);
+            }
+            const base = s;
+            const inventoryData = [
+                { name: 'item_spank', img: 'item_spank.png' },
+                { name: 'item_alco', img: 'package://browsers/hud/images/asti.png' },
+
+                { name: 'Бронежилет', img: 'armor.png' },
+                { name: 'Аптечка', img: 'heal.png' },
+
+                { name: 'weapon_revolver', img: 'weapon_revolver.png' },
+                { name: 'weapon_revolver_mk2', img: 'weapon_revolver_mk2.png' },
+                { name: 'weapon_assaultrifle', img: 'weapon_assaultrifle.png' },
+                { name: 'weapon_heavyshotgun', img: 'weapon_heavyshotgun.png' },
+                { name: 'weapon_assaultshotgun', img: 'weapon_assaultshotgun.png' },
+                { name: 'weapon_carbinerifle', img: 'weapon_carbinerifle.png' },
+                { name: 'weapon_sniperrifle', img: 'weapon_sniperrifle.png' },
+                { name: 'weapon_heavysniper', img: 'svc.png' },
+                { name: 'weapon_heavysniper_mk2', img: 'weapon_heavysniper_mk2.png' },
+                { name: 'weapon_marksmanrifle', img: 'weapon_marksmanrifle.png' },
+                { name: 'weapon_specialcarbine', img: 'weapon_specialcarbine.png' },
+                { name: 'weapon_precisionrifle', img: 'weapon_precisionrifle.png' },
+                { name: 'weapon_combatmg', img: 'weapon_combatmg.png' },
+                { name: 'weapon_navyrevolver', img: 'weapon_navyrevolver.png' },
+                { name: 'weapon_combatmg_mk2', img: 'weapon_combatmg_mk2.png' },
+                { name: 'weapon_minismg', img: 'weapon_minismg.png' },
+                { name: 'weapon_musket', img: 'weapon_musket.png' },
+                { name: 'weapon_militaryrifle', img: 'weapon_militaryrifle.png', realName: 'Military Rifle' },
+                { name: 'weapon_minismg', img: 'weapon_minismg.png', realName: 'Mini SMG' }
+            ];
+            const item = inventoryData.find(data => data.name === base);
+            if (item) return 'INVPIC|' + item.img;
+            if (base.indexOf('weapon_') === 0) return 'INVICONGEN|weapon';
+            return 'INVPIC|default.png';
+        }
+
+        function resolveInventoryImgSrc(imgFile) {
+            if (imgFile.indexOf('CALCLOTHPNG|') === 0) {
+                var qc = imgFile.split('|');
+                var cidNum = Number(qc[1]);
+                var drw = Number(qc[2]);
+                var trx = Number(qc[3]);
+                var fld = CALAM_CLOTH_CID_FOLDER[cidNum];
+                var gd = invClothGenderDir();
+                if (!fld || !Number.isFinite(drw) || !Number.isFinite(trx)) return invResolveClothIconUrl(cidNum);
+                return invPkgClothesBase() + gd + '/' + fld + '/' + drw + '_' + trx + '.png';
+            }
+            if (imgFile.indexOf('F3IMG|') === 0) {
+                return '../menunew/img/' + imgFile.slice(6);
+            }
+            if (imgFile.indexOf('INVPIC|') === 0) {
+                var invFn = imgFile.slice(7);
+                if (invFn.indexOf('package://') === 0) return invFn;
+                if (invFn === 'default.png') return '../menunew/img/cartridge.svg';
+                if (invFn === 'cobura.png' || invFn === 'coburaw.png') {
+                    return '../menunew/img/clothes/' + invFn;
+                }
+                return 'package://browsers/inventory/img/' + invFn;
+            }
+            if (imgFile.indexOf('IVBAGF3|') === 0) {
+                var bkf3 = imgFile.slice(9);
+                var f3bagsRel = {
+                    bag_antisocial: '../menunew/img/bags/antisocial.png',
+                    bag_anime: '../menunew/img/bags/anime.png',
+                    bag_grob: '../menunew/img/bags/grob.png',
+                    bag_big_black: '../menunew/img/bags/big_black.png',
+                    bag_big_white: '../menunew/img/bags/big_white.png',
+                    bag_waist: '../menunew/img/bags/waist.png'
+                };
+                if (f3bagsRel[bkf3]) return f3bagsRel[bkf3];
+                return '../menunew/img/bags/antisocial.png';
+            }
+            if (imgFile === 'INVICONGEN|weapon') {
+                return '../menunew/img/cartridge.svg';
+            }
+            if (imgFile === '__menunew_bags.png') return '../menunew/img/bags/antisocial.png';
+            if (imgFile === 'default.png') return '../menunew/img/cartridge.svg';
+            return 'package://browsers/inventory/img/' + imgFile;
+        }
+        
+        /** Для ic1: только базовое имя, без « · текст.N» и без «(N слотов)» в сумках. */
+        function invShortItemNameFromCatalog(full) {
+            if (full == null || typeof full !== 'string') return 'Одежда';
+            var s = full.replace(/\s*\(\d+\s*слотов\)/gi, '').trim();
+            var i = s.indexOf(' · текст.');
+            if (i === -1) i = s.indexOf(' · т.');
+            if (i !== -1) s = s.slice(0, i).trim();
+            return s || 'Одежда';
+        }
+
+        function getNameForItem(itemName) {
+            var raw = typeof itemName === 'string' ? itemName : '';
+            raw = raw.replace(/^\uFEFF/, '').trim();
+            if (raw.indexOf('ic1.') === 0) {
+                var ic = decodeIc1Payload(invItemBaseId(raw));
+                if (ic && ic.nm) return invShortItemNameFromCatalog(ic.nm);
+                return 'Одежда';
+            }
+            var s = invItemBaseId(raw);
+            if (s.indexOf('ivhol:') === 0) {
+                var hkk = s.slice(6);
+                if (F3_HOLSTER[hkk]) return F3_HOLSTER[hkk].title;
+            }
+            if (s.indexOf('ivbag:') === 0) {
+                var bkk = s.slice(6);
+                if (F3_BAG[bkk]) return F3_BAG[bkk].title;
+                return 'Сумка';
+            }
+            if (s.indexOf('frdef:') === 0) {
+                var fp = s.split(':');
+                if (fp.length >= 3) {
+                    var fks = { '1': 'Ballas', '2': 'Families', '3': 'Bloods', '4': 'Vagos', '5': 'Marabunta', '6': 'FIB' };
+                    var fn = fks[fp[2]] || fp[2];
+                    if (fp[1] === 'top') return 'Верх (' + fn + ')';
+                    if (fp[1] === 'bottom') return 'Штаны (' + fn + ')';
+                    if (fp[1] === 'shoes') return 'Обувь (' + fn + ')';
+                }
+                return 'Одежда фракции';
+            }
+            const base = s;
+            const weaponNames = {
+                  "item_spank": "Spank",
+                  "item_alco": "Asti",
+                "Бронежилет": "Броник",
+                "Аптечка": "Аптечка",
+
+                "weapon_heavyshotgun": "Heavy Shotgun",
+                "weapon_assaultshotgun": "Assault Shotgun",
+                "weapon_carbinerifle": "Carbine Rifle",
+                "weapon_assaultrifle": "Assault Rifle",
+                "weapon_combatmg": "Combat MG",
+                "weapon_combatmg_mk2": "Combat MG MKII",
+                "weapon_sniperrifle": "Sniper Rifle",
+                "weapon_heavysniper": "Heavy Sniper MK1",
+                "weapon_heavysniper_mk2": "Heavy Sniper MKII",
+                "weapon_marksmanrifle": "Marksman Rifle",
+                "weapon_specialcarbine": "Special Carbine",
+                "weapon_precisionrifle": "Precision Rifle",
+                "weapon_revolver": "Revolver",
+                "weapon_revolver_mk2": "Revolver MKII",
+                "weapon_navyrevolver": "Navy Revolver",
+                "weapon_minismg": "Mini SMG",
+                "weapon_musket": "Musket",
+                  "weapon_militaryrifle": "Military Rifle",
+                  "weapon_minismg": "Mini SMG"
+            };
+
+            
+    let finalName = weaponNames[base] || (base.startsWith('weapon_') ? humanizeWeaponIdClient(base) : base);
+    
+    if (finalName === 'item_spank') finalName = 'Spank';
+    if (finalName === 'item_alco') finalName = 'Asti';
+    finalName = finalName.replace('item_', '').replace('iten_', '');
+
+    return finalName;
+
+        }
+    
+        function invFastSlotBlockedBaseName(itemStr) {
+            var b = (typeof itemStr === 'string' ? itemStr : '').split('(')[0].trim();
+            return b === 'item_spank' || b === 'item_alco';
+        }
+
+        function invIsEquipableClothToken(s) {
+            if (typeof s !== 'string') return false;
+            var b = invItemBaseId(s);
+            if (b.indexOf('frdef:') === 0) return true;
+            return b.indexOf('ic1.') === 0 || b.indexOf('ivhol:') === 0 || b.indexOf('ivbag:') === 0;
+        }
+
+        function invIsBagOrHolsterToken(s) {
+            if (typeof s !== 'string') return false;
+            var b = invItemBaseId(s);
+            return b.indexOf('ivbag:') === 0 || b.indexOf('ivhol:') === 0;
+        }
+
+        var INV_BASE_SLOTS = 50;
+        function invCanUnequipBag(snap) {
+            if (!snap || snap.usedSlots == null || snap.maxSlots == null) return true;
+            return snap.usedSlots < snap.maxSlots;
+        }
+
+        function renderEquipSlotsFromSnap(snap) {
+            var capDefault = {
+                headwear: 'Головной убор',
+                mask: 'Маска',
+                ears: 'Серьги',
+                glasses: 'Очки',
+                bracelet: 'Браслет',
+                top: 'Торс / верх',
+                watch: 'Часы',
+                bag: 'Сумка',
+                pants: 'Штаны',
+                holster: 'Аксессуар',
+                gloves: 'Перчатки',
+                shoes: 'Обувь'
+            };
+            var keys = ['headwear', 'mask', 'ears', 'glasses', 'bracelet', 'top', 'watch', 'bag', 'pants', 'holster', 'gloves', 'shoes'];
+            var eqSlotDefaultCid = { headwear: 1, mask: 2, ears: 12, glasses: 7, bracelet: 14, top: 3, watch: 13, bag: 8, pants: 4, holster: 6, gloves: 15, shoes: 5 };
+            for (var ki = 0; ki < keys.length; ki++) {
+                var k = keys[ki];
+                var el = document.querySelector('.equip-slot[data-eq="' + k + '"]');
+                if (!el) continue;
+                var captionEl = el.parentElement ? el.parentElement.querySelector('.equip-slot-caption') : null;
+                var data = snap && snap.slots ? snap.slots[k] : null;
+                var defaultTip = el.getAttribute('data-eq-tip') || '';
+                if (data && data.filled && data.name) {
+                    el.classList.remove('empty');
+                    if (captionEl) captionEl.textContent = data.name;
+                    el.setAttribute('title', data.name);
+                    el.setAttribute('data-eq-tip', data.name);
+                } else {
+                    el.classList.add('empty');
+                    if (captionEl) captionEl.textContent = capDefault[k] || '';
+                    var origTip = el.getAttribute('data-eq-orig-tip') || defaultTip;
+                    el.setAttribute('data-eq-tip', origTip);
+                    el.setAttribute('title', origTip);
+                }
+                if (!el.getAttribute('data-eq-orig-tip')) {
+                    el.setAttribute('data-eq-orig-tip', defaultTip);
+                }
+                var slotImg = el.querySelector('img');
+                if (k === 'holster' && slotImg) {
+                    if (slotImg._invImgErrCb) {
+                        slotImg.removeEventListener('error', slotImg._invImgErrCb);
+                        slotImg._invImgErrCb = null;
+                    }
+                    slotImg.dataset.invCloudTry = '';
+                    slotImg.dataset.invCloudRel = '';
+                    if (data && data.filled && data.holsterIcon) {
+                        var hm = { cobura: 'cobura.png', coburaw: 'coburaw.png' };
+                        if (hm[data.holsterIcon]) {
+                            slotImg.src='../menunew/img/clothes/' + hm[data.holsterIcon];
+                        } else {
+                            slotImg.src = invResolveClothIconUrl(6);
+                        }
+                    } else if (data && data.filled && data.equipToken) {
+                        var logTok = getImageForItem(data.equipToken);
+                        invBindResolvedItemImg(slotImg, logTok, resolveInventoryImgSrc(logTok));
+                    } else if (data && data.filled && data.accessoryCalamity && data.accessoryCalamity.length >= 3) {
+                        var ac = data.accessoryCalamity;
+                        var logicalAc = 'CALCLOTHPNG|' + Number(ac[0]) + '|' + Number(ac[1]) + '|' + Number(ac[2]);
+                        invBindResolvedItemImg(slotImg, logicalAc, resolveInventoryImgSrc(logicalAc));
+                    } else {
+                        slotImg.src = invResolveClothIconUrl(6);
+                    }
+                } else if (slotImg && (!data || !data.filled)) {
+                    if (slotImg._invImgErrCb) {
+                        slotImg.removeEventListener('error', slotImg._invImgErrCb);
+                        slotImg._invImgErrCb = null;
+                    }
+                    slotImg.dataset.invCloudTry = '';
+                    slotImg.dataset.invCloudRel = '';
+                    slotImg.src = invResolveClothIconUrl(eqSlotDefaultCid[k]);
+                }
+                if (k === 'bag') {
+                    var filledBag = data && data.filled;
+                    var blockedBag = filledBag && snap && snap.usedSlots != null && snap.maxSlots != null && snap.usedSlots >= snap.maxSlots;
+                    if (blockedBag) {
+                        el.classList.add('eq-bag-unequip-blocked');
+                        el.setAttribute('title', 'Освободите хотя бы один слот в инвентаре, чтобы снять сумку.');
+                    } else {
+                        el.classList.remove('eq-bag-unequip-blocked');
+                        if (filledBag && data.name) el.setAttribute('title', data.name);
+                        else el.setAttribute('title', 'Сумка');
+                    }
+                }
+            }
+            var ctr = document.getElementById('invSlotCounter');
+            if (ctr && snap && snap.maxSlots != null) {
+                ctr.innerHTML = '<b>' + snap.usedSlots + '</b> / <b class="cap-max">' + snap.maxSlots + '</b>';
+            } else if (ctr && !snap) {
+                ctr.textContent = '—';
+            }
+        }
+
+        (function bindPaperDollMenuOnce() {
+            var pd = document.getElementById('paperDoll');
+            if (!pd || pd._eqMenuBound) return;
+            pd._eqMenuBound = true;
+            pd.addEventListener('click', function(e) {
+                var t = e.target && e.target.closest ? e.target.closest('.equip-slot') : null;
+                if (!t) return;
+                if (t.classList.contains('empty')) return;
+                var key = t.getAttribute('data-eq');
+                if (!key) return;
+                if (key === 'bag' && window.lastEquipSnap && !invCanUnequipBag(window.lastEquipSnap)) return;
+                mp.trigger('inventoryUnequipSlot', key);
+            });
+            pd.addEventListener('contextmenu', function(e) {
+                var t = e.target && e.target.closest ? e.target.closest('.equip-slot') : null;
+                if (!t) return;
+                e.preventDefault();
+                e.stopPropagation();
+                var key = t.getAttribute('data-eq');
+                showEquipSlotContextMenu(e.clientX, e.clientY, key);
+            });
+        })();
+
+        var INV_GRID_CELL_COUNT = 50;
+        var invBindListenAttached = false;
+
+        /** Fallback: US VK → подпись латиницей (если ev.code пустой / Unidentified в CEF). */
+        function invVkToUsLabel(vk) {
+            var n = parseInt(vk, 10);
+            if (isNaN(n) || n === 0) return '?';
+            if (n >= 0x30 && n <= 0x39) return String.fromCharCode(n);
+            if (n >= 0x41 && n <= 0x5a) return String.fromCharCode(n);
+            if (n >= 0x60 && n <= 0x69) return String(n - 0x60);
+            if (n >= 0x70 && n <= 0x7b) return 'F' + (n - 0x6f);
+            var o = {
+                0x20: 'Space',
+                0x09: 'Tab',
+                0x0d: 'Enter',
+                0x1b: 'Esc',
+                0x08: 'Bksp',
+                0x2d: 'Ins',
+                0x2e: 'Del',
+                0x24: 'Home',
+                0x23: 'End',
+                0x21: 'PgUp',
+                0x22: 'PgDn',
+                0x25: 'Left',
+                0x26: 'Up',
+                0x27: 'Right',
+                0x28: 'Down',
+                0x10: 'Shift',
+                0x11: 'Ctrl',
+                0x12: 'Alt',
+                0xbd: '-',
+                0xbb: '=',
+                0xdb: '[',
+                0xdd: ']',
+                0xdc: '\\',
+                0xba: ';',
+                0xde: "'",
+                0xbc: ',',
+                0xbe: '.',
+                0xbf: '/',
+                0xc0: '`',
+                0xe2: '\\'
+            };
+            if (o[n]) return o[n];
+            return 'VK' + n;
+        }
+
+        /** Подпись бинда: латиница по физ. клавише (ev.code), иначе разбор Windows VK — не ev.key (русские буквы). */
+        function invBindLabelFromKeyboardEvent(ev, vk) {
+            var code = ev && ev.code;
+            var hasCode = code && typeof code === 'string' && code.length && code !== 'Unidentified';
+            if (hasCode) {
+                if (code === 'Space') return 'Space';
+                var km = /^Key([A-Z])$/.exec(code);
+                if (km) return km[1];
+                var dm = /^Digit([0-9])$/.exec(code);
+                if (dm) return dm[1];
+                var nm = /^Numpad(\d)$/.exec(code);
+                if (nm) return nm[1];
+                var map = {
+                    Minus: '-',
+                    Equal: '=',
+                    BracketLeft: '[',
+                    BracketRight: ']',
+                    Backslash: '\\',
+                    Semicolon: ';',
+                    Quote: "'",
+                    Comma: ',',
+                    Period: '.',
+                    Slash: '/',
+                    Backquote: '`',
+                    IntlBackslash: '\\',
+                    Tab: 'Tab',
+                    Enter: 'Enter',
+                    Escape: 'Esc',
+                    Backspace: 'Bksp',
+                    CapsLock: 'Caps',
+                    ShiftLeft: 'Shift',
+                    ShiftRight: 'Shift',
+                    ControlLeft: 'Ctrl',
+                    ControlRight: 'Ctrl',
+                    AltLeft: 'Alt',
+                    AltRight: 'Alt',
+                    ArrowUp: 'Up',
+                    ArrowDown: 'Down',
+                    ArrowLeft: 'Left',
+                    ArrowRight: 'Right',
+                    Insert: 'Ins',
+                    Delete: 'Del',
+                    Home: 'Home',
+                    End: 'End',
+                    PageUp: 'PgUp',
+                    PageDown: 'PgDn'
+                };
+                if (map[code]) return map[code];
+                if (/^F\d{1,2}$/.test(code)) return code;
+                if (code.indexOf('Arrow') === 0) return code.slice(5);
+            }
+            return invVkToUsLabel(vk);
+        }
+
+        function invEnsureBindListener() {
+            if (invBindListenAttached) return;
+            invBindListenAttached = true;
+            window.addEventListener(
+                'keydown',
+                function (ev) {
+                    if (window._invBindWaitingSlot == null || window._invBindWaitingSlot === '') return;
+                    if (ev.repeat) return;
+                    var vk = ev.keyCode != null ? ev.keyCode : ev.which;
+                    if (ev.key === 'Escape' || vk === 27) {
+                        window._invBindWaitingSlot = null;
+                        var t0 = document.getElementById('invBindToast');
+                        if (t0) t0.style.display = 'none';
+                        if (typeof mp !== 'undefined' && mp.trigger) {
+                            mp.trigger('notify:client', 1, 'bottom-mid', 'Назначение клавиши отменено.', 2200);
+                        }
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return;
+                    }
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    var slot = window._invBindWaitingSlot;
+                    window._invBindWaitingSlot = null;
+                    var toast = document.getElementById('invBindToast');
+                    if (toast) toast.style.display = 'none';
+                    var label = invBindLabelFromKeyboardEvent(ev, vk);
+                    mp.trigger('inventorySetSlotBind', slot, JSON.stringify({ label: label, code: vk, type: 'key' }));
+                },
+                true
+            );
+        }
+
+        function invBeginBindSlot(slotStr) {
+            invEnsureBindListener();
+            window._invBindWaitingSlot = slotStr;
+            var toast = document.getElementById('invBindToast');
+            if (toast) toast.style.display = 'none';
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('notify:client', 1, 'bottom-mid', 'Нажмите любую клавишу. Esc — отмена.', 14000);
+            }
+        }
+
+        function invEnsureDragEndCleanup() {
+            if (window._invDragCleanBound) return;
+            window._invDragCleanBound = true;
+            document.addEventListener('dragend', function () {
+                document.querySelectorAll('.inv-bag-cell').forEach(function (el) {
+                    el.style.borderColor = '';
+                });
+            });
+        }
+
+        function updateInventoryUI(inventory, fastSlots, arg3, arg4) {
+            var warehouseMode = false;
+            var warehouseItems = [];
+            var equipSnap = null;
+            if (arg3 !== undefined && arg3 !== null && arg3 !== '') {
+                var p3 = arg3;
+                if (typeof arg3 === 'string') {
+                    try { p3 = JSON.parse(arg3); } catch (e0) { p3 = null; }
+                }
+                if (Array.isArray(p3)) {
+                    warehouseMode = true;
+                    warehouseItems = p3;
+                    if (arg4 !== undefined && arg4 !== null && arg4 !== '') {
+                        try { equipSnap = typeof arg4 === 'string' ? JSON.parse(arg4) : arg4; } catch (e1) { equipSnap = null; }
+                    }
+                } else if (p3 && typeof p3 === 'object' && p3.maxSlots != null) {
+                    equipSnap = p3;
+                }
+            }
+
+            var weaponTooltip = document.getElementById('weaponTooltip');
+            if (typeof inventory === 'string') {
+                try { inventory = JSON.parse(inventory || '[]'); } catch (e) { inventory = []; }
+            } else if (!Array.isArray(inventory)) {
+                inventory = [];
+            }
+            if (typeof fastSlots === 'string') {
+                try { fastSlots = JSON.parse(fastSlots || '["", "", ""]'); } catch (e) { fastSlots = ['', '', '']; }
+            } else if (!Array.isArray(fastSlots)) {
+                fastSlots = ['', '', '', '', ''];
+            }
+
+            window.inventoryWarehouseMode = warehouseMode;
+            window.inventoryFastSlotsRef = fastSlots;
+
+            invEnsureDragEndCleanup();
+            var slotBinds =
+                equipSnap && equipSnap.slotBinds && typeof equipSnap.slotBinds === 'object' ? equipSnap.slotBinds : {};
+            var bagPanelSnap = !warehouseMode && equipSnap && equipSnap.bagPanel ? equipSnap.bagPanel : null;
+
+            var titleEl = document.getElementById('playerInvTitle');
+            var whCol = document.getElementById('familyWhLeft');
+            if (warehouseMode) {
+                document.body.classList.add('mode-family-warehouse');
+                if (titleEl) titleEl.innerText = 'Инвентарь';
+                if (whCol) whCol.classList.add('family-wh-visible');
+            } else {
+                document.body.classList.remove('mode-family-warehouse');
+                if (titleEl) titleEl.innerText = 'Инвентарь';
+                if (whCol) whCol.classList.remove('family-wh-visible');
+            }
+
+            if (!warehouseMode) {
+                window.lastEquipSnap = equipSnap || null;
+                renderEquipSlotsFromSnap(equipSnap);
+            } else {
+                window.lastEquipSnap = null;
+            }
+
+            var inventoryElement = document.getElementById('inventory');
+            if (!inventoryElement) return;
+
+            if (weaponTooltip) weaponTooltip.style.display = 'none';
+            inventoryElement.innerHTML = '';
+
+            var slotsContainer = document.querySelector('.slots');
+            if (slotsContainer) {
+                var quickSlots = slotsContainer.querySelectorAll('.slot');
+                for (var idx = 0; idx < quickSlots.length && idx < 3; idx++) {
+                    var slotElement = quickSlots[idx];
+                    var item = fastSlots[idx];
+                    slotElement.className = 'slot blockitem';
+                    slotElement.innerHTML = '';
+                    var slotNumberDiv = document.createElement('div');
+                    slotNumberDiv.className = 'slot-number';
+                    slotNumberDiv.innerText = idx + 1;
+                    slotElement.appendChild(slotNumberDiv);
+                    if (item) {
+                        var imgEl = document.createElement('img');
+                        var slotLogImg = getImageForItem(item);
+                        invBindResolvedItemImg(imgEl, slotLogImg, resolveInventoryImgSrc(slotLogImg));
+                        if (invItemBaseId(item).indexOf('weapon_') === 0) imgEl.classList.add('inv-item-img--weapon');
+                        imgEl.alt = '';
+                        imgEl.title = getNameForItem(item) || '';
+                        slotElement.appendChild(imgEl);
+                        invApplyConsumableStackUi(slotElement, item, 'slot');
+                        (function(it, slotIdx) {
+                            slotElement.addEventListener('mouseenter', function() {
+                                if (weaponTooltip) { weaponTooltip.innerText = getNameForItem(it) || it; weaponTooltip.style.display = 'block'; weaponTooltip.style.opacity = '0.9'; }
+                            });
+                            slotElement.addEventListener('mousemove', function(e) {
+                                if (weaponTooltip) { weaponTooltip.style.left = (e.pageX + 10) + 'px'; weaponTooltip.style.top = (e.pageY + 10) + 'px'; }
+                            });
+                            slotElement.addEventListener('mouseleave', function() { if (weaponTooltip) weaponTooltip.style.display = 'none'; });
+
+                            slotElement.addEventListener('click', function() {
+                                if (it && slotIdx !== null) {
+                                    if (weaponTooltip) weaponTooltip.style.display = 'none';
+                                    mp.trigger('removeFastSlot' + (slotIdx + 1), it);
+                                }
+                            });
+                            slotElement.addEventListener('contextmenu', function(e) {
+                                e.preventDefault();
+                                showContextMenu(e.clientX, e.clientY, it, fastSlots, slotIdx);
+                                if (weaponTooltip) weaponTooltip.style.display = 'none';
+                            });
+                        })(item, idx);
+                    }
+                }
+            }
+
+            invEnsureBindListener();
+            var invArr50 = [];
+            for (var gi = 0; gi < INV_GRID_CELL_COUNT; gi++) {
+                invArr50[gi] =
+                    inventory[gi] !== undefined && inventory[gi] !== null && inventory[gi] !== '' ? inventory[gi] : null;
+            }
+            window.inventoryGridItemsRef = invArr50;
+            for (var si = 0; si < INV_GRID_CELL_COUNT; si++) {
+                var invItemCell = invArr50[si];
+                var cell = document.createElement('div');
+                cell.className = 'inv-grid-cell';
+                cell.dataset.invSlot = String(si);
+                cell.draggable = !!invItemCell;
+                var bindEnt = slotBinds[String(si)];
+                if (bindEnt && bindEnt.label) {
+                    var lb = document.createElement('div');
+                    lb.className = 'inv-slot-bind';
+                    lb.textContent = bindEnt.label;
+                    cell.appendChild(lb);
+                }
+                if (invItemCell) {
+                    var imgElement = document.createElement('img');
+                    var invLogImg = getImageForItem(invItemCell);
+                    invBindResolvedItemImg(imgElement, invLogImg, resolveInventoryImgSrc(invLogImg));
+                    if (invItemBaseId(invItemCell).indexOf('weapon_') === 0) imgElement.classList.add('inv-item-img--weapon');
+                    imgElement.alt = '';
+                    imgElement.title = getNameForItem(invItemCell) || '';
+                    cell.appendChild(imgElement);
+                    invApplyConsumableStackUi(cell, invItemCell, 'grid');
+                    var invLbl = document.createElement('div');
+                    invLbl.className = 'inv-slot-label';
+                    invLbl.textContent = getNameForItem(invItemCell) || '';
+                    cell.appendChild(invLbl);
+                }
+                (function (slotIdx, it) {
+                    cell.addEventListener('click', function () {
+                        if (window.inventoryWarehouseMode) {
+                            if (!it) return;
+                            if (familyWhIsStackItem(it)) openWarehouseQtyModal(it, 'deposit');
+                            else familyWarehouseDepositPayload(it, 1);
+                            return;
+                        }
+                        if (!it) return;
+                        if (invIsEquipableClothToken(it)) {
+                            mp.trigger('inventoryEquipItem', it);
+                            return;
+                        }
+                        if (fastSlots.includes('') && !fastSlots.includes(it) && !invFastSlotBlockedBaseName(it)) {
+                            mp.trigger('setFastSlot', it);
+                        }
+                    });
+                    cell.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();
+                        showGridInventoryContextMenu(e.clientX, e.clientY, slotIdx, it, fastSlots, slotBinds);
+                        if (weaponTooltip) weaponTooltip.style.display = 'none';
+                    });
+                    cell.addEventListener('dragstart', function (e) {
+                        if (!it) {
+                            e.preventDefault();
+                            return;
+                        }
+                        try {
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('text/plain', 'inv:' + slotIdx);
+                        } catch (e1) {}
+                    });
+                    cell.addEventListener('dragover', function (e) {
+                        e.preventDefault();
+                    });
+                    cell.addEventListener('drop', function (e) {
+                        e.preventDefault();
+                        var txt = '';
+                        try {
+                            txt = e.dataTransfer.getData('text/plain') || '';
+                        } catch (e2) {}
+                        if (txt.indexOf('inv:') === 0) {
+                            var from = parseInt(txt.slice(4), 10);
+                            if (!isNaN(from)) {
+                                var invRef2 = window.inventoryGridItemsRef || [];
+                                var fromItem = invRef2[from];
+                                var toItem = invRef2[slotIdx];
+                                var fBase = fromItem ? invItemBaseId(fromItem) : '';
+                                var isFromConsum = invIsConsumableStackBase(fBase);
+                                var fromQty = fromItem ? invConsumableStackQty(fromItem) : 1;
+                                var toEmpty = !toItem || toItem === '' || toItem === null;
+                                if (toEmpty && e.ctrlKey && isFromConsum && fromQty > 1) {
+                                    openGridConsumQtyModal(from, slotIdx, fromQty);
+                                } else {
+                                    mp.trigger('inventoryGridSwap', from, slotIdx);
+                                }
+                            }
+                        } else if (txt.indexOf('bag:') === 0) {
+                            var bf = parseInt(txt.slice(4), 10);
+                            if (!isNaN(bf)) mp.trigger('inventoryMoveFromBag', bf, slotIdx);
+                        }
+                    });
+                })(si, invItemCell);
+                inventoryElement.appendChild(cell);
+            }
+
+            var bagSec = document.getElementById('invBagSection');
+            var bagGrid = document.getElementById('invBagGrid');
+            var bagTitle = document.getElementById('invBagTitle');
+            if (bagSec && bagGrid && bagTitle) {
+                if (!warehouseMode && bagPanelSnap && bagPanelSnap.capacity > 0) {
+                    bagSec.style.display = 'block';
+                    bagTitle.textContent = bagPanelSnap.title || 'Сумка';
+                    bagGrid.innerHTML = '';
+                    var caps = bagPanelSnap.capacity || 0;
+                    var slotsBag = bagPanelSnap.slots || [];
+                    var cols = Math.min(10, Math.max(1, caps));
+                    bagGrid.style.gridTemplateColumns = 'repeat(' + cols + ', var(--inv-slot))';
+                    bagGrid.style.gridAutoRows = 'var(--inv-slot)';
+                    for (var bi = 0; bi < caps; bi++) {
+                        var bit = slotsBag[bi];
+                        var bcell = document.createElement('div');
+                        bcell.className = 'inv-bag-cell';
+                        bcell.dataset.bagSlot = String(bi);
+                        bcell.draggable = !!bit;
+                        if (bit) {
+                            var bimg = document.createElement('img');
+                            var bl = getImageForItem(bit);
+                            invBindResolvedItemImg(bimg, bl, resolveInventoryImgSrc(bl));
+                            if (invItemBaseId(bit).indexOf('weapon_') === 0) bimg.classList.add('inv-item-img--weapon');
+                            bimg.alt = '';
+                            bimg.title = getNameForItem(bit) || '';
+                            bcell.appendChild(bimg);
+                            invApplyConsumableStackUi(bcell, bit, 'grid');
+                            var bagLbl = document.createElement('div');
+                            bagLbl.className = 'inv-slot-label';
+                            bagLbl.textContent = getNameForItem(bit) || '';
+                            bcell.appendChild(bagLbl);
+                        }
+                        (function (bidx, bt, bagEl) {
+                            var suppressBagClick = false;
+                            var suppressClearTimer = null;
+                            bagEl.addEventListener('dragstart', function (e) {
+                                if (!bt) {
+                                    e.preventDefault();
+                                    return;
+                                }
+                                suppressBagClick = true;
+                                if (suppressClearTimer) clearTimeout(suppressClearTimer);
+                                try {
+                                    e.dataTransfer.effectAllowed = 'move';
+                                    e.dataTransfer.setData('text/plain', 'bag:' + bidx);
+                                } catch (_e) {}
+                            });
+                            bagEl.addEventListener('dragend', function () {
+                                if (suppressClearTimer) clearTimeout(suppressClearTimer);
+                                suppressClearTimer = setTimeout(function () {
+                                    suppressBagClick = false;
+                                    suppressClearTimer = null;
+                                }, 80);
+                            });
+                            bagEl.addEventListener('click', function (ev) {
+                                if (!bt || suppressBagClick) return;
+                                var bBase = invItemBaseId(bt);
+                                var isBagConsum = invIsConsumableStackBase(bBase);
+                                var bQty = invConsumableStackQty(bt);
+                                if (ev.ctrlKey && isBagConsum && bQty > 1) {
+                                    openBagConsumQtyModal('toInv', bQty, bidx, -1);
+                                    return;
+                                }
+                                mp.trigger('inventoryMoveFromBag', bidx, -1, -1);
+                            });
+                            bagEl.addEventListener('dragover', function (e) {
+                                e.preventDefault();
+                            });
+                            bagEl.addEventListener('drop', function (e) {
+                                e.preventDefault();
+                                var tx = '';
+                                try {
+                                    tx = e.dataTransfer.getData('text/plain') || '';
+                                } catch (_e) {}
+                                if (tx.indexOf('inv:') === 0) {
+                                    var islot = parseInt(tx.slice(4), 10);
+                                    if (!isNaN(islot)) {
+                                        var invRef = window.inventoryGridItemsRef || [];
+                                        var invDropItem = invRef[islot];
+                                        var icBase = invDropItem ? invItemBaseId(invDropItem) : '';
+                                        var isDropConsum = invIsConsumableStackBase(icBase);
+                                        var iQty = invDropItem ? invConsumableStackQty(invDropItem) : 1;
+                                        if (e.ctrlKey && isDropConsum && iQty > 1) {
+                                            openBagConsumQtyModal('toBag', iQty, bidx, islot);
+                                        } else {
+                                            mp.trigger('inventoryMoveToBag', islot, bidx, -1);
+                                        }
+                                    }
+                                } else if (tx.indexOf('bag:') === 0) {
+                                    var bfrom = parseInt(tx.slice(4), 10);
+                                    if (!isNaN(bfrom) && bfrom !== bidx) mp.trigger('inventorySwapBagSlots', bfrom, bidx);
+                                }
+                            });
+                            bagEl.addEventListener('contextmenu', function (ev) {
+                                ev.preventDefault();
+                            });
+                        })(bi, bit, bcell);
+                        bagGrid.appendChild(bcell);
+                    }
+                } else {
+                    bagSec.style.display = 'none';
+                    bagGrid.innerHTML = '';
+                }
+            }
+
+            var whEl = document.getElementById('warehouseInventory');
+            if (whEl) {
+                whEl.innerHTML = '';
+                if (warehouseMode) {
+                    for (var wj = 0; wj < warehouseItems.length; wj++) {
+                        var wItem = warehouseItems[wj];
+                        var wDiv = document.createElement('div');
+                        wDiv.className = 'item';
+                        var wImg = document.createElement('img');
+                        var whLogImg = getImageForItem(wItem);
+                        invBindResolvedItemImg(wImg, whLogImg, resolveInventoryImgSrc(whLogImg));
+                        if (invItemBaseId(wItem).indexOf('weapon_') === 0) wImg.classList.add('inv-item-img--weapon');
+                        wImg.alt = '';
+                        wImg.title = getNameForItem(wItem) || '';
+                        wDiv.appendChild(wImg);
+                        invApplyConsumableStackUi(wDiv, wItem, 'grid');
+                        (function(wit) {
+                            wDiv.addEventListener('mouseenter', function() {
+                                if (weaponTooltip) { weaponTooltip.innerText = getNameForItem(wit) || wit; weaponTooltip.style.display = 'block'; weaponTooltip.style.opacity = '0.9'; }
+                            });
+                            wDiv.addEventListener('mousemove', function(e) {
+                                if (weaponTooltip) { weaponTooltip.style.left = (e.pageX + 10) + 'px'; weaponTooltip.style.top = (e.pageY + 10) + 'px'; }
+                            });
+                            wDiv.addEventListener('mouseleave', function() { if (weaponTooltip) weaponTooltip.style.display = 'none'; });
+                            wDiv.addEventListener('click', function() {
+                                if (familyWhIsStackItem(wit)) openWarehouseQtyModal(wit, 'withdraw');
+                                else mp.trigger('familyWarehouseWithdraw', JSON.stringify({ item: wit, q: 1 }));
+                            });
+                            wDiv.addEventListener('contextmenu', function(e) {
+                                e.preventDefault();
+                                showWarehouseContextMenu(e.clientX, e.clientY, wit);
+                                if (weaponTooltip) weaponTooltip.style.display = 'none';
+                            });
+                        })(wItem);
+                        whEl.appendChild(wDiv);
+                    }
+                }
+            }
+        }
+        window.updateInventoryUI = updateInventoryUI;
+
+        function familyWhStackBaseName(itemStr) {
+            return (typeof itemStr === 'string' ? itemStr : '').split('(')[0].trim();
+        }
+        function familyWhIsStackItem(itemStr) {
+            var b = familyWhStackBaseName(itemStr);
+            return b === 'item_spank' || b === 'item_alco';
+        }
+        var whQtyState = { item: null, mode: 'deposit' };
+
+        function openWarehouseQtyModal(itemStr, mode) {
+            if (!familyWhIsStackItem(itemStr)) {
+                if (mode === 'deposit') familyWarehouseDepositPayload(itemStr, 1);
+                else mp.trigger('familyWarehouseWithdraw', JSON.stringify({ item: itemStr, q: 1 }));
+                return;
+            }
+            whQtyState.item = itemStr;
+            whQtyState.mode = mode;
+            var modal = document.getElementById('whQtyModal');
+            var title = document.getElementById('whQtyTitle');
+            var okBtn = document.getElementById('whQtyOk');
+            var inp = document.getElementById('whQtyInput');
+            title.textContent = mode === 'deposit' ? 'Положить на склад' : 'Забрать со склада';
+            okBtn.textContent = mode === 'deposit' ? 'Положить' : 'Забрать';
+            inp.value = '1';
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            setTimeout(function() {
+                inp.focus();
+                inp.select();
+            }, 30);
+        }
+
+        function closeWarehouseQtyModal() {
+            var modal = document.getElementById('whQtyModal');
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            whQtyState.item = null;
+        }
+
+        function confirmWarehouseQtyModal() {
+            var inp = document.getElementById('whQtyInput');
+            var n = parseInt(String(inp.value || '').replace(/\D/g, ''), 10);
+            if (!isFinite(n) || n < 1) {
+                inp.select();
+                return;
+            }
+            var it = whQtyState.item;
+            var mode = whQtyState.mode;
+            closeWarehouseQtyModal();
+            if (!it) return;
+            if (mode === 'deposit') familyWarehouseDepositPayload(it, n);
+            else mp.trigger('familyWarehouseWithdraw', JSON.stringify({ item: it, q: n }));
+        }
+
+        function familyWarehouseDepositPayload(item, qty) {
+            mp.trigger('familyWarehouseDeposit', JSON.stringify({ item: item, q: qty }));
+        }
+        function familyWarehouseDepositWithQty(it) {
+            openWarehouseQtyModal(it, 'deposit');
+        }
+        function familyWarehouseWithdrawWithQty(wit) {
+            openWarehouseQtyModal(wit, 'withdraw');
+        }
+
+        var bagConsumQtyState = { mode: 'toInv', bagIdx: -1, invSlot: -1, max: 1, gridFrom: -1, gridTo: -1 };
+
+        function closeBagConsumMoveModal() {
+            var m = document.getElementById('bagConsumMoveModal');
+            if (m) {
+                m.classList.remove('is-open');
+                m.setAttribute('aria-hidden', 'true');
+            }
+            bagConsumQtyState.mode = 'toInv';
+            bagConsumQtyState.bagIdx = -1;
+            bagConsumQtyState.invSlot = -1;
+            bagConsumQtyState.max = 1;
+            bagConsumQtyState.gridFrom = -1;
+            bagConsumQtyState.gridTo = -1;
+        }
+
+        function openGridConsumQtyModal(fromS, toS, stackQty) {
+            var sq = Math.max(2, parseInt(stackQty, 10) || 2);
+            bagConsumQtyState.mode = 'grid';
+            bagConsumQtyState.gridFrom = fromS;
+            bagConsumQtyState.gridTo = toS;
+            bagConsumQtyState.bagIdx = -1;
+            bagConsumQtyState.invSlot = -1;
+            bagConsumQtyState.max = Math.max(1, sq - 1);
+            var titleEl = document.getElementById('bagConsumTitle');
+            var okBtn = document.getElementById('bagConsumOk');
+            if (titleEl) titleEl.textContent = 'Сколько переложить';
+            if (okBtn) okBtn.textContent = 'Перенести';
+            var modal = document.getElementById('bagConsumMoveModal');
+            var hint = document.getElementById('bagConsumHint');
+            var inp = document.getElementById('bagConsumInput');
+            if (hint) hint.textContent = 'Макс.: ' + bagConsumQtyState.max + ' шт.';
+            if (inp) inp.value = '1';
+            if (modal) {
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+            }
+            setTimeout(function () {
+                if (inp) {
+                    inp.focus();
+                    inp.select();
+                }
+            }, 30);
+        }
+
+        function openBagConsumQtyModal(mode, stackMax, bagIdx, invSlot) {
+            bagConsumQtyState.mode = mode === 'toBag' ? 'toBag' : 'toInv';
+            bagConsumQtyState.bagIdx = bagIdx;
+            bagConsumQtyState.invSlot = invSlot != null && invSlot !== '' ? invSlot : -1;
+            bagConsumQtyState.max = Math.max(1, parseInt(stackMax, 10) || 1);
+            var titleEl = document.getElementById('bagConsumTitle');
+            var okBtn = document.getElementById('bagConsumOk');
+            if (bagConsumQtyState.mode === 'toBag') {
+                if (titleEl) titleEl.textContent = 'Положить в сумку';
+                if (okBtn) okBtn.textContent = 'Положить';
+            } else {
+                if (titleEl) titleEl.textContent = 'Перенести в инвентарь';
+                if (okBtn) okBtn.textContent = 'Перенести';
+            }
+            var modal = document.getElementById('bagConsumMoveModal');
+            var hint = document.getElementById('bagConsumHint');
+            var inp = document.getElementById('bagConsumInput');
+            if (hint) hint.textContent = 'Макс.: ' + bagConsumQtyState.max + ' шт.';
+            if (inp) inp.value = String(bagConsumQtyState.max);
+            if (modal) {
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+            }
+            setTimeout(function () {
+                if (inp) {
+                    inp.focus();
+                    inp.select();
+                }
+            }, 30);
+        }
+
+        function confirmBagConsumMoveModal() {
+            var inp = document.getElementById('bagConsumInput');
+            var n = parseInt(String(inp && inp.value ? inp.value : '').replace(/\D/g, ''), 10);
+            if (!isFinite(n) || n < 1) {
+                if (inp) inp.select();
+                return;
+            }
+            var cap = bagConsumQtyState.max;
+            if (n > cap) n = cap;
+            var mode = bagConsumQtyState.mode;
+            var gridFrom = bagConsumQtyState.gridFrom;
+            var gridTo = bagConsumQtyState.gridTo;
+            var bix = bagConsumQtyState.bagIdx;
+            var isl = bagConsumQtyState.invSlot;
+            closeBagConsumMoveModal();
+            if (mode === 'grid') {
+                if (gridFrom < 0 || gridTo < 0) return;
+                mp.trigger('inventoryGridSplitMove', gridFrom, gridTo, n);
+                return;
+            }
+            if (mode === 'toBag') {
+                if (isl < 0 || bix < 0) return;
+                mp.trigger('inventoryMoveToBag', isl, bix, n);
+                return;
+            }
+            if (bix < 0) return;
+            mp.trigger('inventoryMoveFromBag', bix, -1, n);
+        }
+
+        (function initBagConsumMoveModal() {
+            var box = document.getElementById('bagConsumBox');
+            if (box) {
+                box.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+                box.addEventListener('click', function (e) { e.stopPropagation(); });
+            }
+            var bd = document.getElementById('bagConsumBackdrop');
+            if (bd) bd.addEventListener('click', closeBagConsumMoveModal);
+            var c = document.getElementById('bagConsumCancel');
+            if (c) c.addEventListener('click', closeBagConsumMoveModal);
+            var o = document.getElementById('bagConsumOk');
+            if (o) o.addEventListener('click', confirmBagConsumMoveModal);
+            var maxB = document.getElementById('bagConsumMax');
+            if (maxB) {
+                maxB.addEventListener('click', function () {
+                    var i = document.getElementById('bagConsumInput');
+                    if (i) {
+                        i.value = String(bagConsumQtyState.max);
+                        i.select();
+                    }
+                });
+            }
+            var inp = document.getElementById('bagConsumInput');
+            if (inp) {
+                inp.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        confirmBagConsumMoveModal();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeBagConsumMoveModal();
+                    }
+                });
+            }
+        })();
+
+        (function initWhQtyModal() {
+            var box = document.getElementById('whQtyBox');
+            if (box) {
+                box.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+                box.addEventListener('click', function(e) { e.stopPropagation(); });
+            }
+            var bd = document.getElementById('whQtyBackdrop');
+            if (bd) bd.addEventListener('click', closeWarehouseQtyModal);
+            var c = document.getElementById('whQtyCancel');
+            if (c) c.addEventListener('click', closeWarehouseQtyModal);
+            var o = document.getElementById('whQtyOk');
+            if (o) o.addEventListener('click', confirmWarehouseQtyModal);
+            var inp = document.getElementById('whQtyInput');
+            if (inp) {
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        confirmWarehouseQtyModal();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeWarehouseQtyModal();
+                    }
+                });
+            }
+        })();
+    
+        const contextMenu = document.getElementById('contextMenu');
+        const contextMenuList = document.getElementById('contextMenuList');
+        let selectedItem = null;
+        let selectedSlotIndex = null;
+        let selectedGridSlotIndex = null;
+        let contextFromWarehouse = false;
+        let selectedEquipSlotKey = null;
+
+        /** ПКМ: меню слева от курсора, без вылезания за экран (без лишнего скролла страницы). */
+        function positionInventoryContextMenu(clientX, clientY) {
+            if (!contextMenu) return;
+            contextMenu.style.display = 'block';
+            contextMenu.style.position = 'fixed';
+            contextMenu.style.visibility = 'hidden';
+            contextMenu.style.left = '-9999px';
+            contextMenu.style.top = '0';
+            void contextMenu.offsetWidth;
+            var w = contextMenu.offsetWidth;
+            var h = contextMenu.offsetHeight;
+            contextMenu.style.visibility = '';
+            var gap = 8;
+            var pad = 8;
+            var left = clientX - w - gap;
+            if (left < pad) {
+                left = clientX + gap;
+            }
+            if (left + w > window.innerWidth - pad) {
+                left = Math.max(pad, window.innerWidth - w - pad);
+            }
+            var top = clientY;
+            if (top + h > window.innerHeight - pad) {
+                top = Math.max(pad, window.innerHeight - h - pad);
+            }
+            if (top < pad) top = pad;
+            contextMenu.style.left = left + 'px';
+            contextMenu.style.top = top + 'px';
+        }
+
+        function resetInventoryEscState() {
+            selectedItem = null;
+            selectedSlotIndex = null;
+            selectedGridSlotIndex = null;
+            contextFromWarehouse = false;
+            selectedEquipSlotKey = null;
+            window._invBindWaitingSlot = null;
+            var toast = document.getElementById('invBindToast');
+            if (toast) toast.style.display = 'none';
+            if (contextMenu) contextMenu.style.display = 'none';
+            closeWarehouseQtyModal();
+            closeBagConsumMoveModal();
+            var wt = document.getElementById('weaponTooltip');
+            if (wt) wt.style.display = 'none';
+        }
+        if (typeof window !== 'undefined') window.resetInventoryEscState = resetInventoryEscState;
+    
+        function showWarehouseContextMenu(x, y, item) {
+            contextFromWarehouse = true;
+            selectedItem = item;
+            selectedSlotIndex = null;
+            selectedEquipSlotKey = null;
+            document.getElementById('wearClothBtn').style.display = 'none';
+            document.getElementById('unequipSlotBtn').style.display = 'none';
+            document.getElementById('fastSlotBtn').style.display = 'none';
+            document.getElementById('removeFastSlotBtn').style.display = 'none';
+            document.getElementById('putWarehouseBtn').style.display = 'none';
+            document.getElementById('useItemBtn').style.display = 'none';
+            document.getElementById('dropItemBtn').style.display = 'none';
+            document.getElementById('bindSlotBtn').style.display = 'none';
+            document.getElementById('clearBindSlotBtn').style.display = 'none';
+            document.getElementById('takeWarehouseBtn').style.display = 'block';
+            positionInventoryContextMenu(x, y);
+        }
+
+        function showEquipSlotContextMenu(x, y, slotKey) {
+            var _eqEl = document.querySelector('.equip-slot[data-eq="' + slotKey + '"]');
+            if (!_eqEl || _eqEl.classList.contains('empty')) return;
+            if (slotKey === 'bag' && window.lastEquipSnap && !invCanUnequipBag(window.lastEquipSnap)) return;
+            contextFromWarehouse = false;
+            selectedEquipSlotKey = slotKey;
+            selectedItem = null;
+            selectedSlotIndex = null;
+            selectedGridSlotIndex = null;
+            document.getElementById('wearClothBtn').style.display = 'none';
+            document.getElementById('unequipSlotBtn').style.display = 'block';
+            document.getElementById('fastSlotBtn').style.display = 'none';
+            document.getElementById('removeFastSlotBtn').style.display = 'none';
+            document.getElementById('putWarehouseBtn').style.display = 'none';
+            document.getElementById('takeWarehouseBtn').style.display = 'none';
+            document.getElementById('useItemBtn').style.display = 'none';
+            document.getElementById('dropItemBtn').style.display = 'none';
+            document.getElementById('bindSlotBtn').style.display = 'none';
+            document.getElementById('clearBindSlotBtn').style.display = 'none';
+            positionInventoryContextMenu(x, y);
+        }
+
+        function showGridInventoryContextMenu(x, y, gridSlotIndex, item, fastSlots, bindsRef) {
+            contextFromWarehouse = false;
+            selectedEquipSlotKey = null;
+            selectedGridSlotIndex = gridSlotIndex;
+            selectedSlotIndex = null;
+            selectedItem = item || null;
+
+            document.getElementById('takeWarehouseBtn').style.display = 'none';
+            document.getElementById('putWarehouseBtn').style.display = 'none';
+            document.getElementById('unequipSlotBtn').style.display = 'none';
+
+            if (window.inventoryWarehouseMode) {
+                document.getElementById('bindSlotBtn').style.display = 'none';
+                document.getElementById('clearBindSlotBtn').style.display = 'none';
+                selectedGridSlotIndex = null;
+                if (!item) {
+                    positionInventoryContextMenu(x, y);
+                    return;
+                }
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('putWarehouseBtn').style.display = 'block';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'none';
+                positionInventoryContextMenu(x, y);
+                return;
+            }
+
+            document.getElementById('bindSlotBtn').style.display = 'block';
+            var hasBind = bindsRef && bindsRef[String(gridSlotIndex)];
+            document.getElementById('clearBindSlotBtn').style.display = hasBind ? 'block' : 'none';
+
+            if (!item) {
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('useItemBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'none';
+                positionInventoryContextMenu(x, y);
+                return;
+            }
+
+            var isClothTok = invIsEquipableClothToken(item);
+
+            if (isClothTok && invIsBagOrHolsterToken(item)) {
+                document.getElementById('wearClothBtn').style.display = 'block';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'none';
+            } else if (isClothTok && !invIsBagOrHolsterToken(item)) {
+                document.getElementById('wearClothBtn').style.display = 'block';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'block';
+            } else {
+                var freeSlotExists = fastSlots.includes('');
+                var itemAlreadyInSlots = fastSlots.includes(item);
+                var canFastSlot = freeSlotExists && !itemAlreadyInSlots && !invFastSlotBlockedBaseName(item);
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = canFastSlot ? 'block' : 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'block';
+            }
+            positionInventoryContextMenu(x, y);
+        }
+
+        function showContextMenu(x, y, item, fastSlots, slotIndex = null) {
+            contextFromWarehouse = false;
+            selectedEquipSlotKey = null;
+            selectedGridSlotIndex = null;
+            selectedItem = item;
+            selectedSlotIndex = slotIndex;
+
+            document.getElementById('bindSlotBtn').style.display = 'none';
+            document.getElementById('clearBindSlotBtn').style.display = 'none';
+
+            document.getElementById('takeWarehouseBtn').style.display = 'none';
+            document.getElementById('putWarehouseBtn').style.display = 'none';
+            document.getElementById('unequipSlotBtn').style.display = 'none';
+
+            var isClothTok = invIsEquipableClothToken(item);
+
+            if (slotIndex !== null && slotIndex !== undefined) {
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'block';
+                document.getElementById('dropItemBtn').style.display = 'none';
+                document.getElementById('useItemBtn').style.display = 'none';
+            } else if (window.inventoryWarehouseMode) {
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('putWarehouseBtn').style.display = 'block';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'none';
+            } else if (isClothTok && invIsBagOrHolsterToken(item)) {
+                document.getElementById('wearClothBtn').style.display = 'block';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'none';
+            } else if (isClothTok && !invIsBagOrHolsterToken(item)) {
+                document.getElementById('wearClothBtn').style.display = 'block';
+                document.getElementById('fastSlotBtn').style.display = 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'block';
+            } else {
+                const freeSlotExists = fastSlots.includes('');
+                const itemAlreadyInSlots = fastSlots.includes(item);
+                const canFastSlot = freeSlotExists && !itemAlreadyInSlots && !invFastSlotBlockedBaseName(item);
+                document.getElementById('wearClothBtn').style.display = 'none';
+                document.getElementById('fastSlotBtn').style.display = canFastSlot ? 'block' : 'none';
+                document.getElementById('removeFastSlotBtn').style.display = 'none';
+                document.getElementById('dropItemBtn').style.display = 'block';
+                document.getElementById('useItemBtn').style.display = 'block';
+            }
+            positionInventoryContextMenu(x, y);
+        }
+    
+        document.addEventListener('click', () => {
+            contextMenu.style.display = 'none';
+        });
+    
+        
+        document.getElementById('wearClothBtn').addEventListener('click', () => {
+            if (selectedItem && invIsEquipableClothToken(selectedItem)) {
+                mp.trigger('inventoryEquipItem', selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('unequipSlotBtn').addEventListener('click', () => {
+            if (selectedEquipSlotKey) {
+                mp.trigger('inventoryUnequipSlot', selectedEquipSlotKey);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('useItemBtn').addEventListener('click', () => {
+            if (contextFromWarehouse) {
+                contextMenu.style.display = 'none';
+                return;
+            }
+            if (selectedItem && selectedSlotIndex === null && !invIsEquipableClothToken(selectedItem)) {
+                const itemName = (typeof selectedItem === 'string' ? selectedItem : '').split('(')[0].trim();
+                mp.trigger('useConsumable', itemName);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('dropItemBtn').addEventListener('click', () => {
+            if (contextFromWarehouse) {
+                contextMenu.style.display = 'none';
+                return;
+            }
+            if (selectedItem && selectedSlotIndex === null) {
+                mp.trigger('dropItem', selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+    
+        document.getElementById('fastSlotBtn').addEventListener('click', () => {
+            const fs = window.inventoryFastSlotsRef;
+            if (selectedItem && selectedSlotIndex === null && fs && !fs.includes(selectedItem) && !invFastSlotBlockedBaseName(selectedItem)) {
+                mp.trigger('setFastSlot', selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('putWarehouseBtn').addEventListener('click', () => {
+            if (selectedItem && !contextFromWarehouse && window.inventoryWarehouseMode) {
+                familyWarehouseDepositWithQty(selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('takeWarehouseBtn').addEventListener('click', () => {
+            if (selectedItem && contextFromWarehouse) {
+                familyWarehouseWithdrawWithQty(selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+    
+        document.getElementById('removeFastSlotBtn').addEventListener('click', () => {
+            if (selectedItem && selectedSlotIndex !== null && selectedSlotIndex !== undefined) {
+                mp.trigger('removeFastSlot' + (selectedSlotIndex + 1), selectedItem);
+            }
+            contextMenu.style.display = 'none';
+        });
+    
+        document.getElementById('bindSlotBtn').addEventListener('click', () => {
+            if (selectedGridSlotIndex !== null && selectedGridSlotIndex !== undefined) {
+                invBeginBindSlot(String(selectedGridSlotIndex));
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.getElementById('clearBindSlotBtn').addEventListener('click', () => {
+            if (selectedGridSlotIndex !== null && selectedGridSlotIndex !== undefined) {
+                mp.trigger('inventorySetSlotBind', String(selectedGridSlotIndex), JSON.stringify({ clear: true }));
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        document.querySelector('.inv-close-trigger').addEventListener('click', () => {
+            mp.trigger('closeInventory');
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+/* Scoped to the live F10 Vue tree; backend bindings remain on their original controls. */
+#playerMainMenu{--legacy-surface:#161618;--legacy-border:rgba(255,255,255,.07);--legacy-muted:#99999f;--legacy-ease:cubic-bezier(.16,1,.3,1)}
+#playerMainMenu,#playerMainMenu button,#playerMainMenu input,#playerMainMenu textarea,#playerMainMenu .yk-text{font-family:Inter,Montserrat,"Segoe UI",sans-serif!important;text-shadow:none!important}
+#playerMainMenu .legacy-main-menu{width:1120px!important;height:690px!important;border-radius:14px!important;background:rgba(17,17,19,.91)!important;background-image:none!important;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid var(--legacy-border)!important;box-shadow:none;overflow:hidden;color:#eeeef0}
+#playerMainMenu .pm-bg-host:before,#playerMainMenu .pm-bg-host:after,#playerMainMenu .pm-preload-assets,#playerMainMenu .legacy-old-close{display:none!important}
+#playerMainMenu .legacy-main-menu>.yk-content{padding:0 28px 24px!important;min-height:0}
+.legacy-menu-header{position:relative;display:flex;align-items:center;flex-shrink:0;gap:22px;height:90px;border-bottom:1px solid var(--legacy-border);margin-bottom:4px}
+.legacy-menu-tools{display:flex;gap:8px;align-items:center}.legacy-menu-brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:700;letter-spacing:.17em;white-space:nowrap;pointer-events:none;color:#f0f0f2}
+#playerMainMenu .legacy-icon-button{display:grid;place-items:center;width:36px;height:36px;padding:8px;border:0;border-radius:7px;background:transparent;color:#95959c;cursor:pointer;transition:background 150ms var(--legacy-ease),color 150ms var(--legacy-ease)}
+.legacy-icon-button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#playerMainMenu .legacy-icon-button:hover,#playerMainMenu .legacy-icon-button.active{background:#ffffff09;color:#fff}
+.legacy-menu-tabs{display:flex;align-items:stretch;align-self:stretch;gap:20px;margin-left:auto;max-width:34%;overflow:auto}
+#playerMainMenu .legacy-menu-tabs button{position:relative;border:0;background:transparent;color:#9a9aa2;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;padding:0}
+.legacy-menu-tabs button:after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:#ededf0;transform:scaleX(0);transition:transform 150ms var(--legacy-ease)}
+#playerMainMenu .legacy-menu-tabs button:hover,#playerMainMenu .legacy-menu-tabs button.active{color:#fff}.legacy-menu-tabs button.active:after{transform:scaleX(1)}
+#playerMainMenu .legacy-menu-close{flex-shrink:0;display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid #d6656540;border-radius:4px;background:#7f34344d;color:#df9b9b;font-size:23px;line-height:1;cursor:pointer;transition:background 150ms var(--legacy-ease)}
+#playerMainMenu .legacy-menu-close:hover{background:#983f3f80}
+#playerMainMenu .playerMenu-scroll{scrollbar-color:#454549 transparent;scrollbar-width:thin;min-height:0}#playerMainMenu .yk-text{color:#d9d9df}
+#playerMainMenu .yk-btn,#playerMainMenu .playerMenu-shop-nav-btn{background:#202023!important;background-image:none!important;color:#d5d5dc!important;border:1px solid var(--legacy-border)!important;border-radius:6px!important;box-shadow:none!important;transition:background 150ms var(--legacy-ease),border-color 150ms var(--legacy-ease),color 150ms var(--legacy-ease)}
+#playerMainMenu .yk-btn:hover,#playerMainMenu .playerMenu-shop-nav-btn:hover{background:#2b2b2f!important;border-color:#ffffff24!important;color:#fff!important}
+#playerMainMenu .yk-input,#playerMainMenu input:not([type=checkbox]):not([type=range]),#playerMainMenu textarea{background:#161618!important;color:#e4e4e9!important;border:1px solid #ffffff15!important;border-radius:6px!important;box-shadow:none!important;outline:none}
+#playerMainMenu input:focus-visible,#playerMainMenu textarea:focus-visible,#playerMainMenu button:focus-visible{outline:1px solid #c8c8d0!important;outline-offset:3px}
+#playerMainMenu .legacy-help{display:flex!important;flex-direction:column;padding:8px 0 86px;overflow:hidden!important}
+#playerMainMenu .legacy-help>div:first-child{display:none!important}#playerMainMenu .legacy-help>div.flex-1{padding:0!important;min-height:0;overflow:auto}
+#playerMainMenu .legacy-help>div.flex-1>.playerMenu-scroll{height:100%!important;overflow:auto!important;padding-right:6px}
+#playerMainMenu .legacy-help>div:last-child{bottom:0!important;width:100%!important;padding:16px 0 0;border-top:1px solid var(--legacy-border)}
+#playerMainMenu .legacy-help>div:last-child>.yk-text{display:none}#playerMainMenu .legacy-help>div:last-child .text-center{display:flex;justify-content:center;gap:12px;margin:0!important}
+#playerMainMenu .legacy-help .purple,#playerMainMenu .legacy-help .orange{height:42px;font-size:12px;font-weight:600;letter-spacing:.05em;margin:0!important;max-width:250px}
+#playerMainMenu .legacy-help .orange{background:#8a694125!important;color:#dcc3a2!important;border-color:#b88c5540!important}
+#playerMainMenu .legacy-faq{background:#161618!important;border:1px solid var(--legacy-border);border-radius:8px!important;padding:17px 20px!important;margin:0 0 10px!important}
+#playerMainMenu .legacy-faq>div:first-child{cursor:pointer;min-height:24px}#playerMainMenu .legacy-faq .yk-text{color:#e5e5e9!important;font-size:14px!important;line-height:1.7}
+#playerMainMenu .legacy-faq>div:first-child .yk-text{font-weight:500}#playerMainMenu .legacy-faq svg{width:12px;height:9px;transition:transform 150ms var(--legacy-ease)}#playerMainMenu .legacy-faq svg path{fill:#85858c!important}
+#playerMainMenu .legacy-settings{height:100%!important;min-height:0!important;padding:8px 0;gap:26px;overflow:hidden!important}
+#playerMainMenu .legacy-settings-nav{flex:0 0 175px!important;padding:0!important;gap:6px;align-self:stretch!important;border-right:1px solid var(--legacy-border);padding-right:18px!important}
+#playerMainMenu .legacy-settings-nav button{width:100%!important;margin:0!important;min-height:42px;text-align:left;padding:12px 14px!important;background:transparent!important;border-color:transparent!important;font-size:11px!important;font-weight:600;letter-spacing:.07em;border-radius:4px!important}
+#playerMainMenu .legacy-settings-nav button.orange{background:#242427!important;border-left:2px solid #e3dfd4!important;color:#fff!important}
+#playerMainMenu .legacy-settings-content{margin:0!important;height:100%!important;min-width:0;display:block!important;padding-right:6px}
+#playerMainMenu .legacy-options{width:100%;gap:18px}#playerMainMenu .legacy-options>div{margin:0!important;min-width:0}
+#playerMainMenu .playerMenu-setting-line{background:#161618!important;border:1px solid var(--legacy-border)!important;border-radius:7px!important;min-height:67px;padding:13px 15px!important;margin-bottom:10px;box-shadow:none!important;gap:12px}
+#playerMainMenu .playerMenu-setting-text{color:#c7c7cf!important;font-size:13px!important;line-height:1.45;max-width:70%}
+#playerMainMenu .playerMenu-setting-checkbox{width:38px!important;height:22px!important;border:1px solid #ffffff15!important;border-radius:12px!important;background:#303034!important;background-image:none!important;margin:0;transition:background 150ms var(--legacy-ease);appearance:none}
+#playerMainMenu .playerMenu-setting-checkbox:before{content:none!important}#playerMainMenu .playerMenu-setting-checkbox:after{content:""!important;display:block!important;top:3px!important;left:3px!important;transform:none!important;width:14px!important;height:14px!important;background:#85858d!important;border-radius:50%;transition:left 150ms var(--legacy-ease),background 150ms var(--legacy-ease)}
+#playerMainMenu .playerMenu-setting-checkbox:checked{background:#494740!important}#playerMainMenu .playerMenu-setting-checkbox:checked:after{left:19px!important;background:#eee9dc!important}
+#playerMainMenu .playerMenu-char-estate-col{display:none!important}#playerMainMenu .playerMenu-char-info-col{flex:1!important;width:100%!important;max-width:none!important}
+#playerMainMenu .playerMenu-infoBlock,#playerMainMenu .bonusPointShopItem-item,#playerMainMenu .playerMenu-shop-buy-panel{background:#161618!important;border:1px solid var(--legacy-border)!important;border-radius:9px!important;box-shadow:none!important}
+#playerMainMenu .playerMenu-shop-nav-btn.active{background:#303033!important;color:#fff!important}#playerMainMenu .bonusPointShopItem-item{transition:border-color 150ms var(--legacy-ease)}#playerMainMenu .bonusPointShopItem-wrapper:hover .bonusPointShopItem-item{border-color:#ffffff30!important}
+#playerMainMenu .playerMenu-setting-line-inline [style*="background"]{background:#252528!important;color:#dedee4!important;border-color:#ffffff15!important}#playerMainMenu [data-tab="5"] .yk-text[style*="color"]{color:#c5c5ce!important}
+#playerMainMenu *,#playerMainMenu *:before,#playerMainMenu *:after{box-sizing:border-box}
+#playerMainMenu .legacy-help{height:100%!important;min-height:0!important}
+#playerMainMenu .playerMenu-shop-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;width:100%;padding:4px 0 20px}
+#playerMainMenu .bonusPointShopItem-wrapper{width:auto!important;margin:0!important;min-width:0}
+#playerMainMenu .bonusPointShopItem-item{width:100%!important;height:158px!important}
+#playerMainMenu .bonusPointShopItem-item-price{background:#2d2d31!important;background-image:none!important;color:#e5e2d9!important;border:1px solid #ffffff15;border-radius:4px!important;padding:5px 9px!important;box-shadow:none!important}
+#playerMainMenu .playerMenu-skillBlock{background:#161618!important;border:1px solid var(--legacy-border);border-radius:8px!important;padding:14px!important}
+#playerMainMenu .yk-progress-block{background:#2a2a2f!important;border-radius:4px!important}
+#playerMainMenu .yk-progress-fill{background:#99968d!important;background-image:none!important;border-radius:4px!important}
+#playerMainMenu .playerMenu-char-info-col svg{filter:grayscale(1);opacity:.8}
+#playerMainMenu .playerMenu-char-info-col .yk-text[style*="color"]{color:#aaaab2!important}
+#playerMainMenu .legacy-main-menu{max-width:calc(100vw - 48px)!important;max-height:calc(100vh - 32px)!important}
+@media(max-width:1100px){.legacy-menu-brand{font-size:16px;letter-spacing:.12em}.legacy-menu-tabs{gap:12px}.legacy-menu-header{gap:14px}#playerMainMenu .legacy-settings{gap:16px}#playerMainMenu .legacy-settings-nav{flex-basis:150px!important}#playerMainMenu .playerMenu-setting-line{padding:10px!important}}
+#playerMainMenu .playerMenu-shop-modal{background:rgba(24,24,27,.98)!important;border:1px solid #ffffff16!important;border-radius:12px!important;box-shadow:0 20px 70px #0006!important}
+#playerMainMenu .playerMenu-shop-modal-backdrop{background:rgba(12,12,14,.55)!important;backdrop-filter:blur(5px)}
+
+/* Transparent CEF exterior: avoid off-screen blur/shadow surfaces rendering opaque in RAGE. */
+html,body,#playerMainMenu,#playerMainMenu>.content-block,#playerMainMenu>div{background:transparent!important;background-image:none!important}
+
+/* Legibility and old blue settings surfaces. Preserve reticle color-picker gradients. */
+#playerMainMenu .legacy-main-menu .yk-text,#playerMainMenu .playerMenu-setting-text,#playerMainMenu .playerMenu-char-info-col .yk-text[style*="color"]{color:#f4f4f6!important}
+#playerMainMenu .playerMenu-setting-reticle-type-item,#playerMainMenu .playerMenu-reticle-setting,#playerMainMenu .playerMenu-reticle-setting-item,#playerMainMenu .yk-input-block{background:rgba(25,25,29,.96)!important;color:#f4f4f6!important;border:1px solid #ffffff10!important;border-radius:8px}
+#playerMainMenu .playerMenu-setting-reticle-type-item.active{background:#35353c!important;color:#fff!important}
+#playerMainMenu .shop-armor-card__body,#playerMainMenu .shop-armor-card--active .shop-armor-card__body{background:rgba(23,23,26,.93)!important;background-image:none!important;border:1px solid #ffffff12!important;box-shadow:none!important;border-radius:12px!important}
+#playerMainMenu img[src*="MainMenu/promo.png"]{display:none!important}
+#playerMainMenu .playerMenu-scroll::-webkit-scrollbar-thumb{background:#56565e!important}
+
+#playerMainMenu .playerMenu-setting-reticle-param-item-block{background:rgba(25,25,29,.96)!important;border:1px solid #ffffff10;border-radius:10px}#playerMainMenu .playerMenu-setting-reticle-type-item{color:#f3f3f6!important}#playerMainMenu .vc-chrome{background:#202024!important;border-color:#ffffff12!important}#playerMainMenu .vc-chrome input{color:#fff!important}
+
+#playerMainMenu .playerMenu-scroll::-webkit-scrollbar-track{background:#1c1c20!important}

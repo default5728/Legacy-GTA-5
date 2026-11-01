@@ -1,0 +1,477 @@
+/* Extracted from veprais/client_packages/interface/build/bundle.css (hudevo/bymarko) */
+
+@font-face { font-family: "Geometria Bold"; src: url("fonts/Geometria-Bold.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Geometria Medium"; src: url("fonts/Geometria-Medium.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Geometria Regular"; src: url("fonts/Geometria.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Geometria-Light"; src: url("fonts/Geometria-Light.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Geometria-ExtraLight"; src: url("fonts/Geometria-ExtraLight.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Helvetica Neue Bold"; src: url("fonts/HelveticaNeueCyr-Bold.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Helvetica Neue Medium"; src: url("fonts/HelveticaNeueCyr-Medium.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Helvetica Neue"; src: url("fonts/HelveticaNeueCyr-Thin.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Helvetica"; src: url("fonts/HelveticaNeueCyr-Thin.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Gotham Pro Bold"; src: url("fonts/GothamPro-Bold.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Gotham Pro Light"; src: url("fonts/GothamPro-Light.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Montserrat Medium"; src: url("fonts/Montserrat-Medium.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Montserrat Regular"; src: url("fonts/Montserrat-Regular.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Montserrat SemiBold"; src: url("fonts/Montserrat-SemiBold.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: "Montserrat Bold"; src: url("fonts/Montserrat-Bold.ttf") format("truetype"); font-weight: normal; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Thin.ttf") format("truetype"); font-weight: 100; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-ExtraLight.ttf") format("truetype"); font-weight: 200; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-ExtraBold.ttf") format("truetype"); font-weight: 800; font-style: normal; }
+@font-face { font-family: Montserrat; src: url("fonts/Montserrat-Black.ttf") format("truetype"); font-weight: 900; font-style: normal; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+html.hud-browser-preview,
+html.hud-browser-preview body {
+    background: #000 !important;
+}
+
+#hud {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background: transparent;
+    z-index: 1;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#hud * {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#hud * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#hud .text-customizations {
+    font-family: "Montserrat Regular", Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #fff;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+#hud .text-customizations.w-4 { font-family: "Montserrat Regular", Montserrat, sans-serif; font-weight: normal; }
+#hud .text-customizations.w-5 { font-family: "Montserrat Medium", Montserrat, sans-serif; font-weight: normal; }
+#hud .text-customizations.w-6 { font-family: "Montserrat SemiBold", Montserrat, sans-serif; font-weight: normal; }
+#hud .text-customizations.w-7 { font-family: "Montserrat Bold", Montserrat, sans-serif; font-weight: normal; }
+#hud .text-customizations.s-10 { font-size: 10px; }
+#hud .text-customizations.s-12 { font-size: 12px; }
+#hud .text-customizations.s-14 { font-size: 14px; }
+#hud .text-customizations.s-15 { font-size: 15px; }
+#hud .text-customizations.s-17 { font-size: 17px; }
+#hud .text-customizations.s-18 { font-size: 18px; }
+#hud .text-customizations.s-24 { font-size: 24px; }
+
+#hud .w-100 { width: 100%; }
+#hud .display-settings { display: flex; }
+#hud .display-settings.column { flex-direction: column; }
+#hud .display-settings.center { align-items: center; justify-content: center; }
+#hud .ml-5 { margin-left: 5px; }
+#hud .ml-10 { margin-left: 10px; }
+#hud .margin-00 { margin-left: auto; }
+
+#hud #up-right-block {
+    position: absolute;
+    top: 21px;
+    right: 22.25px;
+    max-width: 240px;
+    text-align: right;
+    z-index: 3;
+}
+
+#hud #name-svg {
+    display: inline-block;
+    position: relative;
+    font-family: "Geometria Regular", Montserrat, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    white-space: nowrap;
+}
+
+#hud .hud-brand-bold {
+    font-family: "Geometria Bold", Montserrat, sans-serif;
+    font-weight: 700;
+}
+
+#hud .hud-brand-regular {
+    font-family: "Geometria Regular", Montserrat, sans-serif;
+    font-weight: 400;
+}
+
+#hud #name-svg .hud-logo-star {
+    position: absolute;
+    top: -8px;
+    right: calc(100% - 18px);
+    width: 40px;
+    height: 26px;
+    flex-shrink: 0;
+    display: block;
+    pointer-events: none;
+}
+
+#hud .hud-server-meta {
+    justify-content: flex-end;
+}
+
+#hud #name {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: "Geometria Regular", Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
+    text-transform: none;
+}
+
+#hud #name .hud-server-name,
+#hud #name .hud-server-online {
+    font-family: "Geometria Bold", Montserrat, sans-serif !important;
+    font-weight: 700 !important;
+}
+
+#hud #name .hud-server-static {
+    font-family: "Geometria Regular", Montserrat, sans-serif !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+#hud #playerId {
+    display: none !important;
+}
+
+#hud #down-right-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 14px 22px 14px 30px;
+    background: rgba(7, 16, 48, 0.62);
+    border-radius: 41px 9px 9px 40px;
+    z-index: 2;
+}
+
+#hud #down-right-block > .ml-10 {
+    display: flex;
+    flex-direction: column;
+}
+
+#hud #down-right-block > .ml-10 > .display-settings.center {
+    align-items: center;
+    justify-content: flex-start !important;
+    min-height: 24px;
+    flex-wrap: nowrap;
+}
+
+#hud #down-right-block > .ml-10 .hud-stat-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8.5px;
+    flex-shrink: 0;
+    display: block;
+}
+
+#hud #down-right-block .hud-time-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+#hud #down-right-block .hud-date-part {
+    color: #7B93D1;
+}
+
+#hud #down-right-block > .ml-10 .hud-money-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: auto;
+    max-width: none;
+}
+
+#hud .hud-speed-box {
+    margin-right: 7px;
+}
+
+#hud .streets { line-height: 1.1; }
+
+#hud .fuel-line { color: #8BA2F0; }
+
+#hud .hud-right-notify-column {
+    position: absolute;
+    top: 85px;
+    right: 20px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: min(338px, calc(100vw - 40px));
+}
+
+#hud .hud-timers-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+
+#hud #bonus-block,
+#hud .hud-capsule-timer {
+    position: static;
+    width: 100%;
+    max-width: none;
+}
+
+#hud .hud-capsule-timer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 42px;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    background: linear-gradient(270deg, rgba(7, 16, 48, 0.78) 0%, rgba(12, 22, 52, 0.72) 62%, rgba(28, 34, 58, 0.62) 100%);
+    border-radius: 12px;
+}
+
+#hud .hud-capsule-timer.is-ready {
+    justify-content: center;
+}
+
+#hud .hud-capsule-timer__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: Montserrat, "Proxima Nova", sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #ff8a00;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#hud .hud-capsule-timer__label--solo {
+    flex: 0 1 auto;
+    text-align: center;
+}
+
+#hud .hud-capsule-timer__time {
+    flex: 0 0 auto;
+    font-family: Montserrat, "Proxima Nova", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+
+#hud .hud-capsule-timer__ico {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    display: block;
+    object-fit: contain;
+}
+
+#hud .hud-timer-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+    background: linear-gradient(270deg, rgba(7, 16, 48, 0.62) 0%, rgba(7, 16, 48, 0.6) 60.94%, rgba(33, 39, 61, 0.53) 100%);
+    border-radius: 9px;
+}
+
+#hud .hud-timer-block.lw-ready {
+    justify-content: center;
+    padding: 14px 36px;
+}
+
+#hud #bonus-block .block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: none;
+    padding: 14px;
+    gap: 0;
+    background: linear-gradient(270deg, rgba(7, 16, 48, 0.62) 0%, rgba(7, 16, 48, 0.6) 60.94%, rgba(33, 39, 61, 0.53) 100%);
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+#hud #bonus-block .block.lw-ready {
+    justify-content: center;
+    padding: 14px 36px;
+}
+
+#hud .hud-timer-text {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #fff;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+
+#hud .hud-side-stack {
+    position: static;
+    top: auto;
+    right: auto;
+    width: calc(100% - 16px);
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    z-index: auto;
+}
+
+#hud .center-left-block {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-family: "Geometria Regular", Montserrat, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 4px #000;
+    z-index: 2;
+    max-width: 260px;
+}
+
+#hud .bg-text {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#hud .bg-text:first-child { margin-top: 0; }
+
+#hud .text-after-gb {
+    min-width: 20px;
+    min-height: 20px;
+    padding: 2px 4px;
+    margin-right: 5px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#hud #bottomInfoPanel {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    z-index: 2;
+}
+
+#hud #playerCurrentZonePanel {
+    padding: 10px;
+    background: rgba(7, 16, 48, 0.5);
+    border-radius: 9px;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+}
+
+#hud .location-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 120px;
+}
+
+#hud .zone-line {
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+#hud .zone-line--gz { color: #ABE9AC; }
+#hud .zone-line--normal { color: #30A8FF; }
+
+#hud .street-line {
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.25;
+}
+
+#hud .text-customizations.s-17 { font-size: 17px; }
+
+#hud .ammo-panel {
+    background: rgba(7, 16, 48, 0.5);
+    border-radius: 9px;
+    padding: 0 10px;
+    min-height: 38px;
+}
+
+#hud .ammo-panel__icon {
+    flex-shrink: 0;
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+@media (max-width: 1366px) {
+    #hud #up-right-block { top: 14px; right: 14px; max-width: 220px; }
+    #hud .hud-right-notify-column { top: 78px; right: 14px; width: min(338px, calc(100vw - 28px)); }
+    #hud #down-right-block {
+        right: 14px;
+        bottom: 14px;
+        transform: scale(0.92);
+        transform-origin: right bottom;
+    }
+    #hud .center-left-block {
+        left: 14px;
+        transform: translateY(-50%) scale(0.92);
+        transform-origin: left center;
+    }
+}

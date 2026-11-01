@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><link rel="stylesheet" href="package://browsers/shared/cef-no-select.css"><script src="package://browsers/shared/cef-no-select.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Семья</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none}
+input,textarea{user-select:text;-webkit-user-select:text}
+:root{
+    --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+    --txt:#e8e8e8;--txt2:rgba(255,255,255,0.55);
+    --red:#dc2626;--red-h:rgba(220,38,38,0.18);
+    --border:rgba(255,255,255,0.08);
+    --radius:14px;--rad-sm:8px;
+}
+html,body{width:100%;height:100%;background:transparent !important;overflow:hidden;font-family:'Inter',system-ui,sans-serif;font-size:14px;color:var(--txt);-webkit-font-smoothing:antialiased}
+#root{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center}
+#root.open{display:flex}
+.shell{
+    width:1060px;max-width:97vw;
+    height:680px;max-height:96vh;
+    background:var(--bg2);
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    display:flex;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 32px 80px rgba(0,0,0,0.8);
+}
+/* ── Sidebar ─────────────────────────────────── */
+.sidebar{
+    width:200px;flex-shrink:0;
+    background:var(--bg);
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;
+    padding:0;
+}
+.sidebar-header{
+    padding:20px 16px 12px;
+    border-bottom:1px solid var(--border);
+}
+.frac-name{font-size:16px;font-weight:700;line-height:1.2;word-break:break-word}
+.frac-rank-badge{
+    display:inline-block;margin-top:6px;
+    padding:2px 10px;border-radius:20px;
+    font-size:11px;font-weight:600;
+    background:var(--red-h);color:var(--red);
+}
+.nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav-btn{
+    width:100%;text-align:left;
+    padding:10px 16px;
+    background:none;border:none;color:var(--txt2);
+    cursor:pointer;font-size:13px;font-weight:500;
+    transition:background .15s,color .15s;
+    display:flex;align-items:center;gap:8px;
+}
+.nav-btn:hover{background:var(--bg3);color:var(--txt)}
+.nav-btn.active{background:var(--bg3);color:var(--txt);border-left:2px solid var(--red)}
+.nav-btn .ico{width:16px;text-align:center;font-style:normal}
+.nav-bottom{padding:10px 16px;border-top:1px solid var(--border)}
+.btn-close{
+    width:100%;padding:9px;border-radius:var(--rad-sm);
+    background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);
+    color:var(--red);font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-close:hover{background:rgba(220,38,38,0.22)}
+/* ── Main area ────────────────────────────────── */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.panel{display:none;flex-direction:column;height:100%}
+.panel.active{display:flex}
+.panel-header{
+    padding:16px 20px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:15px;font-weight:700;flex-shrink:0;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.panel-header-right{display:flex;align-items:center;gap:14px;margin-left:auto;flex-shrink:0}
+.member-stats{font-size:12px;font-weight:600;color:var(--txt2);white-space:nowrap}
+.member-stats .stat-online{color:#22c55e}
+.panel-body{flex:1;overflow-y:auto;padding:16px 20px}
+/* scrollbar */
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* ── Members ────────────────────────────────────── */
+.member-row{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);margin-bottom:6px;
+    transition:background .15s;
+}
+.member-row:hover{background:var(--bg4)}
+.member-avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--bg4);display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:var(--txt);flex-shrink:0;
+}
+.member-info{flex:1}
+.member-name{font-weight:600;font-size:13px}
+.member-rank-name{font-size:11px;color:var(--txt2)}
+.member-actions{display:flex;gap:6px;flex:1;justify-content:flex-start;align-items:center;min-width:0}
+.member-kick{margin-left:auto;flex-shrink:0;display:flex;align-items:center}
+.rank-up-btn,.rank-dn-btn,.rank-pick-btn{
+    width:26px;height:26px;border-radius:5px;
+    background:var(--bg4);border:1px solid var(--border);
+    color:var(--txt2);cursor:pointer;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s,color .15s,border-color .15s;
+}
+.rank-pick-btn:hover{background:rgba(220,38,38,0.15);color:var(--red);border-color:rgba(220,38,38,0.45)}
+.rank-up-btn:hover{background:rgba(34,197,94,0.15);color:#22c55e;border-color:#22c55e}
+.rank-dn-btn:hover{background:var(--red-h);color:var(--red);border-color:var(--red)}
+/* ── Ranks config ───────────────────────────────── */
+.rank-cfg-row{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:12px 14px;margin-bottom:8px;
+}
+.rank-cfg-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rank-cfg-num{
+    width:28px;height:28px;border-radius:6px;
+    background:var(--bg4);display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--txt2);flex-shrink:0;
+}
+.rank-name-input{
+    flex:1;background:var(--bg4);border:1px solid var(--border);border-radius:6px;
+    padding:5px 10px;color:var(--txt);font-size:13px;outline:none;
+    transition:border-color .15s;
+}
+.rank-name-input:focus{border-color:rgba(220,38,38,0.5)}
+/* ── Warehouse ──────────────────────────────────── */
+.stock-grid{display:flex;flex-wrap:wrap;gap:8px}
+.stock-item{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:8px;
+    border:1px solid var(--border);
+}
+.stock-item-name{flex:1;word-break:break-all}
+.btn-take{
+    padding:4px 10px;border-radius:5px;
+    background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);
+    color:#22c55e;font-size:11px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-take:hover{background:rgba(34,197,94,0.22)}
+.deposit-row{display:flex;gap:8px;margin-bottom:14px}
+.deposit-input{
+    flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:7px 12px;color:var(--txt);font-size:13px;outline:none;
+    transition:border-color .15s;
+}
+.deposit-input:focus{border-color:rgba(220,38,38,0.4)}
+.btn-deposit{
+    padding:7px 14px;border-radius:var(--rad-sm);
+    background:var(--red-h);border:1px solid rgba(220,38,38,0.3);
+    color:var(--red);font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-deposit:hover{background:rgba(220,38,38,0.28)}
+/* ── Zones ──────────────────────────────────────── */
+.zones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.zone-card{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:10px 12px;border:1px solid var(--border);
+    display:flex;flex-direction:column;gap:4px;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.zone-card:hover{
+    border-color:rgba(220,38,38,0.55);
+    background:rgba(220,38,38,0.06);
+}
+.zone-card:active{ transform:scale(0.98); }
+.zone-card--mine{border-color:rgba(220,38,38,0.45);background:rgba(220,38,38,0.08)}
+.zone-card--battle{
+  border-color:rgba(220,38,38,0.55);
+  animation:zone-battle-pulse 1.05s ease-in-out infinite;
+}
+.zone-card--battle-lock{cursor:not-allowed;opacity:0.72}
+@keyframes zone-battle-pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.25);background:rgba(220,38,38,0.06)}
+  50%{box-shadow:0 0 14px 2px rgba(220,38,38,0.42);background:rgba(220,38,38,0.14)}
+}
+.zone-battle-tag{display:block;margin-top:4px;font-size:10px;font-weight:700;color:#ef4444;letter-spacing:0.04em;text-transform:uppercase}
+.zone-id{font-size:11px;color:var(--txt2);font-weight:600}
+.zone-owner{font-size:13px;font-weight:700}
+.zone-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+/* ── Rating ─────────────────────────────────────── */
+.rating-row{
+    display:flex;align-items:center;gap:12px;
+    background:var(--bg3);border-radius:var(--rad-sm);padding:10px 14px;margin-bottom:6px;
+}
+.rating-pos{width:24px;font-size:13px;font-weight:700;color:var(--txt2)}
+.rating-name{flex:1;font-weight:600;font-size:14px}
+.rating-zones{font-size:13px;color:var(--txt2)}
+.rating-bar-wrap{width:100px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.rating-bar{height:100%;border-radius:3px;transition:width .4s}
+/* ── Member actions extra ───────────────────────── */
+.kick-btn{
+    width:26px;height:26px;border-radius:5px;
+    background:var(--bg4);border:1px solid var(--border);
+    color:var(--txt2);cursor:pointer;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s,color .15s;
+}
+.kick-btn:hover{background:rgba(220,38,38,0.2);color:var(--red);border-color:var(--red)}
+.member-status{
+    width:9px;height:9px;border-radius:50%;flex-shrink:0;
+    box-shadow:0 0 8px currentColor;
+}
+.member-status.online{background:#22c55e;color:rgba(34,197,94,0.55)}
+.member-status.offline{background:#6b7280;color:rgba(107,114,128,0.45)}
+#tab-members.panel.active{display:flex;flex-direction:column;min-height:0}
+#tab-members .members-scroll{flex:1;overflow-y:auto;padding-bottom:8px}
+.members-action-bar{
+    flex-shrink:0;padding:12px 16px;border-top:1px solid rgba(220,38,38,0.22);
+    background:rgba(8,8,8,0.97);display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    z-index:3;box-shadow:0 -8px 24px rgba(0,0,0,0.35);
+}
+.members-action-bar input{
+    flex:1;min-width:140px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;
+    padding:8px 10px;color:var(--txt);font-size:13px;outline:none;
+}
+.members-action-bar input:focus{border-color:rgba(220,38,38,0.45)}
+.members-action-btn{
+    padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;
+    border:1px solid var(--border);background:var(--bg4);color:var(--txt);transition:background .15s,border-color .15s,color .15s;
+}
+.members-action-btn:hover{border-color:rgba(220,38,38,0.45);color:var(--red)}
+.members-action-btn--danger{border-color:rgba(220,38,38,0.35);color:var(--red)}
+.members-action-btn--danger:hover{background:rgba(220,38,38,0.12)}
+.rank-perms{display:flex;flex-wrap:wrap;gap:8px}
+.perm-check{
+    display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;user-select:none;font-size:12px;font-weight:500;
+    color:var(--txt2);
+    padding:6px 12px 6px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--bg4);
+    transition:border-color .15s,background .15s,color .15s,box-shadow .15s;
+}
+.perm-check:hover{border-color:rgba(220,38,38,0.35);color:var(--txt)}
+.perm-check input{
+    appearance:none;-webkit-appearance:none;
+    width:15px;height:15px;border-radius:4px;flex-shrink:0;
+    border:1px solid rgba(255,255,255,0.18);
+    background:var(--bg3);
+    cursor:pointer;position:relative;margin:0;
+    transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.perm-check input:checked{
+    border-color:var(--red);
+    background:var(--red);
+    box-shadow:0 0 0 2px rgba(220,38,38,0.22);
+}
+.perm-check input:checked::after{
+    content:'';
+    position:absolute;left:4px;top:1px;
+    width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+}
+.perm-check:has(input:checked){
+    color:var(--txt);
+    border-color:rgba(220,38,38,0.35);
+    background:rgba(220,38,38,0.08);
+}
+.mgmt-wh-toggle{
+    margin-top:16px;padding:14px 16px;
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.mgmt-wh-toggle__title{font-size:13px;font-weight:700;color:var(--txt)}
+.mgmt-wh-toggle__sub{margin-top:3px;font-size:11px;color:var(--txt2);line-height:1.35;max-width:360px}
+.frac-slider-toggle{position:relative;display:inline-flex;align-items:center;flex-shrink:0;cursor:pointer;user-select:none}
+.frac-slider-toggle>input{position:absolute;opacity:0;width:0;height:0;margin:0;pointer-events:none}
+.frac-slider-toggle__ui{
+    position:relative;width:48px;height:26px;border-radius:999px;
+    background:var(--bg4);border:1px solid var(--border);box-sizing:border-box;
+    transition:background .2s,border-color .2s;
+}
+.frac-slider-toggle__ui::after{
+    content:'';position:absolute;top:2px;left:3px;width:20px;height:20px;border-radius:50%;
+    background:rgba(255,255,255,0.35);box-shadow:0 1px 3px rgba(0,0,0,.45);
+    transition:transform .22s ease,background .2s;
+}
+.frac-slider-toggle__ui.frac-slider-toggle__ui--on{background:rgba(220,38,38,0.2);border-color:var(--red)}
+.frac-slider-toggle__ui.frac-slider-toggle__ui--on::after{transform:translateX(22px);background:var(--red)}
+.prefix-input{
+    width:100px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;
+    padding:3px 7px;color:var(--txt);font-size:11px;outline:none;
+    transition:border-color .15s;
+}
+.prefix-input:focus{border-color:rgba(220,38,38,0.5)}
+.prefix-btn{
+    width:26px;height:26px;border-radius:5px;
+    background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);
+    color:#22c55e;cursor:pointer;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s;
+}
+.prefix-btn:hover{background:rgba(34,197,94,0.25)}
+/* ── Modal overlay ─────────────────────────────── */
+.modal-overlay{
+    display:none;position:fixed;inset:0;z-index:19999;
+    background:rgba(0,0,0,0.55);align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px 28px;min-width:360px;max-width:480px;
+    box-shadow:0 16px 48px rgba(0,0,0,0.7);
+}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--txt)}
+.modal-input{
+    width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:8px 12px;color:var(--txt);font-size:13px;outline:none;margin-bottom:14px;
+    user-select:text;-webkit-user-select:text;
+    transition:border-color .15s;
+}
+.modal-input:focus{border-color:rgba(220,38,38,0.5)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.modal-ok{
+    padding:7px 18px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.modal-ok:hover{background:#ef4444}
+.modal-cancel{
+    padding:7px 18px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:13px;cursor:pointer;
+    transition:background .15s;
+}
+.modal-cancel:hover{background:var(--bg4);color:var(--txt)}
+.fam-confirm-text{font-size:13px;line-height:1.5;color:var(--txt2);margin-bottom:16px}
+.rank-pick-box{min-width:340px;max-width:420px}
+.rank-pick-sub{font-size:12px;color:var(--txt2);margin:-6px 0 12px}
+.rank-pick-sub b{color:var(--txt);font-weight:600}
+.rank-pick-select{position:relative;margin-bottom:12px}
+.rank-pick-trigger{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:9px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+    font-size:13px;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s;
+}
+.rank-pick-trigger:hover,.rank-pick-trigger.open{border-color:rgba(220,38,38,0.45);background:var(--bg4)}
+.rank-pick-chevron{font-size:12px;color:var(--txt2);transition:transform .15s}
+.rank-pick-trigger.open .rank-pick-chevron{transform:rotate(180deg);color:var(--red)}
+.rank-pick-list{
+    display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;
+    max-height:220px;overflow-y:auto;
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad-sm);
+    box-shadow:0 16px 40px rgba(0,0,0,0.55);
+}
+.rank-pick-list.open{display:block}
+.rank-pick-option{
+    width:100%;text-align:left;padding:9px 12px;border:none;background:transparent;
+    color:var(--txt2);font-size:13px;cursor:pointer;transition:background .12s,color .12s;
+}
+.rank-pick-option:hover{background:rgba(220,38,38,0.1);color:var(--txt)}
+.rank-pick-option.current{color:var(--red);font-weight:600}
+.rank-pick-option.selected{background:rgba(220,38,38,0.14);color:var(--txt)}
+/* Кастомный скролл — Капт и выбор ранга */
+.bizwar-card::-webkit-scrollbar,
+.rank-pick-list::-webkit-scrollbar{width:6px}
+.bizwar-card::-webkit-scrollbar-track,
+.rank-pick-list::-webkit-scrollbar-track{
+    background:rgba(255,255,255,0.04);
+    border-radius:10px;
+    margin:6px 2px;
+}
+.bizwar-card::-webkit-scrollbar-thumb,
+.rank-pick-list::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,rgba(220,38,38,0.45) 0%,rgba(220,38,38,0.82) 100%);
+    border-radius:10px;
+    border:1px solid rgba(220,38,38,0.22);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.bizwar-card::-webkit-scrollbar-thumb:hover,
+.rank-pick-list::-webkit-scrollbar-thumb:hover{background:rgba(239,68,68,0.92)}
+.bizwar-card{scrollbar-width:thin;scrollbar-color:rgba(220,38,38,0.65) rgba(255,255,255,0.06)}
+.rank-pick-list{scrollbar-width:thin;scrollbar-color:rgba(220,38,38,0.65) rgba(255,255,255,0.06)}
+/* ── Bizwar overlay (поверх планшета, меню семьи не закрывается) ── */
+.bizwar-overlay{
+    display:none;position:absolute;inset:0;z-index:12000;
+    align-items:center;justify-content:center;padding:20px;
+    background:rgba(0,0,0,0.52);border-radius:var(--radius);
+}
+.bizwar-overlay.open{display:flex}
+.bizwar-card{
+    width:min(540px,100%);max-height:92%;overflow:auto;
+    background:var(--bg2);border:1px solid rgba(220,38,38,0.22);border-radius:var(--radius);
+    box-shadow:0 28px 72px rgba(0,0,0,0.82);
+}
+.bizwar-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.bizwar-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.bizwar-zone-badge{background:var(--red-h);color:var(--red);border:1px solid rgba(220,38,38,0.3);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700}
+.bizwar-close{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.bizwar-close:hover{background:var(--red-h);color:var(--red);border-color:var(--red)}
+.bizwar-teams{display:flex;gap:1px;background:var(--border)}
+.bizwar-team{flex:1;padding:10px 14px;background:var(--bg2);text-align:center}
+.bizwar-team-label{font-size:11px;color:var(--txt2);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.bizwar-team-name{font-size:14px;font-weight:700}
+.bizwar-team-online{font-size:12px;color:var(--txt2);margin-top:2px}
+.bizwar-vs{display:flex;align-items:center;justify-content:center;background:var(--bg3);padding:0 12px;font-size:13px;font-weight:800;color:var(--txt2)}
+.bizwar-body{padding:16px 18px}
+.bizwar-section{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.bizwar-count-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.bizwar-count-btn{width:38px;height:34px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,border-color .15s}
+.bizwar-count-btn:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-count-btn.active{background:var(--red-h);color:var(--red);border-color:var(--red)}
+.bizwar-count-input{width:100%;height:38px;border-radius:var(--rad-sm);border:1px solid var(--border);background:var(--bg3);color:var(--txt);padding:0 12px;font-size:14px;font-weight:700;outline:none}
+.bizwar-count-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.14)}
+.bizwar-cal-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.bizwar-cal-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:background .15s,border-color .15s}
+.bizwar-cal-row:hover{background:var(--bg4)}
+.bizwar-cal-row.selected{background:var(--red-h);border-color:rgba(220,38,38,0.4)}
+.bizwar-cal-row.disabled{opacity:.35;cursor:not-allowed}
+.bizwar-cal-check{width:18px;height:18px;border-radius:4px;flex-shrink:0;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+.bizwar-cal-row.selected .bizwar-cal-check{background:var(--red);border-color:var(--red)}
+.bizwar-cal-row.selected .bizwar-cal-check::after{content:'✓';font-size:11px;color:#fff;font-weight:700}
+.bizwar-cal-name{font-size:13px;font-weight:700;min-width:64px}
+.bizwar-cal-weapons{font-size:11px;color:var(--txt2);flex:1}
+.bizwar-extras{display:flex;gap:8px;margin-bottom:14px}
+.bizwar-extra{flex:1;padding:8px 10px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:12px;font-weight:600;text-align:center;transition:background .15s,color .15s,border-color .15s}
+.bizwar-extra:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-extra.on{background:rgba(34,197,94,0.12);color:#22c55e;border-color:rgba(34,197,94,0.35)}
+.bizwar-actions{display:flex;gap:8px}
+.bizwar-btn-cancel{padding:10px 16px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:13px;cursor:pointer}
+.bizwar-btn-cancel:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-btn-confirm{flex:1;padding:10px;border-radius:var(--rad-sm);background:var(--red);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.bizwar-btn-confirm:hover{background:#ef4444}
+.bizwar-join-info{background:var(--bg3);border-radius:var(--rad-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.7;color:var(--txt2)}
+.bizwar-join-info b{color:var(--txt)}
+.bizwar-btn-join{width:100%;padding:10px;border-radius:var(--rad-sm);background:var(--red);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.bizwar-btn-join:hover{background:#ef4444}
+/* ── Advert variants ────────────────────────────── */
+.advert-variant{
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:14px 16px;margin-bottom:10px;cursor:pointer;
+    transition:border-color .15s,background .15s;
+    font-size:13px;line-height:1.6;color:var(--txt2);
+}
+.advert-variant:hover{border-color:rgba(220,38,38,0.4);background:rgba(220,38,38,0.06);color:var(--txt)}
+.advert-variant-num{font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px}
+.advert-variant-text{font-size:13px;line-height:1.6;white-space:pre-line;color:inherit}
+/* ── Advert ─────────────────────────────────────── */
+.advert-box{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    border:1px solid var(--border);padding:12px;
+    font-size:13px;line-height:1.6;color:var(--txt2);
+    margin-bottom:14px;min-height:60px;
+}
+.advert-textarea{
+    width:100%;height:120px;resize:none;
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    color:var(--txt);font-size:13px;padding:10px 12px;outline:none;
+    transition:border-color .15s;margin-bottom:10px;
+}
+.advert-textarea:focus{border-color:rgba(220,38,38,0.4)}
+.btn-primary{
+    padding:8px 20px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;
+    font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-primary:hover{background:#ef4444}
+/* ── Empty / loader ─────────────────────────────── */
+.empty{color:var(--txt2);font-size:13px;padding:20px 0;text-align:center}
+/* ── Logs ───────────────────────────────────────── */
+.logs-search-input{
+    width:220px;max-width:42vw;
+    padding:7px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);
+    color:var(--txt);font-size:12px;font-weight:500;
+    outline:none;transition:border-color .15s;
+}
+.logs-search-input:focus{border-color:rgba(220,38,38,0.45)}
+.logs-search-input::placeholder{color:rgba(255,255,255,0.35)}
+.logs-body{padding:12px 20px 16px}
+.logs-head,.log-row{
+    display:grid;grid-template-columns:118px minmax(120px,180px) 1fr;
+    gap:10px 14px;align-items:start;
+}
+.logs-head{
+    padding:0 12px 10px;
+    font-size:11px;font-weight:700;text-transform:uppercase;
+    letter-spacing:0.04em;color:var(--txt2);
+    border-bottom:1px solid var(--border);
+    margin-bottom:6px;
+}
+.log-row{
+    padding:10px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);margin-bottom:5px;
+    transition:background .15s;
+}
+.log-row:hover{background:var(--bg4)}
+.log-time{
+    font-size:11px;color:var(--txt2);
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.log-name{font-weight:600;font-size:12px;line-height:1.35;word-break:break-word}
+.log-name-id{font-size:11px;font-weight:500;color:var(--txt2);margin-top:2px}
+.log-action{font-size:12px;color:var(--txt2);line-height:1.45;word-break:break-word}
+.logs-body::-webkit-scrollbar{width:5px}
+.logs-body::-webkit-scrollbar-thumb{background:rgba(220,38,38,0.35);border-radius:3px}
+.logs-body::-webkit-scrollbar-track{background:var(--bg3)}
+.refresh-btn{
+    float:right;padding:4px 12px;border-radius:5px;
+    background:var(--bg4);border:1px solid var(--border);color:var(--txt2);
+    font-size:12px;cursor:pointer;transition:background .15s;
+}
+.refresh-btn:hover{background:var(--bg3);color:var(--txt)}
+.save-btn{
+    margin-top:12px;padding:8px 20px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;
+    font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;
+}
+.save-btn:hover{background:#ef4444}
+.mgmt-balance-ops{margin:14px 0 18px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border)}
+.mgmt-balance-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn-secondary{padding:10px 14px;border-radius:10px;border:1px solid rgba(220,38,38,0.35);background:rgba(26,26,26,0.9);color:#e8e8e8;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:rgba(220,38,38,0.12)}
+/* ── Management stats / invite ─────────────────── */
+.mgmt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.mgmt-stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);padding:10px 12px}
+.mgmt-stat__lbl{font-size:11px;color:var(--txt2);margin-bottom:4px}
+.mgmt-stat__val{font-size:15px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
+.mgmt-invite{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;padding:12px 14px;background:var(--bg3);border-radius:var(--rad-sm);border:1px solid var(--border)}
+.mgmt-invite input{flex:1;min-width:120px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--txt);font-size:13px;outline:none}
+.mgmt-invite input:focus{border-color:rgba(220,38,38,0.45)}
+.mgmt-invite-btn{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--txt);transition:background .15s,border-color .15s,color .15s}
+.mgmt-invite-btn:hover{border-color:rgba(220,38,38,0.45);color:var(--red)}
+.mgmt-invite-btn--danger{border-color:rgba(220,38,38,0.35);color:var(--red)}
+.mgmt-invite-btn--danger:hover{background:rgba(220,38,38,0.12)}
+/* ── Garage ─────────────────────────────────────── */
+.garage-panel{display:flex;flex-direction:column;gap:14px}
+.garage-global{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);padding:12px 14px}
+.garage-global__lbl{font-size:12px;color:var(--txt2);margin-bottom:6px}
+.garage-plate{width:100%;max-width:160px;background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--txt);font-size:13px;outline:none;text-transform:uppercase;letter-spacing:0.06em}
+.garage-colors{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.garage-color{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .12s,border-color .12s}
+.garage-color.active{border-color:#f5f5f5;transform:scale(1.08)}
+.garage-save{margin-top:10px;padding:7px 14px;border-radius:6px;background:var(--red);border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.garage-save:hover{background:#ef4444}
+.garage-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.garage-slot{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);padding:12px;display:flex;flex-direction:column;gap:8px}
+.garage-slot__title{font-size:13px;font-weight:700}
+.garage-slot__model{font-size:11px;color:var(--txt2)}
+.garage-slot__acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.garage-act{padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--txt);transition:background .15s,border-color .15s,color .15s}
+.garage-act--evac:hover{border-color:rgba(220,38,38,0.45);color:var(--red)}
+.garage-act--sum:hover{border-color:rgba(34,197,94,0.45);color:#22c55e}
+.garage-warn{font-size:12px;color:var(--txt2);margin-bottom:8px}
+.garage-empty{font-size:12px;color:var(--txt2);padding:12px;background:var(--bg3);border-radius:var(--rad-sm);border:1px dashed var(--border)}
+</style>
+</head>
+<body>
+
+<div id="root">
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="frac-name" id="famName">—</div>
+        <div class="frac-rank-badge" id="fracRankBadge">Рядовой</div>
+      </div>
+      <nav class="nav" id="navList">
+        <button class="nav-btn active" data-tab="members" onclick="FamApp.tab('members')">Участники</button>
+        <button class="nav-btn" data-tab="management" onclick="FamApp.tab('management')">Управление</button>
+        <button class="nav-btn" data-tab="garage" id="navGarage" style="display:none" onclick="FamApp.tab('garage')">Семейный гараж</button>
+        <button class="nav-btn" data-tab="zones" id="navZones" onclick="FamApp.tab('zones')">Война семей</button>
+        <button class="nav-btn" data-tab="rating" id="navRating" onclick="FamApp.tab('rating')">Рейтинг</button>
+        <button class="nav-btn" data-tab="advert" onclick="FamApp.tab('advert')">Реклама</button>
+        <button class="nav-btn" data-tab="logs" onclick="FamApp.tab('logs')">Логи</button>
+      </nav>
+      <div class="nav-bottom">
+        <button class="btn-close" onclick="FamApp.close()">Закрыть</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+
+      <!-- Members -->
+      <div class="panel active" id="tab-members">
+        <div class="panel-header">
+          <span>Участники семьи</span>
+          <span class="panel-header-right">
+            <span class="member-stats" id="memberStats">Всего: 0 · Онлайн: <span class="stat-online">0</span></span>
+            <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('fam:members:refresh')">↻ Обновить</button>
+          </span>
+        </div>
+        <div class="panel-body members-scroll" id="membersBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+        <div class="members-action-bar" id="membersActionBar"></div>
+      </div>
+
+      <!-- Management (ranks) -->
+      <div class="panel" id="tab-management">
+        <div class="panel-header">Управление семьёй</div>
+        <div class="panel-body" id="mgmtBody">
+          <div class="empty">Только лидер может редактировать ранги.</div>
+        </div>
+      </div>
+
+      <!-- Garage -->
+      <div class="panel" id="tab-garage">
+        <div class="panel-header">
+          Семейный гараж
+          <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('fam:fleet:pull')">↻</button>
+        </div>
+        <div class="panel-body" id="garageBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+      <!-- Capt zones -->
+      <div class="panel" id="tab-zones">
+        <div class="panel-header">
+          Война семей — карта точек
+          <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('fam:zones:request')">↻</button>
+        </div>
+        <div class="panel-body" id="zonesBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+      <!-- Rating -->
+      <div class="panel" id="tab-rating">
+        <div class="panel-header">
+          Рейтинг по зонам
+          <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('fam:rating:request')">↻</button>
+        </div>
+        <div class="panel-body" id="ratingBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+      <!-- Advert -->
+      <div class="panel" id="tab-advert">
+        <div class="panel-header">Реклама семьи</div>
+        <div class="panel-body" id="advertBody">
+          <div class="empty" id="advertCooldownMsg" style="display:none;color:#dc2626"></div>
+          <div id="advertVariants">
+            <div class="advert-variant" onclick="FamApp.sendAdvert(1)">
+              <div class="advert-variant-num">Вариант 1</div>
+              <div class="advert-variant-text" id="advertText1"></div>
+            </div>
+            <div class="advert-variant" onclick="FamApp.sendAdvert(2)">
+              <div class="advert-variant-num">Вариант 2</div>
+              <div class="advert-variant-text" id="advertText2"></div>
+            </div>
+            <div class="advert-variant" onclick="FamApp.sendAdvert(3)">
+              <div class="advert-variant-num">Вариант 3</div>
+              <div class="advert-variant-text" id="advertText3"></div>
+            </div>
+            <div class="empty" style="margin-top:8px;font-size:11px">Кликни по варианту, чтобы опубликовать в чате. Стоимость: 100 000$, КД: 1 ч</div>
+          </div>
+          <div id="advertEditorLegacy" style="display:none">
+            <textarea class="advert-textarea" id="advertText" placeholder="Текст рекламы семьи (до 512 символов)..."></textarea>
+            <button class="btn-primary" onclick="FamApp.saveAdvert()">Сохранить</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs -->
+      <div class="panel" id="tab-logs">
+        <div class="panel-header">
+          <span>Логи семьи</span>
+          <span class="panel-header-right">
+            <input type="text" class="logs-search-input" id="logsSearch" placeholder="Поиск по ID или действию..." autocomplete="off" />
+            <button class="refresh-btn" onclick="FamApp.requestLogs()">↻</button>
+          </span>
+        </div>
+        <div class="panel-body logs-body" id="logsBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- Bizwar overlay (внутри планшета — Семья остаётся открытой) -->
+    <div class="bizwar-overlay" id="bizwarOverlay">
+      <div class="bizwar-card">
+        <div class="bizwar-header">
+          <div class="bizwar-title">Война семей <span class="bizwar-zone-badge" id="bwZoneBadge">Точка #?</span></div>
+          <button type="button" class="bizwar-close" onclick="FamApp.closeBizwar()">X</button>
+        </div>
+        <div class="bizwar-teams">
+          <div class="bizwar-team">
+            <div class="bizwar-team-label">Атакует</div>
+            <div class="bizwar-team-name" id="bwAtkName">—</div>
+            <div class="bizwar-team-online" id="bwAtkOnline"></div>
+          </div>
+          <div class="bizwar-vs">VS</div>
+          <div class="bizwar-team">
+            <div class="bizwar-team-label">Защищает</div>
+            <div class="bizwar-team-name" id="bwDefName">—</div>
+            <div class="bizwar-team-online" id="bwDefOnline"></div>
+          </div>
+        </div>
+        <div class="bizwar-body">
+          <div id="bwJoinSection" style="display:none">
+            <div class="bizwar-join-info" id="bwJoinInfo"></div>
+            <div class="bizwar-join-hint" style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.55);">
+              Телепорт на войну — только у метки в офисе Arcadius или в особняке семьи (E).
+            </div>
+          </div>
+          <div id="bwAttackSection">
+            <div class="bizwar-section">Кол-во игроков (с каждой стороны)</div>
+            <div class="bizwar-count-row" id="bwCountRow"></div>
+            <div class="bizwar-section">Калибры (<span id="bwCalCount">0</span>/3)</div>
+            <div class="bizwar-cal-grid" id="bwCalibersGrid"></div>
+            <div class="bizwar-section">Дополнительно</div>
+            <div class="bizwar-extras">
+              <div class="bizwar-extra" id="bwToggleArmor" onclick="FamApp._bizwarToggleExtra('armor')">Броня</div>
+              <div class="bizwar-extra" id="bwToggleSpunk" onclick="FamApp._bizwarToggleExtra('spunk')">Спанк</div>
+              <div class="bizwar-extra" id="bwToggleAlco" onclick="FamApp._bizwarToggleExtra('alco')">Алко</div>
+            </div>
+            <div class="bizwar-actions">
+              <button type="button" class="bizwar-btn-cancel" onclick="FamApp.closeBizwar()">Отмена</button>
+              <button type="button" class="bizwar-btn-confirm" onclick="FamApp._bizwarConfirm()">Начать войну</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /shell -->
+</div><!-- /root -->
+
+<!-- Rank picker (сверху по центру) -->
+<div class="modal-overlay" id="rankPickModal">
+  <div class="modal-box rank-pick-box">
+    <div class="modal-title">Выберите ранг</div>
+    <div class="rank-pick-sub">Текущий ранг: <b id="rankPickCurrent">—</b></div>
+    <div class="rank-pick-select">
+      <button type="button" class="rank-pick-trigger" id="rankPickTrigger" onclick="FamApp._toggleRankPickList()">
+        <span id="rankPickSelectedLabel">Выберите ранг</span>
+        <span class="rank-pick-chevron">▾</span>
+      </button>
+      <div class="rank-pick-list" id="rankPickList"></div>
+    </div>
+    <input class="modal-input" id="rankPickReason" placeholder="Причина изменения ранга..." maxlength="256">
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" onclick="FamApp._closeRankPickModal()">Отмена</button>
+      <button type="button" class="modal-ok" onclick="FamApp._confirmRankPick()">Применить</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="famConfirmModal">
+  <div class="modal-box">
+    <div class="modal-title" id="famConfirmTitle">Подтверждение</div>
+    <p class="fam-confirm-text" id="famConfirmText"></p>
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" onclick="FamApp._closeConfirmModal()">Отмена</button>
+      <button type="button" class="modal-ok" onclick="FamApp._confirmModalOk()">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── helpers ────────────────────────────────────────────────────────────────────
+function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatVehicleName(model) {
+    const m = String(model || '').trim();
+    if (!m) return '—';
+    return m.replace(/_/g, ' ').replace(/\b([a-z])/gi, (c) => c.toUpperCase());
+}
+
+const FAM_ZONE_COLORS = ['#dc2626','#8b21c9','#16a34a','#ca8a04','#0891b2','#ef4444','#22c55e','#e5e7eb'];
+const BIZWAR_CALIBERS_INFO = [
+    { key:'7.62mm',  label:'7.62mm',  weapons:'Special Carbine, Carbine Rifle' },
+    { key:'5.56',    label:'5.56',    weapons:'Mini SMG' },
+    { key:'11.43mm', label:'11.43mm', weapons:'Revolver, Revolver Mk2' },
+    { key:'.50mm',   label:'.50mm',   weapons:'Heavy Sniper, Heavy Sniper Mk2' },
+    { key:'12mm',    label:'12mm',    weapons:'Heavy Shotgun, Assault Shotgun' }
+];
+const FLEET_PALETTE = [
+    { idx: 0, css: '#f2f2f2', label: 'Белый' },
+    { idx: 1, css: '#1a1a1a', label: 'Чёрный' },
+    { idx: 2, css: '#dc2626', label: 'Красный' },
+    { idx: 3, css: '#2563eb', label: 'Синий' },
+    { idx: 4, css: '#eab308', label: 'Жёлтый' },
+    { idx: 5, css: '#16a34a', label: 'Зелёный' },
+    { idx: 6, css: '#ea580c', label: 'Оранжевый' },
+    { idx: 7, css: '#cbd5e1', label: 'Серебро' },
+    { idx: 8, css: '#64748b', label: 'Серый' },
+    { idx: 9, css: '#78350f', label: 'Коричневый' }
+];
+
+// ── state ─────────────────────────────────────────────────────────────────────
+let _state = {
+    familyName: '—',
+    familyAccent: '#dc2626',
+    playerRank: 0,
+    isLeader: false,
+    canManageRanks: false,
+    canKickMember: false,
+    canInvite: false,
+    canWarehouse: false,
+    canCapt: false,
+    canWithdrawMoney: false,
+    hasCaptTab: true,
+    hasGarageTab: false,
+    members: [],
+    ranks: [],
+    advert: '',
+    warehouseOpen: true,
+    ownedZones: 0,
+    totalZones: 50,
+    stats: { balance: 0, ratingPoints: 0, territories: 0, captLevel: 0 }
+};
+let _zones = {};         // { [zoneId]: ownerFamilyName }
+let _zoneBattle = {};    // { [zoneId]: true } — активная война на точке
+let _fleet = { plate: 'FAMILY', colorIdx: 0, canSave: false, vehicles: [] };
+let _rankPickTarget = null;
+let _rankPickSelected = null;
+let _bizwarState = {
+    zoneId: 0, myFamily: '', attackerFamily: '', defenderFamily: '', ownerFamily: '',
+    atkOnline: 0, defOnline: 0, maxCount: 10, isJoin: false, count: 5,
+    selectedCalibers: [], allowArmor: false, allowSpunk: true, allowAlco: true,
+    availableCalibersArr: []
+};
+let _logsSearchTimer = null;
+let _confirmCallback = null;
+
+// ── API ───────────────────────────────────────────────────────────────────────
+window.FamApp = {
+
+    open(payloadJson) {
+        const payload = typeof payloadJson === 'string' ? JSON.parse(payloadJson) : payloadJson;
+        Object.assign(_state, payload);
+        const root = document.getElementById('root');
+        if (root) root.classList.add('open');
+        this._applyState();
+        this.tab('members');
+        this._renderMembers(_state.members || []);
+        this._renderMembersActionBar();
+        this._renderManagement();
+        this._renderAdvert();
+        this._trigger('fam:points:request');
+        this._trigger('fam:rating:request');
+        if (_state.hasGarageTab) this._trigger('fam:fleet:pull');
+    },
+
+    close() {
+        const o = document.getElementById('bizwarOverlay');
+        if (o) o.classList.remove('open');
+        this._closeRankPickModal();
+        this._closeConfirmModal();
+        document.getElementById('root').classList.remove('open');
+        this._trigger('fam:close');
+    },
+
+    tab(name) {
+        if (name === 'garage' && !_state.hasGarageTab) name = 'members';
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-tab') === name);
+        });
+        const panel = document.getElementById('tab-' + name);
+        if (panel) panel.classList.add('active');
+        if (name === 'logs') this.requestLogs();
+        if (name === 'garage') this._trigger('fam:fleet:pull');
+    },
+
+    requestLogs() {
+        const q = document.getElementById('logsSearch')?.value || '';
+        this._trigger('fam:logs:request', q);
+    },
+
+    setLogs(json) {
+        const list = typeof json === 'string' ? JSON.parse(json) : json;
+        this._renderLogs(Array.isArray(list) ? list : []);
+    },
+
+    setMembers(json) {
+        const list = typeof json === 'string' ? JSON.parse(json) : json;
+        _state.members = list;
+        this._renderMembers(list);
+    },
+
+    refreshMembers() {
+        this._trigger('fam:members:refresh');
+    },
+
+    setMyRank(rank, rankName) {
+        _state.playerRank = rank;
+        _state.isLeader = rank === 10;
+        const badge = document.getElementById('fracRankBadge');
+        if (badge) badge.textContent = rank === 10 ? 'Лидер' : (rankName || `Ранг ${rank}`);
+    },
+
+    setPoints(json) {
+        const raw = typeof json === 'string' ? JSON.parse(json) : json;
+        _zones = {};
+        _zoneBattle = {};
+        Object.keys(raw || {}).forEach((k) => {
+            const v = raw[k];
+            if (v && typeof v === 'object') {
+                _zones[k] = v.owner != null ? String(v.owner) : '';
+                _zoneBattle[k] = !!v.underAttack;
+            } else {
+                _zones[k] = v != null ? String(v) : '';
+            }
+        });
+        this._renderZones();
+    },
+
+    patchPoint(zoneId, owner, underAttack) {
+        const key = String(zoneId);
+        _zones[key] = owner != null ? String(owner) : '';
+        _zoneBattle[key] = !!underAttack;
+        this._renderZones();
+    },
+
+    setZoneBattleFlash(zoneId, active) {
+        const key = String(zoneId);
+        if (active) _zoneBattle[key] = true;
+        else delete _zoneBattle[key];
+        this._renderZones();
+    },
+
+    setZones(json) {
+        this.setPoints(json);
+    },
+
+    setRating(json) {
+        const data = typeof json === 'string' ? JSON.parse(json) : json;
+        this._renderRating(data);
+    },
+
+    saveAdvert() {
+        const text = document.getElementById('advertText').value.slice(0, 512);
+        this._trigger('fam:advert:save', text);
+        _state.advert = text;
+    },
+
+    sendAdvert(variant) {
+        if (!_state.isLeader) return;
+        this._trigger('fam:advert:broadcast', variant);
+    },
+
+    saveRanks() {
+        const rows = document.querySelectorAll('.rank-cfg-row');
+        const result = [];
+        rows.forEach(row => {
+            const rankNum = parseInt(row.getAttribute('data-rank'), 10);
+            const nameInput = row.querySelector('.rank-name-input');
+            const name = nameInput ? nameInput.value.trim() || `Ранг ${rankNum}` : `Ранг ${rankNum}`;
+            const perms = {};
+            row.querySelectorAll('input[type=checkbox]').forEach(cb => { perms[cb.name] = cb.checked; });
+            result.push({ rank: rankNum, name, ...perms });
+        });
+        this._trigger('fam:rankconfig:save', JSON.stringify(result));
+    },
+
+    setBalance(val) {
+        const n = parseInt(val, 10) || 0;
+        if (!_state.stats) _state.stats = {};
+        _state.stats.balance = n;
+        if (document.getElementById('tab-management')?.classList.contains('active')) this._renderManagement();
+    },
+
+    depositBalance() {
+        const el = document.getElementById('famBalAmount');
+        this._trigger('fam:balance:deposit', String(el ? el.value : ''));
+    },
+
+    withdrawBalance() {
+        const el = document.getElementById('famBalAmount');
+        this._trigger('fam:balance:withdraw', String(el ? el.value : ''));
+    },
+
+    toggleWarehouse(open) {
+        if (!_state.isLeader) return;
+        _state.warehouseOpen = !!open;
+        this._syncWarehouseToggleVisual();
+        this._trigger('fam:warehouse:toggle', open ? 1 : 0);
+    },
+
+    setWarehouseOpen(open) {
+        _state.warehouseOpen = open === true || open === 1 || open === '1';
+        const cb = document.getElementById('fracWarehouseOpenToggle');
+        if (cb) cb.checked = _state.warehouseOpen !== false;
+        this._syncWarehouseToggleVisual();
+    },
+
+    _syncWarehouseToggleVisual() {
+        const wrap = document.querySelector('[data-frac-switch]');
+        if (!wrap) return;
+        const inp = wrap.querySelector('input');
+        const ui = wrap.querySelector('.frac-slider-toggle__ui');
+        if (ui && inp) ui.classList.toggle('frac-slider-toggle__ui--on', !!inp.checked);
+    },
+
+    openRankPicker(targetStatic) {
+        if (!_state.canManageRanks) return;
+        const m = _state.members.find(x => x.static === targetStatic);
+        if (!m || m.rank === 10) return;
+        _rankPickTarget = targetStatic;
+        _rankPickSelected = null;
+        const curName = m.rankName || `Ранг ${m.rank}`;
+        document.getElementById('rankPickCurrent').textContent = curName + (m.online ? '' : ' (оффлайн)');
+        document.getElementById('rankPickSelectedLabel').textContent = 'Выберите ранг';
+        document.getElementById('rankPickReason').value = '';
+        document.getElementById('rankPickReason').style.borderColor = '';
+        document.getElementById('rankPickTrigger').style.borderColor = '';
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        this._renderRankPickList(m.rank);
+        document.getElementById('rankPickModal').classList.add('open');
+    },
+    _renderRankPickList(currentRank) {
+        const list = document.getElementById('rankPickList');
+        if (!list) return;
+        const ranks = (_state.ranks.length ? _state.ranks : Array.from({length:9},(_,i)=>({rank:i+1,name:`Ранг ${i+1}`})))
+            .filter(r => r.rank >= 1 && r.rank <= 9);
+        list.innerHTML = ranks.map(r =>
+            `<button type="button" class="rank-pick-option${r.rank === currentRank ? ' current' : ''}${r.rank === _rankPickSelected ? ' selected' : ''}" onclick="FamApp._selectRankPick(${r.rank})">${esc(r.name || `Ранг ${r.rank}`)}</button>`
+        ).join('');
+    },
+    _toggleRankPickList() {
+        const trigger = document.getElementById('rankPickTrigger');
+        const list = document.getElementById('rankPickList');
+        if (!trigger || !list) return;
+        const open = !list.classList.contains('open');
+        list.classList.toggle('open', open);
+        trigger.classList.toggle('open', open);
+    },
+    _selectRankPick(rankNum) {
+        _rankPickSelected = rankNum;
+        const r = (_state.ranks.find(x => x.rank === rankNum) || { name: `Ранг ${rankNum}` });
+        document.getElementById('rankPickSelectedLabel').textContent = r.name || `Ранг ${rankNum}`;
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        const m = _state.members.find(x => x.static === _rankPickTarget);
+        this._renderRankPickList(m ? m.rank : 0);
+    },
+    _closeRankPickModal() {
+        document.getElementById('rankPickModal').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        _rankPickTarget = null;
+        _rankPickSelected = null;
+    },
+    _confirmRankPick() {
+        if (!_rankPickTarget) return;
+        const reasonEl = document.getElementById('rankPickReason');
+        const reason = reasonEl ? reasonEl.value.trim() : '';
+        if (!_rankPickSelected || _rankPickSelected < 1 || _rankPickSelected > 9) {
+            document.getElementById('rankPickTrigger').style.borderColor = '#dc2626';
+            return;
+        }
+        const m = _state.members.find(x => x.static === _rankPickTarget);
+        if (m && m.rank === _rankPickSelected) {
+            document.getElementById('rankPickTrigger').style.borderColor = '#dc2626';
+            return;
+        }
+        if (!reason) { if (reasonEl) reasonEl.style.borderColor = '#dc2626'; return; }
+        this._trigger('fam:rank:set', _rankPickTarget, _rankPickSelected, reason);
+        this._closeRankPickModal();
+    },
+    _openConfirmModal(title, text, onOk) {
+        _confirmCallback = typeof onOk === 'function' ? onOk : null;
+        const titleEl = document.getElementById('famConfirmTitle');
+        const textEl = document.getElementById('famConfirmText');
+        if (titleEl) titleEl.textContent = title || 'Подтверждение';
+        if (textEl) textEl.textContent = text || '';
+        document.getElementById('famConfirmModal')?.classList.add('open');
+    },
+    _closeConfirmModal() {
+        document.getElementById('famConfirmModal')?.classList.remove('open');
+        _confirmCallback = null;
+    },
+    _confirmModalOk() {
+        const cb = _confirmCallback;
+        this._closeConfirmModal();
+        if (typeof cb === 'function') cb();
+    },
+
+    kickMember(targetStatic) {
+        if (!_state.canKickMember) return;
+        this._openConfirmModal('Исключение', 'Исключить игрока из семьи?', () => {
+            this._trigger('fam:kick', targetStatic);
+        });
+    },
+
+    inviteMember() {
+        if (!_state.canInvite && !_state.isLeader) return;
+        const el = document.getElementById('famInviteStatic');
+        const val = el ? String(el.value || '').trim() : '';
+        if (!val) return;
+        this._trigger('fam:invite', val);
+        if (el) el.value = '';
+    },
+
+    leaveFamily() {
+        this._openConfirmModal('Выход из семьи', 'Покинуть семью?', () => {
+            this._trigger('fam:leave');
+        });
+    },
+
+    saveFleetGlobal() {
+        if (!_fleet.canSave) return;
+        const plateEl = document.getElementById('garagePlateInput');
+        const plate = plateEl ? String(plateEl.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6) : 'FAMILY';
+        this._trigger('fam:fleet:save', plate || 'FAMILY', String(_fleet.colorIdx));
+    },
+
+    selectFleetColor(idx) {
+        if (!_fleet.canSave) return;
+        _fleet.colorIdx = idx;
+        this._renderGarage();
+    },
+
+    fleetEvac(slot) {
+        this._trigger('fam:fleet:evac', slot);
+    },
+
+    fleetSummon(slot) {
+        this._trigger('fam:fleet:summon', slot);
+    },
+
+    setFleet(plate, colorIdx, canSave, vehiclesJson) {
+        _fleet.plate = String(plate || 'FAMILY').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6) || 'FAMILY';
+        _fleet.colorIdx = Math.max(0, Math.min(9, parseInt(colorIdx, 10) || 0));
+        _fleet.canSave = !!canSave;
+        try {
+            const raw = typeof vehiclesJson === 'string' ? vehiclesJson : JSON.stringify(vehiclesJson || '[]');
+            _fleet.vehicles = JSON.parse(raw);
+            if (!Array.isArray(_fleet.vehicles)) _fleet.vehicles = [];
+        } catch (_e) {
+            _fleet.vehicles = [];
+        }
+        this._renderGarage();
+    },
+
+    // ── internal ─────────────────────────────────────────────────────────────
+    _applyState() {
+        const famNameEl = document.getElementById('famName');
+        if (famNameEl) famNameEl.textContent = _state.familyName || '—';
+        const badge = document.getElementById('fracRankBadge');
+        if (!badge) return;
+        const rankName = _state.playerRank === 10 ? 'Лидер' : (_state.ranks.find(r => r.rank === _state.playerRank) || {}).name || `Ранг ${_state.playerRank}`;
+        badge.textContent = rankName;
+        badge.style.color = _state.familyAccent || '#dc2626';
+        badge.style.background = (_state.familyAccent || '#dc2626') + '26';
+
+        const navGar = document.getElementById('navGarage');
+        if (navGar) navGar.style.display = _state.hasGarageTab ? '' : 'none';
+    },
+
+    _updateMemberStats(list) {
+        const el = document.getElementById('memberStats');
+        if (!el) return;
+        const total = Array.isArray(list) ? list.length : 0;
+        const online = Array.isArray(list) ? list.filter(m => m.online).length : 0;
+        el.innerHTML = `Всего: ${total} · Онлайн: <span class="stat-online">${online}</span>`;
+    },
+
+    _renderMembers(list) {
+        const body = document.getElementById('membersBody');
+        if (!body) return;
+        this._updateMemberStats(list);
+        if (!list || list.length === 0) { body.innerHTML = '<div class="empty">Нет участников</div>'; return; }
+        body.innerHTML = list.map(m => {
+            const initials = String(m.name || '?').slice(0, 2).toUpperCase();
+            const canChange = _state.canManageRanks && m.rank !== 10 && m.static > 0;
+            const rankBtn = canChange ? `
+                <button type="button" class="rank-pick-btn" title="Изменить ранг" onclick="FamApp.openRankPicker(${m.static})">▾</button>` : '';
+            const kickBtn = (_state.canKickMember && m.rank !== 10 && m.static > 0) ? `
+                <button class="kick-btn" title="Исключить" onclick="FamApp.kickMember(${m.static})">X</button>` : '';
+            const statusTitle = m.online ? 'В сети' : 'Не в сети';
+            const statusClass = m.online ? 'online' : 'offline';
+            return `<div class="member-row">
+                <div class="member-avatar">${esc(initials)}</div>
+                <div class="member-info">
+                    <div class="member-name">${esc(m.name)}</div>
+                    <div class="member-rank-name">${esc(m.rankName || `Ранг ${m.rank}`)}${m.online ? '' : ' · оффлайн'}</div>
+                </div>
+                <div class="member-actions">${rankBtn}</div>
+                ${kickBtn ? `<div class="member-kick">${kickBtn}</div>` : ''}
+                <span class="member-status ${statusClass}" title="${statusTitle}"></span>
+            </div>`;
+        }).join('');
+    },
+
+    _renderMembersActionBar() {
+        const bar = document.getElementById('membersActionBar');
+        if (!bar) return;
+        const canInvite = _state.canInvite || _state.isLeader;
+        bar.innerHTML = canInvite
+            ? `<input type="text" id="famInviteStatic" placeholder="Static ID для приглашения" maxlength="12" inputmode="numeric">
+               <button type="button" class="members-action-btn" onclick="FamApp.inviteMember()">Пригласить</button>
+               <button type="button" class="members-action-btn members-action-btn--danger" onclick="FamApp.leaveFamily()">Покинуть семью</button>`
+            : `<button type="button" class="members-action-btn members-action-btn--danger" onclick="FamApp.leaveFamily()">Покинуть семью</button>`;
+    },
+
+    _renderManagement() {
+        const body = document.getElementById('mgmtBody');
+        if (!body) return;
+        const st = _state.stats || {};
+        const fmtNum = n => String(Number(n) || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        const statsHtml = `
+            <div class="mgmt-stats">
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Баланс семьи</div><div class="mgmt-stat__val">$${fmtNum(st.balance)}</div></div>
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Рейтинг</div><div class="mgmt-stat__val">${fmtNum(st.ratingPoints)}</div></div>
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Территории</div><div class="mgmt-stat__val">${fmtNum(st.territories)} / ${_state.totalZones || 50}</div></div>
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Уровень войны семей</div><div class="mgmt-stat__val">${fmtNum(st.captLevel)}</div></div>
+            </div>`;
+        const balanceOpsHtml = `
+            <div class="mgmt-balance-ops">
+                <input type="text" class="modal-input" id="famBalAmount" placeholder="Сумма..." inputmode="numeric" maxlength="12">
+                <div class="mgmt-balance-btns">
+                    <button type="button" class="btn-primary" onclick="FamApp.depositBalance()">Пополнить счёт</button>
+                    ${_state.canWithdrawMoney ? '<button type="button" class="btn-secondary" onclick="FamApp.withdrawBalance()">Снять со счёта</button>' : ''}
+                </div>
+            </div>`;
+
+        if (!_state.isLeader && !_state.canManageRanks) {
+            body.innerHTML = statsHtml + balanceOpsHtml + '<div class="empty">Недостаточно прав для настройки рангов.</div>';
+            return;
+        }
+
+        const ranks = _state.ranks.length ? _state.ranks : Array.from({length:9},(_,i)=>({
+            rank:i+1,name:`Ранг ${i+1}`,changeRank:false,canKick:false,canInvite:false,familyWarehouse:false,
+            captParticipate:false,fleetEvac:false,fleetSummon:false,withdrawMoney:false
+        }));
+
+        body.innerHTML = statsHtml + balanceOpsHtml + ranks.map(r => `
+            <div class="rank-cfg-row" data-rank="${r.rank}">
+                <div class="rank-cfg-top">
+                    <div class="rank-cfg-num">${r.rank}</div>
+                    <input class="rank-name-input" value="${esc(r.name)}" maxlength="32" placeholder="Название ранга" ${_state.isLeader ? '' : 'readonly'}>
+                </div>
+                <div class="rank-perms">
+                    <label class="perm-check"><input type="checkbox" name="changeRank" ${r.changeRank?'checked':''} ${_state.isLeader?'':'disabled'}> Менять ранги</label>
+                    <label class="perm-check"><input type="checkbox" name="canKick" ${r.canKick?'checked':''} ${_state.isLeader?'':'disabled'}> Кикать</label>
+                    <label class="perm-check"><input type="checkbox" name="canInvite" ${r.canInvite?'checked':''} ${_state.isLeader?'':'disabled'}> Приглашать</label>
+                    <label class="perm-check"><input type="checkbox" name="familyWarehouse" ${(r.familyWarehouse||r.warehouseAccess)?'checked':''} ${_state.isLeader?'':'disabled'}> Склад</label>
+                    <label class="perm-check"><input type="checkbox" name="captParticipate" ${(r.captParticipate||r.bizwar)?'checked':''} ${_state.isLeader?'':'disabled'}> Участие в Войне семей</label>
+                    <label class="perm-check"><input type="checkbox" name="fleetEvac" ${r.fleetEvac?'checked':''} ${_state.isLeader?'':'disabled'}> Эвак авто</label>
+                    <label class="perm-check"><input type="checkbox" name="fleetSummon" ${r.fleetSummon?'checked':''} ${_state.isLeader?'':'disabled'}> Призыв авто</label>
+                    <label class="perm-check"><input type="checkbox" name="withdrawMoney" ${r.withdrawMoney?'checked':''} ${_state.isLeader?'':'disabled'}> Снятие $</label>
+                </div>
+            </div>`).join('') + (_state.isLeader ? '<button class="save-btn" onclick="FamApp.saveRanks()">Сохранить ранги</button>' : '') +
+            (_state.isLeader ? `
+            <div class="mgmt-wh-toggle">
+                <div class="mgmt-wh-toggle__text">
+                    <div class="mgmt-wh-toggle__title">Открыть склад</div>
+                    <div class="mgmt-wh-toggle__sub">Если выключено — склад недоступен всей семье, даже с правом доступа</div>
+                </div>
+                <label class="frac-slider-toggle" data-frac-switch>
+                    <input type="checkbox" id="fracWarehouseOpenToggle" ${_state.warehouseOpen !== false ? 'checked' : ''} onchange="FamApp.toggleWarehouse(this.checked)">
+                    <span class="frac-slider-toggle__ui" aria-hidden="true"></span>
+                </label>
+            </div>` : '');
+        this._syncWarehouseToggleVisual();
+    },
+
+    _zoneOwnerColor(ownerName) {
+        const key = String(ownerName || '').trim();
+        if (!key || key === 'Свободна') return '#555555';
+        if (key === _state.familyName) return '#dc2626';
+        let h = 0;
+        for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+        return FAM_ZONE_COLORS[h % FAM_ZONE_COLORS.length];
+    },
+
+    _renderZones() {
+        const body = document.getElementById('zonesBody');
+        if (!body) return;
+        const total = _state.totalZones || 50;
+        const entries = [];
+        for (let i = 1; i <= total; i++) {
+            entries.push([String(i), _zones[i] != null ? _zones[i] : (_zones[String(i)] || '')]);
+        }
+        const myFam = _state.familyName || '';
+        body.innerHTML = '<div class="zones-grid">' + entries.map(([zid, owner]) => {
+            const ownerName = String(owner || '').trim();
+            const fname = ownerName && ownerName !== 'Свободна' ? ownerName : 'Свободна';
+            const color = this._zoneOwnerColor(ownerName);
+            const mine = ownerName && ownerName === myFam ? ' zone-card--mine' : '';
+            const inBattle = !!_zoneBattle[zid] || !!_zoneBattle[String(zid)];
+            const battleCls = inBattle ? ' zone-card--battle' : '';
+            const battleTag = inBattle ? '<span class="zone-battle-tag">Активный бой</span>' : '';
+            return `<div class="zone-card${mine}${battleCls}" data-zone-id="${zid}" onclick="FamApp.clickZone(${zid})" title="${inBattle ? 'На точке идёт война семей' : 'Открыть меню войны семей'}">
+                <div class="zone-id">Зона #${zid}</div>
+                <div class="zone-owner"><span class="zone-dot" style="background:${color}"></span>${esc(fname)}</div>
+                ${battleTag}
+            </div>`;
+        }).join('') + '</div>';
+    },
+
+    _renderGarage() {
+        const body = document.getElementById('garageBody');
+        if (!body) return;
+        if (!_state.hasGarageTab) {
+            body.innerHTML = '<div class="garage-empty">Семейный гараж доступен только при особняке.</div>';
+            return;
+        }
+        const colorsHtml = FLEET_PALETTE.map(c =>
+            `<button type="button" class="garage-color${c.idx === _fleet.colorIdx ? ' active' : ''}" style="background:${c.css}" title="${esc(c.label)}" onclick="FamApp.selectFleetColor(${c.idx})"></button>`
+        ).join('');
+        const slotsHtml = _fleet.vehicles.length ? _fleet.vehicles.map(v => {
+            const slot = parseInt(v.slot, 10);
+            const acts = [];
+            if (v.evacAllowed) acts.push(`<button type="button" class="garage-act garage-act--evac" onclick="FamApp.fleetEvac(${slot})">Эвакуировать</button>`);
+            if (v.summonAllowed) acts.push(`<button type="button" class="garage-act garage-act--sum" onclick="FamApp.fleetSummon(${slot})">Призвать</button>`);
+            return `<div class="garage-slot">
+                <div class="garage-slot__title">${esc(formatVehicleName(v.model))}</div>
+                <div class="garage-slot__model">Слот ${slot}</div>
+                ${acts.length ? `<div class="garage-slot__acts">${acts.join('')}</div>` : ''}
+            </div>`;
+        }).join('') : '<div class="garage-empty">Нет машин в гараже. Лидер: донат-авто в F3 или покупка в автосалоне (dim 124).</div>';
+
+        body.innerHTML = `<div class="garage-panel">
+            ${_fleet.canSave ? '' : '<div class="garage-warn">Менять общий номер и цвет может только лидер.</div>'}
+            <div class="garage-global">
+                <div class="garage-global__lbl">Общий номер (до 6 символов)</div>
+                <input class="garage-plate" id="garagePlateInput" maxlength="6" value="${esc(_fleet.plate)}" ${_fleet.canSave ? '' : 'readonly'} autocomplete="off">
+                <div class="garage-global__lbl" style="margin-top:10px">Общий цвет</div>
+                <div class="garage-colors">${colorsHtml}</div>
+                ${_fleet.canSave ? '<button type="button" class="garage-save" onclick="FamApp.saveFleetGlobal()">Сохранить номер и цвет</button>' : ''}
+            </div>
+            <div class="garage-slots">${slotsHtml}</div>
+        </div>`;
+    },
+
+    clickZone(zoneId) {
+        this._trigger('family:capt:zone:click', String(zoneId));
+    },
+
+    openBizwar(payloadJson) {
+        const p = typeof payloadJson === 'string' ? JSON.parse(payloadJson) : payloadJson;
+        Object.assign(_bizwarState, p);
+        _bizwarState.selectedCalibers = [];
+        _bizwarState.atkOnline = p.atkOnline || _bizwarState.atkOnline || 0;
+        _bizwarState.defOnline = p.defOnline || _bizwarState.defOnline || 0;
+        const atkOn = parseInt(_bizwarState.atkOnline, 10) || 0;
+        const defOn = parseInt(_bizwarState.defOnline, 10) || 0;
+            const fallbackMax = atkOn;
+        _bizwarState.maxCount = Math.max(3, Math.min(30, parseInt(p.maxCount, 10) || fallbackMax || 3));
+        _bizwarState.count = Math.max(3, Math.min(_bizwarState.maxCount, p.count || 3));
+        _bizwarState.allowArmor = !!p.allowArmor;
+        _bizwarState.allowSpunk = p.allowSpunk !== false;
+        _bizwarState.allowAlco = p.allowAlco !== false;
+        const calArr = Array.isArray(p.calibers) ? p.calibers : (Array.isArray(p.weapons) ? p.weapons : []);
+        _bizwarState.availableCalibersArr = calArr.length
+            ? calArr
+            : BIZWAR_CALIBERS_INFO.map(c => c.key);
+
+        document.getElementById('bwZoneBadge').textContent = `Точка #${_bizwarState.zoneId || p.pointId || '?'}`;
+        const atkName = _bizwarState.attackerFamily || _bizwarState.myFamily || _state.familyName || '—';
+        let defName = _bizwarState.defenderFamily || _bizwarState.ownerFamily || 'Свободна';
+        if (!defName || String(defName).trim() === '') defName = 'Свободна';
+        const atkEl = document.getElementById('bwAtkName');
+        const defEl = document.getElementById('bwDefName');
+        if (atkEl) {
+            atkEl.textContent = atkName;
+            atkEl.style.color = atkName === _state.familyName ? '#dc2626' : '#e8e8e8';
+        }
+        if (defEl) {
+            defEl.textContent = defName || 'Свободна';
+            defEl.style.color = defName === _state.familyName ? '#dc2626' : (defName && defName !== 'Свободна' ? '#e8e8e8' : '#555');
+        }
+        document.getElementById('bwAtkOnline').textContent = `${_bizwarState.atkOnline || 0} онлайн`;
+        document.getElementById('bwDefOnline').textContent = 'онлайн не требуется';
+
+        if (_bizwarState.isJoin) {
+            document.getElementById('bwJoinSection').style.display = '';
+            document.getElementById('bwAttackSection').style.display = 'none';
+            const calStr = (Array.isArray(p.calibers) ? p.calibers : _bizwarState.availableCalibersArr).join(', ');
+            document.getElementById('bwJoinInfo').innerHTML =
+                `<b>Калибры:</b> ${esc(calStr)}<br><b>Формат:</b> ${p.count || _bizwarState.count}v${p.count || _bizwarState.count}<br>` +
+                `<b>Броня:</b> ${p.allowArmor?'Да':'Нет'} &nbsp; <b>Спанк:</b> ${p.allowSpunk!==false?'Да':'Нет'} &nbsp; <b>Алко:</b> ${p.allowAlco!==false?'Да':'Нет'}`;
+        } else {
+            document.getElementById('bwJoinSection').style.display = 'none';
+            document.getElementById('bwAttackSection').style.display = '';
+            this._bizwarBuildCount();
+            this._bizwarBuildCalibers();
+            this._bizwarUpdateExtras();
+        }
+        document.getElementById('bizwarOverlay').classList.add('open');
+    },
+
+    closeBizwar() {
+        const el = document.getElementById('bizwarOverlay');
+        if (el) el.classList.remove('open');
+        try { if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('bizwar:close'); } catch (_) {}
+    },
+
+    _bizwarBuildCount() {
+        const row = document.getElementById('bwCountRow');
+        if (!row) return;
+        const maxN = Math.max(3, Math.min(30, parseInt(_bizwarState.maxCount, 10) || 3));
+        if (_bizwarState.count > maxN) _bizwarState.count = maxN;
+        if (_bizwarState.count < 3) _bizwarState.count = 3;
+        row.innerHTML = `<input id="bwCountInput" class="bizwar-count-input" type="number" min="3" max="${maxN}" inputmode="numeric" value="${_bizwarState.count}" placeholder="Минимум 3">`;
+        const input = document.getElementById('bwCountInput');
+        if (input) {
+            input.oninput = () => {
+                const n = parseInt(input.value, 10);
+                _bizwarState.count = Number.isFinite(n) ? n : 0;
+            };
+        }
+    },
+
+    _bizwarBuildCalibers() {
+        const grid = document.getElementById('bwCalibersGrid');
+        if (!grid) return;
+        grid.innerHTML = BIZWAR_CALIBERS_INFO.map(c => {
+            const avail = _bizwarState.availableCalibersArr.includes(c.key);
+            const elId = this._bizwarCalElId(c.key);
+            return `<div class="bizwar-cal-row${avail?'':' disabled'}" id="${elId}" onclick="FamApp._bizwarToggleCal('${c.key}')">
+                <div class="bizwar-cal-check"></div>
+                <div class="bizwar-cal-name">${c.label}</div>
+                <div class="bizwar-cal-weapons">${c.weapons}</div>
+            </div>`;
+        }).join('');
+        this._bizwarUpdateCalCount();
+    },
+
+    _bizwarCalElId(key) { return 'bw_cal_' + String(key).replace(/\./g, '_'); },
+
+    _bizwarToggleCal(key) {
+        if (!_bizwarState.availableCalibersArr.includes(key)) return;
+        const idx = _bizwarState.selectedCalibers.indexOf(key);
+        if (idx === -1) {
+            if (_bizwarState.selectedCalibers.length >= 3) return;
+            _bizwarState.selectedCalibers.push(key);
+        } else {
+            _bizwarState.selectedCalibers.splice(idx, 1);
+        }
+        BIZWAR_CALIBERS_INFO.forEach(c => {
+            const el = document.getElementById(this._bizwarCalElId(c.key));
+            if (!el) return;
+            el.classList.toggle('selected', _bizwarState.selectedCalibers.includes(c.key));
+            if (!_bizwarState.availableCalibersArr.includes(c.key)) el.classList.add('disabled');
+        });
+        this._bizwarUpdateCalCount();
+    },
+
+    _bizwarUpdateCalCount() {
+        const el = document.getElementById('bwCalCount');
+        if (el) el.textContent = String(_bizwarState.selectedCalibers.length);
+    },
+
+    _bizwarToggleExtra(type) {
+        if (type === 'armor') _bizwarState.allowArmor = !_bizwarState.allowArmor;
+        else if (type === 'spunk') _bizwarState.allowSpunk = !_bizwarState.allowSpunk;
+        else if (type === 'alco') _bizwarState.allowAlco = !_bizwarState.allowAlco;
+        this._bizwarUpdateExtras();
+    },
+
+    _bizwarUpdateExtras() {
+        document.getElementById('bwToggleArmor').classList.toggle('on', _bizwarState.allowArmor);
+        document.getElementById('bwToggleSpunk').classList.toggle('on', _bizwarState.allowSpunk);
+        document.getElementById('bwToggleAlco').classList.toggle('on', _bizwarState.allowAlco);
+    },
+
+    _bizwarConfirm() {
+        const countInput = document.getElementById('bwCountInput');
+        const maxN = Math.max(3, Math.min(30, parseInt(_bizwarState.maxCount, 10) || 3));
+        const count = countInput ? parseInt(countInput.value, 10) : parseInt(_bizwarState.count, 10);
+        if (!Number.isFinite(count) || count < 3 || count > maxN) {
+            if (countInput) countInput.focus();
+            return;
+        }
+        _bizwarState.count = count;
+        if (_bizwarState.selectedCalibers.length < 1) {
+            const g = document.getElementById('bwCalibersGrid');
+            if (g) g.style.outline = '1px solid #dc2626';
+            return;
+        }
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('family:capt:attack:confirm',
+                    _bizwarState.zoneId,
+                    _bizwarState.count,
+                    JSON.stringify(_bizwarState.selectedCalibers),
+                    String(_bizwarState.allowArmor),
+                    String(_bizwarState.allowSpunk),
+                    String(_bizwarState.allowAlco)
+                );
+            }
+        } catch (_) {}
+        const g = document.getElementById('bwCalibersGrid');
+        if (g) g.style.outline = '';
+        this.closeBizwar();
+    },
+
+    _bizwarTeleport() {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('family:capt:teleport', _bizwarState.zoneId);
+        } catch (_) {}
+        this.closeBizwar();
+    },
+
+    _renderRating(data) {
+        const body = document.getElementById('ratingBody');
+        if (!body) return;
+        if (!Array.isArray(data) || !data.length) {
+            body.innerHTML = '<div class="empty">Пока никого в рейтинге — захватывайте точки в Войне семей</div>';
+            return;
+        }
+        const maxZones = Math.max(...data.map(d => d.zones), 1);
+        body.innerHTML = data.map((d, i) =>
+            `<div class="rating-row">
+                <div class="rating-pos">${i + 1}</div>
+                <div class="rating-name" style="color:${esc(d.color)}">${esc(d.name)}</div>
+                <div class="rating-bar-wrap">
+                    <div class="rating-bar" style="width:${Math.round(d.zones/maxZones*100)}%;background:${esc(d.color)}"></div>
+                </div>
+                <div class="rating-zones">${d.zones} зон</div>
+            </div>`
+        ).join('');
+    },
+
+    _formatLogTime(raw) {
+        if (!raw) return '—';
+        const d = new Date(raw);
+        if (isNaN(d.getTime())) return String(raw);
+        const pad = n => String(n).padStart(2, '0');
+        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    },
+
+    _renderLogs(list) {
+        const body = document.getElementById('logsBody');
+        if (!body) return;
+        if (!list.length) {
+            body.innerHTML = '<div class="empty">Записей не найдено</div>';
+            return;
+        }
+        body.innerHTML =
+            `<div class="logs-head"><span>Время</span><span>Участник</span><span>Действие</span></div>` +
+            list.map(row => {
+                const name = esc(row.name || 'Система');
+                const sid = row.static > 0 ? `#${row.static}` : '';
+                return `<div class="log-row">
+                    <div class="log-time">${esc(this._formatLogTime(row.time))}</div>
+                    <div>
+                        <div class="log-name">${name}</div>
+                        ${sid ? `<div class="log-name-id">${esc(sid)}</div>` : ''}
+                    </div>
+                    <div class="log-action">${esc(row.text || '')}</div>
+                </div>`;
+            }).join('');
+    },
+
+    _renderAdvert() {
+        const fn = _state.familyName || 'Семья';
+        const texts = {
+            1: `Семья ${fn} приветствует всех игроков сервера!\nХотим проинформировать Вас о том, что прямо сейчас мы ведём набор в нашу семью.\nВсех желающих вступить в наши ряды ждём около офиса Arcadius!`,
+            2: `На связи семья ${fn}!\nПрямо сейчас мы проводим набор в нашу семью!\nХочешь играть Войну семей, зарабатывать деньги, завести новые знакомства? Тогда тебе к нам.\nВсех, кто хочет присоединиться к нам ждём около офиса Arcadius!`,
+            3: `Прямо сейчас проводится набор в семью ${fn}!\nЕсли ты хочешь получить ещё больше контента, перестрелок, войн семей, интересных мероприятий - тогда тебе к нам!\nВсех желающих вступить в наши ряды ждём около офиса Arcadius!`
+        };
+        [1, 2, 3].forEach(i => {
+            const el = document.getElementById(`advertText${i}`);
+            if (el) {
+                el.textContent = texts[i];
+                el.style.color = '';
+            }
+        });
+        const variants = document.getElementById('advertVariants');
+        if (variants) variants.style.display = _state.isLeader ? '' : 'none';
+        const legacy = document.getElementById('advertEditorLegacy');
+        if (legacy) legacy.style.display = 'none';
+    },
+
+    _trigger(event, ...args) {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger(event, ...args);
+            }
+        } catch (_) {}
+    }
+};
+
+// Уведомить клиент что браузер готов
+try {
+    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('fam:browser:ready');
+} catch (_) {}
+(function initLogsSearch() {
+    const inp = document.getElementById('logsSearch');
+    if (!inp) return;
+    inp.addEventListener('input', () => {
+        clearTimeout(_logsSearchTimer);
+        _logsSearchTimer = setTimeout(() => {
+            if (document.getElementById('tab-logs')?.classList.contains('active')) FamApp.requestLogs();
+        }, 350);
+    });
+    inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            FamApp.requestLogs();
+        }
+    });
+})();
+</script>
+</body>
+</html>

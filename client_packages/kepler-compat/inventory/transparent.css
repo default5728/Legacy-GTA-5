@@ -1,0 +1,5 @@
+:root{color-scheme:normal}
+html,body{background:transparent!important}
+.panel{background:rgba(13,13,17,.35);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;border-color:rgba(255,255,255,.08)}
+.cell,.weapon-cell{background:rgba(20,20,25,.24);box-shadow:none;border-color:rgba(255,255,255,.07)}
+.cell:hover:enabled,.cell.selected{background:rgba(28,28,36,.48);box-shadow:none}

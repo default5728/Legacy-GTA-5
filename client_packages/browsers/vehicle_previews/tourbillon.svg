@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="Bugatti Tourbillon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0b1221"/>
+      <stop offset="1" stop-color="#273b5c"/>
+    </linearGradient>
+    <linearGradient id="car" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#d7edff"/>
+      <stop offset=".42" stop-color="#6d9ac8"/>
+      <stop offset="1" stop-color="#1b2d4d"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#80d9f7"/>
+      <stop offset="1" stop-color="#1a3153"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  <path d="M0 412L960 336V540H0Z" fill="#07101c" opacity=".72"/>
+  <path d="M0 440L960 364" stroke="#93d9ff" stroke-opacity=".18" stroke-width="2"/>
+  <path d="M140 352C188 300 275 257 392 246L575 222C667 211 741 235 818 295L870 347L835 386H145Z" fill="url(#car)" stroke="#d5f4ff" stroke-opacity=".58" stroke-width="4"/>
+  <path d="M354 252L496 232C572 222 629 234 681 267L671 303L338 312Z" fill="url(#glass)" stroke="#c9f6ff" stroke-opacity=".58" stroke-width="3"/>
+  <path d="M175 355H857L826 381H159Z" fill="#0a1728" opacity=".85"/>
+  <path d="M753 300L814 323L832 348L732 346Z" fill="#b8f7ff" opacity=".9"/>
+  <path d="M157 347L261 332L246 359L151 366Z" fill="#d8fbff" opacity=".92"/>
+  <circle cx="290" cy="384" r="58" fill="#07101b" stroke="#a8d8ef" stroke-width="8"/>
+  <circle cx="290" cy="384" r="29" fill="#547a9e"/>
+  <circle cx="739" cy="384" r="58" fill="#07101b" stroke="#a8d8ef" stroke-width="8"/>
+  <circle cx="739" cy="384" r="29" fill="#547a9e"/>
+  <text x="55" y="78" fill="#e8f6ff" font-family="Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="4">BUGATTI</text>
+  <text x="55" y="119" fill="#83bde7" font-family="Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="8">TOURBILLON</text>
+</svg>

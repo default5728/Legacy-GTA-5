@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="cardBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#242838"/>
+      <stop offset="100%" stop-color="#12141c"/>
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#e08a45"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="14" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+  
+      <!-- Head Base -->
+      <path d="M 50 18 C 34 18 25 32 25 48 C 25 64 36 78 50 78 C 64 78 75 64 75 48 C 75 32 66 18 50 18 Z" fill="url(#skinGrad)"/>
+      <!-- Dreadlocks -->
+      <path d="M 24 38 C 26 16 74 16 76 38 Z" fill="url(#hairGrad)"/>
+      <rect x="22" y="36" width="6" height="30" rx="3" fill="#64748b"/>
+      <rect x="30" y="32" width="6" height="35" rx="3" fill="#94a3b8"/>
+      <rect x="40" y="28" width="6" height="24" rx="3" fill="#cbd5e1"/>
+      <rect x="54" y="28" width="6" height="24" rx="3" fill="#cbd5e1"/>
+      <rect x="64" y="32" width="6" height="35" rx="3" fill="#94a3b8"/>
+      <rect x="72" y="36" width="6" height="30" rx="3" fill="#64748b"/>
+    
+</svg>

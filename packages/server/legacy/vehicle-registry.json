@@ -1,0 +1,270 @@
+{
+  "models": {
+    "vaz21099": {
+      "pack": "vaz21099",
+      "dependencies": []
+    },
+    "2021ladaraven": {
+      "pack": "2021ladaraven",
+      "dependencies": []
+    },
+    "i8": {
+      "pack": "BMWi8",
+      "dependencies": []
+    },
+    "chiron17": {
+      "pack": "chiron17",
+      "dependencies": []
+    },
+    "5rp_skate": {
+      "pack": "gta5rp_skate",
+      "dependencies": []
+    },
+    "2019m5": {
+      "pack": "gta5rp_veh_2019M5",
+      "dependencies": []
+    },
+    "2020rs7": {
+      "pack": "gta5rp_veh_2020rs7",
+      "dependencies": []
+    },
+    "2022c63": {
+      "pack": "gta5rp_veh_2022c63",
+      "dependencies": []
+    },
+    "812superfast": {
+      "pack": "gta5rp_veh_812superfast",
+      "dependencies": []
+    },
+    "918spyder": {
+      "pack": "gta5rp_veh_918spyder",
+      "dependencies": []
+    },
+    "agerars": {
+      "pack": "gta5rp_veh_agerars",
+      "dependencies": []
+    },
+    "alphard": {
+      "pack": "gta5rp_veh_alphard",
+      "dependencies": []
+    },
+    "amgone1": {
+      "pack": "gta5rp_veh_amgone1",
+      "dependencies": []
+    },
+    "astondb11": {
+      "pack": "gta5rp_veh_astondb11",
+      "dependencies": []
+    },
+    "audiq8": {
+      "pack": "gta5rp_veh_audiq8",
+      "dependencies": []
+    },
+    "audisport": {
+      "pack": "gta5rp_veh_audisport",
+      "dependencies": []
+    },
+    "avtr": {
+      "pack": "gta5rp_veh_avtr",
+      "dependencies": []
+    },
+    "battista": {
+      "pack": "gta5rp_veh_battista",
+      "dependencies": []
+    },
+    "bmwe70": {
+      "pack": "gta5rp_veh_bmwe70",
+      "dependencies": []
+    },
+    "bmwix": {
+      "pack": "gta5rp_veh_bmwix",
+      "dependencies": []
+    },
+    "bmwm5f90lci": {
+      "pack": "gta5rp_veh_bmwm5f90lci",
+      "dependencies": []
+    },
+    "bmwm760": {
+      "pack": "gta5rp_veh_bmwm760",
+      "dependencies": []
+    },
+    "bmwxm": {
+      "pack": "gta5rp_veh_bmwxm",
+      "dependencies": []
+    },
+    "divo": {
+      "pack": "gta5rp_veh_divo",
+      "dependencies": []
+    },
+    "exp100": {
+      "pack": "gta5rp_veh_exp100",
+      "dependencies": []
+    },
+    "f12": {
+      "pack": "gta5rp_veh_f12",
+      "dependencies": []
+    },
+    "fera458": {
+      "pack": "gta5rp_veh_fera458",
+      "dependencies": []
+    },
+    "gemera": {
+      "pack": "gta5rp_veh_gemera",
+      "dependencies": []
+    },
+    "ktm125": {
+      "pack": "gta5rp_veh_ktm125",
+      "dependencies": []
+    },
+    "ktm390": {
+      "pack": "gta5rp_veh_ktm390",
+      "dependencies": []
+    },
+    "ktm450": {
+      "pack": "gta5rp_veh_ktm450",
+      "dependencies": []
+    },
+    "ktm690": {
+      "pack": "gta5rp_veh_ktm690",
+      "dependencies": []
+    },
+    "panigale": {
+      "pack": "gta5rp_veh_panigale",
+      "dependencies": []
+    },
+    "temerario": {
+      "pack": "gta5rp_veh_temerario",
+      "dependencies": []
+    },
+    "tourbillon": {
+      "pack": "gta5rp_veh_tourbillon",
+      "dependencies": []
+    },
+    "transit": {
+      "pack": "gta5rp_veh_transit",
+      "dependencies": []
+    },
+    "urus": {
+      "pack": "gta5rp_veh_urus",
+      "dependencies": []
+    },
+    "urus24": {
+      "pack": "gta5rp_veh_urus24",
+      "dependencies": []
+    },
+    "urus6x6": {
+      "pack": "gta5rp_veh_urus6x6",
+      "dependencies": []
+    },
+    "valkyriespider": {
+      "pack": "gta5rp_veh_valkyriespider",
+      "dependencies": []
+    },
+    "lada2107": {
+      "pack": "lada2107",
+      "dependencies": []
+    },
+    "rmodsian": {
+      "pack": "LamborghiniSian",
+      "dependencies": []
+    },
+    "btype3": {
+      "pack": "mpvalentines2",
+      "dependencies": []
+    },
+    "shahed136": {
+      "pack": "shahed",
+      "dependencies": []
+    },
+    "98clk": {
+      "pack": "98clk",
+      "dependencies": []
+    },
+    "2108320": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "2109320": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "2109920": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "21134": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "21144": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "21154": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "2347": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "21093099ip": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "211415p": {
+      "pack": "200613",
+      "dependencies": []
+    },
+    "tesroad20": {
+      "pack": "tesroad20",
+      "dependencies": []
+    }
+  },
+  "aliases": {
+    "vaz21099": "vaz21099",
+    "2021ladaraven": "2021ladaraven",
+    "bmwi8": "i8",
+    "chiron17": "chiron17",
+    "gta5rp_skate": "5rp_skate",
+    "gta5rp_veh_2019m5": "2019m5",
+    "gta5rp_veh_2020rs7": "2020rs7",
+    "gta5rp_veh_2022c63": "2022c63",
+    "gta5rp_veh_812superfast": "812superfast",
+    "gta5rp_veh_918spyder": "918spyder",
+    "gta5rp_veh_agerars": "agerars",
+    "gta5rp_veh_alphard": "alphard",
+    "gta5rp_veh_amgone1": "amgone1",
+    "gta5rp_veh_astondb11": "astondb11",
+    "gta5rp_veh_audiq8": "audiq8",
+    "gta5rp_veh_audisport": "audisport",
+    "gta5rp_veh_avtr": "avtr",
+    "gta5rp_veh_battista": "battista",
+    "gta5rp_veh_bmwe70": "bmwe70",
+    "gta5rp_veh_bmwix": "bmwix",
+    "gta5rp_veh_bmwm5f90lci": "bmwm5f90lci",
+    "gta5rp_veh_bmwm760": "bmwm760",
+    "gta5rp_veh_bmwxm": "bmwxm",
+    "gta5rp_veh_divo": "divo",
+    "gta5rp_veh_exp100": "exp100",
+    "gta5rp_veh_f12": "f12",
+    "gta5rp_veh_fera458": "fera458",
+    "gta5rp_veh_gemera": "gemera",
+    "gta5rp_veh_ktm125": "ktm125",
+    "gta5rp_veh_ktm390": "ktm390",
+    "gta5rp_veh_ktm450": "ktm450",
+    "gta5rp_veh_ktm690": "ktm690",
+    "gta5rp_veh_panigale": "panigale",
+    "gta5rp_veh_temerario": "temerario",
+    "gta5rp_veh_tourbillon": "tourbillon",
+    "gta5rp_veh_transit": "transit",
+    "gta5rp_veh_urus": "urus",
+    "gta5rp_veh_urus24": "urus24",
+    "gta5rp_veh_urus6x6": "urus6x6",
+    "gta5rp_veh_valkyriespider": "valkyriespider",
+    "lada2107": "lada2107",
+    "lamborghinisian": "rmodsian",
+    "mpvalentines2": "btype3",
+    "shahed": "shahed136"
+  }
+}

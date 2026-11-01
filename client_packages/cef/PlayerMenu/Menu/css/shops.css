@@ -1,0 +1,413 @@
+.shop-window {
+  position: relative;
+  width: 1308px;
+  height: 800px;
+  background: #171827;
+  display: flex;
+}
+
+.shop-window div.top-logo-dop-block {
+  top: -18px;
+}
+
+.close-shops {
+  width: 59px;
+  height: 59px;
+  background: #252635;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: absolute;
+  right: -25px;
+  top:-25px;
+}
+
+.back-logo-img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.shop-window ul {
+  position: relative;
+  z-index: 50;
+  width: 256px;
+  border-right: 1px solid  #252635;
+  padding-left: 48px;
+  padding-top: 64px;
+}
+
+.shop-window ul li {
+  width: 208px;
+  border-right: 1px solid  #252635;
+  background: none;
+  margin-bottom: 24px;
+}
+
+.shop-window ul li.active {
+  border-color: #006EFF;
+}
+
+.shop-window ul li a {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+.shop-window ul li a:hover {
+  color: #fff;
+}
+
+.shop-window ul li.active a{
+  cursor: default;
+  color: #fff;
+}
+
+.shop-window ul.nav>li>a:focus, .shop-window ul.nav>li>a:hover, .shop-window ul.nav>li>a:focus {
+  background-color: inherit;
+  border-radius: 8px !important;
+}
+
+.shop-window ul p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 24px;
+}
+
+.shops-list {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin-top: 64px;
+  margin-left: 48px;
+  overflow: auto;
+  height: 736px;
+  z-index: 1;
+}
+
+.craft-window .shops-list {
+  height: 700px;
+}
+
+.shops-item {
+  width: 297px;
+  height: 313px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.41) -119.72%, #252635 34.57%, #252635 56.21%, #252635 70.01%, rgba(250, 250, 251, 0.41) 216.81%);
+  border-image-slice: 1;
+  margin-right: 32px;
+  margin-bottom: 32px;
+}
+
+.shops-item-img {
+  width: 100%;
+  height: 167px;
+  border-bottom: 1px solid #252635;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shops-item p {
+  margin: 0;
+  margin-left: 32px;
+  margin-top: 16px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.shops-item p b {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+
+.shops-item p.shops-item-price {
+  font-weight: 500;
+  font-size: 14px;
+  color: #3D3F53;
+}
+
+.shops-item p.shops-item-price a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+
+.shops-item button {
+  margin-top: 10px;
+  margin-left: 32px;
+  width: 233px;
+  height: 47px;
+  border: 1px solid #3D3F53;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  background: none;
+  outline: none;
+}
+
+.shops-item button:hover {
+  border-color: #006EFF;
+}
+
+/* craft css */
+
+.craft-window {
+  position: relative;
+  width: 1067px;
+  height: 800px;
+  background: #171827;
+}
+
+.craft-window .shops-list {
+  margin-top: 0;
+}
+
+.craft-top-p {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 48px;
+  margin-right: 64px;
+  margin-left: 48px;
+}
+
+.craft-name-p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.craft-res-p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+
+.craft-res-p a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.craft-res-p b {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+}
+
+.barber-shop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(58.01% 58.01% at 50% 50%, rgba(23, 24, 39, 0) 0%, rgba(23, 24, 39, 0.74) 100%);
+}
+
+.barber-shop__header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  height: 106px;
+  border-bottom: 1px solid #3D3F53;
+  padding: 0 32px 0 104px;
+}
+
+.barber-shop__nav {
+  display: flex;
+  margin: 0;
+  height: 100%;
+  margin-bottom: -1px;
+  margin-left: 104px;
+}
+
+.barber-shop__nav li {
+  list-style: none;
+  height: 100%;
+  display: flex;
+  height: 106px;
+  align-items: center;
+  border-bottom: 1px solid #3D3F53;
+  margin-right: 48px;
+}
+
+.barber-shop__nav li.active {
+  border-color: #006EFF;
+}
+
+.barber-shop__nav li a, .barber-shop__nav li.active a {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  text-decoration: none;
+}
+
+.barber-shop__nav li a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.barber-shop__header-left {
+  display: flex;
+  align-items:center;
+}
+
+.barber-shop__header-right {
+  display: flex;
+  align-items: center;
+}
+
+.barber-shop__balance {
+  display: flex;
+}
+
+.barber-shop__balance p {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  margin: 0;
+  margin-right: 6px;
+}
+
+.barber-shop__balance a, .barber-shop__balance b {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+}
+
+.barber-shop__close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: #252635;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: 32px;
+}
+
+.barber-shop__content {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 80px;
+}
+
+
+.barber-shop__list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 40px;
+  padding-right: 80px;
+  overflow: auto;
+  height: 550px;
+  margin-bottom: 40px;
+}
+
+.barber-shop__list::-webkit-scrollbar {
+  width: 1px;
+  background: none
+}
+
+.barber-shop__list li {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.barber-shop__list li a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  cursor: pointer;
+  display: flex;
+}
+
+.barber-shop__list li a p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.barber-shop__list li a b {
+  font-weight: 500;
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.barber-shop__list li.active a, .barber-shop__list li a:hover {
+  color: #fff;
+  padding-right: 24px;
+}
+
+.barber-shop__heading {
+  text-align: right;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  margin: 0;
+  padding-right: 80px;
+}
+
+.barber-shop__slider {
+  width: 271px;
+  margin-right: 80px;
+}
+
+.barber-shop__slider .slider_name {
+  text-align: right;
+  margin-bottom: 12px;
+}
+
+.barber-shop__buy-btn {
+  position: absolute;
+  right: 80px;
+  bottom: 64px;
+  display: flex;
+  width: 271px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  background: #006EFF;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.barber-shop__buy-btn p, .barber-shop__buy-btn b, .barber-shop__buy-btn i {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  font-style: normal;
+  color: #fff;
+}
+
+.barber-shop__buy-btn p {
+  margin-right: 6px;
+}
+
+.barber-shop__buy-btn:hover {
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+  text-decoration: none;
+}
+
+.barber-shop__lenses-block {
+  position: absolute;
+  right: 0;
+  bottom: 172px;
+}
+
+.barber-shop__lenses-block .slider {
+  margin-top: 64px;
+}

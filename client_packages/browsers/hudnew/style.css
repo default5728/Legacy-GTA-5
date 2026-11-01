@@ -1,0 +1,945 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    font-family: Gilroy, 'Geometria Regular', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+html.hud2-preview,
+html.hud2-preview body {
+    background: #1a1d24;
+}
+
+#hud2-root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* ===== Скрин 2: верхний правый бренд ===== */
+.top-right {
+    position: absolute;
+    top: 1.5vh;
+    right: 1.6vw;
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35vh;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.55);
+    line-height: 1.05;
+}
+
+.top-right.is-on {
+    display: flex;
+}
+
+.tr-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+.tr-line-brand {
+    gap: 0.35vw;
+}
+
+.tr-line-player {
+    gap: 0.75vw;
+    padding-right: 0.05vw;
+}
+
+.tr-gta {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 800;
+    font-size: 0.9vw;
+    letter-spacing: 0.02em;
+    color: #fff;
+}
+
+.tr-server {
+    font-family: Montserrat, 'Geometria Medium', sans-serif;
+    font-weight: 600;
+    font-size: 0.9vw;
+    letter-spacing: 0.04em;
+    color: #fff;
+}
+
+.tr-rp {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.9vw;
+    letter-spacing: 0.02em;
+    color: #fff;
+    margin-left: -0.08vw;
+}
+
+.tr-sep {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.82vw;
+    color: #fff;
+    opacity: 0.95;
+}
+
+.tr-online {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.78vw;
+    color: #fff;
+}
+
+.tr-nick {
+    font-family: Gilroy, 'Geometria Medium', sans-serif;
+    font-weight: 500;
+    font-size: 0.78vw;
+    color: #fff;
+}
+
+.tr-id-wrap,
+.tr-time,
+.tr-date {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.78vw;
+    color: #fff;
+}
+
+/* ===== Деньги + микро (над миникартой) ===== */
+.money-bar {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9vw;
+    width: 100%;
+    min-width: 0;
+    padding: 0.55vh 0.85vw;
+    background: rgba(18, 20, 24, 0.58);
+    border: none;
+    border-radius: 0.15vw;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    box-sizing: border-box;
+}
+
+.money-bar.is-on {
+    display: flex;
+}
+
+.money-bar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28vh;
+}
+
+.money-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4vw;
+}
+
+.money-ico {
+    width: 0.95vw;
+    height: 0.95vw;
+    min-width: 14px;
+    min-height: 14px;
+    flex-shrink: 0;
+    color: #fff;
+    opacity: 0.92;
+}
+
+.money-ico-card {
+    width: 1.05vw;
+    height: 0.8vw;
+    min-width: 15px;
+    min-height: 11px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.money-ico-cash {
+    color: #fff;
+}
+
+.money-val {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.82vw;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+}
+
+.money-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.55vw;
+}
+
+.status-ico {
+    width: 1.15vw;
+    height: 1.15vw;
+    min-width: 16px;
+    min-height: 16px;
+    color: #9aa0a8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.12s ease;
+}
+
+.status-ico svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.status-ico.is-live {
+    color: #3dff6a;
+}
+
+/* ===== Стек сверху миникарты: только деньги ===== */
+.minimap-stack {
+    position: absolute;
+    left: 1.6%;
+    bottom: 22%;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4vh;
+    z-index: 3;
+    max-width: 22vw;
+    pointer-events: none;
+}
+
+.minimap-stack.is-on {
+    display: flex;
+}
+
+/* ===== Около миникарты справа: резисты + патроны ===== */
+.left-mini-stack {
+    position: absolute;
+    left: 18%;
+    bottom: 4%;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.45vh;
+    z-index: 5;
+    pointer-events: none;
+    transform: none;
+}
+
+.left-mini-stack.is-on {
+    display: flex;
+}
+
+/* ===== Улицы / ЗЗ — сверху миникарты (viewport absolute) ===== */
+.street-bar {
+    position: absolute;
+    left: 1.6%;
+    top: 72%;
+    bottom: auto;
+    display: none;
+    width: 14.5%;
+    max-width: 22vw;
+    box-sizing: border-box;
+    color: #fff;
+    z-index: 4;
+    pointer-events: none;
+    text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.95),
+        0 1px 3px rgba(0, 0, 0, 0.9),
+        0 2px 8px rgba(0, 0, 0, 0.75);
+}
+
+.street-bar.is-on {
+    display: block;
+}
+
+.street-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.4vw;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.35vh 0.4vw 0.15vh;
+    background: transparent;
+}
+
+.street-bar.is-gz .street-area,
+.street-bar.is-gz .street-dir {
+    color: #8dff8d;
+}
+
+.street-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.08vh;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.street-area {
+    font-family: Montserrat, 'Geometria Medium', sans-serif;
+    font-weight: 600;
+    font-size: 0.78vw;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.street-name {
+    font-family: Montserrat, 'Geometria Regular', sans-serif;
+    font-weight: 400;
+    font-size: 0.64vw;
+    letter-spacing: 0.02em;
+    color: rgba(230, 235, 240, 0.88);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.street-name:empty {
+    display: none;
+}
+
+.street-bar.is-gz .street-name {
+    color: #b8ffb8;
+}
+
+.street-dir {
+    font-family: Montserrat, 'Geometria Bold', sans-serif;
+    font-weight: 600;
+    font-size: 0.95vw;
+    min-width: 1.1ch;
+    text-align: center;
+    flex-shrink: 0;
+    padding-left: 0.15vw;
+}
+
+/* ===== Кейс + ВЗП рядом ===== */
+.top-case-cluster {
+    position: absolute;
+    top: 10.5vh;
+    right: 1.6vw;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75vw;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.top-case-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* ===== Бонус кейса ===== */
+.case-bonus {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: none;
+    align-items: center;
+    gap: 0.85vw;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.75vh 1.15vw 0.75vh 0.9vw;
+    background: rgba(18, 22, 32, 0.62);
+    border: none;
+    border-radius: 0.28vw;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    overflow: visible;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    z-index: 2;
+    transform: translateY(-3px);
+}
+
+.case-bonus.is-on {
+    display: flex;
+}
+
+.case-bonus-text {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.82vw;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+}
+
+.case-bonus-time {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.95vw;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    margin-left: auto;
+    padding-right: 0.25vw;
+}
+
+.case-bonus-accent {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.32vw;
+    min-width: 4px;
+    height: 100%;
+    border-radius: 0 0.28vw 0.28vw 0;
+    background: linear-gradient(180deg, #ffb84a 0%, #ff7a18 50%, #ff5c00 100%);
+    box-shadow:
+        0 0 3px 0 rgba(255, 140, 30, 0.7),
+        0 0 7px 1px rgba(255, 100, 0, 0.35);
+}
+
+/* ===== Квест «Начало пути» — 4px вниз + 1.5px вправо ===== */
+.path-quest {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    width: 16vw;
+    max-width: 300px;
+    margin: 0;
+    padding: 12px 18px 12px 16px;
+    background: linear-gradient(270deg, rgba(6, 7, 10, 0.82) 0%, rgba(10, 11, 14, 0.74) 60.94%, rgba(24, 26, 31, 0.66) 100%);
+    border: none;
+    border-radius: 9px;
+    color: #fff;
+    text-shadow: 1px 1px 0.5px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    transform: translate(1.5px, 4px);
+}
+
+.path-quest.is-on {
+    display: flex;
+}
+
+.path-quest-title {
+    font-family: Montserrat, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    color: #fff;
+}
+
+.path-quest-desc {
+    font-family: Montserrat, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    color: #fff;
+    opacity: 0.82;
+    white-space: normal;
+}
+
+.path-quest-accent {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 8px;
+    height: auto;
+    border: none;
+    border-radius: 0 9px 9px 0;
+    background: linear-gradient(180deg, #FF9900 0%, #FF5C00 100%);
+    box-shadow: none;
+    outline: none;
+}
+
+/* ===== Резисты ===== */
+.resist-box {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    display: none;
+    flex-direction: column;
+    min-width: 4.2vw;
+    padding: 0.35vh 0.55vw;
+    background: rgba(18, 20, 24, 0.58);
+    border: none;
+    border-radius: 0.18vw;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.resist-box.is-on {
+    display: flex;
+}
+
+.resist-row {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7vw;
+    padding: 0.35vh 0.1vw;
+}
+
+.resist-row.is-on {
+    display: flex;
+}
+
+.resist-row + .resist-row.is-on {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resist-ico {
+    width: 0.95vw;
+    height: 0.95vw;
+    min-width: 14px;
+    min-height: 14px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
+
+/* иконки-черепа: спанк зелёный, алко красный, энергетик голубой */
+.resist-row--spank .resist-ico {
+    filter: brightness(0) saturate(100%) invert(62%) sepia(54%) saturate(580%) hue-rotate(92deg) brightness(98%) contrast(92%);
+}
+
+.resist-row--alco .resist-ico {
+    filter: brightness(0) saturate(100%) invert(35%) sepia(78%) saturate(1800%) hue-rotate(340deg) brightness(98%) contrast(95%);
+}
+
+.resist-row--energy .resist-ico {
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(1200%) hue-rotate(175deg) brightness(95%) contrast(92%);
+}
+
+.resist-val {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.95vw;
+    font-variant-numeric: tabular-nums;
+    min-width: 1.6ch;
+    text-align: right;
+    color: #fff;
+}
+
+/* ===== Патроны ===== */
+.ammo-block {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    display: none;
+    align-items: center;
+    gap: 0.55vw;
+    min-height: 1.55vw;
+    padding: 0.35vw 0.7vw;
+    border-radius: 0.12vw;
+    background: rgba(18, 20, 24, 0.58);
+    border: none;
+    box-sizing: border-box;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.ammo-block.is-on {
+    display: flex;
+}
+
+.ammo-bullets {
+    flex-shrink: 0;
+    width: 1.2vw;
+    height: 1.2vw;
+    min-width: 18px;
+    min-height: 18px;
+    color: #fff;
+}
+
+.ammo-text {
+    display: flex;
+    align-items: baseline;
+    font-family: Gilroy, 'Geometria Medium', sans-serif;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.ammo-clip {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.05vw;
+    color: #fff;
+}
+
+.ammo-sep,
+.ammo-total {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.95vw;
+    color: rgba(200, 205, 210, 0.55);
+}
+
+/* ===== ВЗП ===== */
+.vzp {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.28vh;
+    min-width: 14vw;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+.vzp.is-on {
+    display: flex;
+}
+
+.vzp-row {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 14vw;
+    overflow: visible;
+}
+
+.vzp-name-block {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4vw;
+    padding: 0.38vw 0.6vw;
+    background: rgba(40, 44, 50, 0.72);
+    border-radius: 0.2vw 0 0 0.2vw;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.vzp-ico {
+    width: 0.85vw;
+    height: 0.85vw;
+    min-width: 12px;
+    min-height: 12px;
+    flex-shrink: 0;
+}
+
+.vzp-name {
+    font-family: Gilroy, 'Geometria Medium', sans-serif;
+    font-weight: 500;
+    font-size: 0.78vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 9.5vw;
+}
+
+.vzp-alive {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    min-width: 2.6vw;
+    padding: 0.38vw 0.55vw;
+    background: #e67a1a;
+    border-radius: 0 0.2vw 0.2vw 0;
+    color: #fff;
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 1.05vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.vzp-timer {
+    margin-top: 0.45vh;
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 800;
+    font-size: 1.55vw;
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.vzp-role {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.78vw;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Горизонтальный спидометр ===== */
+.speedo {
+    position: absolute;
+    right: 1.6vw;
+    bottom: 2.4vh;
+    display: none;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.speedo.is-on {
+    display: block;
+}
+
+.speedo-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35vh;
+    min-width: 18vw;
+}
+
+.speedo-top {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.55vw;
+}
+
+.speedo-rpm {
+    width: 3.4vw;
+    height: 2.65vw;
+    min-width: 48px;
+    min-height: 38px;
+    flex-shrink: 0;
+    margin-bottom: 0.15vh;
+}
+
+.rpm-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+.rpm-track {
+    stroke: rgba(255, 255, 255, 0.18);
+}
+
+.rpm-arc {
+    stroke: #3dff6a;
+    filter: drop-shadow(0 0 4px rgba(61, 255, 106, 0.5));
+    transition: stroke-dashoffset 0.08s linear;
+}
+
+.speedo-speed-block {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45vw;
+    line-height: 1;
+}
+
+.speed-digits {
+    display: flex;
+    align-items: baseline;
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 800;
+    font-size: 3.1vw;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.spd-dim {
+    color: rgba(255, 255, 255, 0.28);
+}
+
+.speedo-gear-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-bottom: 0.35vh;
+    gap: 0.15vh;
+}
+
+.gear-badge {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 800;
+    font-size: 1.35vw;
+    color: #fff;
+    line-height: 1;
+}
+
+.speed-unit {
+    font-family: Gilroy, 'Geometria Regular', sans-serif;
+    font-weight: 500;
+    font-size: 0.72vw;
+    color: rgba(210, 215, 220, 0.72);
+    letter-spacing: 0.04em;
+}
+
+.speedo-icons {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: auto auto;
+    gap: 0.28vw 0.32vw;
+    align-items: center;
+    margin-left: 0.35vw;
+    margin-bottom: 0.45vh;
+}
+
+.sico {
+    width: 1.15vw;
+    height: 1.15vw;
+    min-width: 16px;
+    min-height: 16px;
+    color: rgba(255, 255, 255, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.12vw;
+    background: transparent;
+}
+
+.sico svg {
+    width: 72%;
+    height: 72%;
+    display: block;
+}
+
+.sico-turn {
+    width: 1.55vw;
+    min-width: 22px;
+    grid-column: 1 / span 2;
+}
+
+.sico-belt {
+    grid-column: 3;
+}
+
+.sico.active-green {
+    color: #fff;
+    background: #2ecc71;
+}
+
+.sico.active-red {
+    color: #fff;
+    background: #e74c3c;
+}
+
+.sico.blink {
+    animation: icoBlink 0.7s steps(1) infinite;
+}
+
+@keyframes icoBlink {
+    0%, 49% { color: #3dff6a; background: transparent; }
+    50%, 100% { color: rgba(255, 255, 255, 0.35); background: transparent; }
+}
+
+.speedo-bot {
+    display: flex;
+    align-items: center;
+    gap: 0.45vw;
+    padding-left: 0.1vw;
+}
+
+.fuel-pct {
+    font-family: Gilroy, 'Geometria Bold', sans-serif;
+    font-weight: 700;
+    font-size: 0.85vw;
+    font-variant-numeric: tabular-nums;
+    min-width: 2.6ch;
+    flex-shrink: 0;
+}
+
+.fuel-segs {
+    display: flex;
+    align-items: center;
+    gap: 0.14vw;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 0.85vw;
+}
+
+.fuel-seg {
+    width: 0.28vw;
+    min-width: 3px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.22);
+    transform: skewX(-18deg);
+    border-radius: 1px;
+}
+
+.fuel-seg.is-on {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.odo-val {
+    font-family: Gilroy, 'Geometria Medium', sans-serif;
+    font-weight: 500;
+    font-size: 0.72vw;
+    color: rgba(200, 205, 210, 0.55);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* Кастомный прицел из F10 — как в старом HUD, поверх всего */
+.hud-crosshair-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.hud-crosshair-overlay.is-on {
+    display: flex;
+}
+
+.hud-ch-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hud-ch-mid {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-ch-v,
+.hud-ch-h,
+.hud-ch-dot {
+    flex-shrink: 0;
+    box-sizing: border-box;
+}

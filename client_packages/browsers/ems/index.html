@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/media.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <style>
+      /* Landing screen */
+      .ems-landing {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 360px;
+        background: #1a1418;
+        border: 1px solid rgba(180,50,50,0.3);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        padding: 36px 36px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .ems-landing .alert-icon { margin-bottom: 18px; }
+      .ems-landing .ems-landing-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      .ems-landing .ems-landing-sub {
+        font-size: 13px;
+        color: rgba(245,245,245,0.55);
+        text-align: center;
+        margin-bottom: 28px;
+        line-height: 1.45;
+      }
+      .ems-landing-btns {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+      }
+      .ems-landing-btns a {
+        flex: 1;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.6px;
+        text-decoration: none;
+        transition: opacity 0.15s;
+        text-transform: uppercase;
+      }
+      .ems-landing-btns a:hover { opacity: 0.85; }
+      .ems-landing-btn-tattoo {
+        background: linear-gradient(135deg,#a33,#822);
+        color: #fff !important;
+        border: none;
+        box-shadow: 0 4px 14px rgba(170,50,50,0.3);
+      }
+      .ems-landing-btn-makeup {
+        background: rgba(60,40,40,0.5);
+        color: rgba(255,200,200,0.8) !important;
+        border: 1px solid rgba(160,70,70,0.35) !important;
+      }
+      .ems-landing-close {
+        margin-top: 18px;
+        font-size: 12px;
+        color: rgba(255,255,255,0.35);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        transition: color 0.15s;
+        text-decoration: none;
+      }
+      .ems-landing-close:hover { color: rgba(255,255,255,0.6); }
+
+      /* Back button (shared) */
+      .ems-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        color: rgba(255,200,200,0.55);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 14px;
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .ems-back-btn:hover { color: rgba(255,180,180,0.85); }
+    </style>
+    <title>EMS</title>
+  </head>
+  <body>
+
+    <!-- LANDING: выбор тату или макияж -->
+    <div id="EmsLanding" v-if="Active">
+      <div class="ems-landing">
+        <div class="alert-icon"></div>
+        <span class="ems-landing-title">Медицинский центр</span>
+        <span class="ems-landing-sub">Выберите, что вы хотите свести:</span>
+        <div class="ems-landing-btns">
+          <a class="ems-landing-btn-tattoo" @click="go('tattoo')">Татуировки</a>
+          <a class="ems-landing-btn-makeup" @click="go('makeup')">Макияж</a>
+        </div>
+        <a class="ems-landing-close" @click="close()">Закрыть</a>
+      </div>
+    </div>
+
+    <!-- TATTOO screen -->
+    <div id="TattooClearAlert" v-if="Active">
+      <div class="alert-window tattoo-panel">
+        <div class="dop-window">
+          <a class="ems-back-btn" @click="back()">← Назад</a>
+          <div class="alert-icon"></div>
+          <a class="heading">Сведение татуировок</a>
+          <a class="tattoo-desc">Снять одну татуировку — 10 000&nbsp;$. Внизу можно снять все сразу за 50 000&nbsp;$.</a>
+          <div class="tattoo-list-wrap">
+            <div v-for="(t, i) in tattoos" :key="t.key + '-' + i" class="tattoo-row">
+              <span class="tattoo-label" :title="t.key">{{ t.label }}</span>
+              <a class="tattoo-remove-one" @click="removeOne(i)">Снять · 10 000&nbsp;$</a>
+            </div>
+            <p v-if="tattoos.length === 0" class="tattoo-empty">У вас нет татуировок.</p>
+          </div>
+          <div class="bottom-block">
+            <a @click="back()">Назад</a>
+            <a @click="removeAll()" class="a-true" :class="{ 'is-disabled': tattoos.length === 0 }">Снять все · 50 000&nbsp;$</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAKEUP screen -->
+    <div id="MakeupClearAlert" v-if="Active">
+      <div class="alert-window tattoo-panel">
+        <div class="dop-window">
+          <a class="ems-back-btn" @click="back()">← Назад</a>
+          <div class="alert-icon"></div>
+          <a class="heading">Удаление макияжа</a>
+          <a class="tattoo-desc">Снять один макияж — 10 000&nbsp;$.</a>
+          <div class="tattoo-list-wrap">
+            <div v-for="(m, i) in makeups" :key="'mk'+m.id" class="tattoo-row">
+              <span class="tattoo-label">{{ m.label }}</span>
+              <a class="tattoo-remove-one" @click="removeOne(i)">Снять · 10 000&nbsp;$</a>
+            </div>
+            <p v-if="makeups.length === 0" class="tattoo-empty">У вас нет макияжа.</p>
+          </div>
+          <div class="bottom-block">
+            <a @click="back()">Назад</a>
+            <a @click="closePanel()" class="a-true">Закрыть</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RNK -->
+    <div id="unRNK" v-if="Active">
+      <div class="alert-window">
+        <div class="dop-window">
+          <div class="alert-icon"></div>
+          <a class="heading">Лечение от RNK</a>
+          <a>Зависимость: {{ RNKAddiction }}%. Пройти лечение?<br>Цена 15.000$</a>
+          <div class="bottom-block">
+            <a @click="cancel()">Отмена</a>
+            <a @click="startClearRNK()" class="a-true">Оплатить</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

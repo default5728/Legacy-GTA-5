@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bs-bg: #0c0c10;
+  --bs-panel: #1a1a24;
+  --bs-panel2: #252532;
+  --bs-line: rgba(255, 255, 255, 0.08);
+  --bs-accent: #c41e3a;
+  --bs-accent-h: #e63946;
+  --bs-accent-glow: rgba(196, 30, 58, 0.35);
+  --bs-text: #ffffff;
+  --bs-text2: rgba(255, 255, 255, 0.72);
+  --bs-muted: rgba(255, 255, 255, 0.42);
+  --bs-r: 12px;
+  --bs-r-sm: 8px;
+  --bs-font: 'Montserrat', system-ui, sans-serif;
+  --bs-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 32px rgba(196, 30, 58, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--bs-font);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+}
+
+.flow-shop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(196, 30, 58, 0.15);
+  border: 1px solid rgba(196, 30, 58, 0.45);
+  color: var(--bs-accent-h);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.flow-shop-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--bs-text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.flow-shop-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--bs-muted);
+}
+
+.flow-shop-close {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(196, 30, 58, 0.55);
+  border-radius: var(--bs-r-sm);
+  background: var(--bs-panel);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: var(--bs-shadow);
+}
+
+.flow-shop-close:hover {
+  background: var(--bs-accent);
+  border-color: var(--bs-accent-h);
+}
+
+.flow-shop-close svg path {
+  fill: #a1a3c2;
+  transition: 0.2s ease;
+}
+
+.flow-shop-close:hover svg path {
+  fill: #fff;
+}
+
+.flow-shop-panel {
+  background: var(--bs-panel);
+  border: 1px solid var(--bs-accent);
+  border-radius: var(--bs-r);
+  box-shadow: var(--bs-shadow);
+}
+
+.flow-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--bs-r-sm);
+  border: 1px solid rgba(196, 30, 58, 0.55);
+  background: var(--bs-panel2);
+  color: var(--bs-text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-decoration: none;
+}
+
+.flow-shop-btn:hover {
+  background: rgba(196, 30, 58, 0.2);
+  color: #fff;
+  text-decoration: none;
+}
+
+.flow-shop-btn--primary {
+  background: var(--bs-accent);
+  border-color: var(--bs-accent-h);
+  box-shadow: 0 6px 24px var(--bs-accent-glow);
+}
+
+.flow-shop-btn--primary:hover {
+  background: var(--bs-accent-h);
+}
+
+.flow-shop-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: var(--bs-r-sm);
+  border: 1px solid rgba(196, 30, 58, 0.35);
+  background: #12121a;
+  color: var(--bs-text);
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.flow-shop-input:focus {
+  border-color: var(--bs-accent-h);
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.18);
+}
+
+.flow-shop-input::placeholder {
+  color: var(--bs-muted);
+}

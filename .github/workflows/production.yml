@@ -1,0 +1,72 @@
+name: Check and publish production release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: legacy-production-release
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Check credentials and JavaScript
+        run: |
+          node tools/check-secrets.cjs
+          node tools/check-syntax.cjs
+          node tools/test-panel-money.cjs
+          node tools/test-flow-panel-ui.cjs
+          node tools/test-panel-management.cjs
+          node tools/test-rank-permissions.cjs
+          node tools/test-admin-binds.cjs
+          node tools/test-player-menu-binds.cjs
+          node tools/test-bandolier.cjs
+          node tools/test-admin-session-login.cjs
+          node tools/test-report-panel.cjs
+          node tools/test-report-history.cjs
+          node tools/test-chat-admin-commands.cjs
+          node tools/test-player-tools.cjs
+          node tools/test-god-access.cjs
+          node tools/test-character-level.cjs
+          node tools/test-vehicle-dynamics.cjs
+          node tools/test-creator.cjs
+          node tools/test-creator-sources.cjs
+          node tools/test-house-blips.cjs
+          node tools/test-world-services.cjs
+          node tools/test-personal-fleet.cjs
+          node tools/test-passenger-speedometer.cjs
+          node tools/test-plates.cjs
+          node tools/test-plate-textures.cjs
+          node tools/test-new-content.cjs
+          node tools/test-melee.cjs
+          node tools/test-tesla-flight.cjs
+          python3 -m py_compile ops/autodeploy/deploy.py
+          python3 ops/autodeploy/test_deploy.py
+      - name: Publish the checked commit for the VPS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          latest=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)
+          if [ "$latest" != "$GITHUB_SHA" ]; then
+            echo "A newer main commit exists; its run will publish the release."
+            exit 0
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/deploy-ready" >/dev/null 2>&1; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/git/refs/heads/deploy-ready" -f sha="$GITHUB_SHA" -F force=true --silent
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref=refs/heads/deploy-ready -f sha="$GITHUB_SHA" --silent
+          fi

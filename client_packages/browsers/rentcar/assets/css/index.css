@@ -1,0 +1,439 @@
+* {
+    font-family: proxima nova, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    user-select: none;
+    background: transparent;
+}
+
+body:not(.rent-car-open):not(.rent-car-preview) {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+body.rent-car-preview {
+    visibility: visible;
+    pointer-events: auto;
+    background: #101010;
+}
+
+body.rent-car-open {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+#rentcar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.centrized {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rent_container {
+    position: absolute;
+    width: 135vh;
+    height: 72vh;
+    background: #141414;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 2vh 5vh rgba(0, 0, 0, 0.5);
+}
+
+.rent_breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5vh 3vh 1vh 3vh;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.rent_breadcrumb_left {
+    display: flex;
+    align-items: center;
+    gap: .8vh;
+}
+
+.rent_breadcrumb_inactive {
+    font-size: 1.4vh;
+    font-weight: 500;
+    opacity: .35;
+    cursor: pointer;
+    transition: opacity .2s;
+}
+
+.rent_breadcrumb_inactive:hover {
+    opacity: .65;
+}
+
+.rent_breadcrumb_tab_active {
+    opacity: 1;
+    font-weight: 600;
+}
+
+.rent_breadcrumb_separator {
+    font-size: 1.4vh;
+    opacity: .2;
+}
+
+.rent_breadcrumb_single {
+    opacity: 1;
+    font-weight: 600;
+    font-size: 1.4vh;
+}
+
+.rent_breadcrumb_active {
+    font-size: 1.4vh;
+    font-weight: 600;
+    opacity: 1;
+}
+
+.rent_subtitle {
+    padding: 0 3vh 1.2vh 3vh;
+    font-size: 1.15vh;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .28);
+    line-height: 1.45;
+    flex-shrink: 0;
+}
+
+.rent_close {
+    background: rgba(255, 255, 255, .03);
+    border: none;
+    border-radius: 0;
+    width: 2.8vh;
+    height: 2.8vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, .2);
+    transition: background .2s, color .2s;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.rent_close svg {
+    width: 1.4vh;
+    height: 1.4vh;
+}
+
+.rent_close:hover {
+    background: rgba(255, 255, 255, .07);
+    color: rgba(255, 255, 255, .8);
+}
+
+.rent_search_wrap {
+    padding: 0 3vh;
+    margin-bottom: 1.6vh;
+    flex-shrink: 0;
+}
+
+.rent_search_input_container {
+    display: flex;
+    align-items: center;
+    gap: 1.2vh;
+    padding: 1.2vh 1.5vh;
+    background: #111111;
+    border-radius: 0;
+}
+
+.rent_search_icon {
+    width: 1.6vh;
+    height: 1.6vh;
+    opacity: .15;
+    flex-shrink: 0;
+    color: white;
+}
+
+.rent_search {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.4vh;
+    font-family: proxima nova, sans-serif;
+    color: rgba(255, 255, 255, .7);
+    width: 100%;
+}
+
+.rent_search::placeholder {
+    color: rgba(255, 255, 255, .1);
+}
+
+.rent_container_items {
+    padding: 0 3vh 3vh 3vh;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.rent_container_items::-webkit-scrollbar {
+    width: .3vh;
+}
+
+.rent_container_items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.rent_container_items::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .05);
+    border-radius: 0;
+}
+
+.rent_container_items_grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.2vh;
+}
+
+.rent_container_items_block {
+    background: #191919;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.2vh;
+    transition: background .2s;
+}
+
+.rent_container_items_block:hover {
+    background: #1d1d1d;
+}
+
+.rent_container_items_block_img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2vh;
+}
+
+.rent_container_items_block_img img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 .5vh 1.5vh rgba(0, 0, 0, 0.5));
+}
+
+.rent_container_items_block_info {
+    display: flex;
+    flex-direction: column;
+    gap: .2vh;
+    margin-bottom: 1.2vh;
+    min-height: 3.2vh;
+}
+
+.rent_container_items_block_model {
+    font-size: 1.15vh;
+    font-weight: 700;
+    color: white;
+}
+
+.rent_container_items_block_number {
+    font-size: .9vh;
+    font-weight: 500;
+    color: #353535;
+    text-transform: uppercase;
+}
+
+.rent_container_items_block_btn {
+    width: 100%;
+    padding: .9vh;
+    background: #222222;
+    border: none;
+    border-radius: 0;
+    font-size: 1.1vh;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .6);
+    cursor: pointer;
+    transition: background .2s, color .2s;
+    text-align: center;
+    font-family: proxima nova, sans-serif;
+}
+
+.rent_container_items_block_btn:hover {
+    background: #2a2a2a;
+    color: white;
+}
+
+.rent_container_items_block_btn .price {
+    color: #ff6a28;
+    margin-left: .3vh;
+}
+
+.rent_empty {
+    font-size: 1.4vh;
+    opacity: .3;
+    text-align: center;
+    padding: 4vh 0;
+}
+
+.rent_modal_backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    z-index: 20;
+}
+
+.rent_modal_panel {
+    width: 36vh;
+    background: #191919;
+    padding: 3vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: -1vh 0 3vh rgba(0, 0, 0, .35);
+}
+
+.rent_modal_close {
+    position: absolute;
+    top: 1.6vh;
+    right: 1.6vh;
+}
+
+.rent_modal_img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2vh 0 2.5vh;
+}
+
+.rent_modal_img img {
+    max-width: 92%;
+    max-height: 92%;
+    object-fit: contain;
+}
+
+.rent_modal_title {
+    font-size: 1.8vh;
+    font-weight: 700;
+    margin-bottom: 1vh;
+}
+
+.rent_modal_meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.25vh;
+    color: rgba(255, 255, 255, .45);
+    margin-bottom: 2.5vh;
+}
+
+.rent_modal_meta span:last-child {
+    color: rgba(255, 255, 255, .85);
+    font-weight: 600;
+}
+
+.rent_modal_price {
+    font-size: 1.35vh;
+    color: rgba(255, 255, 255, .45);
+    margin-bottom: 1.6vh;
+}
+
+.rent_modal_price span {
+    color: #ff6a28;
+    font-weight: 700;
+}
+
+.rent_modal_pay {
+    width: 100%;
+    padding: 1.1vh;
+    background: #222222;
+    border: none;
+    border-radius: 0;
+    font-size: 1.2vh;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .75);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8vh;
+    transition: background .2s, color .2s;
+    font-family: proxima nova, sans-serif;
+}
+
+.rent_modal_pay img {
+    width: 1.5vh;
+    height: 1.5vh;
+    opacity: .7;
+}
+
+.rent_modal_pay:hover {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.slide-enter-active {
+    animation: rent_slide_enter .4s forwards ease;
+}
+
+.slide-leave-active {
+    animation: rent_slide_leave .4s forwards ease;
+}
+
+@keyframes rent_slide_enter {
+    from {
+        transform: translate(-50%, calc(-50% + 2.5vh));
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes rent_slide_leave {
+    to {
+        transform: translate(-50%, calc(-50% + 2.5vh));
+        opacity: 0;
+    }
+}
+
+.list-enter-active {
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.list-leave-active {
+    transition: opacity .15s ease;
+}
+
+.list-enter {
+    opacity: 0;
+    transform: translateY(.8vh);
+}
+
+.list-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .2s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}

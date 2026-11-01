@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>accept - flow</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./index.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="accept">
+        <div class="accept_block">
+            <div class="accept_pos"></div>
+            <h3>Подтверждение</h3>
+            <p><b>Хотите начать игру в кости на <b id="sumkost">1.000.000</b>$ против <b id="login">whait</b>?</b></p>
+            <div>
+                <button onclick="mp.trigger('otvetkost', 'yes', document.getElementById('sumkost').textContent);">Принять</button>
+                <button onclick="mp.trigger('otvetkost', 'no', document.getElementById('sumkost').textContent);">Отклонить</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.accept').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

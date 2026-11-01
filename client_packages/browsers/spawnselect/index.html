@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="UTF-8">
+<title>Выбор спауна</title>
+<link rel="stylesheet" href="styles/Lib/css/fonts.css">
+<link rel="stylesheet" href="styles/Lib/css/help.css">
+<link rel="stylesheet" href="styles/Menu/UI/style.css">
+<link rel="stylesheet" href="spawn-menu.css">
+</head>
+<body>
+<svg height="0" width="0" style="position:absolute">
+    <defs>
+        <linearGradient id="spawnMenu_ico_gradient" x1="40.1523" y1="-0.15625" x2="40.1523" y2="79.8439" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFB800"/>
+            <stop offset="1" stop-color="#FF5C00"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<div id="playerSpawnSelect">
+    <div class="spawnMenu-gradient"></div>
+
+    <div id="confirmPanel" class="spawnMenu-confirm d-flex column center interactive hidden">
+        <svg id="warnIco" width="71" height="65" viewBox="0 0 71 65" style="margin-bottom: 10px;">
+            <path d="M35.5003 45.6578C33.5154 45.6578 31.8516 47.3217 31.8516 49.3066C31.8516 51.2916 33.5154 52.9554 35.5003 52.9554C37.4123 52.9554 39.1491 51.2916 39.0615 49.3942C39.1491 47.3071 37.4999 45.6578 35.5003 45.6578Z" fill="white"/>
+            <path d="M69.2723 58.589C71.5637 54.6337 71.5783 49.9195 69.3015 45.9788L46.4455 6.39674C44.1832 2.41227 40.0966 0.0478516 35.5137 0.0478516C30.9308 0.0478516 26.8442 2.42686 24.5819 6.38215L1.69676 46.008C-0.580087 49.9925 -0.565492 54.7359 1.74054 58.6912C4.01738 62.6027 8.08943 64.9525 12.6431 64.9525H58.2967C62.865 64.9525 66.9663 62.5735 69.2723 58.589ZM64.3099 55.7284C63.0402 57.9176 60.7925 59.2166 58.2821 59.2166H12.6285C10.1473 59.2166 7.91429 57.9468 6.6737 55.8013C5.41852 53.6267 5.40392 51.0287 6.65911 48.8394L29.5443 9.2282C30.7849 7.05352 33.0033 5.76915 35.5137 5.76915C38.0095 5.76915 40.2425 7.06812 41.4831 9.2428L64.3537 48.854C65.5797 50.9849 65.5651 53.5537 64.3099 55.7284Z" fill="white"/>
+            <path d="M34.5942 20.0432C32.8574 20.5394 31.7773 22.1157 31.7773 24.0277C31.8649 25.1807 31.9379 26.3483 32.0255 27.5013C32.2736 31.8945 32.5217 36.2 32.7698 40.5932C32.8574 42.0819 34.0104 43.1619 35.4991 43.1619C36.9878 43.1619 38.1554 42.0089 38.2284 40.5056C38.2284 39.6007 38.2284 38.7688 38.316 37.8493C38.4765 35.0324 38.6517 32.2156 38.8122 29.3987C38.8998 27.5743 39.0603 25.7499 39.1479 23.9255C39.1479 23.2687 39.0603 22.6849 38.8122 22.1011C38.0679 20.4665 36.331 19.6345 34.5942 20.0432Z" fill="white"/>
+        </svg>
+        <div id="warnText" class="yk-text w-5 s-25" style="margin-bottom: 10px;">Вы потеряете все оружие</div>
+        <button type="button" id="confirmBtn" class="yk-btn s-18 orange interactive" style="width: 250px;">ПОДТВЕРДИТЬ</button>
+    </div>
+
+    <div id="optsBar" class="spawnMenu-bar d-flex center-align interactive"></div>
+</div>
+
+<script src="spawn-icons.js"></script>
+<script>
+'use strict';
+
+const SPAWN_ICONS_EXTRA = {
+    def: '<svg class="spawnMenu-ico pe-none" width="62" height="62" viewBox="0 0 92 64"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.7958 55.3597H1.79742H10.948C11.7958 59.9537 15.8286 63.4456 20.6641 63.4456C25.4997 63.4456 29.5325 59.9537 30.3802 55.3597H67.0106C67.8584 59.9537 71.8911 63.4456 76.7267 63.4456C82.1761 63.4456 86.6095 59.0122 86.6095 53.5628C86.6095 50.919 85.5449 48.4176 83.7259 46.5884L91.1876 41.7026C92.1429 41.0773 92.2792 39.7304 91.4712 38.9261C87.8021 35.2725 82.7434 33.1065 77.4907 32.9143C77.2492 25.6858 75.5231 22.5346 73.0041 17.9441C72.5002 17.0257 71.9561 16.0326 71.3837 14.93H74.0315C75.0238 14.93 75.8284 14.1255 75.8284 13.1331V2.35181C75.8284 1.3594 75.0238 0.554932 74.0315 0.554932H68.6409C64.6777 0.554932 61.4534 3.77926 61.4534 7.74246C61.4534 8.1694 61.4954 8.59167 61.5693 9.00657L52.0332 11.3898C51.0706 11.6304 50.485 12.6059 50.7258 13.5687C50.9668 14.5327 51.9426 15.1165 52.9047 14.8763L60.3817 13.0077C62.2871 18.2138 62.4938 28.03 62.359 32.2873C62.2472 36.0175 61.5031 38.7344 60.085 40.5925C58.498 42.6699 56.007 43.6796 52.4691 43.6796H48.6957C45.2279 43.6796 42.4066 40.8583 42.4066 37.3905C42.4066 34.5363 45.722 31.6642 47.0027 30.7959C47.4833 30.4721 47.7972 29.9144 47.7972 29.3025V23.9139C47.7972 19.9507 44.5729 16.7263 40.6097 16.7263H17.9688C14.0056 16.7263 10.7813 19.9507 10.7813 23.9139V28.2438C0.12704 34.6303 0 52.7709 0 53.5626C0 53.5667 0.000539065 53.5705 0.000539065 53.5746C0.00808597 54.5694 0.821175 55.3597 1.7958 55.3597ZM67.2916 14.7985C66.0678 14.5654 64.9314 14.0208 63.9904 13.2206C66.02 18.1971 66.1431 28.077 65.951 32.395C65.9103 33.7507 65.7914 35.0037 65.5955 36.1634C68.097 34.5598 70.9271 33.5036 73.9009 33.0932C73.6916 26.6717 72.2043 23.9563 69.8536 19.6729L69.8507 19.6675C69.0795 18.2619 68.2189 16.6934 67.2916 14.7985ZM68.6066 11.3366L68.6409 11.3359H72.2347V4.14834H68.6409C66.6593 4.14834 65.0471 5.7605 65.0471 7.7421C65.0471 9.6671 66.5809 11.2778 68.5336 11.333C68.5579 11.3337 68.5823 11.335 68.6066 11.3366ZM70.4378 53.5626C70.4378 57.0304 73.2591 59.8517 76.7269 59.8517C80.1947 59.8517 83.0159 57.0304 83.0159 53.5626C83.0159 50.075 80.1875 47.2735 76.7269 47.2735C73.2591 47.2735 70.4378 50.0948 70.4378 53.5626ZM75.8212 36.5165C70.9181 36.7743 66.356 39.1489 63.3024 43.0314C61.2915 45.5893 60.0834 48.58 59.753 51.7655H67.0109C67.8587 47.1714 71.8915 43.6796 76.727 43.6796C78.0159 43.6796 79.2926 43.9354 80.4768 44.4201L87.2341 39.9956C83.9058 37.4816 79.7758 36.3023 75.8212 36.5165ZM14.6379 55.3577C15.4131 57.9542 17.8208 59.8517 20.6641 59.8517C23.5075 59.8517 25.9152 57.9544 26.6902 55.3577H14.6379ZM8.93014 47.5229L5.53565 51.7657H32.2053C31.3385 46.1756 26.4934 41.8829 20.6641 41.8829C16.0747 41.8829 11.798 43.9387 8.93014 47.5229ZM40.6095 20.3203H31.0861V27.5078H44.2033V23.914C44.2033 21.9324 42.5911 20.3203 40.6095 20.3203ZM17.9688 20.3203C15.9872 20.3203 14.3751 21.9324 14.3751 23.914V27.5078H27.4923V20.3203H17.9688ZM41.4293 31.0998H13.0193C7.18627 34.2909 4.96227 42.2559 4.11486 47.789L6.12413 45.2777C9.67747 40.8364 14.9772 38.2891 20.6641 38.2891C28.4777 38.2891 34.9357 44.1881 35.8284 51.7657H56.1402C56.2911 49.9969 56.667 48.2762 57.255 46.6297C55.8255 47.0577 54.2288 47.2735 52.469 47.2735H48.6955C43.2461 47.2735 38.8127 42.8401 38.8127 37.3907C38.8127 34.9363 40.0565 32.7592 41.4293 31.0998Z"/></svg>',
+    house: '<svg class="spawnMenu-ico pe-none" width="62" height="62" viewBox="0 0 80 80"><path d="M78.0001 34.64C77.9977 34.6381 77.9958 34.6357 77.994 34.6339L45.3603 2.00135C43.9693 0.609743 42.1199 -0.15625 40.1527 -0.15625C38.1856 -0.15625 36.3362 0.609743 34.9446 2.00135L2.32797 34.6174C2.31698 34.6284 2.30538 34.64 2.29501 34.6509C-0.561443 37.5239 -0.55656 42.1851 2.30905 45.0508C3.61825 46.3606 5.34677 47.1186 7.19553 47.1986C7.27121 47.2059 7.3469 47.2096 7.42319 47.2096H8.72324V71.2245C8.72324 75.9773 12.5904 79.8439 17.3433 79.8439H30.1106C31.4052 79.8439 32.4544 78.7941 32.4544 77.5002V58.672C32.4544 56.5034 34.2189 54.7395 36.3875 54.7395H43.918C46.0866 54.7395 47.8505 56.5034 47.8505 58.672V77.5002C47.8505 78.7941 48.8997 79.8439 50.1943 79.8439H62.9616C67.7151 79.8439 71.5816 75.9773 71.5816 71.2245V47.2096H72.7877C74.7542 47.2096 76.6036 46.4436 77.9958 45.0514C80.8645 42.1815 80.8657 37.5117 78.0001 34.64ZM74.681 41.7371C74.175 42.2431 73.5024 42.5221 72.7877 42.5221H69.2379C67.9433 42.5221 66.8941 43.5713 66.8941 44.8658V71.2245C66.8941 73.3925 65.1302 75.1564 62.9616 75.1564H52.538V58.672C52.538 53.9192 48.6714 50.052 43.918 50.052H36.3875C31.6341 50.052 27.7669 53.9192 27.7669 58.672V75.1564H17.3433C15.1753 75.1564 13.4108 73.3925 13.4108 71.2245V44.8658C13.4108 43.5713 12.3616 42.5221 11.067 42.5221H7.57822C7.5416 42.5196 7.50559 42.5178 7.46836 42.5172C6.77011 42.505 6.11521 42.2279 5.62448 41.7365C4.58078 40.6928 4.58078 38.9942 5.62448 37.9499C5.62509 37.9499 5.62509 37.9493 5.6257 37.9487L5.62753 37.9469L38.26 5.31556C38.7654 4.80958 39.4374 4.53126 40.1527 4.53126C40.8675 4.53126 41.5395 4.80958 42.0454 5.31556L74.6706 37.9401C74.6755 37.945 74.681 37.9499 74.6859 37.9548C75.7241 39.0003 75.7223 40.6953 74.681 41.7371Z"/></svg>'
+};
+
+function getSpawnIcon(type) {
+    const icons = window.SPAWN_ICONS || {};
+    const raw = icons[type] || SPAWN_ICONS_EXTRA[type] || icons.faction || SPAWN_ICONS_EXTRA.def;
+    if (!raw) return '';
+    return raw.replace('class="spawnMenu-ico"', 'class="spawnMenu-ico pe-none"');
+}
+
+let _payload = { spawnOptions: [], fraction: 0 };
+let _currentKey = null;
+let _waitCamera = false;
+let _waitRequest = false;
+
+function findOption(key) {
+    return (_payload.spawnOptions || []).find(function (o) { return o.key === key; }) || null;
+}
+
+function renderOptions() {
+    const bar = document.getElementById('optsBar');
+    const opts = _payload.spawnOptions || [];
+    bar.innerHTML = opts.map(function (opt) {
+        const type = opt.spawnType || 'def';
+        const icon = getSpawnIcon(type);
+        const name = opt.spawnName || String(opt.label || opt.key || '').toUpperCase();
+        const active = _currentKey === opt.key ? ' active' : '';
+        return '<div class="spawnMenu-spawnBlock' + active + '" data-key="' + opt.key + '">' +
+            icon +
+            '<div class="yk-text w-6 s-20 mt-5 spawnMenu-text pe-none upper">' + name + '</div>' +
+            '</div>';
+    }).join('');
+
+    bar.querySelectorAll('.spawnMenu-spawnBlock').forEach(function (el) {
+        el.addEventListener('click', function () {
+            SpawnSelect.pick(el.getAttribute('data-key'));
+        });
+    });
+}
+
+function updateConfirmPanel() {
+    const panel = document.getElementById('confirmPanel');
+    const bar = document.getElementById('optsBar');
+    const opt = _currentKey ? findOption(_currentKey) : null;
+    if (bar) {
+        bar.style.pointerEvents = (_waitCamera || _waitRequest) ? 'none' : 'auto';
+        bar.style.opacity = (_waitCamera || _waitRequest) ? '0.72' : '1';
+    }
+    if (!opt || _waitCamera) {
+        panel.classList.add('hidden');
+        return;
+    }
+    panel.classList.remove('hidden');
+    const warn = !!opt.warning;
+    document.getElementById('warnIco').style.display = warn ? '' : 'none';
+    document.getElementById('warnText').style.display = warn ? '' : 'none';
+    document.getElementById('confirmBtn').disabled = _waitRequest;
+}
+
+window.SpawnSelect = {
+    open(payloadJson) {
+        _waitRequest = false;
+        _waitCamera = false;
+        _currentKey = null;
+        _payload = typeof payloadJson === 'string' ? JSON.parse(payloadJson) : payloadJson;
+        const bar = document.getElementById('optsBar');
+        if (bar) bar.style.display = '';
+        renderOptions();
+        updateConfirmPanel();
+        document.getElementById('playerSpawnSelect').classList.add('open');
+    },
+    setSelected(key) {
+        _currentKey = key || null;
+        renderOptions();
+        updateConfirmPanel();
+    },
+    setWaitCamera(value) {
+        _waitCamera = !!value;
+        updateConfirmPanel();
+    },
+    pick(key) {
+        if (_waitCamera || _waitRequest) return;
+        if (!findOption(key)) return;
+        if (_currentKey === key) return;
+
+        _waitCamera = true;
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('spawnselect:preview', key);
+            }
+        } catch (_e) {
+            _waitCamera = false;
+            updateConfirmPanel();
+        }
+    },
+    confirm() {
+        if (!_currentKey || _waitRequest || _waitCamera) return;
+        _waitRequest = true;
+        document.getElementById('playerSpawnSelect').classList.remove('open');
+        document.getElementById('confirmPanel').classList.add('hidden');
+        const bar = document.getElementById('optsBar');
+        if (bar) bar.style.display = 'none';
+        document.getElementById('confirmBtn').disabled = true;
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('spawnselect:confirm', _currentKey, _payload.fraction || 0);
+            }
+        } catch (_e) {}
+    },
+    dismissInstant() {
+        _waitRequest = true;
+        document.getElementById('playerSpawnSelect').classList.remove('open');
+        document.getElementById('confirmPanel').classList.add('hidden');
+        const bar = document.getElementById('optsBar');
+        if (bar) bar.style.display = 'none';
+    },
+    close() {
+        _waitRequest = false;
+        _waitCamera = false;
+        _currentKey = null;
+        document.getElementById('playerSpawnSelect').classList.remove('open');
+        document.getElementById('confirmPanel').classList.add('hidden');
+        const bar = document.getElementById('optsBar');
+        if (bar) bar.style.display = '';
+    }
+};
+
+document.getElementById('confirmBtn').addEventListener('click', function () {
+    SpawnSelect.confirm();
+});
+
+try {
+    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('spawnselect:browser:ready');
+} catch (_e) {}
+</script>
+</body>
+</html>

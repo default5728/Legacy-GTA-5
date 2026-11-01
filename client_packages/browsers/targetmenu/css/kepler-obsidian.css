@@ -1,0 +1,34 @@
+:root{--kepler-ease:cubic-bezier(.25,1,.5,1)}
+html,body{background:transparent!important;font-family:Inter,"Segoe UI",system-ui,sans-serif;color:#e2e2e6}
+#playerTargetMenuBlock{position:fixed!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:clamp(300px,37vmin,510px)!important;height:auto!important;aspect-ratio:1;pointer-events:none}
+#playerTargetMenuBackground,#playerTargetMenuSub,#playerTargetMenuHeader,#playerTargetMenuDesc{display:none!important}
+#playerTargetMenu.kepler-wheel{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;transform:none!important;margin:0!important;pointer-events:none}
+.kepler-petal{position:absolute;inset:0;width:100%;height:100%;appearance:none;margin:0;padding:0;border:0;background:linear-gradient(145deg,rgba(25,25,30,.75),rgba(15,15,20,.65));backdrop-filter:none;backdrop-filter:none;color:#e2e2e6;cursor:pointer;pointer-events:auto;transition:background-color 250ms var(--kepler-ease),color 250ms var(--kepler-ease);outline:none}
+.kepler-petal:hover,.kepler-petal:focus-visible{background:rgba(28,28,36,.86);color:#fff}
+.kepler-sector-surface{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.kepler-petal-content{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:9px;width:25%;font-size:clamp(9px,1vmin,13px);font-weight:500;line-height:1.25;text-align:center;letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
+.kepler-petal-content img{width:clamp(22px,2.8vmin,32px);height:clamp(22px,2.8vmin,32px);object-fit:contain;filter:grayscale(1) brightness(1.8)}
+.kepler-center{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;box-sizing:border-box;width:38px;height:38px;aspect-ratio:1;border:1px solid rgba(255,255,255,.25);border-radius:50%;padding:0;background:rgba(255,255,255,.12);backdrop-filter:none;backdrop-filter:none;color:#fff;font:500 15px/1 Inter,"Segoe UI",system-ui,sans-serif;pointer-events:auto;cursor:pointer;box-shadow:none}
+.kepler-in-vehicle .kepler-center{visibility:hidden;pointer-events:none}
+.tgt-dim{background:rgba(0,0,0,.12)!important;backdrop-filter:none!important}
+.tgt-card,.tgt-sheet,.trade-column,.trade-cell{background:rgba(13,13,17,.85)!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:12px!important;box-shadow:none!important;backdrop-filter:none;backdrop-filter:none;color:#e2e2e6!important}
+.tgt-primary-btn,.trade-btn-confirm{background:#1c1c24!important;border:1px solid rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important}
+.tgt-root button,.tgt-root input{transition:background-color 250ms var(--kepler-ease),border-color 250ms var(--kepler-ease),opacity 250ms var(--kepler-ease)!important}
+.tgt-root input{background:rgba(13,13,17,.8)!important;border:1px solid rgba(255,255,255,.12)!important;color:#e2e2e6!important;box-shadow:none!important}
+.tgt-root{animation:kepler-menu-in 250ms var(--kepler-ease)}
+@keyframes kepler-menu-in{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+
+.tgt-root{transition:opacity 250ms var(--kepler-ease),transform 250ms var(--kepler-ease)}.kepler-closing .tgt-root{opacity:0;transform:scale(.98);pointer-events:none}
+
+.kepler-petal-content svg{position:static!important;width:clamp(22px,2.8vmin,32px)!important;height:clamp(22px,2.8vmin,32px)!important;pointer-events:none!important}
+
+/* Render only painted SVG petals; no rectangular backing or clipped blur layers. */
+.kepler-petal,.kepler-petal:hover,.kepler-petal:focus-visible{background:transparent!important;pointer-events:none;clip-path:none!important;-webkit-clip-path:none!important}
+.kepler-sector-surface>path{fill:rgba(13,13,17,.72);pointer-events:visiblePainted;cursor:pointer;transition:fill 250ms var(--kepler-ease)}
+.kepler-petal:hover .kepler-sector-surface>path,.kepler-petal:focus-visible .kepler-sector-surface>path{fill:rgba(28,28,36,.86)}
+.tgt-dim{background:transparent!important;box-shadow:none!important}
+#playerTargetMenuBlock,#playerTargetMenu.kepler-wheel{background:transparent!important;box-shadow:none!important;filter:none!important}
+
+.tuning-row{display:grid;grid-template-columns:1fr auto;gap:16px;margin:24px 0;color:#ddd;font-size:14px}.tuning-row output{font-variant-numeric:tabular-nums;color:#fff}.tuning-row input{grid-column:1/-1;width:100%;accent-color:#ddd;cursor:pointer}.tuning-actions{display:flex;gap:12px}.tuning-actions button{flex:1}.tuning-sheet{min-width:380px}
+
+.tuning-actions button{height:44px;margin:0;padding:0 18px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.06);color:#eee;font:600 13px Inter,Segoe UI,sans-serif;cursor:pointer;transition:background 150ms,border-color 150ms}.tuning-actions button:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}

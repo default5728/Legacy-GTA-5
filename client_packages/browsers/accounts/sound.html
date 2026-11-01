@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <style>
+    html {
+      background: transparent;
+    }
+    #audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    window.playHeadShotSound = function() {
+      const audioObj = new Audio('./audio.mp3');
+      audioObj.volume = 0.1;
+      audioObj.play();
+    }
+  </script>
+</body>
+</html>

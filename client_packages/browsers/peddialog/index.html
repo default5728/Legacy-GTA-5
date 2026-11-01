@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ped Dialog</title>
+    <link rel="stylesheet" href="../handler/Lib/css/fonts.css?v=2">
+    <link rel="stylesheet" href="../handler/Menu/UI/style.css?v=2">
+    <link rel="stylesheet" href="../handler/Lib/css/help.css?v=2">
+    <link rel="stylesheet" href="../shared/pedtalk-gta5rp.css?v=3">
+</head>
+<body>
+    <div id="pedtalk-root" class="pedtalk-root">
+        <div class="pedtalk-gradient"></div>
+        <div id="pedMenu-block">
+            <div id="dialog-header" class="yk-text w-5 s-20 pedtalk-actor"></div>
+            <div id="dialog-content-area" class="yk-text s-25 mt-5 pedtalk-text"></div>
+            <div id="pedMenu-scrol" class="yk-scroll" style="max-height: 225px; margin-top: 20px;">
+                <div id="dialog-buttons-area" class="pedtalk-answers-row"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function trig() {
+            try { if (typeof mp !== 'undefined' && mp.trigger) mp.trigger.apply(mp, arguments); } catch (e) {}
+        }
+
+        function esc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showRoot(on) {
+            var root = document.getElementById('pedtalk-root');
+            if (on) root.classList.add('active');
+            else root.classList.remove('active');
+        }
+
+        function bindButtons() {
+            var list = document.querySelectorAll('.dialog-list-item-button');
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].classList.contains('disabled')) continue;
+                list[i].onclick = function (e) {
+                    trig('peddialog:select', parseInt(e.currentTarget.id, 10));
+                };
+            }
+            var btns = document.querySelectorAll('.pedMenu-ansButton[data-ped-btn]');
+            for (var j = 0; j < btns.length; j++) {
+                btns[j].onclick = function (e) {
+                    trig('peddialog:button', e.currentTarget.getAttribute('data-ped-btn'));
+                };
+            }
+        }
+
+        function renderAnswerButton(label, id, extraClass) {
+            return '<div class="pedMenu-ansButton' + (extraClass || '') + '" data-ped-btn="' + esc(id) + '">' +
+                '<span class="yk-text w-4 s-20 pe-none pedtalk-answer-label">' + esc(label) + '</span></div>';
+        }
+
+        window.showPedDialogMsg = function (header, text, buttons) {
+            document.getElementById('dialog-header').innerHTML = esc(header);
+            document.getElementById('dialog-content-area').innerHTML = esc(text);
+
+            var bh = '';
+            (buttons || []).forEach(function (b, i) {
+            bh += renderAnswerButton(b.label, String(b.id != null ? b.id : i));
+            });
+            document.getElementById('dialog-buttons-area').innerHTML = bh;
+            bindButtons();
+            showRoot(true);
+        };
+
+        window.showPedDialogList = function (header, items, buttons, opts) {
+            opts = opts || {};
+            document.getElementById('dialog-header').innerHTML = esc(header);
+
+            var html = '';
+            (items || []).forEach(function (item, i) {
+                var cls = 'pedMenu-ansButton dialog-list-item-button' + (item.disabled ? ' disabled' : '');
+                html += '<div class="' + cls + '" id="' + i + '">' +
+                    '<span class="yk-text w-4 s-20 pe-none pedtalk-answer-label">' + esc(item.label) + '</span></div>';
+            });
+            (buttons || []).forEach(function (b, i) {
+                html += renderAnswerButton(b.label, String(i));
+            });
+            document.getElementById('dialog-content-area').innerHTML = '';
+            document.getElementById('dialog-buttons-area').innerHTML = html;
+            bindButtons();
+            showRoot(true);
+        };
+
+        window.hidePedDialog = function () {
+            showRoot(false);
+            document.getElementById('dialog-header').innerHTML = '';
+            document.getElementById('dialog-content-area').innerHTML = '';
+            document.getElementById('dialog-buttons-area').innerHTML = '';
+        };
+
+        window.showPedDialogFromCfg = function (cfg) {
+            cfg = cfg || {};
+            if (cfg.mode === 'list') showPedDialogList(cfg.header, cfg.items, cfg.buttons, cfg.opts || {});
+            else showPedDialogMsg(cfg.header, cfg.text, cfg.buttons);
+        };
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') trig('peddialog:button', 'esc');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <meta charset="utf-8">
+  <title>Moon DM — Анимации</title>
+  <link rel="stylesheet" href="css/fonts.css?v=1">
+  <link rel="stylesheet" href="css/anim-menu.css?v=7">
+</head>
+<body>
+
+<div id="app">
+  <div id="animMenu" v-if="Active">
+    <div class="animMenu-position">
+      <div id="animMenu-main-block">
+
+        <div class="yk-input-block animMenu-search">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.0835 0.833496C13.6398 0.833496 17.3335 4.52715 17.3335 9.0835C17.3335 11.0312 16.6585 12.8213 15.5298 14.2326L18.8983 17.602C19.2563 17.96 19.2563 18.5404 18.8983 18.8983C18.5679 19.2288 18.0479 19.2542 17.6883 18.9746L17.602 18.8983L14.2326 15.5298C12.8213 16.6585 11.0312 17.3335 9.0835 17.3335C4.52715 17.3335 0.833496 13.6398 0.833496 9.0835C0.833496 4.52715 4.52715 0.833496 9.0835 0.833496ZM9.08356 2.66689C5.53973 2.66689 2.66689 5.53973 2.66689 9.08356C2.66689 12.6274 5.53973 15.5002 9.08356 15.5002C12.6274 15.5002 15.5002 12.6274 15.5002 9.08356C15.5002 5.53973 12.6274 2.66689 9.08356 2.66689Z" fill="#949DBC" fill-opacity="0.62"/>
+          </svg>
+          <input ref="iSearch" v-model="searchForm" class="yk-input ml-10" placeholder="" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div v-if="searchForm === ''" class="d-flex flex-1 mt-10 animMenu-content">
+          <div id="animMenu-category-block">
+            <div class="animMenu-top-categories">
+              <div @click="selectAnimCategory('fav')" class="animMenu-category-item" :class="{ selected: currentAnimCategory === 'fav' }">Избранные</div>
+              <div @click="selectAnimCategory('history')" class="animMenu-category-item" :class="{ selected: currentAnimCategory === 'history' }">История</div>
+            </div>
+            <div class="yk-scroll animMenu-scroll">
+              <div v-for="ac in animCategoryList" :key="ac.id"
+                   @click="selectAnimCategory(ac.id)"
+                   class="animMenu-category-item"
+                   :class="{ selected: ac.id === currentAnimCategory }">
+                {{ ac.name }}
+              </div>
+            </div>
+          </div>
+
+          <div class="yk-scroll animMenu-scroll animMenu-list">
+
+            <template v-if="currentAnimCategory !== 'fav' && currentAnimCategory !== 'history'">
+              <div v-for="anim in currentAnimList" :key="animKey(anim)" class="animMenu-item-wrap">
+                <div @click="startPlayAnim(anim)" @contextmenu.prevent="animContextMenu(anim, $event)"
+                     class="animMenu-anim-item" :class="{ selected: animKey(anim) === currentAnimKey }">
+                  <span>{{ anim.animName }}</span>
+                  <svg v-if="isFavorite(anim)" @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                    <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="url(#animMenu_star_gradient)"/>
+                  </svg>
+                  <svg v-else @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                    <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="#0C0F14"/>
+                    <path d="M15.0441 1.22993C15.2211 0.837013 15.779 0.837018 15.9559 1.22992L19.6747 9.48744C19.8929 9.97189 20.3511 10.3048 20.8793 10.3626L29.8818 11.3477C30.3102 11.3946 30.4826 11.9252 30.1636 12.2149L23.4594 18.3034C23.0661 18.6606 22.8911 19.1993 22.9993 19.7194L24.8444 28.5858C24.9321 29.0077 24.4808 29.3356 24.1067 29.1217L16.2444 24.6271C15.7832 24.3634 15.2168 24.3634 14.7556 24.6271L6.8933 29.1217C6.5192 29.3356 6.06785 29.0077 6.15564 28.5858L8.00068 19.7194C8.10892 19.1993 7.93391 18.6606 7.54059 18.3034L0.83641 12.2149C0.517414 11.9252 0.689811 11.3946 1.11817 11.3477L10.1207 10.3626C10.6489 10.3048 11.1071 9.97189 11.3253 9.48743L15.0441 1.22993Z" stroke="#96ADFF" stroke-opacity="0.19"/>
+                  </svg>
+                </div>
+              </div>
+            </template>
+
+            <template v-else-if="currentAnimCategory === 'history'">
+              <div v-for="anim in animHistoryList" :key="animKey(anim)" class="animMenu-item-wrap">
+                <div @click="startPlayAnim(anim)" @contextmenu.prevent="animContextMenu(anim, $event)"
+                     class="animMenu-anim-item" :class="{ selected: animKey(anim) === currentAnimKey }">
+                  <span>{{ anim.animName }}</span>
+                  <svg v-if="isFavorite(anim)" @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                    <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="url(#animMenu_star_gradient)"/>
+                  </svg>
+                  <svg v-else @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                    <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="#0C0F14"/>
+                    <path d="M15.0441 1.22993C15.2211 0.837013 15.779 0.837018 15.9559 1.22992L19.6747 9.48744C19.8929 9.97189 20.3511 10.3048 20.8793 10.3626L29.8818 11.3477C30.3102 11.3946 30.4826 11.9252 30.1636 12.2149L23.4594 18.3034C23.0661 18.6606 22.8911 19.1993 22.9993 19.7194L24.8444 28.5858C24.9321 29.0077 24.4808 29.3356 24.1067 29.1217L16.2444 24.6271C15.7832 24.3634 15.2168 24.3634 14.7556 24.6271L6.8933 29.1217C6.5192 29.3356 6.06785 29.0077 6.15564 28.5858L8.00068 19.7194C8.10892 19.1993 7.93391 18.6606 7.54059 18.3034L0.83641 12.2149C0.517414 11.9252 0.689811 11.3946 1.11817 11.3477L10.1207 10.3626C10.6489 10.3048 11.1071 9.97189 11.3253 9.48743L15.0441 1.22993Z" stroke="#96ADFF" stroke-opacity="0.19"/>
+                  </svg>
+                </div>
+              </div>
+            </template>
+
+            <template v-else-if="currentAnimCategory === 'fav'">
+              <div v-for="anim in favoriteAnims" :key="animKey(anim)" class="animMenu-item-wrap">
+                <div @click="startPlayAnim(anim)" @contextmenu.prevent="animContextMenu(anim, $event)"
+                     class="animMenu-anim-item" :class="{ selected: animKey(anim) === currentAnimKey }">
+                  <span>{{ anim.animName }}</span>
+                  <svg @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                    <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="url(#animMenu_star_gradient)"/>
+                  </svg>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div v-else class="yk-scroll animMenu-scroll mt-10 animMenu-search-list">
+          <div v-for="anim in searchAnimList" :key="animKey(anim)" class="animMenu-item-wrap">
+            <div @click="startPlayAnim(anim)" @contextmenu.prevent="animContextMenu(anim, $event)"
+                 class="animMenu-anim-item" :class="{ selected: animKey(anim) === currentAnimKey }">
+              <span>{{ anim.animName }}</span>
+              <svg v-if="isFavorite(anim)" @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="url(#animMenu_star_gradient)"/>
+              </svg>
+              <svg v-else @click.stop="toggleFavorite(anim)" class="ml-auto animMenu-star" width="31" height="30" viewBox="0 0 31 30" aria-hidden="true">
+                <path d="M14.5882 1.02461C14.9421 0.23879 16.0579 0.238787 16.4118 1.0246L20.1306 9.28212C20.2761 9.60509 20.5816 9.82702 20.9337 9.86555L29.9362 10.8507C30.7929 10.9444 31.1377 12.0056 30.4997 12.585L23.7956 18.6736C23.5333 18.9117 23.4167 19.2708 23.4888 19.6176L25.3339 28.4839C25.5095 29.3277 24.6068 29.9835 23.8585 29.5558L15.9963 25.0612C15.6888 24.8854 15.3112 24.8854 15.0037 25.0612L7.14145 29.5558C6.39325 29.9835 5.49055 29.3277 5.66613 28.4839L7.51116 19.6176C7.58333 19.2708 7.46665 18.9117 7.20444 18.6736L0.50026 12.585C-0.137736 12.0056 0.207067 10.9444 1.06378 10.8507L10.0663 9.86555C10.4184 9.82702 10.7239 9.60509 10.8694 9.28212L14.5882 1.02461Z" fill="#0C0F14"/>
+                <path d="M15.0441 1.22993C15.2211 0.837013 15.779 0.837018 15.9559 1.22992L19.6747 9.48744C19.8929 9.97189 20.3511 10.3048 20.8793 10.3626L29.8818 11.3477C30.3102 11.3946 30.4826 11.9252 30.1636 12.2149L23.4594 18.3034C23.0661 18.6606 22.8911 19.1993 22.9993 19.7194L24.8444 28.5858C24.9321 29.0077 24.4808 29.3356 24.1067 29.1217L16.2444 24.6271C15.7832 24.3634 15.2168 24.3634 14.7556 24.6271L6.8933 29.1217C6.5192 29.3356 6.06785 29.0077 6.15564 28.5858L8.00068 19.7194C8.10892 19.1993 7.93391 18.6606 7.54059 18.3034L0.83641 12.2149C0.517414 11.9252 0.689811 11.3946 1.11817 11.3477L10.1207 10.3626C10.6489 10.3048 11.1071 9.97189 11.3253 9.48743L15.0441 1.22993Z" stroke="#96ADFF" stroke-opacity="0.19"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="animMenu-close">
+          <div @click="closeMenu" class="yk-text w-5 s-15 animMenu-close-text">Закрыть (ESC)</div>
+        </div>
+      </div>
+    </div>
+
+        <!-- Вне transform-родителя: иначе position:fixed считает координаты относительно панели, а не экрана -->
+        <div v-if="openedContextKey && contextAnim"
+             class="animMenu-anim-context animMenu-anim-context--float"
+             :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px', width: contextMenuW + 'px' }"
+             @mousedown.stop
+             @click.stop>
+          <div v-for="(fa, i) in fastAnimBinderList" :key="'slot-' + i"
+               @mousedown.prevent.stop="bindAnimToSlot(contextAnim, i)"
+               class="animMenu-anim-context-item">
+            <div class="yk-text w-5 s-13 animMenu-slot-label">Слот {{ i + 1 }} -</div>
+            <div class="yk-text w-5 s-13 ml-5">{{ fa }}</div>
+          </div>
+        </div>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="animMenu_star_gradient" x1="-2" y1="-1" x2="37.5" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB800"/>
+      <stop offset="1" stop-color="#FF3D00"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script src="js/vue.js"></script>
+<script src="js/anim-categories.js?v=1"></script>
+<script src="js/index.js?v=7"></script>
+</body>
+</html>

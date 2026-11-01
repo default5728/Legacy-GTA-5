@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>MoonVito</title>
+    <link rel="stylesheet" href="../phone/fonts/gilroy.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="mv-overlay" v-if="open">
+            <div class="mv-window">
+                <aside class="mv-side">
+                    <div class="mv-logo">MOONVITO</div>
+
+                    <nav class="mv-nav">
+                        <button type="button" class="mv-nav__item" :class="{ 'is-active': view === 'sell' }" @click="goSell">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            <span>Новое объявление</span>
+                        </button>
+                        <button type="button" class="mv-nav__item" :class="{ 'is-active': view === 'mine' }" @click="setView('mine')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M5 8h14v11H5V8z" stroke="currentColor" stroke-width="1.6"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke="currentColor" stroke-width="1.6"/></svg>
+                            <span>Мои объявления</span>
+                        </button>
+                        <button type="button" class="mv-nav__item" :class="{ 'is-active': view === 'fav' }" @click="setView('fav')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M12 19.5S5.5 15.2 5.5 10.8A3.5 3.5 0 0 1 12 8.6a3.5 3.5 0 0 1 6.5 2.2C18.5 15.2 12 19.5 12 19.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                            <span>Избранное</span>
+                        </button>
+                        <button type="button" class="mv-nav__item" :class="{ 'is-active': view === 'history' }" @click="setView('history')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><rect x="6" y="4" width="12" height="16" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M9 9h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            <span>История сделок</span>
+                        </button>
+                        <button type="button" class="mv-nav__item" :class="{ 'is-active': view === 'views' }" @click="setView('views')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 8.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            <span>История просмотров</span>
+                        </button>
+                    </nav>
+
+                    <div class="mv-cats">
+                        <div class="mv-cat">
+                            <button type="button" class="mv-cat__row" @click="toggleCat('items')">
+                                <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                                <span>Предметы</span>
+                                <svg class="mv-chev" :class="{ open: openCats.items }" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <div class="mv-cat__sub" v-show="openCats.items">
+                                <button type="button" :class="{ 'is-on': category === 'all' && listViews }" @click="setCategory('all')">Все предметы</button>
+                                <button type="button" :class="{ 'is-on': category === 'med' }" @click="setCategory('med')">Медицина</button>
+                                <button type="button" :class="{ 'is-on': category === 'weapon' }" @click="setCategory('weapon')">Оружие и броня</button>
+                                <button type="button" :class="{ 'is-on': category === 'food' }" @click="setCategory('food')">Еда и напитки</button>
+                                <button type="button" :class="{ 'is-on': category === 'other' }" @click="setCategory('other')">Прочее</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="mv-cat__row" :class="{ 'is-on': category === 'cloth' }" @click="setCategory('cloth')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M9 6l3-2 3 2 3 1.5-2 2.5V19H8V10L6 7.5 9 6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            <span>Одежда и аксессуары</span>
+                        </button>
+                        <button type="button" class="mv-cat__row" :class="{ 'is-on': category === 'bag' }" @click="setCategory('bag')">
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M7 9h10l-.8 11H7.8L7 9z" stroke="currentColor" stroke-width="1.5"/><path d="M10 9V7.2a2 2 0 0 1 4 0V9" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span>Сумки и рюкзаки</span>
+                        </button>
+
+                        <div class="mv-cat">
+                            <button type="button" class="mv-cat__row" @click="toggleCat('transport')">
+                                <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M5 14l1.5-4.5h11L19 14v3.5H5V14z" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="17.2" r="1.2" fill="currentColor"/><circle cx="16" cy="17.2" r="1.2" fill="currentColor"/></svg>
+                                <span>Транспорт</span>
+                                <svg class="mv-chev" :class="{ open: openCats.transport }" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <div class="mv-cat__sub" v-show="openCats.transport">
+                                <button type="button" class="is-off" disabled>Весь транспорт</button>
+                                <button type="button" class="is-off" disabled>Аренда</button>
+                                <button type="button" class="is-off" disabled>Продажа</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="mv-cat__row is-off" disabled>
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M5 19V9l7-5 7 5v10H5z" stroke="currentColor" stroke-width="1.5"/><path d="M10 19v-6h4v6" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span>Квартиры</span>
+                        </button>
+                        <button type="button" class="mv-cat__row is-off" disabled>
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M4 19V11l8-6 8 6v8H4z" stroke="currentColor" stroke-width="1.5"/><path d="M10 19v-5h4v5" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span>Дома</span>
+                        </button>
+                        <button type="button" class="mv-cat__row is-off" disabled>
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><rect x="5" y="8" width="14" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span>Бизнесы</span>
+                        </button>
+                        <button type="button" class="mv-cat__row is-off" disabled>
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><path d="M14.5 6.5l3 3M7 14l-2 5 5-2 7.5-7.5a2.1 2.1 0 0 0-3-3L7 14z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            <span>Услуги</span>
+                            <svg class="mv-chev" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button type="button" class="mv-cat__row is-off" disabled>
+                            <svg class="mv-ico" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M4 12h16M12 4c2.5 2.8 2.5 13.2 0 16M12 4c-2.5 2.8-2.5 13.2 0 16" stroke="currentColor" stroke-width="1.5"/></svg>
+                            <span>DASH</span>
+                            <svg class="mv-chev" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </aside>
+
+                <section class="mv-main" :class="{ 'mv-main--detail': view === 'detail', 'mv-main--sell': view === 'sell' }">
+                    <!-- LIST HEADER -->
+                    <header class="mv-bar" v-if="listViews">
+                        <div class="mv-bar__left">
+                            <i class="mv-sq"></i>
+                            <span class="mv-bar__title">{{ breadcrumbTitle }}</span>
+                        </div>
+                        <div class="mv-bar__right">
+                            <button type="button" class="mv-btn" @click="cycleSort">Сортировать</button>
+                            <button type="button" class="mv-btn" @click="cycleSort">
+                                Фильтр
+                                <svg viewBox="0 0 24 24"><path d="M4 8h16M7 12h10M10 16h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                            <label class="mv-search">
+                                <input type="text" v-model="search" placeholder="Поиск" autocomplete="off">
+                                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 16l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                            </label>
+                            <button type="button" class="mv-close" @click="close" aria-label="Закрыть">
+                                <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- SELL HEADER -->
+                    <header class="mv-bar" v-else-if="view === 'sell'">
+                        <div class="mv-bar__left">
+                            <i class="mv-sq"></i>
+                            <span class="mv-bar__title">Главная / Создание объявления</span>
+                        </div>
+                        <div class="mv-bar__right">
+                            <button type="button" class="mv-close" @click="close" aria-label="Закрыть">
+                                <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- DETAIL HEADER -->
+                    <header class="mv-bar mv-bar--blue" v-else-if="view === 'detail'">
+                        <div class="mv-bar__left">
+                            <button type="button" class="mv-link" @click="backFromDetail">Вернуться назад</button>
+                            <i class="mv-sq mv-sq--blue"></i>
+                            <span class="mv-bar__title">{{ detailBreadcrumb }}</span>
+                        </div>
+                        <div class="mv-bar__right">
+                            <button type="button" class="mv-btn" v-if="detailRow && detailRow.mine" @click="doCancel(detailRow)">Снять с публикации</button>
+                            <button type="button" class="mv-btn" v-if="detailRow && !detailRow.mine" @click="doBuy(detailRow)">Купить</button>
+                            <button type="button" class="mv-btn" v-if="detailRow" disabled>Редактировать</button>
+                            <button type="button" class="mv-close" @click="close" aria-label="Закрыть">
+                                <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    <div class="mv-body">
+                        <!-- LISTS -->
+                        <template v-if="listViews">
+                            <div class="mv-blank" v-if="loading">Загрузка…</div>
+                            <div class="mv-blank mv-blank--empty" v-else-if="!activeRows.length"></div>
+                            <div class="mv-cards" v-else>
+                                <article class="mv-card" v-for="row in activeRows" :key="view+'-'+row.indexbd" @click="openDetail(row)">
+                                    <div class="mv-card__pic"><img :src="itemImg(row.name)" alt="" @error="onItemImgError($event, row)"></div>
+                                    <div class="mv-card__info">
+                                        <div class="mv-card__top">
+                                            <h3>{{ row.label }}</h3>
+                                            <div class="mv-price">
+                                                <span class="mv-price__coin">$</span>
+                                                <div>
+                                                    <b>{{ fmt(row.price) }}$</b>
+                                                    <small>цена выкупа</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>{{ row.label }}{{ row.sellerstatic ? (' · #' + row.sellerstatic) : '' }}</p>
+                                        <div class="mv-card__bot" @click.stop>
+                                            <span class="mv-live"><i></i>на рынке</span>
+                                            <div class="mv-card__acts">
+                                                <button type="button" class="mv-ico-btn" :class="{ on: isFav(row) }" @click="toggleFav(row)">
+                                                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 19.5S5.5 15.2 5.5 10.8A3.5 3.5 0 0 1 12 8.6a3.5 3.5 0 0 1 6.5 2.2C18.5 15.2 12 19.5 12 19.5z" stroke="currentColor" stroke-width="1.6"/></svg>
+                                                </button>
+                                                <button type="button" class="mv-act mv-act--danger" v-if="row.mine" @click="doCancel(row)">Снять</button>
+                                                <button type="button" class="mv-act mv-act--buy" v-else @click="doBuy(row)">Купить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </template>
+
+                        <!-- SELL STEPS -->
+                        <template v-else-if="view === 'sell'">
+                            <div class="mv-wizard">
+                                <section class="mv-acc" :class="{ open: sellStep === 1 }">
+                                    <button type="button" class="mv-acc__hd" @click="sellStep = 1">
+                                        <i class="mv-sq"></i>
+                                        <span class="mv-acc__n">01</span>
+                                        <span class="mv-acc__slash">/</span>
+                                        <span class="mv-acc__t">Выбор лота</span>
+                                    </button>
+                                    <div class="mv-acc__bd" v-show="sellStep === 1">
+                                        <div class="mv-types">
+                                            <button type="button" class="is-cur">Предметы</button>
+                                            <button type="button" disabled>Продажа транспорта</button>
+                                            <button type="button" disabled>Аренда транспорта</button>
+                                            <button type="button" disabled>Услуги</button>
+                                            <button type="button" disabled>Домены</button>
+                                            <button type="button" disabled>Сайты</button>
+                                        </div>
+                                        <div class="mv-acc__panel">
+                                            <div class="mv-blank mv-blank--panel" v-if="!filteredInventory.length">Нечего продавать</div>
+                                            <div class="mv-inv" v-else>
+                                                <button type="button" class="mv-inv__item" v-for="row in filteredInventory" :key="'s'+row.invIndex" :class="{ on: sellInvIndex === row.invIndex }" @click="selectSell(row)">
+                                                    <img :src="itemImg(row.name)" alt="" @error="onItemImgError($event, row)">
+                                                    <div>
+                                                        <b>{{ row.label }}</b>
+                                                        <span>{{ catLabel(row.category) }}</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mv-acc__next" v-if="sellInvIndex != null">
+                                            <button type="button" class="mv-act mv-act--buy" @click="sellStep = 2">Далее</button>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="mv-acc" :class="{ open: sellStep === 2, dim: sellInvIndex == null }">
+                                    <button type="button" class="mv-acc__hd" @click="sellInvIndex != null && (sellStep = 2)">
+                                        <i class="mv-sq"></i>
+                                        <span class="mv-acc__n">02</span>
+                                        <span class="mv-acc__slash">/</span>
+                                        <span class="mv-acc__t">Оформление объявления</span>
+                                    </button>
+                                    <div class="mv-acc__bd" v-show="sellStep === 2 && selectedSellRow">
+                                        <div class="mv-form">
+                                            <div class="mv-form__prev">
+                                                <img :src="itemImg(selectedSellRow.name)" alt="" @error="onItemImgError($event, selectedSellRow)">
+                                                <div>
+                                                    <b>{{ selectedSellRow.label }}</b>
+                                                    <span>{{ catLabel(selectedSellRow.category) }}</span>
+                                                </div>
+                                            </div>
+                                            <label>Цена выкупа ($)</label>
+                                            <input type="text" :value="sellPrice" @input="onPriceInput" inputmode="numeric" placeholder="100000">
+                                            <p class="mv-form__hint">от {{ fmt(minPrice) }}$</p>
+                                            <div class="mv-acc__next">
+                                                <button type="button" class="mv-btn" @click="sellStep = 1">Назад</button>
+                                                <button type="button" class="mv-act mv-act--buy" :disabled="!sellPriceValid" @click="sellStep = 3">Далее</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="mv-acc" :class="{ open: sellStep === 3, dim: !sellPriceValid }">
+                                    <button type="button" class="mv-acc__hd" @click="sellPriceValid && (sellStep = 3)">
+                                        <i class="mv-sq"></i>
+                                        <span class="mv-acc__n">03</span>
+                                        <span class="mv-acc__slash">/</span>
+                                        <span class="mv-acc__t">Подтверждение и оплата</span>
+                                    </button>
+                                    <div class="mv-acc__bd" v-show="sellStep === 3 && selectedSellRow">
+                                        <div class="mv-form">
+                                            <div class="mv-sum"><span>Лот</span><b>{{ selectedSellRow.label }}</b></div>
+                                            <div class="mv-sum"><span>Цена</span><b>{{ fmt(sellPrice) }} $</b></div>
+                                            <div class="mv-sum"><span>Комиссия</span><b>бесплатно</b></div>
+                                            <div class="mv-acc__next">
+                                                <button type="button" class="mv-btn" @click="sellStep = 2">Назад</button>
+                                                <button type="button" class="mv-act mv-act--buy" @click="doSell">Выставить на рынок</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </template>
+
+                        <!-- DETAIL -->
+                        <template v-else-if="view === 'detail' && detailRow">
+                            <div class="mv-split">
+                                <article class="mv-pane">
+                                    <div class="mv-pane__hd">
+                                        <div class="mv-pane__ttl">
+                                            <i class="mv-sq mv-sq--blue"></i>
+                                            <h2>Объявление #{{ detailRow.indexbd }}{{ detailRow.sellerstatic ? (' от #' + detailRow.sellerstatic) : '' }}</h2>
+                                        </div>
+                                        <div class="mv-pane__meta">
+                                            <span class="mv-mico"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.2-5.5 9.5-5.5S21.5 12 21.5 12 18.3 17.5 12 17.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>{{ detailViews }}</span>
+                                            <span class="mv-mico"><svg viewBox="0 0 24 24"><path d="M12 19.5S5.5 15.2 5.5 10.8A3.5 3.5 0 0 1 12 8.6a3.5 3.5 0 0 1 6.5 2.2C18.5 15.2 12 19.5 12 19.5z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>{{ isFav(detailRow) ? 1 : 0 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="mv-pane__date">{{ detailDateText }}</div>
+                                    <div class="mv-pane__img">
+                                        <img :src="itemImg(detailRow.name)" alt="" @error="onItemImgError($event, detailRow)">
+                                    </div>
+                                    <h3 class="mv-pane__name">{{ detailRow.label }}</h3>
+                                    <div class="mv-price mv-price--lg">
+                                        <span class="mv-price__coin">$</span>
+                                        <b>{{ fmt(detailRow.price) }}$</b>
+                                        <small>цена выкупа</small>
+                                    </div>
+                                    <p class="mv-pane__desc">{{ detailRow.label }}</p>
+                                    <div class="mv-pane__tools">
+                                        <button type="button" class="mv-tool" :class="{ on: isFav(detailRow) }" @click="toggleFav(detailRow)">
+                                            <svg viewBox="0 0 24 24" fill="none"><path d="M12 19.5S5.5 15.2 5.5 10.8A3.5 3.5 0 0 1 12 8.6a3.5 3.5 0 0 1 6.5 2.2C18.5 15.2 12 19.5 12 19.5z" stroke="currentColor" stroke-width="1.5"/></svg>
+                                        </button>
+                                        <button type="button" class="mv-tool" @click="backFromDetail" title="Обновить">
+                                            <svg viewBox="0 0 24 24" fill="none"><path d="M19 12a7 7 0 1 1-1.8-4.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 5v4h-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </button>
+                                    </div>
+                                </article>
+
+                                <article class="mv-pane">
+                                    <div class="mv-pane__hd">
+                                        <div class="mv-pane__ttl">
+                                            <i class="mv-sq mv-sq--blue"></i>
+                                            <h2>Анализ рынка</h2>
+                                        </div>
+                                        <div class="mv-range">
+                                            <button type="button" :class="{ on: chartRange === '7' }" @click="chartRange = '7'">7 дней</button>
+                                            <button type="button" :class="{ on: chartRange === '30' }" @click="chartRange = '30'">30 дней</button>
+                                            <button type="button" :class="{ on: chartRange === '365' }" @click="chartRange = '365'">Год</button>
+                                        </div>
+                                        <button type="button" class="mv-btn mv-btn--sm" @click="filterSimilar">Такие же объявления</button>
+                                    </div>
+                                    <div class="mv-plot">
+                                        <div class="mv-plot__y">
+                                            <span v-for="(lab, i) in chartYLabels" :key="'y'+i">{{ lab }}</span>
+                                        </div>
+                                        <div class="mv-plot__box">
+                                            <svg viewBox="0 0 560 260" preserveAspectRatio="none">
+                                                <defs>
+                                                    <linearGradient id="mvFill" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="0%" stop-color="#6a9adf" stop-opacity="0.28"/>
+                                                        <stop offset="100%" stop-color="#6a9adf" stop-opacity="0"/>
+                                                    </linearGradient>
+                                                </defs>
+                                                <line v-for="(gy, gi) in chartGridYs" :key="'g'+gi" x1="0" x2="560" :y1="gy" :y2="gy" class="mv-plot__grid"/>
+                                                <path :d="chartAreaPath" fill="url(#mvFill)"/>
+                                                <path :d="chartLinePath" class="mv-plot__line" fill="none"/>
+                                                <circle v-for="(pt, pi) in chartPoints" :key="'p'+pi" :cx="pt.x" :cy="pt.y" r="5" class="mv-plot__dot"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </template>
+
+                        <template v-else>
+                            <div class="mv-blank">Пока пусто</div>
+                        </template>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="package://browsers/phone/js/vue.js"></script>
+    <script src="app.js?v=8"></script>
+</body>
+</html>

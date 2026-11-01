@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Фракция</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none}
+input,textarea{user-select:text;-webkit-user-select:text}
+:root{
+    --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+    --txt:#e8e8e8;--txt2:rgba(255,255,255,0.55);
+    --red:#dc2626;--red-h:rgba(220,38,38,0.18);
+    --border:rgba(255,255,255,0.08);
+    --radius:14px;--rad-sm:8px;
+}
+html,body{width:100%;height:100%;background:transparent !important;overflow:hidden;font-family:'Inter',system-ui,sans-serif;font-size:14px;color:var(--txt);-webkit-font-smoothing:antialiased}
+#root{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center}
+#root.open{display:flex}
+.shell{
+    width:1060px;max-width:97vw;
+    height:680px;max-height:96vh;
+    background:var(--bg2);
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    display:flex;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 32px 80px rgba(0,0,0,0.8);
+}
+/* ── Sidebar ─────────────────────────────────── */
+.sidebar{
+    width:200px;flex-shrink:0;
+    background:var(--bg);
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;
+    padding:0;
+}
+.sidebar-header{
+    padding:20px 16px 12px;
+    border-bottom:1px solid var(--border);
+}
+.frac-name{font-size:16px;font-weight:700;line-height:1.2;word-break:break-word}
+.frac-rank-badge{
+    display:inline-block;margin-top:6px;
+    padding:2px 10px;border-radius:20px;
+    font-size:11px;font-weight:600;
+    background:var(--red-h);color:var(--red);
+}
+.nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav-btn{
+    width:100%;text-align:left;
+    padding:10px 16px;
+    background:none;border:none;color:var(--txt2);
+    cursor:pointer;font-size:13px;font-weight:500;
+    transition:background .15s,color .15s;
+    display:flex;align-items:center;gap:8px;
+}
+.nav-btn:hover{background:var(--bg3);color:var(--txt)}
+.nav-btn.active{background:var(--bg3);color:var(--txt);border-left:2px solid var(--red)}
+.nav-btn .ico{width:16px;text-align:center;font-style:normal}
+.nav-bottom{padding:10px 16px;border-top:1px solid var(--border)}
+.btn-close{
+    width:100%;padding:9px;border-radius:var(--rad-sm);
+    background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);
+    color:var(--red);font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-close:hover{background:rgba(220,38,38,0.22)}
+/* ── Main area ────────────────────────────────── */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.panel{display:none;flex-direction:column;height:100%}
+.panel.active{display:flex}
+.panel-header{
+    padding:16px 20px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:15px;font-weight:700;flex-shrink:0;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.panel-header-right{display:flex;align-items:center;gap:14px;margin-left:auto;flex-shrink:0}
+.member-stats{font-size:12px;font-weight:600;color:var(--txt2);white-space:nowrap}
+.member-stats .stat-online{color:#22c55e}
+.panel-body{flex:1;overflow-y:auto;padding:16px 20px}
+/* scrollbar */
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* ── Members ────────────────────────────────────── */
+.member-row{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);margin-bottom:6px;
+    transition:background .15s;
+}
+.member-row:hover{background:var(--bg4)}
+.member-avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--bg4);display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:var(--txt);flex-shrink:0;
+}
+.member-info{flex:1}
+.member-name{font-weight:600;font-size:13px}
+.member-rank-name{font-size:11px;color:var(--txt2)}
+.member-actions{display:flex;gap:6px}
+.rank-up-btn,.rank-dn-btn,.rank-pick-btn{
+    width:26px;height:26px;border-radius:5px;
+    background:var(--bg4);border:1px solid var(--border);
+    color:var(--txt2);cursor:pointer;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s,color .15s,border-color .15s;
+}
+.rank-pick-btn:hover{background:rgba(220,38,38,0.15);color:var(--red);border-color:rgba(220,38,38,0.45)}
+.rank-up-btn:hover{background:rgba(34,197,94,0.15);color:#22c55e;border-color:#22c55e}
+.rank-dn-btn:hover{background:var(--red-h);color:var(--red);border-color:var(--red)}
+/* ── Ranks config ───────────────────────────────── */
+.rank-cfg-row{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:12px 14px;margin-bottom:8px;
+}
+.rank-cfg-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rank-cfg-num{
+    width:28px;height:28px;border-radius:6px;
+    background:var(--bg4);display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--txt2);flex-shrink:0;
+}
+.rank-name-input{
+    flex:1;background:var(--bg4);border:1px solid var(--border);border-radius:6px;
+    padding:5px 10px;color:var(--txt);font-size:13px;outline:none;
+    transition:border-color .15s;
+}
+.rank-name-input:focus{border-color:rgba(220,38,38,0.5)}
+/* ── Warehouse ──────────────────────────────────── */
+.stock-grid{display:flex;flex-wrap:wrap;gap:8px}
+.stock-item{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:8px;
+    border:1px solid var(--border);
+}
+.stock-item-name{flex:1;word-break:break-all}
+.btn-take{
+    padding:4px 10px;border-radius:5px;
+    background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);
+    color:#22c55e;font-size:11px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-take:hover{background:rgba(34,197,94,0.22)}
+.deposit-row{display:flex;gap:8px;margin-bottom:14px}
+.deposit-input{
+    flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:7px 12px;color:var(--txt);font-size:13px;outline:none;
+    transition:border-color .15s;
+}
+.deposit-input:focus{border-color:rgba(220,38,38,0.4)}
+.btn-deposit{
+    padding:7px 14px;border-radius:var(--rad-sm);
+    background:var(--red-h);border:1px solid rgba(220,38,38,0.3);
+    color:var(--red);font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-deposit:hover{background:rgba(220,38,38,0.28)}
+/* ── Zones ──────────────────────────────────────── */
+.zones-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.zone-card{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    padding:10px 12px;border:1px solid var(--border);
+    display:flex;flex-direction:column;gap:4px;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.zone-card:hover{
+    border-color:rgba(220,38,38,0.55);
+    background:rgba(220,38,38,0.06);
+}
+.zone-card:active{ transform:scale(0.98); }
+.zone-id{font-size:11px;color:var(--txt2);font-weight:600}
+.zone-owner{font-size:13px;font-weight:700}
+.zone-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+.panel-body--zones{display:flex;flex-direction:column;gap:14px;padding:14px 20px 16px}
+.capt-stats-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);padding:12px 14px}
+.capt-stats-empty{font-size:13px;color:var(--txt2);text-align:center;padding:8px 0}
+.capt-stats-head{margin-bottom:10px}
+.capt-stats-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.capt-stats-meta{font-size:12px;color:var(--txt2);display:flex;flex-wrap:wrap;gap:8px 16px}
+.capt-stats-winner{color:#22c55e;font-weight:600}
+.capt-stats-table-wrap{overflow-x:auto;max-height:220px;overflow-y:auto}
+.capt-stats-table{width:100%;border-collapse:collapse;font-size:12px}
+.capt-stats-table th,.capt-stats-table td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--border)}
+.capt-stats-table th{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:.3px;font-weight:600}
+.capt-stats-table td:first-child,.capt-stats-table th:first-child{text-align:left}
+.capt-stats-row--me td{background:rgba(220,38,38,0.1)}
+.capt-stats-you{color:var(--red);font-size:11px;font-weight:700}
+/* ── Rating ─────────────────────────────────────── */
+.rating-row{
+    display:flex;align-items:center;gap:12px;
+    background:var(--bg3);border-radius:var(--rad-sm);padding:10px 14px;margin-bottom:6px;
+}
+.rating-pos{width:24px;font-size:13px;font-weight:700;color:var(--txt2)}
+.rating-name{flex:1;font-weight:600;font-size:14px}
+.rating-zones{font-size:13px;color:var(--txt2)}
+.rating-bar-wrap{width:100px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.rating-bar{height:100%;border-radius:3px;transition:width .4s}
+.member-status{
+    width:9px;height:9px;border-radius:50%;flex-shrink:0;
+    box-shadow:0 0 8px currentColor;
+}
+.member-status.online{background:#22c55e;color:rgba(34,197,94,0.55)}
+.member-status.offline{background:#6b7280;color:rgba(107,114,128,0.45)}
+.rank-perms{display:flex;flex-wrap:wrap;gap:8px}
+.perm-check{
+    display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;user-select:none;font-size:12px;font-weight:500;
+    color:var(--txt2);
+    padding:6px 12px 6px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--bg4);
+    transition:border-color .15s,background .15s,color .15s,box-shadow .15s;
+}
+.perm-check:hover{border-color:rgba(220,38,38,0.35);color:var(--txt)}
+.perm-check input{
+    appearance:none;-webkit-appearance:none;
+    width:15px;height:15px;border-radius:4px;flex-shrink:0;
+    border:1px solid rgba(255,255,255,0.18);
+    background:var(--bg3);
+    cursor:pointer;position:relative;margin:0;
+    transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.perm-check input:checked{
+    border-color:var(--red);
+    background:var(--red);
+    box-shadow:0 0 0 2px rgba(220,38,38,0.22);
+}
+.perm-check input:checked::after{
+    content:'';
+    position:absolute;left:4px;top:1px;
+    width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+}
+.perm-check:has(input:checked){
+    color:var(--txt);
+    border-color:rgba(220,38,38,0.35);
+    background:rgba(220,38,38,0.08);
+}
+.mgmt-wh-toggle{
+    margin-top:16px;padding:14px 16px;
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.mgmt-wh-toggle__title{font-size:13px;font-weight:700;color:var(--txt)}
+.mgmt-wh-toggle__sub{margin-top:3px;font-size:11px;color:var(--txt2);line-height:1.35;max-width:360px}
+.frac-slider-toggle{position:relative;display:inline-flex;align-items:center;flex-shrink:0;cursor:pointer;user-select:none}
+.frac-slider-toggle>input{position:absolute;opacity:0;width:0;height:0;margin:0;pointer-events:none}
+.frac-slider-toggle__ui{
+    position:relative;width:48px;height:26px;border-radius:999px;
+    background:var(--bg4);border:1px solid var(--border);box-sizing:border-box;
+    transition:background .2s,border-color .2s;
+}
+.frac-slider-toggle__ui::after{
+    content:'';position:absolute;top:2px;left:3px;width:20px;height:20px;border-radius:50%;
+    background:rgba(255,255,255,0.35);box-shadow:0 1px 3px rgba(0,0,0,.45);
+    transition:transform .22s ease,background .2s;
+}
+.frac-slider-toggle__ui.frac-slider-toggle__ui--on{background:rgba(220,38,38,0.2);border-color:var(--red)}
+.frac-slider-toggle__ui.frac-slider-toggle__ui--on::after{transform:translateX(22px);background:var(--red)}
+.prefix-input{
+    width:100px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;
+    padding:3px 7px;color:var(--txt);font-size:11px;outline:none;
+    transition:border-color .15s;
+}
+.prefix-input:focus{border-color:rgba(220,38,38,0.5)}
+.prefix-btn{
+    width:26px;height:26px;border-radius:5px;
+    background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);
+    color:#22c55e;cursor:pointer;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s;
+}
+.prefix-btn:hover{background:rgba(34,197,94,0.25)}
+/* ── Modal overlay ─────────────────────────────── */
+.modal-overlay{
+    display:none;position:fixed;inset:0;z-index:19999;
+    background:rgba(0,0,0,0.55);align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px 28px;min-width:360px;max-width:480px;
+    box-shadow:0 16px 48px rgba(0,0,0,0.7);
+}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--txt)}
+.modal-input{
+    width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:8px 12px;color:var(--txt);font-size:13px;outline:none;margin-bottom:14px;
+    user-select:text;-webkit-user-select:text;
+    transition:border-color .15s;
+}
+.modal-input:focus{border-color:rgba(220,38,38,0.5)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.modal-ok{
+    padding:7px 18px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.modal-ok:hover{background:#ef4444}
+.modal-cancel{
+    padding:7px 18px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:13px;cursor:pointer;
+    transition:background .15s;
+}
+.modal-cancel:hover{background:var(--bg4);color:var(--txt)}
+.rank-pick-box{min-width:340px;max-width:420px}
+.rank-pick-sub{font-size:12px;color:var(--txt2);margin:-6px 0 12px}
+.rank-pick-sub b{color:var(--txt);font-weight:600}
+.rank-pick-select{position:relative;margin-bottom:12px}
+.rank-pick-trigger{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:9px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);color:var(--txt);
+    font-size:13px;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s;
+}
+.rank-pick-trigger:hover,.rank-pick-trigger.open{border-color:rgba(220,38,38,0.45);background:var(--bg4)}
+.rank-pick-chevron{font-size:12px;color:var(--txt2);transition:transform .15s}
+.rank-pick-trigger.open .rank-pick-chevron{transform:rotate(180deg);color:var(--red)}
+.rank-pick-list{
+    display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:5;
+    max-height:220px;overflow-y:auto;
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad-sm);
+    box-shadow:0 16px 40px rgba(0,0,0,0.55);
+}
+.rank-pick-list.open{display:block}
+.rank-pick-option{
+    width:100%;text-align:left;padding:9px 12px;border:none;background:transparent;
+    color:var(--txt2);font-size:13px;cursor:pointer;transition:background .12s,color .12s;
+}
+.rank-pick-option:hover{background:rgba(220,38,38,0.1);color:var(--txt)}
+.rank-pick-option.current{color:var(--red);font-weight:600}
+.rank-pick-option.selected{background:rgba(220,38,38,0.14);color:var(--txt)}
+/* Кастомный скролл — капт и выбор ранга */
+.bizwar-card::-webkit-scrollbar,
+.rank-pick-list::-webkit-scrollbar{width:6px}
+.bizwar-card::-webkit-scrollbar-track,
+.rank-pick-list::-webkit-scrollbar-track{
+    background:rgba(255,255,255,0.04);
+    border-radius:10px;
+    margin:6px 2px;
+}
+.bizwar-card::-webkit-scrollbar-thumb,
+.rank-pick-list::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,rgba(220,38,38,0.45) 0%,rgba(220,38,38,0.82) 100%);
+    border-radius:10px;
+    border:1px solid rgba(220,38,38,0.22);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.bizwar-card::-webkit-scrollbar-thumb:hover,
+.rank-pick-list::-webkit-scrollbar-thumb:hover{background:rgba(239,68,68,0.92)}
+.bizwar-card{scrollbar-width:thin;scrollbar-color:rgba(220,38,38,0.65) rgba(255,255,255,0.06)}
+.rank-pick-list{scrollbar-width:thin;scrollbar-color:rgba(220,38,38,0.65) rgba(255,255,255,0.06)}
+/* ── Bizwar overlay (поверх планшета, меню фракции не закрывается) ── */
+.bizwar-overlay{
+    display:none;position:absolute;inset:0;z-index:12000;
+    align-items:center;justify-content:center;padding:20px;
+    background:rgba(0,0,0,0.52);border-radius:var(--radius);
+}
+.bizwar-overlay.open{display:flex}
+.bizwar-card{
+    width:min(540px,100%);max-height:92%;overflow:auto;
+    background:var(--bg2);border:1px solid rgba(220,38,38,0.22);border-radius:var(--radius);
+    box-shadow:0 28px 72px rgba(0,0,0,0.82);
+}
+.bizwar-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.bizwar-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.bizwar-zone-badge{background:var(--red-h);color:var(--red);border:1px solid rgba(220,38,38,0.3);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700}
+.bizwar-close{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.bizwar-close:hover{background:var(--red-h);color:var(--red);border-color:var(--red)}
+.bizwar-teams{display:flex;gap:1px;background:var(--border)}
+.bizwar-team{flex:1;padding:10px 14px;background:var(--bg2);text-align:center}
+.bizwar-team-label{font-size:11px;color:var(--txt2);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.bizwar-team-name{font-size:14px;font-weight:700}
+.bizwar-team-online{font-size:12px;color:var(--txt2);margin-top:2px}
+.bizwar-vs{display:flex;align-items:center;justify-content:center;background:var(--bg3);padding:0 12px;font-size:13px;font-weight:800;color:var(--txt2)}
+.bizwar-body{padding:16px 18px}
+.bizwar-section{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.bizwar-count-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.bizwar-count-btn{width:38px;height:34px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,border-color .15s}
+.bizwar-count-btn:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-count-btn.active{background:var(--red-h);color:var(--red);border-color:var(--red)}
+.bizwar-count-input{width:100%;height:38px;border-radius:var(--rad-sm);border:1px solid var(--border);background:var(--bg3);color:var(--txt);padding:0 12px;font-size:14px;font-weight:700;outline:none}
+.bizwar-count-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.14)}
+.bizwar-cal-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.bizwar-cal-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:background .15s,border-color .15s}
+.bizwar-cal-row:hover{background:var(--bg4)}
+.bizwar-cal-row.selected{background:var(--red-h);border-color:rgba(220,38,38,0.4)}
+.bizwar-cal-row.disabled{opacity:.35;cursor:not-allowed}
+.bizwar-cal-check{width:18px;height:18px;border-radius:4px;flex-shrink:0;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+.bizwar-cal-row.selected .bizwar-cal-check{background:var(--red);border-color:var(--red)}
+.bizwar-cal-row.selected .bizwar-cal-check::after{content:'✓';font-size:11px;color:#fff;font-weight:700}
+.bizwar-cal-name{font-size:13px;font-weight:700;min-width:64px}
+.bizwar-cal-weapons{font-size:11px;color:var(--txt2);flex:1}
+.bizwar-extras{display:flex;gap:8px;margin-bottom:14px}
+.bizwar-extra{flex:1;padding:8px 10px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:12px;font-weight:600;text-align:center;transition:background .15s,color .15s,border-color .15s}
+.bizwar-extra:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-extra.on{background:rgba(34,197,94,0.12);color:#22c55e;border-color:rgba(34,197,94,0.35)}
+.bizwar-actions{display:flex;gap:8px}
+.bizwar-btn-cancel{padding:10px 16px;border-radius:var(--rad-sm);background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:13px;cursor:pointer}
+.bizwar-btn-cancel:hover{background:var(--bg4);color:var(--txt)}
+.bizwar-btn-confirm{flex:1;padding:10px;border-radius:var(--rad-sm);background:var(--red);border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.bizwar-btn-confirm:hover{background:#ef4444}
+.bizwar-join-info{background:var(--bg3);border-radius:var(--rad-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.7;color:var(--txt2)}
+.bizwar-join-info b{color:var(--txt)}
+.bizwar-btn-join{width:100%;padding:10px;border-radius:var(--rad-sm);background:var(--red);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.bizwar-btn-join:hover{background:#ef4444}
+/* ── Advert variants ────────────────────────────── */
+.advert-variant{
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    padding:14px 16px;margin-bottom:10px;cursor:pointer;
+    transition:border-color .15s,background .15s;
+    font-size:13px;line-height:1.6;color:var(--txt2);
+}
+.advert-variant:hover{border-color:rgba(220,38,38,0.4);background:rgba(220,38,38,0.06);color:var(--txt)}
+.advert-variant-num{font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px}
+.advert-variant-text{font-size:13px;line-height:1.6;white-space:pre-line;color:inherit}
+/* ── Advert ─────────────────────────────────────── */
+.advert-box{
+    background:var(--bg3);border-radius:var(--rad-sm);
+    border:1px solid var(--border);padding:12px;
+    font-size:13px;line-height:1.6;color:var(--txt2);
+    margin-bottom:14px;min-height:60px;
+}
+.advert-textarea{
+    width:100%;height:120px;resize:none;
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad-sm);
+    color:var(--txt);font-size:13px;padding:10px 12px;outline:none;
+    transition:border-color .15s;margin-bottom:10px;
+}
+.advert-textarea:focus{border-color:rgba(220,38,38,0.4)}
+.btn-primary{
+    padding:8px 20px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;
+    font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .15s;
+}
+.btn-primary:hover{background:#ef4444}
+/* ── Empty / loader ─────────────────────────────── */
+.empty{color:var(--txt2);font-size:13px;padding:20px 0;text-align:center}
+/* ── Logs ───────────────────────────────────────── */
+.logs-search-input{
+    width:220px;max-width:42vw;
+    padding:7px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);border:1px solid var(--border);
+    color:var(--txt);font-size:12px;font-weight:500;
+    outline:none;transition:border-color .15s;
+}
+.logs-search-input:focus{border-color:rgba(220,38,38,0.45)}
+.logs-search-input::placeholder{color:rgba(255,255,255,0.35)}
+.logs-body{padding:12px 20px 16px}
+.logs-head,.log-row{
+    display:grid;grid-template-columns:118px minmax(120px,180px) 1fr;
+    gap:10px 14px;align-items:start;
+}
+.logs-head{
+    padding:0 12px 10px;
+    font-size:11px;font-weight:700;text-transform:uppercase;
+    letter-spacing:0.04em;color:var(--txt2);
+    border-bottom:1px solid var(--border);
+    margin-bottom:6px;
+}
+.log-row{
+    padding:10px 12px;border-radius:var(--rad-sm);
+    background:var(--bg3);margin-bottom:5px;
+    transition:background .15s;
+}
+.log-row:hover{background:var(--bg4)}
+.log-time{
+    font-size:11px;color:var(--txt2);
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.log-name{font-weight:600;font-size:12px;line-height:1.35;word-break:break-word}
+.log-name-id{font-size:11px;font-weight:500;color:var(--txt2);margin-top:2px}
+.log-action{font-size:12px;color:var(--txt2);line-height:1.45;word-break:break-word}
+.logs-body::-webkit-scrollbar{width:5px}
+.logs-body::-webkit-scrollbar-thumb{background:rgba(220,38,38,0.35);border-radius:3px}
+.logs-body::-webkit-scrollbar-track{background:var(--bg3)}
+.refresh-btn{
+    float:right;padding:4px 12px;border-radius:5px;
+    background:var(--bg4);border:1px solid var(--border);color:var(--txt2);
+    font-size:12px;cursor:pointer;transition:background .15s;
+}
+.refresh-btn:hover{background:var(--bg3);color:var(--txt)}
+.save-btn{
+    margin-top:12px;padding:8px 20px;border-radius:var(--rad-sm);
+    background:var(--red);border:none;color:#fff;
+    font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;
+}
+.save-btn:hover{background:#ef4444}
+.mgmt-balance-ops{margin:0 0 16px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border)}
+.mgmt-balance-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mgmt-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mgmt-stat{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border)}
+.btn-secondary{padding:10px 14px;border-radius:10px;border:1px solid rgba(220,38,38,0.35);background:rgba(26,26,26,0.9);color:#e8e8e8;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:rgba(220,38,38,0.12)}
+.mgmt-stat__lbl{font-size:11px;color:var(--txt2)}
+.mgmt-stat__val{font-size:18px;font-weight:700;color:#f5f5f5;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div id="root">
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="frac-name" id="fracName">—</div>
+        <div class="frac-rank-badge" id="fracRankBadge">Рядовой</div>
+      </div>
+      <nav class="nav" id="navList">
+        <button class="nav-btn active" data-tab="members" onclick="FracApp.tab('members')">Участники</button>
+        <button class="nav-btn" data-tab="management" onclick="FracApp.tab('management')">Управление</button>
+        <button class="nav-btn" data-tab="zones" id="navZones" onclick="FracApp.tab('zones')">Капты</button>
+        <button class="nav-btn" data-tab="rating" id="navRating" onclick="FracApp.tab('rating')">Рейтинг</button>
+        <button class="nav-btn" data-tab="advert" onclick="FracApp.tab('advert')">Реклама</button>
+        <button class="nav-btn" data-tab="logs" onclick="FracApp.tab('logs')">Логи</button>
+      </nav>
+      <div class="nav-bottom">
+        <button class="btn-close" onclick="FracApp.close()">Закрыть</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+
+      <!-- Members -->
+      <div class="panel active" id="tab-members">
+        <div class="panel-header">
+          <span>Участники фракции</span>
+          <span class="panel-header-right">
+            <span class="member-stats" id="memberStats">Всего: 0 · Онлайн: <span class="stat-online">0</span></span>
+            <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('frac:members:refresh')">↻ Обновить</button>
+          </span>
+        </div>
+        <div class="panel-body" id="membersBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+      <!-- Management (ranks) -->
+      <div class="panel" id="tab-management">
+        <div class="panel-header">Настройки рангов</div>
+        <div class="panel-body" id="mgmtBody">
+          <div class="empty">Только лидер может редактировать ранги.</div>
+        </div>
+      </div>
+
+      <!-- Biz Wars / Zones -->
+      <div class="panel" id="tab-zones">
+        <div class="panel-header">
+          Капты — зоны гетто
+          <button class="refresh-btn" onclick="if(mp&&mp.trigger){mp.trigger('frac:zones:request');mp.trigger('capt:stats:request');}">↻</button>
+        </div>
+        <div class="panel-body panel-body--zones">
+          <div id="captStatsBlock" class="capt-stats-wrap">
+            <div class="capt-stats-empty">Статистика последнего боя загружается...</div>
+          </div>
+          <div id="zonesBody">
+            <div class="empty">Загрузка...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating -->
+      <div class="panel" id="tab-rating">
+        <div class="panel-header">
+          Рейтинг по зонам
+          <button class="refresh-btn" onclick="mp && mp.trigger && mp.trigger('frac:rating:request')">↻</button>
+        </div>
+        <div class="panel-body" id="ratingBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+      <!-- Advert -->
+      <div class="panel" id="tab-advert">
+        <div class="panel-header">Реклама фракции</div>
+        <div class="panel-body" id="advertBody">
+          <div class="empty" id="advertCooldownMsg" style="display:none;color:#dc2626"></div>
+          <div id="advertVariants">
+            <div class="advert-variant" onclick="FracApp.sendAdvert(1)">
+              <div class="advert-variant-num">Вариант 1</div>
+              <div class="advert-variant-text" id="advertText1"></div>
+            </div>
+            <div class="advert-variant" onclick="FracApp.sendAdvert(2)">
+              <div class="advert-variant-num">Вариант 2</div>
+              <div class="advert-variant-text" id="advertText2"></div>
+            </div>
+            <div class="advert-variant" onclick="FracApp.sendAdvert(3)">
+              <div class="advert-variant-num">Вариант 3</div>
+              <div class="advert-variant-text" id="advertText3"></div>
+            </div>
+            <div class="empty" style="margin-top:8px;font-size:11px">Кликни по варианту, чтобы опубликовать в чате. КД: 4 ч</div>
+          </div>
+          <div id="advertEditorLegacy" style="display:none">
+            <textarea class="advert-textarea" id="advertText" placeholder="Текст рекламы фракции (до 512 символов)..."></textarea>
+            <button class="btn-primary" onclick="FracApp.saveAdvert()">Сохранить</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs -->
+      <div class="panel" id="tab-logs">
+        <div class="panel-header">
+          <span>Логи фракции</span>
+          <span class="panel-header-right">
+            <input type="text" class="logs-search-input" id="logsSearch" placeholder="Поиск по ID или действию..." autocomplete="off" />
+            <button class="refresh-btn" onclick="FracApp.requestLogs()">↻</button>
+          </span>
+        </div>
+        <div class="panel-body logs-body" id="logsBody">
+          <div class="empty">Загрузка...</div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- Bizwar overlay (внутри планшета — фракция остаётся открытой) -->
+    <div class="bizwar-overlay" id="bizwarOverlay">
+      <div class="bizwar-card">
+        <div class="bizwar-header">
+          <div class="bizwar-title">Капт <span class="bizwar-zone-badge" id="bwZoneBadge">Зона #?</span></div>
+          <button type="button" class="bizwar-close" onclick="FracApp.closeBizwar()">X</button>
+        </div>
+        <div class="bizwar-teams">
+          <div class="bizwar-team">
+            <div class="bizwar-team-label">Атакует</div>
+            <div class="bizwar-team-name" id="bwAtkName">—</div>
+            <div class="bizwar-team-online" id="bwAtkOnline"></div>
+          </div>
+          <div class="bizwar-vs">VS</div>
+          <div class="bizwar-team">
+            <div class="bizwar-team-label">Защищает</div>
+            <div class="bizwar-team-name" id="bwDefName">—</div>
+            <div class="bizwar-team-online" id="bwDefOnline"></div>
+          </div>
+        </div>
+        <div class="bizwar-body">
+          <div id="bwJoinSection" style="display:none">
+            <div class="bizwar-join-info" id="bwJoinInfo"></div>
+            <button type="button" class="bizwar-btn-join" onclick="FracApp._bizwarTeleport()">Телепорт на капт</button>
+          </div>
+          <div id="bwAttackSection">
+            <div class="bizwar-section">Кол-во игроков (с каждой стороны)</div>
+            <div class="bizwar-count-row" id="bwCountRow"></div>
+            <div class="bizwar-section">Калибры (<span id="bwCalCount">0</span>/3)</div>
+            <div class="bizwar-cal-grid" id="bwCalibersGrid"></div>
+            <div class="bizwar-section">Дополнительно</div>
+            <div class="bizwar-extras">
+              <div class="bizwar-extra" id="bwToggleArmor" onclick="FracApp._bizwarToggleExtra('armor')">Броня</div>
+              <div class="bizwar-extra" id="bwToggleSpunk" onclick="FracApp._bizwarToggleExtra('spunk')">Спанк</div>
+              <div class="bizwar-extra" id="bwToggleAlco" onclick="FracApp._bizwarToggleExtra('alco')">Алко</div>
+            </div>
+            <div class="bizwar-actions">
+              <button type="button" class="bizwar-btn-cancel" onclick="FracApp.closeBizwar()">Отмена</button>
+              <button type="button" class="bizwar-btn-confirm" onclick="FracApp._bizwarConfirm()">Начать атаку</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /shell -->
+</div><!-- /root -->
+
+<!-- Rank picker (сверху по центру) -->
+<div class="modal-overlay" id="rankPickModal">
+  <div class="modal-box rank-pick-box">
+    <div class="modal-title">Выберите ранг</div>
+    <div class="rank-pick-sub">Текущий ранг: <b id="rankPickCurrent">—</b></div>
+    <div class="rank-pick-select">
+      <button type="button" class="rank-pick-trigger" id="rankPickTrigger" onclick="FracApp._toggleRankPickList()">
+        <span id="rankPickSelectedLabel">Выберите ранг</span>
+        <span class="rank-pick-chevron">▾</span>
+      </button>
+      <div class="rank-pick-list" id="rankPickList"></div>
+    </div>
+    <input class="modal-input" id="rankPickReason" placeholder="Причина изменения ранга..." maxlength="256">
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" onclick="FracApp._closeRankPickModal()">Отмена</button>
+      <button type="button" class="modal-ok" onclick="FracApp._confirmRankPick()">Применить</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIP Platinum: выход из фракции -->
+<div class="modal-overlay" id="selfLeaveModal">
+  <div class="modal-box rank-pick-box">
+    <div class="modal-title">Покинуть фракцию</div>
+    <div class="rank-pick-sub">Укажите причину увольнения (будет записано в лог фракции).</div>
+    <input type="text" class="modal-input" id="selfLeaveReason" maxlength="200" placeholder="Причина...">
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" onclick="FracApp._closeSelfLeaveModal()">Отмена</button>
+      <button type="button" class="modal-ok" onclick="FracApp._confirmSelfLeave()">Покинуть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Kick confirm (CEF: без native confirm) -->
+<div class="modal-overlay" id="kickPickModal">
+  <div class="modal-box rank-pick-box">
+    <div class="modal-title">Уволить участника</div>
+    <div class="rank-pick-sub" id="kickPickText">Уволить игрока из фракции?</div>
+    <div class="modal-actions">
+      <button type="button" class="modal-cancel" onclick="FracApp._closeKickModal()">Отмена</button>
+      <button type="button" class="modal-ok" onclick="FracApp._confirmKick()">Уволить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── helpers ────────────────────────────────────────────────────────────────────
+function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const FRAC_COLORS = {
+    0:'#555555',1:'#8b21c9',2:'#16a34a',3:'#dc2626',4:'#ca8a04',5:'#0891b2',6:'#e5e7eb'
+};
+const FRAC_NAMES = {
+    0:'Нейтрально',1:'Ballas',2:'Families',3:'Bloods',4:'Vagos',5:'Marabunta',6:'FIB'
+};
+
+// ── state ─────────────────────────────────────────────────────────────────────
+let _state = {
+    fractionId: 0,
+    fractionName: '—',
+    fractionColor: '#888',
+    playerRank: 0,
+    isLeader: false,
+    canManageRanks: false,
+    canWarehouse: false,
+    canBizwar: false,
+    isBizwarFaction: false,
+    fractionChatColor: '#dc2626',
+    members: [],
+    ranks: [],
+    advert: '',
+    warehouseOpen: true,
+    ownedZones: 0,
+    totalZones: 0,
+    balance: 0,
+    canWithdrawMoney: false,
+    materials: 0,
+    materialsPerHour: 0,
+    canCraft: false,
+    canInvite: false,
+    canDismiss: false,
+    playerStatic: 0,
+    canSelfLeaveFaction: false
+};
+let _zones = {};    // { [zoneId]: fractionId }
+let _rankPickTarget = null;
+let _rankPickSelected = null;
+let _kickPickTarget = null;
+const BIZWAR_CALIBERS_INFO = [
+    { key:'7.62mm',  label:'7.62mm',  weapons:'Special Carbine, Carbine Rifle' },
+    { key:'5.56',    label:'5.56',    weapons:'Mini SMG' },
+    { key:'11.43mm', label:'11.43mm', weapons:'Revolver, Revolver Mk2' },
+    { key:'.50mm',   label:'.50mm',   weapons:'Heavy Sniper, Heavy Sniper Mk2' },
+    { key:'12mm',    label:'12mm',    weapons:'Heavy Shotgun, Assault Shotgun' }
+];
+let _bizwarState = {
+    zoneId: 0, myFrac: 0, attackerFrac: 0, defenderFrac: 0,
+    atkOnline: 0, defOnline: 0, isJoin: false, count: 5,
+    selectedCalibers: [], allowArmor: false, allowSpunk: true, allowAlco: true,
+    availableCalibersArr: []
+};
+let _logsSearchTimer = null;
+
+// ── API ───────────────────────────────────────────────────────────────────────
+window.FracApp = {
+
+    open(payloadJson) {
+        const payload = typeof payloadJson === 'string' ? JSON.parse(payloadJson) : payloadJson;
+        Object.assign(_state, payload);
+        this._applyState();
+        document.getElementById('root').classList.add('open');
+        this.tab('members');
+        this._renderMembers(_state.members || []);
+        this._renderManagement();
+        this._renderAdvert();
+        if (_state.isBizwarFaction) {
+            this._trigger('frac:zones:request');
+            this._trigger('frac:rating:request');
+            this._trigger('capt:stats:request');
+        }
+    },
+
+    close() {
+        const o = document.getElementById('bizwarOverlay');
+        if (o) o.classList.remove('open');
+        this._closeRankPickModal();
+        document.getElementById('root').classList.remove('open');
+        this._trigger('frac:close');
+    },
+
+    tab(name) {
+        if ((name === 'zones' || name === 'rating') && !_state.isBizwarFaction) name = 'members';
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-tab') === name);
+        });
+        const panel = document.getElementById('tab-' + name);
+        if (panel) panel.classList.add('active');
+        if (name === 'logs') this.requestLogs();
+        if (name === 'zones') {
+            this._trigger('frac:zones:request');
+            this._trigger('capt:stats:request');
+        }
+    },
+
+    requestLogs() {
+        const q = document.getElementById('logsSearch')?.value || '';
+        this._trigger('frac:logs:request', q);
+    },
+
+    setLogs(json) {
+        const list = typeof json === 'string' ? JSON.parse(json) : json;
+        this._renderLogs(Array.isArray(list) ? list : []);
+    },
+
+    setMembers(json) {
+        const list = typeof json === 'string' ? JSON.parse(json) : json;
+        _state.members = list;
+        this._renderMembers(list);
+    },
+
+    setMyRank(rank, rankName) {
+        _state.playerRank = rank;
+        _state.isLeader = rank === 10;
+        const badge = document.getElementById('fracRankBadge');
+        if (badge) badge.textContent = rank === 10 ? 'Лидер' : (rankName || `Ранг ${rank}`);
+    },
+
+    setZones(json) {
+        _zones = typeof json === 'string' ? JSON.parse(json) : json;
+        this._renderZones();
+    },
+
+    setCaptCombatStats(json, myStatic) {
+        let data = json;
+        if (typeof json === 'string') {
+            try { data = json.trim() ? JSON.parse(json) : null; } catch (_e) { data = null; }
+        }
+        this._renderCaptCombatStats(data, myStatic);
+    },
+
+    _renderCaptCombatStats(data, myStatic) {
+        const block = document.getElementById('captStatsBlock');
+        if (!block) return;
+        if (!data || !Array.isArray(data.players) || !data.players.length) {
+            block.innerHTML = '<div class="capt-stats-empty">Статистика последнего боя пока недоступна. Участвуйте в капте.</div>';
+            return;
+        }
+        const kindLabel = data.kind === 'bizwar' ? 'Капт' : 'Война семей';
+        const header = `<div class="capt-stats-head">
+            <div class="capt-stats-title">${kindLabel} — ${esc(data.zoneLabel || '')}</div>
+            <div class="capt-stats-meta">
+                <span>${esc(data.attackerLabel || '—')} vs ${esc(data.defenderLabel || '—')}</span>
+                <span class="capt-stats-winner">Победитель: ${esc(data.winnerLabel || '—')}</span>
+            </div>
+        </div>`;
+        const rows = data.players.map(p => {
+            const mine = Number(p.static) === Number(myStatic);
+            const kd = `${Number(p.kills) || 0} / ${Number(p.deaths) || 0}`;
+            return `<tr class="${mine ? 'capt-stats-row--me' : ''}">
+                <td>${esc(p.name)}${mine ? ' <span class="capt-stats-you">(вы)</span>' : ''}</td>
+                <td>${p.shots || 0}</td>
+                <td>${p.hits || 0}</td>
+                <td>${p.hitPct || 0}%</td>
+                <td>${p.headPct || 0}%</td>
+                <td>${p.damage || 0}</td>
+                <td>${kd}</td>
+            </tr>`;
+        }).join('');
+        block.innerHTML = header + `<div class="capt-stats-table-wrap"><table class="capt-stats-table">
+            <thead><tr>
+                <th>Игрок</th><th>Выстр.</th><th>Попад.</th><th>% попад.</th><th>% в голову</th><th>Урон</th><th>K/D</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table></div>`;
+    },
+
+    setRating(json) {
+        const data = typeof json === 'string' ? JSON.parse(json) : json;
+        this._renderRating(data);
+    },
+
+    saveAdvert() {
+        const text = document.getElementById('advertText').value.slice(0, 512);
+        this._trigger('frac:advert:save', text);
+        _state.advert = text;
+    },
+
+    sendAdvert(variant) {
+        if (!_state.isLeader) return;
+        this._trigger('frac:advert:broadcast', variant);
+    },
+
+    saveRanks() {
+        const rows = document.querySelectorAll('.rank-cfg-row');
+        const result = [];
+        rows.forEach(row => {
+            const rankNum = parseInt(row.getAttribute('data-rank'), 10);
+            const nameInput = row.querySelector('.rank-name-input');
+            const name = nameInput ? nameInput.value.trim() || `Ранг ${rankNum}` : `Ранг ${rankNum}`;
+            const perms = {};
+            row.querySelectorAll('input[type=checkbox]').forEach(cb => { perms[cb.name] = cb.checked; });
+            result.push({ rank: rankNum, name, ...perms });
+        });
+        this._trigger('frac:rankconfig:save', JSON.stringify(result));
+    },
+
+    setBalance(val) {
+        _state.balance = parseInt(val, 10) || 0;
+        if (document.getElementById('tab-management')?.classList.contains('active')) this._renderManagement();
+    },
+
+    setMaterials(val, perHour) {
+        _state.materials = parseInt(val, 10) || 0;
+        if (perHour != null) _state.materialsPerHour = parseInt(perHour, 10) || 0;
+        const el = document.getElementById('fracMaterialsVal');
+        if (el) el.textContent = String(_state.materials).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        if (document.getElementById('tab-management')?.classList.contains('active')) this._renderManagement();
+    },
+
+    depositBalance() {
+        const el = document.getElementById('fracBalAmount');
+        this._trigger('frac:balance:deposit', String(el ? el.value : ''));
+    },
+
+    withdrawBalance() {
+        const el = document.getElementById('fracBalAmount');
+        this._trigger('frac:balance:withdraw', String(el ? el.value : ''));
+    },
+
+    toggleWarehouse(open) {
+        if (!_state.isLeader) return;
+        _state.warehouseOpen = !!open;
+        this._syncWarehouseToggleVisual();
+        this._trigger('frac:warehouse:toggle', open ? 1 : 0);
+    },
+
+    setWarehouseOpen(open) {
+        _state.warehouseOpen = open === true || open === 1 || open === '1';
+        const cb = document.getElementById('fracWarehouseOpenToggle');
+        if (cb) cb.checked = _state.warehouseOpen !== false;
+        this._syncWarehouseToggleVisual();
+    },
+
+    _syncWarehouseToggleVisual() {
+        const wrap = document.querySelector('[data-frac-switch]');
+        if (!wrap) return;
+        const inp = wrap.querySelector('input');
+        const ui = wrap.querySelector('.frac-slider-toggle__ui');
+        if (ui && inp) ui.classList.toggle('frac-slider-toggle__ui--on', !!inp.checked);
+    },
+
+    openRankPicker(targetStatic) {
+        if (!_state.canManageRanks) return;
+        const m = _state.members.find(x => x.static === targetStatic);
+        if (!m || m.rank === 10) return;
+        _rankPickTarget = targetStatic;
+        _rankPickSelected = null;
+        const curName = m.rankName || `Ранг ${m.rank}`;
+        document.getElementById('rankPickCurrent').textContent = curName + (m.online ? '' : ' (оффлайн)');
+        document.getElementById('rankPickSelectedLabel').textContent = 'Выберите ранг';
+        document.getElementById('rankPickReason').value = '';
+        document.getElementById('rankPickReason').style.borderColor = '';
+        document.getElementById('rankPickTrigger').style.borderColor = '';
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        this._renderRankPickList(m.rank);
+        document.getElementById('rankPickModal').classList.add('open');
+    },
+    _renderRankPickList(currentRank) {
+        const list = document.getElementById('rankPickList');
+        if (!list) return;
+        const ranks = (_state.ranks.length ? _state.ranks : Array.from({length:9},(_,i)=>({rank:i+1,name:`Ранг ${i+1}`})))
+            .filter(r => r.rank >= 1 && r.rank <= 9);
+        list.innerHTML = ranks.map(r =>
+            `<button type="button" class="rank-pick-option${r.rank === currentRank ? ' current' : ''}${r.rank === _rankPickSelected ? ' selected' : ''}" onclick="FracApp._selectRankPick(${r.rank})">${esc(r.name || `Ранг ${r.rank}`)}</button>`
+        ).join('');
+    },
+    _toggleRankPickList() {
+        const trigger = document.getElementById('rankPickTrigger');
+        const list = document.getElementById('rankPickList');
+        if (!trigger || !list) return;
+        const open = !list.classList.contains('open');
+        list.classList.toggle('open', open);
+        trigger.classList.toggle('open', open);
+    },
+    _selectRankPick(rankNum) {
+        _rankPickSelected = rankNum;
+        const r = (_state.ranks.find(x => x.rank === rankNum) || { name: `Ранг ${rankNum}` });
+        document.getElementById('rankPickSelectedLabel').textContent = r.name || `Ранг ${rankNum}`;
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        const m = _state.members.find(x => x.static === _rankPickTarget);
+        this._renderRankPickList(m ? m.rank : 0);
+    },
+    _closeRankPickModal() {
+        document.getElementById('rankPickModal').classList.remove('open');
+        document.getElementById('rankPickList').classList.remove('open');
+        document.getElementById('rankPickTrigger').classList.remove('open');
+        _rankPickTarget = null;
+        _rankPickSelected = null;
+    },
+    _confirmRankPick() {
+        if (!_rankPickTarget) return;
+        const reasonEl = document.getElementById('rankPickReason');
+        const reason = reasonEl ? reasonEl.value.trim() : '';
+        if (!_rankPickSelected || _rankPickSelected < 1 || _rankPickSelected > 9) {
+            document.getElementById('rankPickTrigger').style.borderColor = '#dc2626';
+            return;
+        }
+        const m = _state.members.find(x => x.static === _rankPickTarget);
+        if (m && m.rank === _rankPickSelected) {
+            document.getElementById('rankPickTrigger').style.borderColor = '#dc2626';
+            return;
+        }
+        if (!reason) { if (reasonEl) reasonEl.style.borderColor = '#dc2626'; return; }
+        this._trigger('frac:rank:set', _rankPickTarget, _rankPickSelected, reason);
+        this._closeRankPickModal();
+    },
+    openSelfLeaveModal() {
+        if (!_state.canSelfLeaveFaction) return;
+        const inp = document.getElementById('selfLeaveReason');
+        if (inp) inp.value = '';
+        document.getElementById('selfLeaveModal').classList.add('open');
+    },
+    _closeSelfLeaveModal() {
+        document.getElementById('selfLeaveModal').classList.remove('open');
+    },
+    _confirmSelfLeave() {
+        const inp = document.getElementById('selfLeaveReason');
+        const reason = inp ? String(inp.value || '').trim() : '';
+        if (!reason) {
+            if (inp) inp.style.borderColor = '#dc2626';
+            return;
+        }
+        if (inp) inp.style.borderColor = '';
+        this._closeSelfLeaveModal();
+        this._trigger('frac:self:leave', reason);
+    },
+    kickMember(targetStatic) {
+        if (!_state.canDismiss) return;
+        const m = _state.members.find(x => Number(x.static) === Number(targetStatic));
+        if (!m || m.rank === 10 || m.rank >= _state.playerRank) return;
+        _kickPickTarget = Number(targetStatic);
+        const label = m.name || ('#' + targetStatic);
+        const el = document.getElementById('kickPickText');
+        if (el) el.textContent = `Уволить ${label} из фракции?`;
+        document.getElementById('kickPickModal').classList.add('open');
+    },
+    _closeKickModal() {
+        document.getElementById('kickPickModal').classList.remove('open');
+        _kickPickTarget = null;
+    },
+    _confirmKick() {
+        if (_kickPickTarget == null) return;
+        const targetStatic = _kickPickTarget;
+        this._closeKickModal();
+        _state.members = _state.members.filter(x => Number(x.static) !== Number(targetStatic));
+        this._renderMembers(_state.members);
+        this._trigger('frac:kick', targetStatic);
+        setTimeout(() => this._trigger('frac:members:refresh'), 400);
+    },
+    setPrefix(targetStatic, value) {
+        if (!_state.canManageRanks) return;
+        this._trigger('frac:prefix:set', targetStatic, value.trim());
+    },
+
+    // ── internal ─────────────────────────────────────────────────────────────
+    _applyState() {
+        document.getElementById('fracName').textContent = _state.fractionName;
+        const badge = document.getElementById('fracRankBadge');
+        const rankName = _state.playerRank === 10 ? 'Лидер' : (_state.ranks.find(r => r.rank === _state.playerRank) || {}).name || `Ранг ${_state.playerRank}`;
+        badge.textContent = rankName;
+        badge.style.color = _state.fractionColor || '#dc2626';
+        badge.style.background = (_state.fractionColor || '#dc2626') + '26';
+
+        // Капты — только у уличных банд (не FIB)
+        const navZn = document.getElementById('navZones');
+        const navRt = document.getElementById('navRating');
+        const showBizwar = !!_state.isBizwarFaction;
+        if (navZn) navZn.style.display = showBizwar ? '' : 'none';
+        if (navRt) navRt.style.display = showBizwar ? '' : 'none';
+    },
+
+    _updateMemberStats(list) {
+        const el = document.getElementById('memberStats');
+        if (!el) return;
+        const total = Array.isArray(list) ? list.length : 0;
+        const online = Array.isArray(list) ? list.filter(m => m.online).length : 0;
+        el.innerHTML = `Всего: ${total} · Онлайн: <span class="stat-online">${online}</span>`;
+    },
+
+    _renderMembers(list) {
+        const body = document.getElementById('membersBody');
+        if (!body) return;
+        this._updateMemberStats(list);
+        if (!list || list.length === 0) { body.innerHTML = '<div class="empty">Нет участников</div>'; return; }
+        body.innerHTML = list.map(m => {
+            const initials = String(m.name || '?').slice(0, 2).toUpperCase();
+            const canChange = _state.canManageRanks && m.rank !== 10 && m.static > 0;
+            const canDismiss = _state.canDismiss && m.rank !== 10 && m.static > 0 && m.rank < _state.playerRank;
+            const rankBtn = canChange ? `
+                <button type="button" class="rank-pick-btn" title="Изменить ранг" onclick="FracApp.openRankPicker(${m.static})">▾</button>` : '';
+            const isSelf = Number(m.static) === Number(_state.playerStatic);
+            const selfLeaveBtn = (isSelf && _state.canSelfLeaveFaction) ? `
+                <button type="button" class="rank-dn-btn" title="Покинуть фракцию" onclick="FracApp.openSelfLeaveModal()">✕</button>` : '';
+            const dismissBtn = (!isSelf && canDismiss) ? `
+                <button type="button" class="rank-dn-btn" title="Уволить" onclick="FracApp.kickMember(${m.static})">✕</button>` : '';
+            const prefixBlock = canChange ? `
+                <input class="prefix-input" id="pfx_${m.static}" value="${esc(m.prefix || '')}" placeholder="Приписка..." maxlength="32" onclick="event.stopPropagation()">
+                <button type="button" class="prefix-btn" title="Сохранить приписку" onclick="FracApp.setPrefix(${m.static}, document.getElementById('pfx_${m.static}').value)">OK</button>` : '';
+            const statusTitle = m.online ? 'В сети' : 'Не в сети';
+            const statusClass = m.online ? 'online' : 'offline';
+            return `<div class="member-row">
+                <div class="member-avatar">${esc(initials)}</div>
+                <div class="member-info">
+                    <div class="member-name">${esc(m.name)}${m.prefix ? ` <span style="font-size:11px;color:${esc(_state.fractionColor || '#dc2626')}">[${esc(m.prefix)}]</span>` : ''}</div>
+                    <div class="member-rank-name">${esc(m.rankName || `Ранг ${m.rank}`)}</div>
+                </div>
+                <div class="member-actions">${prefixBlock}${rankBtn}${selfLeaveBtn}${dismissBtn}</div>
+                <span class="member-status ${statusClass}" title="${statusTitle}"></span>
+            </div>`;
+        }).join('');
+    },
+
+    _renderManagement() {
+        const body = document.getElementById('mgmtBody');
+        if (!body) return;
+        const fmtNum = n => String(Number(n) || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        const balanceHtml = `
+            <div class="mgmt-stats" style="margin-bottom:14px">
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Баланс фракции</div><div class="mgmt-stat__val">$${fmtNum(_state.balance)}</div></div>
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Материалы</div><div class="mgmt-stat__val" id="fracMaterialsVal">${fmtNum(_state.materials)}</div></div>
+                <div class="mgmt-stat"><div class="mgmt-stat__lbl">Доход / час</div><div class="mgmt-stat__val">+${fmtNum(_state.materialsPerHour || (_state.ownedZones * 20))} мат.</div></div>
+            </div>
+            <div class="mgmt-balance-ops">
+                <input type="text" class="modal-input" id="fracBalAmount" placeholder="Сумма..." inputmode="numeric" maxlength="12">
+                <div class="mgmt-balance-btns">
+                    <button type="button" class="save-btn" style="margin-top:0" onclick="FracApp.depositBalance()">Пополнить счёт</button>
+                    ${_state.canWithdrawMoney ? '<button type="button" class="btn-secondary" onclick="FracApp.withdrawBalance()">Снять со счёта</button>' : ''}
+                </div>
+            </div>`;
+
+        if (!_state.isLeader && !_state.canManageRanks) {
+            body.innerHTML = balanceHtml + '<div class="empty">Недостаточно прав для настройки рангов.</div>';
+            return;
+        }
+        const isFib = _state.fractionId === 6;
+        const ranks = _state.ranks.length ? _state.ranks : Array.from({length:9},(_,i)=>({rank:i+1,name:`Ранг ${i+1}`,changeRank:false,warehouseAccess:false,bizwar:false,withdrawMoney:false,craftAccess:false,canInvite:false,canDismiss:false}));
+        body.innerHTML = balanceHtml + ranks.map(r => `
+            <div class="rank-cfg-row" data-rank="${r.rank}">
+                <div class="rank-cfg-top">
+                    <div class="rank-cfg-num">${r.rank}</div>
+                    <input class="rank-name-input" value="${esc(r.name)}" maxlength="32" placeholder="Название ранга">
+                </div>
+                <div class="rank-perms">
+                    <label class="perm-check"><input type="checkbox" name="changeRank" ${r.changeRank?'checked':''}> Менять ранги</label>
+                    <label class="perm-check"><input type="checkbox" name="warehouseAccess" ${r.warehouseAccess?'checked':''}> Доступ к складу</label>
+                    ${!isFib ? `<label class="perm-check"><input type="checkbox" name="bizwar" ${r.bizwar?'checked':''}> Забитие каптов</label>` : ''}
+                    <label class="perm-check"><input type="checkbox" name="withdrawMoney" ${r.withdrawMoney?'checked':''}> Снятие $</label>
+                    <label class="perm-check"><input type="checkbox" name="craftAccess" ${r.craftAccess?'checked':''}> Крафт</label>
+                    <label class="perm-check"><input type="checkbox" name="canInvite" ${r.canInvite?'checked':''}> Приглашать</label>
+                    <label class="perm-check"><input type="checkbox" name="canDismiss" ${r.canDismiss?'checked':''}> Увольнять</label>
+                </div>
+            </div>`).join('') + (_state.isLeader ? '<button class="save-btn" onclick="FracApp.saveRanks()">Сохранить ранги</button>' : '') +
+            (_state.isLeader ? `
+            <div class="mgmt-wh-toggle">
+                <div class="mgmt-wh-toggle__text">
+                    <div class="mgmt-wh-toggle__title">Открыть склад</div>
+                    <div class="mgmt-wh-toggle__sub">Если выключено — склад недоступен всей фракции, даже с правом доступа</div>
+                </div>
+                <label class="frac-slider-toggle" data-frac-switch>
+                    <input type="checkbox" id="fracWarehouseOpenToggle" ${_state.warehouseOpen !== false ? 'checked' : ''} onchange="FracApp.toggleWarehouse(this.checked)">
+                    <span class="frac-slider-toggle__ui" aria-hidden="true"></span>
+                </label>
+            </div>` : '');
+        this._syncWarehouseToggleVisual();
+    },
+
+    _renderZones() {
+        const body = document.getElementById('zonesBody');
+        if (!body) return;
+        const entries = Object.entries(_zones);
+        if (entries.length === 0) { body.innerHTML = '<div class="empty">Нет зон</div>'; return; }
+        body.innerHTML = '<div class="zones-grid">' + entries.map(([zid, owner]) => {
+            const color = FRAC_COLORS[owner] || '#555';
+            const fname = owner > 0 ? (FRAC_NAMES[owner] || `Фракция ${owner}`) : 'Нейтрально';
+            return `<div class="zone-card" data-zone-id="${zid}" onclick="FracApp.clickZone(${zid})" title="Открыть меню капта">
+                <div class="zone-id">Зона #${zid}</div>
+                <div class="zone-owner"><span class="zone-dot" style="background:${color}"></span>${esc(fname)}</div>
+            </div>`;
+        }).join('') + '</div>';
+    },
+
+    /** Клик по карточке зоны — открыть меню капта. */
+    clickZone(zoneId) {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('bizwar:zone:click', String(zoneId));
+            }
+        } catch (_e) {}
+    },
+
+    openBizwar(payloadJson) {
+        const p = typeof payloadJson === 'string' ? JSON.parse(payloadJson) : payloadJson;
+        Object.assign(_bizwarState, p);
+        _bizwarState.selectedCalibers = [];
+        _bizwarState.count = p.count || 5;
+        _bizwarState.allowArmor = !!p.allowArmor;
+        _bizwarState.allowSpunk = p.allowSpunk !== false;
+        _bizwarState.allowAlco = p.allowAlco !== false;
+        _bizwarState.availableCalibersArr = Array.isArray(p.calibers) ? p.calibers : BIZWAR_CALIBERS_INFO.map(c => c.key);
+
+        document.getElementById('bwZoneBadge').textContent = `Зона #${_bizwarState.zoneId}`;
+        const atkFrac = _bizwarState.attackerFrac || _bizwarState.myFrac;
+        const defFrac = _bizwarState.defenderFrac;
+        const atkEl = document.getElementById('bwAtkName');
+        const defEl = document.getElementById('bwDefName');
+        if (atkEl) {
+            atkEl.textContent = FRAC_NAMES[atkFrac] || `Фракция ${atkFrac}`;
+            atkEl.style.color = FRAC_COLORS[atkFrac] || '#e8e8e8';
+        }
+        if (defEl) {
+            defEl.textContent = FRAC_NAMES[defFrac] || 'Нейтрально';
+            defEl.style.color = FRAC_COLORS[defFrac] || '#555';
+        }
+        document.getElementById('bwAtkOnline').textContent = `${_bizwarState.atkOnline || 0} онлайн`;
+        document.getElementById('bwDefOnline').textContent = `${_bizwarState.defOnline || 0} онлайн`;
+
+        if (_bizwarState.isJoin) {
+            document.getElementById('bwJoinSection').style.display = '';
+            document.getElementById('bwAttackSection').style.display = 'none';
+            const calStr = (p.calibers || []).join(', ');
+            document.getElementById('bwJoinInfo').innerHTML =
+                `<b>Калибры:</b> ${esc(calStr)}<br><b>Формат:</b> ${p.count}v${p.count}<br>` +
+                `<b>Броня:</b> ${p.allowArmor?'Да':'Нет'} &nbsp; <b>Спанк:</b> ${p.allowSpunk?'Да':'Нет'} &nbsp; <b>Алко:</b> ${p.allowAlco?'Да':'Нет'}`;
+        } else {
+            document.getElementById('bwJoinSection').style.display = 'none';
+            document.getElementById('bwAttackSection').style.display = '';
+            this._bizwarBuildCount();
+            this._bizwarBuildCalibers();
+            this._bizwarUpdateExtras();
+        }
+        document.getElementById('bizwarOverlay').classList.add('open');
+    },
+
+    closeBizwar() {
+        const el = document.getElementById('bizwarOverlay');
+        if (el) el.classList.remove('open');
+        try { if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('bizwar:close'); } catch (_) {}
+    },
+
+    _bizwarBuildCount() {
+        const row = document.getElementById('bwCountRow');
+        if (!row) return;
+        const cur = Math.max(5, parseInt(_bizwarState.count, 10) || 5);
+        _bizwarState.count = cur;
+        row.innerHTML = `<input id="bwCountInput" class="bizwar-count-input" type="number" min="5" max="10" inputmode="numeric" value="${cur}" placeholder="Минимум 5">`;
+        const input = document.getElementById('bwCountInput');
+        if (input) {
+            input.oninput = () => {
+                const n = parseInt(input.value, 10);
+                _bizwarState.count = Number.isFinite(n) ? n : 0;
+            };
+        }
+    },
+
+    _bizwarBuildCalibers() {
+        const grid = document.getElementById('bwCalibersGrid');
+        if (!grid) return;
+        grid.innerHTML = BIZWAR_CALIBERS_INFO.map(c => {
+            const avail = _bizwarState.availableCalibersArr.includes(c.key);
+            const elId = this._bizwarCalElId(c.key);
+            return `<div class="bizwar-cal-row${avail?'':' disabled'}" id="${elId}" onclick="FracApp._bizwarToggleCal('${c.key}')">
+                <div class="bizwar-cal-check"></div>
+                <div class="bizwar-cal-name">${c.label}</div>
+                <div class="bizwar-cal-weapons">${c.weapons}</div>
+            </div>`;
+        }).join('');
+        this._bizwarUpdateCalCount();
+    },
+
+    _bizwarCalElId(key) { return 'bw_cal_' + String(key).replace(/\./g, '_'); },
+
+    _bizwarToggleCal(key) {
+        if (!_bizwarState.availableCalibersArr.includes(key)) return;
+        const idx = _bizwarState.selectedCalibers.indexOf(key);
+        if (idx === -1) {
+            if (_bizwarState.selectedCalibers.length >= 3) return;
+            _bizwarState.selectedCalibers.push(key);
+        } else {
+            _bizwarState.selectedCalibers.splice(idx, 1);
+        }
+        BIZWAR_CALIBERS_INFO.forEach(c => {
+            const el = document.getElementById(this._bizwarCalElId(c.key));
+            if (!el) return;
+            el.classList.toggle('selected', _bizwarState.selectedCalibers.includes(c.key));
+            if (!_bizwarState.availableCalibersArr.includes(c.key)) el.classList.add('disabled');
+        });
+        this._bizwarUpdateCalCount();
+    },
+
+    _bizwarUpdateCalCount() {
+        const el = document.getElementById('bwCalCount');
+        if (el) el.textContent = String(_bizwarState.selectedCalibers.length);
+    },
+
+    _bizwarToggleExtra(type) {
+        if (type === 'armor') _bizwarState.allowArmor = !_bizwarState.allowArmor;
+        else if (type === 'spunk') _bizwarState.allowSpunk = !_bizwarState.allowSpunk;
+        else if (type === 'alco') _bizwarState.allowAlco = !_bizwarState.allowAlco;
+        this._bizwarUpdateExtras();
+    },
+
+    _bizwarUpdateExtras() {
+        document.getElementById('bwToggleArmor').classList.toggle('on', _bizwarState.allowArmor);
+        document.getElementById('bwToggleSpunk').classList.toggle('on', _bizwarState.allowSpunk);
+        document.getElementById('bwToggleAlco').classList.toggle('on', _bizwarState.allowAlco);
+    },
+
+    _bizwarConfirm() {
+        const countInput = document.getElementById('bwCountInput');
+        const count = countInput ? parseInt(countInput.value, 10) : parseInt(_bizwarState.count, 10);
+        if (!Number.isFinite(count) || count < 5) {
+            if (countInput) countInput.focus();
+            return;
+        }
+        _bizwarState.count = Math.min(10, count);
+        if (_bizwarState.selectedCalibers.length < 1) {
+            const g = document.getElementById('bwCalibersGrid');
+            if (g) g.style.outline = '1px solid #dc2626';
+            return;
+        }
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('bizwar:attack:confirm',
+                    _bizwarState.zoneId,
+                    _bizwarState.count,
+                    JSON.stringify(_bizwarState.selectedCalibers),
+                    String(_bizwarState.allowArmor),
+                    String(_bizwarState.allowSpunk),
+                    String(_bizwarState.allowAlco)
+                );
+            }
+        } catch (_) {}
+        const g = document.getElementById('bwCalibersGrid');
+        if (g) g.style.outline = '';
+        this.closeBizwar();
+    },
+
+    _bizwarTeleport() {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('bizwar:teleport', _bizwarState.zoneId);
+        } catch (_) {}
+        this.closeBizwar();
+    },
+
+    _renderRating(data) {
+        const body = document.getElementById('ratingBody');
+        if (!body) return;
+        const maxZones = Math.max(...data.map(d => d.zones), 1);
+        body.innerHTML = data.map((d, i) =>
+            `<div class="rating-row">
+                <div class="rating-pos">${i + 1}</div>
+                <div class="rating-name" style="color:${esc(d.color)}">${esc(d.name)}</div>
+                <div class="rating-bar-wrap">
+                    <div class="rating-bar" style="width:${Math.round(d.zones/maxZones*100)}%;background:${esc(d.color)}"></div>
+                </div>
+                <div class="rating-zones">${d.zones} зон</div>
+            </div>`
+        ).join('');
+    },
+
+    _formatLogTime(raw) {
+        if (!raw) return '—';
+        const d = new Date(raw);
+        if (isNaN(d.getTime())) return String(raw);
+        const pad = n => String(n).padStart(2, '0');
+        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    },
+
+    _renderLogs(list) {
+        const body = document.getElementById('logsBody');
+        if (!body) return;
+        if (!list.length) {
+            body.innerHTML = '<div class="empty">Записей не найдено</div>';
+            return;
+        }
+        body.innerHTML =
+            `<div class="logs-head"><span>Время</span><span>Участник</span><span>Действие</span></div>` +
+            list.map(row => {
+                const name = esc(row.name || 'Система');
+                const sid = row.static > 0 ? `#${row.static}` : '';
+                return `<div class="log-row">
+                    <div class="log-time">${esc(this._formatLogTime(row.time))}</div>
+                    <div>
+                        <div class="log-name">${name}</div>
+                        ${sid ? `<div class="log-name-id">${esc(sid)}</div>` : ''}
+                    </div>
+                    <div class="log-action">${esc(row.text || '')}</div>
+                </div>`;
+            }).join('');
+    },
+
+    _renderAdvert() {
+        const fn = _state.fractionName || 'Фракция';
+        const isFib = _state.fractionId === 6;
+        const texts = isFib ? {
+            1: `${fn} набирает новых бойцов!\nНужны активные и собранные игроки.\nКапты, захваты зон и сильный состав. Пишите лидеру.`,
+            2: `${fn} ищет бойцов в состав!\nЕсли готов к PvP и командной игре — заходи.\nРегулярные бои и поддержка от фракции.`,
+            3: `Вступай в ${fn}!\nАктивный состав, капты и захват территорий.\nДокажи, что ты сильнее остальных.`
+        } : {
+            1: `${fn} открывает набор!\nИщем активных бойцов в состав.\nКапты, захваты зон и сильная команда. Заявки открыты!`,
+            2: `Набор в ${fn}!\nНужны уверенные игроки для PvP и захватов.\nПоднимайся по рангам вместе с нами.`,
+            3: `Стань частью ${fn}!\nАктивный состав, бои за районы и поддержка.\nВступай и покажи, на что способен.`
+        };
+        [1, 2, 3].forEach(i => {
+            const el = document.getElementById(`advertText${i}`);
+            if (el) {
+                el.textContent = texts[i];
+                el.style.color = '';
+            }
+        });
+        const variants = document.getElementById('advertVariants');
+        if (variants) variants.style.display = _state.isLeader ? '' : 'none';
+        const legacy = document.getElementById('advertEditorLegacy');
+        if (legacy) legacy.style.display = 'none';
+    },
+
+    _trigger(event, ...args) {
+        try {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger(event, ...args);
+            }
+        } catch (_) {}
+    }
+};
+
+// Уведомить клиент что браузер готов
+try {
+    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('frac:browser:ready');
+} catch (_) {}
+(function initLogsSearch() {
+    const inp = document.getElementById('logsSearch');
+    if (!inp) return;
+    inp.addEventListener('input', () => {
+        clearTimeout(_logsSearchTimer);
+        _logsSearchTimer = setTimeout(() => {
+            if (document.getElementById('tab-logs')?.classList.contains('active')) FracApp.requestLogs();
+        }, 350);
+    });
+    inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            FracApp.requestLogs();
+        }
+    });
+})();
+</script>
+</body>
+</html>

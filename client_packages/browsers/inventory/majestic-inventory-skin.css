@@ -1,0 +1,519 @@
+/* ==========================================================================
+   Majestic Inventory 2026 — visual skin для bloody-dm
+   Поверх существующих стилей (calamity-inventory.css, inventory-bloody-bridge.css
+   и inline-блока в index.html). Структуру HTML и логику JS не меняем.
+   Подключается ПОСЛЕДНИМ в <head>, поэтому работает без !important там,
+   где у inline нет !important, и с !important — для нужных переопределений.
+   ========================================================================== */
+
+/* -- Палитра Majestic -- */
+.box-inventory {
+  --maj-bg: rgba(30, 30, 30, 0.86);
+  --maj-slot-bg: rgba(34, 34, 34, 0.5);
+  --maj-slot-bg-hover: rgba(48, 48, 48, 0.6);
+  /* Линии между ячейками — приглушённые (не «белый квадрат» вокруг всей сетки) */
+  --maj-line: rgba(255, 255, 255, 0.06);
+  --maj-line-soft: rgba(255, 255, 255, 0.05);
+  --maj-text: #fbfbfb;
+  --maj-text-soft: rgba(251, 251, 251, 0.7);
+  --maj-text-mute: rgba(251, 251, 251, 0.5);
+  --maj-pill: rgb(56, 56, 59);
+  --maj-radius: 0.74vh;
+  --maj-radius-slot: 0.2vh;
+}
+
+/* -- Шрифт: антиалиас и сглаживание во всём окне -- */
+.box-inventory,
+.box-inventory * {
+  -webkit-font-smoothing: antialiased !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* ==========================================================================
+   1. Главный контейнер инвентаря
+   ========================================================================== */
+.box-inventory .magicinv {
+  background-color: var(--maj-bg) !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+}
+
+/* Кнопка закрытия */
+.box-inventory .closedinv,
+.box-inventory .closedinv--bm {
+  color: var(--maj-text) !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 2.2vh !important;
+  line-height: 1 !important;
+  width: 3vh !important;
+  height: 3vh !important;
+  border-radius: 0.3vh !important;
+  opacity: 0.7;
+  transition: opacity 0.18s ease, background 0.18s ease, color 0.18s ease !important;
+}
+.box-inventory .closedinv:hover,
+.box-inventory .closedinv--bm:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+/* ==========================================================================
+   2. Заголовки колонок (Склад / Экипировка / Инвентарь)
+   ========================================================================== */
+.box-inventory .leftinv h1,
+.box-inventory .centerinv h1,
+.box-inventory .rightinv h1,
+.box-inventory h1.wh-col-title,
+.box-inventory #equipHeading {
+  font-size: 1.48vh !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--maj-text) !important;
+  text-shadow: none !important;
+  margin: 0 0 0.8vh 0 !important;
+  padding: 0 !important;
+  text-transform: none !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* Счётчик слотов справа от заголовка инвентаря */
+.box-inventory .inv-cap-inline,
+.box-inventory #invSlotCounter {
+  font-size: 1.2vh !important;
+  font-weight: 500 !important;
+  color: var(--maj-text-soft) !important;
+  text-shadow: none !important;
+  letter-spacing: 0.02em !important;
+  margin-left: 0.6vh;
+}
+
+/* ==========================================================================
+   3. Слоты экипировки (paper-doll)
+   ========================================================================== */
+.box-inventory .equipment-panel,
+.box-inventory .equipment-grid,
+.box-inventory .eq-paper-doll {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Сам слот — квадрат, лёгкий тёмный фон, скругление как у Majestic */
+.box-inventory .equip-slot {
+  background: var(--maj-slot-bg) !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 0.24vh !important;
+  box-shadow: none !important;
+  transition: background 0.18s ease !important;
+}
+
+/* Hover пустого/полного — лёгкое осветление вместо красного */
+.box-inventory .equip-slot:hover {
+  background: var(--maj-slot-bg-hover) !important;
+  border: none !important;
+  box-shadow: inset 0 0 0 1px var(--maj-line) !important;
+}
+
+/* Пустой слот: иконка приглушённая */
+.box-inventory .equip-slot.empty img {
+  opacity: 0.55;
+  filter: brightness(0.95) !important;
+}
+.box-inventory .equip-slot:not(.empty) img {
+  opacity: 1;
+}
+
+/* Заполненный слот — чуть ярче фон */
+.box-inventory .equip-slot.filled,
+.box-inventory .equip-slot:not(.empty) {
+  background: rgba(50, 50, 50, 0.6) !important;
+}
+
+/* Слот сумки запрещён к снятию — красная подсказка */
+.box-inventory .equip-slot.eq-bag-unequip-blocked:not(.empty) {
+  cursor: not-allowed !important;
+  box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Подписи под слотами экипировки */
+.box-inventory .equip-slot-caption {
+  font-size: 1.05vh !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--maj-text-mute) !important;
+  text-transform: none !important;
+  text-shadow: none !important;
+  margin-top: 0.34vh !important;
+}
+
+/* Подсказка под слотом из data-eq-tip */
+.box-inventory .equip-slot[data-eq]::after {
+  color: var(--maj-text-mute) !important;
+  font-size: 0.93vh !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* ==========================================================================
+   4. Сетка инвентаря — без общей светлой «рамки», только ячейки + gap
+   ========================================================================== */
+.box-inventory .inv-grid-wrap,
+.box-inventory .inv-grid-wrap.itemlist {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  padding: 0.2vh 0.1vh 0.35vh !important;
+  overflow: visible !important;
+  gap: var(--inv-slot-gap, 0.55vh) !important;
+  box-shadow: none !important;
+}
+
+.box-inventory .inv-grid-cell {
+  background: var(--maj-slot-bg) !important;
+  background-image: none !important;
+  border: 0.0926vh solid rgba(255, 255, 255, 0.03) !important;
+  border-radius: 0.3704vh !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+.box-inventory .inv-grid-cell:hover {
+  background: rgba(220, 38, 38, 0.11) !important;
+  border-color: rgba(220, 38, 38, 0.38) !important;
+  box-shadow: none !important;
+}
+
+/* Подпись предмета снизу при hover — стиль Majestic, светлый */
+.box-inventory .inv-slot-label {
+  background: linear-gradient(to top,
+                              rgba(20, 20, 20, 0.92) 0%,
+                              rgba(20, 20, 20, 0.65) 55%,
+                              transparent 100%) !important;
+  color: rgba(248, 248, 248, 0.96) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Bind-цифра в углу — пилюлей как Majestic */
+.box-inventory .inv-slot-bind {
+  font-size: 0.85vh !important;
+  font-weight: 500 !important;
+  color: #fff !important;
+  background: var(--maj-pill) !important;
+  border-radius: 0.25vh !important;
+  padding: 0.05vh 0.45vh !important;
+  text-shadow: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* ==========================================================================
+   5. Сумка (backpack)
+   ========================================================================== */
+.box-inventory .inv-bag-section {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-top: 0.5vh !important;
+}
+.box-inventory .inv-bag-title {
+  font-size: 1.48vh !important;
+  font-weight: 600 !important;
+  color: var(--maj-text) !important;
+  text-shadow: none !important;
+  letter-spacing: 0.02em !important;
+  margin-bottom: 0.4vh !important;
+}
+.box-inventory .inv-bag-grid {
+  gap: var(--inv-slot-gap, 0.55vh) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+  padding-bottom: 12px !important;
+}
+.box-inventory .inv-bag-cell {
+  background: var(--maj-slot-bg) !important;
+  border: 0.0926vh solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0.3704vh !important;
+  box-shadow: none !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+.box-inventory .inv-bag-cell:hover {
+  background: rgba(40, 40, 40, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: none !important;
+}
+
+/* Скроллбар сумки — белая полоска вместо красной */
+.box-inventory .inv-bag-scroll {
+  scrollbar-color: rgba(255, 255, 255, 0.25) rgba(20, 20, 20, 0.6) !important;
+}
+.box-inventory .inv-bag-scroll::-webkit-scrollbar {
+  width: 4px !important;
+}
+.box-inventory .inv-bag-scroll::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.6) !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+.box-inventory .inv-bag-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.box-inventory .inv-bag-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ==========================================================================
+   6. Склад семьи — без внешней рамки; высота не режет ряды пополам + видимый скроллбар
+   ========================================================================== */
+/* Перебиваем calamity `.magicinv .minvosn .leftinv .itemlist.max { height: 26vh }` — он обрезал склад */
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max {
+  height: auto !important;
+  min-height: 32vh !important;
+  max-height: min(68vh, calc(100vh - 120px)) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  scrollbar-gutter: stable !important;
+  scrollbar-width: auto !important;
+  scrollbar-color: rgba(185, 28, 28, 0.82) rgba(28, 28, 28, 0.92) !important;
+  padding-right: 8px !important;
+  padding-bottom: 12px !important;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar {
+  width: 10px !important;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar-track {
+  background: rgba(28, 28, 28, 0.95) !important;
+  border-radius: 8px !important;
+  margin: 4px 0 !important;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.78) 0%, rgba(185, 28, 28, 0.88) 100%) !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(18, 18, 18, 0.88) !important;
+  min-height: 56px !important;
+}
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(248, 113, 113, 0.92) 0%, rgba(220, 38, 38, 0.95) 100%) !important;
+}
+
+.mode-family-warehouse .magicinv .minvosn .leftinv.family-wh-visible #warehouseInventory.itemlist.max {
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: var(--inv-slot-gap) !important;
+}
+
+.box-inventory .leftinv .itemlist {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  gap: unset !important;
+  padding: 0 !important;
+}
+
+.mode-family-warehouse .box-inventory .leftinv.family-wh-visible .itemlist {
+  width: 100% !important;
+  overflow-y: auto !important;
+}
+.box-inventory .leftinv .itemlist.max {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+/* Внешний вид слотов склада — только calamity / bridge (.item), без лишних линий Majestic */
+.box-inventory .leftinv .itemlist .item {
+  border-radius: 0.3704vh !important;
+}
+.box-inventory .leftinv .itemlist .item:hover {
+  border-color: rgba(220, 38, 38, 0.38) !important;
+  background: rgba(220, 38, 38, 0.11) !important;
+}
+
+/* ==========================================================================
+   7. Быстрые слоты (fast-bar)
+   ========================================================================== */
+.box-inventory .inv-fast-bar,
+.box-inventory .inv-fast-bar.fastslot {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.4vh 0 !important;
+  margin-top: 0.8vh !important;
+}
+.box-inventory .inv-fast-bar__label {
+  font-size: 1.2vh !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--maj-text-mute) !important;
+  text-shadow: none !important;
+  text-transform: none !important;
+}
+.box-inventory .inv-fast-bar .slots,
+.box-inventory .fastslot .slots {
+  gap: 0.46vh !important;
+}
+.box-inventory .slot.blockitem {
+  background: var(--maj-slot-bg) !important;
+  background-image: none !important;
+  border: none !important;
+  border-radius: 0.24vh !important;
+  box-shadow: none !important;
+  position: relative !important;
+  transition: background 0.18s ease !important;
+}
+.box-inventory .slot.blockitem:hover {
+  background: var(--maj-slot-bg-hover) !important;
+  box-shadow: inset 0 0 0 1px var(--maj-line) !important;
+}
+/* Цифра номера слота — пилюля в правом верхнем углу как Majestic */
+.box-inventory .slot.blockitem .slot-number {
+  position: absolute !important;
+  top: -0.08vh !important;
+  right: -0.08vh !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 1.35vh !important;
+  height: 1.35vh !important;
+  min-width: 1.35vh !important;
+  min-height: 1.35vh !important;
+  border-radius: 0.25vh !important;
+  background: var(--maj-pill) !important;
+  color: #fff !important;
+  font-size: 0.84vh !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* ==========================================================================
+   8. Контекстное меню — стиль Majestic
+   ========================================================================== */
+.box-inventory ~ #contextMenu.context-menu,
+#contextMenu.context-menu {
+  background: rgba(20, 20, 20, 0.96) !important;
+  border: 1px solid var(--maj-line) !important;
+  border-radius: 0.46vh !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+  padding: 0.3vh 0 !important;
+}
+#contextMenu.context-menu li,
+#contextMenu.context-menu .ctx-item {
+  font-size: 1.2vh !important;
+  font-weight: 500 !important;
+  color: var(--maj-text) !important;
+  padding: 0.46vh 1vh !important;
+  transition: background 0.15s ease !important;
+}
+#contextMenu.context-menu li:hover,
+#contextMenu.context-menu .ctx-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+}
+
+/* ==========================================================================
+   9. Модалки (qty / consum split) — стиль Majestic
+   ========================================================================== */
+.wh-qty-modal__box,
+.bag-cm-modal__box {
+  background: rgba(20, 20, 20, 0.97) !important;
+  border: 1px solid var(--maj-line) !important;
+  border-radius: 0.74vh !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7) !important;
+  color: var(--maj-text) !important;
+}
+.wh-qty-modal__backdrop,
+.bag-cm-modal__backdrop {
+  background: rgba(0, 0, 0, 0.55) !important;
+}
+.wh-qty-modal__btns button,
+.bag-cm-modal__row button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+  border-radius: 0.24vh !important;
+  color: var(--maj-text) !important;
+  font-weight: 500 !important;
+  transition: background 0.18s ease, color 0.18s ease !important;
+}
+.wh-qty-modal__btns button:hover,
+.bag-cm-modal__row button:hover {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* ==========================================================================
+   10. Toast биндинга
+   ========================================================================== */
+#invBindToast {
+  background: rgba(20, 20, 20, 0.96) !important;
+  border: 1px solid var(--maj-line) !important;
+  border-radius: 0.46vh !important;
+  color: var(--maj-text) !important;
+  font-size: 1.3vh !important;
+  font-weight: 500 !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ==========================================================================
+   11. Tooltip оружия
+   ========================================================================== */
+.box-inventory .weapon-tooltip,
+#weaponTooltip.weapon-tooltip {
+  background: rgba(20, 20, 20, 0.97) !important;
+  border: 1px solid var(--maj-line) !important;
+  border-radius: 0.46vh !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65) !important;
+  color: var(--maj-text) !important;
+  font-size: 1.2vh !important;
+  padding: 0.7vh 0.9vh !important;
+}
+
+/* ==========================================================================
+   12. Грид-разделители для multi-cell предметов (как у Majestic)
+   ========================================================================== */
+.box-inventory .inv-grid-cell.item--multi,
+.box-inventory .inv-bag-cell.item--multi {
+  position: relative;
+}
+.box-inventory .inv-grid-cell.item--multi::after,
+.box-inventory .inv-bag-cell.item--multi::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(100% / var(--slot-cols, 1) - 0.01vh),
+      var(--maj-line) calc(100% / var(--slot-cols, 1) - 0.01vh),
+      var(--maj-line) calc(100% / var(--slot-cols, 1))
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent calc(100% / var(--slot-rows, 1) - 0.01vh),
+      var(--maj-line) calc(100% / var(--slot-rows, 1) - 0.01vh),
+      var(--maj-line) calc(100% / var(--slot-rows, 1))
+    );
+}

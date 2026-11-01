@@ -1,0 +1,11 @@
+<!doctype html><html><meta charset="utf-8"><style>
+@font-face{font-family:GOST;src:url('GOST-R-50577-93.ttf')}*{box-sizing:border-box}html,body{margin:0;width:1024px;height:256px;background:#fff}main{position:absolute;inset:5px;border:6px solid #121212;border-radius:20px;display:flex;align-items:center;color:#080808;padding:6px 20px}#series{width:75%;height:100%;display:flex;align-items:center;justify-content:space-around;font:150px GOST,sans-serif}#series b{font-size:180px;font-weight:400;transform:translateY(14px)}aside{border-left:6px solid #111;height:100%;flex:1;text-align:center}#region{font:130px/1 GOST,sans-serif;height:155px;padding-top:20px}small{font:38px Arial,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px}.flag{width:92px;height:55px;border:2px solid #222;background:linear-gradient(#fff 0 33.333%,#164dc4 33.333% 66.666%,#e53039 66.666%)}
+</style><main><div id="series"></div><aside><div id="region"></div><small>RUS <span class="flag"></span></small></aside></main><script>
+window.renderPlate=plate=>{
+ if(plate!==''&&!/^[АВЕКМНОРСТУХ]\d{3}[АВЕКМНОРСТУХ]{2}\d{2,3}$/.test(plate))return;
+ document.documentElement.style.background=plate===''?'transparent':'#fff';document.body.style.background=plate===''?'transparent':'#fff';document.querySelector('main').style.display=plate===''?'none':'flex';
+ const series=document.getElementById('series');series.replaceChildren();
+ if(plate!==''){for(const [text,big]of [[plate[0],false],[plate.slice(1,4),true],[plate.slice(4,6),false]]){const el=document.createElement(big?'b':'span');el.textContent=text;series.append(el);}document.getElementById('region').textContent=plate.slice(6);}
+ return document.fonts.ready.then(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>{if(window.mp)mp.trigger('legacy:plateTexture:ready',plate);resolve();}))));
+};window.renderPlate(decodeURIComponent(location.hash.slice(1)));
+</script></html>

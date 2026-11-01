@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <link rel="stylesheet" href="package://browsers/shared/cef-no-select.css">
+    <link rel="stylesheet" href="package://browsers/amunation/source/Lib/css/fonts.css">
+    <link rel="stylesheet" href="package://browsers/amunation/source/Menu/UI/style.css">
+    <link rel="stylesheet" href="package://browsers/amunation/source/Lib/css/help.css">
+    <link rel="stylesheet" href="package://browsers/fib_armor/style.css">
+    <link rel="stylesheet" href="package://browsers/fib_armor/css/index.css">
+    <script src="package://browsers/shared/cef-no-select.js"></script>
+    <title>FIB — бронежилет</title>
+</head>
+<body scroll="no" style="overflow: hidden; background: transparent;">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <linearGradient id="ykTabGradActive" gradientTransform="rotate(90)">
+                <stop offset="0%" stop-color="#FFB800"/>
+                <stop offset="100%" stop-color="#FA5C01"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div id="root" class="cs-root">
+        <div class="content-block center">
+            <div class="yk-block cs-head" style="background: radial-gradient(122.31% 217.44% at 1.56% 94.83%, #293342 0%, #121720 100%); width: 800px;">
+                <div class="yk-tab-block-h">
+                    <button type="button" class="yk-tab-button active">
+                        <span class="yk-tab-button-text">БРОНЕЖИЛЕТ FIB</span>
+                    </button>
+                    <svg id="btnClose" class="ml-auto cs-close-ico" width="14" height="14" viewBox="0 0 14 14" style="cursor: pointer;" aria-label="Закрыть">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.41425 7.00025L13.7072 1.70725C14.0982 1.31625 14.0982 0.68425 13.7072 0.29325C13.3162 -0.09775 12.6842 -0.09775 12.2933 0.29325L7.00025 5.58625L1.70725 0.29325C1.31625 -0.09775 0.68425 -0.09775 0.29325 0.29325C-0.09775 0.68425 -0.09775 1.31625 0.29325 1.70725L5.58625 7.00025L0.29325 12.2933C-0.09775 12.6842 -0.09775 13.3162 0.29325 13.7072C0.48825 13.9022 0.74425 14.0002 1.00025 14.0002C1.25625 14.0002 1.51225 13.9022 1.70725 13.7072L7.00025 8.41425L12.2933 13.7072C12.4882 13.9022 12.7443 14.0002 13.0002 14.0002C13.2562 14.0002 13.5122 13.9022 13.7072 13.7072C14.0982 13.3162 14.0982 12.6842 13.7072 12.2933L8.41425 7.00025Z" fill="#4D5E77"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="yk-block d-flex flex-1 mt-20 cs-body" style="height: 520px; width: 800px; position: relative;">
+                <div class="yk-content d-flex flex-1 cs-body__inner" style="padding: 10px 10px 30px 10px;">
+                    <div class="yk-scroll cs-grid-wrap text-center flex-1" id="grid"></div>
+                </div>
+                <div class="cs-pay-bar" id="payBar" hidden>
+                    <button type="button" class="yk-btn s-18 p-10-15 green cs-pay-btn" id="btnAction">Выбрать</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmV4" class="cs-confirm" hidden>
+            <div class="cs-confirm__box yk-block">
+                <div class="cs-confirm__title yk-text w-7 s-16">Покупка варианта 4</div>
+                <div class="cs-confirm__text yk-text w-5 s-14">Подтвердить покупку за <strong id="confirmPrice">500 DP</strong>? После покупки смена вида — как у остальных вариантов.</div>
+                <div class="cs-confirm__actions">
+                    <button type="button" class="yk-btn s-16 p-10-15 cs-confirm__cancel" id="btnConfirmCancel">Отмена</button>
+                    <button type="button" class="yk-btn s-16 p-10-15 purple" id="btnConfirmBuy">Купить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="package://browsers/fib_armor/index.js"></script>
+</body>
+</html>

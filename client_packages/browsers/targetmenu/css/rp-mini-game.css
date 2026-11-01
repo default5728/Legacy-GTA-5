@@ -1,0 +1,156 @@
+.rp-mini-games-window {
+  position: relative;
+  width: 750px;
+  height: 370px;
+  background: rgba(23, 24, 39, 0.9);
+  border-radius: 10px;
+  padding: 64px 90px 36px 90px;
+}
+
+.rp-mini-top {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 24px;
+  color: #fff;
+}
+
+.rp-mini-top img {
+  margin-left: 10px;
+  margin-right: 6px;
+}
+
+.rp-mini-top a {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.rp-mini-top-block {
+  display: flex;
+  justify-content:space-between;
+}
+
+.rp-mini-top-block p {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+}
+
+.rp-mini-top-block p a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.rp-mini-game-block {
+  position: relative;
+  width: 570px;
+  height: 197px;
+}
+.rp-circle {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  background: rgba(0, 110, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.rp-circle div {
+  width: 18px;
+  height: 18px;
+  background: #006EFF;
+  border-radius: 50%;
+}
+
+.rp-mini-game-block p {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rp-mini-game-block p.rp-text1 {
+  font-weight: bold;
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.05);
+}
+
+.rp-mini-game-block p.rp-text2 {
+  font-weight: 500;
+  font-size: 64px;
+  color: #fff;
+}
+
+.rp-mini-pogress {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.rp-mini-pogress-blue {
+  position: relative;
+  z-index: 1;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(0, 110, 255, 0) 1.26%, #006EFF 101.26%);
+  border-radius: 10px;
+}
+
+.rp-mini-progress-block {
+  position: relative;
+  z-index: 1;
+  width: 2px;
+  height: 11px;
+  background: #006EFF;
+  border-radius: 10px;
+}
+
+.rp-mini-pogress-bar {
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 3px;
+  background: #252635;
+  border-radius: 10px;
+}
+
+.rp-mini-games-icon {
+  position: absolute;
+  left: 50%;
+  top: -49px;
+  transform: translate(-50%, 0);
+}
+
+.rp-game-close-but {
+  position: absolute;
+  text-decoration: none;
+  cursor: pointer;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: #252635;
+  border-radius: 10px;
+}
+
+.count-div {
+  display: flex;
+}
+
+.count-div a {
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  margin-right: 4px;
+}

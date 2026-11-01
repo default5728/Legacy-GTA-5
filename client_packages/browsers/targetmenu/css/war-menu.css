@@ -1,0 +1,274 @@
+.new-war_window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1072px;
+  height: 738px;
+  background: rgba(23, 24, 39, 0.98);
+  box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.new-war_window-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 48px 0 0 64px;
+}
+
+.new-war_window-close {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #252635;
+  cursor: pointer;
+}
+
+.new-war_window-close img {
+  width: 15px;
+}
+
+.new-war_window-close:hover {
+  background: #006EFF;
+}
+
+.new-war_window-close:hover img {
+  -webkit-filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
+}
+
+.new-war_window-heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.new-war_window-heading p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.new-war_window-nav {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #3D3F53;
+  margin-bottom: 48px;
+}
+.new-war_window-nav--dop {
+  padding-right: 64px;
+}
+
+.new-war_window-nav li {
+  list-style: none;
+  height: 40px;
+  margin-bottom: -1px;
+  margin-right: 32px;
+  border-bottom: 1px solid #3D3F53;
+}
+
+.new-war_window-link {
+  font-weight: 500;
+  font-size: 14px;
+  color: #3D3F53;
+}
+
+.new-war_window-link:hover, .new-war_window-nav li.active .new-war_window-link {
+  text-decoration: none;
+  color: #fff;
+}
+
+.new-war_window-nav li.active {
+  border-color: #006EFF;
+}
+
+.new-war_window-main-heading {
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 23px;
+}
+
+.new-war_lable {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  margin-bottom: 23px;
+}
+
+.new-war_war-list {
+  width: 505px;
+  padding-right: 48px;
+  margin: 0;
+  height: 427px;
+  overflow: auto;
+}
+
+.new-war_war-list::-webkit-scrollbar {
+  width: 1px;
+  background: none;
+}
+
+.new-war_war-list::-webkit-scrollbar-thumb {
+  background: #006EFF;
+}
+
+.new-war_war-list li {
+  list-style: none;
+  border-bottom: 1px solid #3D3F53;
+}
+.new-war_war-list li a div {
+  display: none;
+}
+.new-war_war-list li a {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 67px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+  text-decoration: none;
+}
+
+.new-war_war-list li.active a {
+  color: #fff;
+}
+
+.new-war_war-list li.active a div {
+  width: 24px;
+  height: 24px;
+  background: #006EFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-war_window-main {
+  display: flex;
+}
+
+.new-war_window-main-right {
+  width: 360px;
+  margin-top: 45px;
+}
+
+.new-war_window-main-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 24px;
+  outline: none;
+  background: none;
+  border: 1px solid #3D3F53;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 48px;
+}
+
+.new-war_window-main-input::placeholder {
+  font-weight: 500;
+  font-size: 14px;
+  color: #3D3F53;
+}
+
+.select--new-war {
+  width: 100%;
+}
+
+.new-war_start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  background: #006EFF;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 48px;
+}
+
+.new-war_start-btn:hover {
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+  color: #fff;
+  text-decoration: none;
+}
+.new-war_window-main-left {
+  margin-right: 78px;
+}
+
+.new-war_table {
+  width: 100%;
+}
+
+.new-war_table th {
+  font-weight: 500;
+  font-size: 14px;
+  color: #3D3F53;
+}
+
+.new-war_table td {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+}
+
+.new-war_table td b {
+  font-weight: 500;
+  font-size: 14px;
+  color: #3D3F53;
+}
+
+.new-war_table td a {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+}
+.new-war_table thead tr {
+  height: 64px;
+}
+.new-war_table tbody tr {
+  height: 64px;
+  border-bottom: 1px solid #252635;
+}
+td.new-war_table--win {
+  color: #31C02E;
+}
+td.new-war_table--defeat {
+  color: #0099ff;
+}
+
+.new-war_history-list {
+  overflow: auto; height: 500px;
+  padding-right: 64px;
+}
+
+.new-war_history-list::-webkit-scrollbar {
+  width: 1px;
+  background: none;
+}
+
+.new-war_history-list::-webkit-scrollbar-thumb {
+  background: #006EFF;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+}

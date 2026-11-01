@@ -1,0 +1,64 @@
+/**
+ * Фрагмент из src_client/menu.js — hydrate/save кастомного прицела с сервера.
+ * События: crosshairSettingsHydrate, crosshairEnabledHydrate, crosshairSave, crosshairLiveHud, crosshairCustomEnabled
+ */
+
+const CROSSHAIR_JSON_REMOTE_MAX = 12000;
+
+function applyCrosshairFromStorageToHud() {
+   try {
+      const s = mp.storage.data && mp.storage.data.settings;
+      if (!s || s.crosshairEnabled === false) return;
+      if (s && typeof s.crosshair === 'string' && s.crosshair.length) {
+         mp.events.call('hudCrosshairApply', s.crosshair);
+      }
+   } catch (_e) {}
+}
+
+function pushCrosshairJsonToServer(_jsonStr) {
+   try {
+      if (mp.players.local.getVariable('auth') !== true) return;
+      if (typeof global.__f10Reticle !== 'undefined' && typeof global.__f10Reticle.saveCrosshairFullToServer === 'function') {
+         global.__f10Reticle.saveCrosshairFullToServer();
+         return;
+      }
+      const jsonStr = _jsonStr;
+      if (typeof jsonStr !== 'string' || !jsonStr.length || jsonStr.length > CROSSHAIR_JSON_REMOTE_MAX) return;
+      JSON.parse(jsonStr);
+      mp.events.callRemote('crosshairSettingsSave:s', jsonStr);
+   } catch (_e) {}
+}
+
+mp.events.add('crosshairSettingsHydrate', (jsonStr) => {
+   if (typeof jsonStr !== 'string' || !jsonStr.length || jsonStr.length > CROSSHAIR_JSON_REMOTE_MAX) return;
+   try { JSON.parse(jsonStr); } catch (_e) { return; }
+   if (typeof global !== 'undefined') global.__crosshairServerHydrated = true;
+   if (!mp.storage.data.settings) mp.storage.data.settings = {};
+   try {
+      if (typeof global.__f10Reticle !== 'undefined' && typeof global.__f10Reticle.applyCrosshairDbPayload === 'function') {
+         global.__f10Reticle.applyCrosshairDbPayload(jsonStr);
+      } else if (typeof global.__f10Reticle !== 'undefined' && typeof global.__f10Reticle.syncReticleFromPhantomJson === 'function') {
+         global.__f10Reticle.syncReticleFromPhantomJson(jsonStr);
+      } else {
+         mp.storage.data.settings.crosshair = jsonStr;
+         mp.storage.flush();
+         mp.events.call('hudCrosshairApply', jsonStr);
+      }
+   } catch (_eSync) {}
+   const s = mp.storage.data.settings;
+   if (s.crosshairEnabled !== false && typeof s.crosshair === 'string' && s.crosshair.length) {
+      mp.events.call('hudCrosshairApply', s.crosshair);
+   }
+});
+
+mp.events.add('crosshairEnabledHydrate', (flag) => {
+   const enabled = flag === true || flag === '1' || flag === 1 || flag === 'true';
+   if (!mp.storage.data.settings) mp.storage.data.settings = {};
+   mp.storage.data.settings.crosshairEnabled = enabled;
+   mp.storage.flush();
+   if (!enabled) {
+      try { mp.events.call('hudCrosshairShow', false); } catch (_e2) {}
+   } else {
+      applyCrosshairFromStorageToHud();
+   }
+});

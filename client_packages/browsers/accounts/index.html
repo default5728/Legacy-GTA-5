@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="css/auth-life5.css?v=43">
+    <script type="text/javascript" src="Lib/js/jquery.js?v=43"></script>
+    <script type="text/javascript" src="Lib/js/vue.js?v=43"></script>
+    <script type="text/javascript" src="Lib/js/preventSelection.js?v=43"></script>
+</head>
+<body>
+
+    <svg height="0" width="0">
+        <defs>
+            <linearGradient id="authIcoGrad1" gradientTransform="rotate(30)">
+                <stop offset="45%" stop-color="#0072ee"></stop>
+                <stop offset="99%" stop-color="#11ade4"></stop>
+            </linearGradient>
+            <linearGradient id="authIcoGrad2" gradientTransform="rotate(30)">
+                <stop offset="45%" stop-color="#ff6513"></stop>
+                <stop offset="99%" stop-color="#ffde37"></stop>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div id="authMenu">
+    <template>
+        <div v-if="loaded && isActive">
+
+            <div class="auth-form-block">
+                <img src="package://browsers/accounts/img/flowdm-logo.png?v=1" style="height: 100px;" draggable="false">
+                <div class="menu-text f-l s-24" style="position: absolute; top: 30px; left: 190px;">{{ serverData.serverName }}</div>
+                <div class="d-flex mt-20">
+                    <div @click="authMode = 1;" class="menu-text s-24" :class="{'f-l': authMode === 0}" :style="{'color': authMode === 0 ? 'rgba(255, 255, 255, 0.45)' : '#fff'}">Регистрация</div>
+                    <div @click="authMode = 0;" class="menu-text s-24 ml-20" :class="{'f-l': authMode === 1}" :style="{'color': authMode === 1 ? 'rgba(255, 255, 255, 0.45)' : '#fff'}">Авторизация</div>
+                </div>
+                <div v-if="authMode === 0" class="d-flex column mt-20">
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="127" height="141.3" viewBox="0 0 127 141.3">
+                            <g>
+                                <path d="M63.5,73A36.5,36.5,0,1,0,27,36.5,36.6,36.6,0,0,0,63.5,73Zm0-63A26.5,26.5,0,1,1,37,36.5,26.5,26.5,0,0,1,63.5,10Z"/>
+                                <path d="M87.8,79.6A59.7,59.7,0,0,1,63.4,85a57.8,57.8,0,0,1-24.2-5.4A39.3,39.3,0,0,0,0,118.9v13a232.1,232.1,0,0,0,64.6,9.4,211.9,211.9,0,0,0,62.4-9.4v-13A39.3,39.3,0,0,0,87.8,79.6ZM117,124.4a202.7,202.7,0,0,1-52.4,6.9,221.7,221.7,0,0,1-54.6-7v-5.4A29.3,29.3,0,0,1,37.3,89.7,69.2,69.2,0,0,0,63.4,95a70.8,70.8,0,0,0,26.2-5.3A29.3,29.3,0,0,1,117,118.9Z"/>
+                            </g>
+                        </svg>
+                        <input ref="loginInput" v-model="formAuth.login" class="menu-input" placeholder="Логин">
+                    </div>
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1 mt-5'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="127" height="128" viewBox="0 0 127 128">
+                            <g>
+                                <path d="M105,44H93V30.1C93,13.5,79.8,0,63.5,0S34,13.5,34,30.1V44H22A21.9,21.9,0,0,0,0,66v40a21.9,21.9,0,0,0,22,22h83a21.9,21.9,0,0,0,22-22V66A21.9,21.9,0,0,0,105,44ZM44,30.1C44,19,52.7,10,63.5,10S83,19,83,30.1V44H44ZM117,106a12,12,0,0,1-12,12H22a12,12,0,0,1-12-12V66A12,12,0,0,1,22,54h83a12,12,0,0,1,12,12Z"/>
+                                <circle cx="39" cy="84.5" r="7.5"/>
+                                <circle cx="64" cy="84.5" r="7.5"/>
+                                <circle cx="88" cy="84.5" r="7.5"/>
+                            </g>
+                        </svg>
+                        <input ref="passInput" v-model="formAuth.pass" @keyup.enter="auth();" type="password" class="menu-input" placeholder="Пароль">
+                    </div>
+                    <button @click="auth();" :class="'menu-btn auth-btn server-' + serverData.serverId + ' flex-1 mt-20'">Войти</button>
+                    <div v-if="!limitError && formAuth.error" class="menu-text" style="position: absolute; top: calc(100% + 15px); left: 50%; transform: translateX(-50%); max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ formAuth.error }}</div>
+                    <div v-if="!limitError && formAuth.error == '' && /[а-яА-ЯЁё]/.test(formAuth.pass)" class="menu-text" style="position: absolute; top: calc(100% + 15px); left: 50%; transform: translateX(-50%); max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">В пароле не может быть русских букв</div>
+                    <div v-if="limitError" class="menu-text menu-color-green text-center" style="position: absolute; top: calc(100% + 15px); left: 50%; transform: translateX(-50%); width: 400px;">
+                        <div>Вы успешно вошли в аккаунт.</div>
+                        <div>Сейчас сервер переполнен.</div>
+                        <div>Ваш номер в очереди: {{ queue }}.</div>
+                        <div>Пожалуйста подождите.</div>
+                        <div>Вы будете автоматически подключены.</div>
+                    </div>
+                </div>
+                <div v-if="authMode === 1" class="d-flex column mt-20">
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="127" height="141.3" viewBox="0 0 127 141.3">
+                            <g>
+                                <path d="M63.5,73A36.5,36.5,0,1,0,27,36.5,36.6,36.6,0,0,0,63.5,73Zm0-63A26.5,26.5,0,1,1,37,36.5,26.5,26.5,0,0,1,63.5,10Z"/>
+                                <path d="M87.8,79.6A59.7,59.7,0,0,1,63.4,85a57.8,57.8,0,0,1-24.2-5.4A39.3,39.3,0,0,0,0,118.9v13a232.1,232.1,0,0,0,64.6,9.4,211.9,211.9,0,0,0,62.4-9.4v-13A39.3,39.3,0,0,0,87.8,79.6ZM117,124.4a202.7,202.7,0,0,1-52.4,6.9,221.7,221.7,0,0,1-54.6-7v-5.4A29.3,29.3,0,0,1,37.3,89.7,69.2,69.2,0,0,0,63.4,95a70.8,70.8,0,0,0,26.2-5.3A29.3,29.3,0,0,1,117,118.9Z"/>
+                            </g>
+                        </svg>
+                        <input v-model="formReg.login" class="menu-input" placeholder="Логин">
+                    </div>
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1 mt-5'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="127" height="87" viewBox="0 0 127 87">
+                            <g>
+                                <path d="M120.7,0H6.3A6.3,6.3,0,0,0,0,6.3V81a6.3,6.3,0,0,0,6.3,6.3H120.7A6.3,6.3,0,0,0,127,81V6.3A6.3,6.3,0,0,0,120.7,0ZM10,19.6,39.7,47.5,10,70.6ZM66.9,53a5.2,5.2,0,0,1-6.8,0L14.4,10h98.2ZM47,54.4l6.3,5.8a14.7,14.7,0,0,0,20.4,0l6.8-6.3,29.3,23.4H17.6ZM87.9,47,117,19.6V70.2Z"/>
+                            </g>
+                        </svg>
+                        <input v-model="formReg.email" class="menu-input" placeholder="Почта">
+                    </div>
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1 mt-5'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="127" height="128" viewBox="0 0 127 128">
+                            <g>
+                                <path d="M105,44H93V30.1C93,13.5,79.8,0,63.5,0S34,13.5,34,30.1V44H22A21.9,21.9,0,0,0,0,66v40a21.9,21.9,0,0,0,22,22h83a21.9,21.9,0,0,0,22-22V66A21.9,21.9,0,0,0,105,44ZM44,30.1C44,19,52.7,10,63.5,10S83,19,83,30.1V44H44ZM117,106a12,12,0,0,1-12,12H22a12,12,0,0,1-12-12V66A12,12,0,0,1,22,54h83a12,12,0,0,1,12,12Z"/>
+                                <circle cx="39" cy="84.5" r="7.5"/>
+                                <circle cx="64" cy="84.5" r="7.5"/>
+                                <circle cx="88" cy="84.5" r="7.5"/>
+                            </g>
+                        </svg>
+                        <input v-model="formReg.pass" type="password" class="menu-input" placeholder="Пароль">
+                    </div>
+                    <div :class="'menu-input-block auth-input server-' + serverData.serverId + ' flex-1 mt-5'">
+                        <svg :class="'auth-input-ico server-' + serverData.serverId + ''" width="128" height="130" viewBox="0 0 128 130">
+                            <g>
+                                <path d="M78,120H25.4A15.5,15.5,0,0,1,10,104.5v-37A15.5,15.5,0,0,1,25.4,52h77a15.4,15.4,0,0,1,13.4,7.9,5,5,0,1,0,8.7-5A25.6,25.6,0,0,0,102.4,42H93.5V30.1C93.5,13.5,80.3,0,64,0S34.5,13.5,34.5,30.1V42H25.4A25.5,25.5,0,0,0,0,67.5v37A25.5,25.5,0,0,0,25.4,130H78a5,5,0,0,0,5-5A5,5,0,0,0,78,120ZM44.5,30.1C44.5,19,53.2,10,64,10s19.5,9,19.5,20.1V42h-39Z"/>
+                                <circle cx="39.5" cy="84.5" r="7.5"/>
+                                <circle cx="64.5" cy="84.5" r="7.5"/>
+                                <circle cx="90.5" cy="84.5" r="7.5"/>
+                                <path d="M125,69.4a5.1,5.1,0,0,0-6.6,2.6l-18.3,41.6L81.4,96.7a5,5,0,0,0-7.1.4,4.9,4.9,0,0,0,.3,7l23.9,21.6a5.5,5.5,0,0,0,3.4,1.3h1a5,5,0,0,0,3.6-2.9l21.1-48A5.1,5.1,0,0,0,125,69.4Z"/>
+                            </g>
+                        </svg>
+                        <input v-model="formReg.confirmPass" @keyup.enter="reg();" type="password" class="menu-input" placeholder="Повтор пароля">
+                    </div>
+                    <button @click="reg();" :class="'menu-btn auth-btn server-' + serverData.serverId + ' flex-1 mt-20'">Создать аккаунт</button>
+                    <div v-if="formReg.error" class="menu-text" style="position: absolute; top: calc(100% + 15px); left: 50%; transform: translateX(-50%); max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ formReg.error }}</div>
+                </div>
+            </div>
+
+            <img :src="'package://browsers/accounts/img/theme/23-figure.webp'" style="position: absolute; bottom: 0; left: 0; height: 100%; z-index: -999;" draggable="false">
+
+            <div class="auth-news-list">
+                <div v-for="n in news" :key="n.id" :class="'auth-news-block list-mt-20'">
+                    <img class="auth-news-img" :src="n.img" draggable="false">
+                    <div class="auth-news-date">{{ n.date }}</div>
+                    <img class="auth-news-img-corner" src="package://browsers/accounts/img/news/corner.png" draggable="false">
+                </div>
+            </div>
+
+        </div>
+    </template>
+    </div>
+
+    <script src="main.js?v=43"></script>
+</body>
+</html>

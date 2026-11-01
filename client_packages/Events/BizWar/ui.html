@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizWar</title>
+    <script src="package://browsers/menunew/js/vue.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Geometria Regular';
+            src: url('package://browsers/hud/fonts/Geometria.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Geometria Medium';
+            src: url('package://browsers/hud/fonts/Geometria-Medium.ttf') format('truetype');
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+            color: #fff;
+            font-family: 'Geometria Regular', Arial, sans-serif;
+        }
+        #bizWarInfoBlock {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .b-elem { position: absolute; }
+        .d-flex { display: flex; }
+        .text-center { text-align: center; }
+        .menu-text { font-size: 14px; color: #fff; }
+        .f-m { font-family: 'Geometria Medium', Arial, sans-serif; }
+        .menu-color-red { color: #e72139; }
+        .menu-color-green { color: #4eff00; }
+        .menu-color-blue { color: #19b9fa; }
+        .time-bg {
+            padding: 3px;
+            border-radius: 5px;
+            background: #232323;
+        }
+        .time-char {
+            display: inline-block;
+            min-width: 0;
+            width: 10px;
+            padding: 1px 2px;
+            background: linear-gradient(to left top, #0a5ad2, #22d4fa);
+            text-align: center;
+            border-radius: 2px;
+        }
+        html, body, #vueApp, #vueApp * {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+        ::selection {
+            background: transparent !important;
+            color: inherit !important;
+        }
+    </style>
+    <script>
+        document.addEventListener('selectstart', function (event) {
+            event.preventDefault();
+        }, true);
+        document.addEventListener('dragstart', function (event) {
+            event.preventDefault();
+        }, true);
+        document.addEventListener('keydown', function (event) {
+            if ((event.ctrlKey || event.metaKey) && String(event.key).toLowerCase() === 'a') {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }, true);
+    </script>
+</head>
+<body>
+    <div id="vueApp">
+        <div v-if="loaded" id="bizWarInfoBlock">
+            <img src="bg.png" alt="" style="height: calc(50px * 0.8); width: calc(1084px * 0.8);">
+            <div class="menu-text menu-color-red b-elem" style="top: 12px; left: 53px; font-size: 13px;">Атака</div>
+            <div class="menu-text f-m menu-color-red b-elem" style="top: 13px; left: 130px; font-size: 13px;">{{ data.attackerCount }}</div>
+            <div class="menu-text menu-color-green b-elem" style="top: 12px; right: 53px; font-size: 13px;">Защита</div>
+            <div class="menu-text f-m menu-color-green b-elem" style="top: 13px; right: 130px; font-size: 13px;">{{ data.defenderCount }}</div>
+            <div class="menu-text f-m b-elem" style="top: 12px; left: 210px; font-size: 13px;">{{ data.attacker }}</div>
+            <div class="menu-text f-m b-elem" style="top: 12px; right: 210px; font-size: 13px;">{{ data.defender }}</div>
+            <div v-if="data.time > 0" class="b-elem d-flex" style="left: 50%; transform: translateX(-50%);">
+                <div class="time-bg">
+                    <span class="menu-text f-m time-char">{{ getTime(0) }}</span>
+                    <span class="menu-text f-m time-char">{{ getTime(1) }}</span>
+                </div>
+                <div class="time-bg" style="margin-left: 2px;">
+                    <span class="menu-text f-m time-char">{{ getTime(2) }}</span>
+                    <span class="menu-text f-m time-char">{{ getTime(3) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const vueApp = new Vue({
+            el: '#vueApp',
+            data: { data: null, interval: null, loaded: false },
+            methods: {
+                getTime(index) {
+                    const twoDigits = (value) => value >= 10 ? String(value) : '0' + value;
+                    const time = Math.max(0, Number(this.data.time) || 0);
+                    return (twoDigits(Math.floor(time / 60)) + twoDigits(time % 60))[index];
+                },
+                update(updateData) {
+                    if (!this.data || !updateData || typeof updateData !== 'object') return;
+                    if (updateData.attacker !== undefined) this.data.attacker = updateData.attacker;
+                    if (updateData.defender !== undefined) this.data.defender = updateData.defender;
+                    if (updateData.attackerCount !== undefined) this.data.attackerCount = Number(updateData.attackerCount) || 0;
+                    if (updateData.defenderCount !== undefined) this.data.defenderCount = Number(updateData.defenderCount) || 0;
+                    if (updateData.time !== undefined) this.data.time = Math.max(0, Number(updateData.time) || 0);
+                    if (updateData.prep !== undefined) this.data.prep = updateData.prep === true;
+                },
+                load(loadData) {
+                    if (!loadData || typeof loadData !== 'object') return;
+                    this.data = {
+                        attacker: loadData.attacker || '',
+                        defender: loadData.defender || '—',
+                        attackerCount: Number(loadData.attackerCount) || 0,
+                        defenderCount: Number(loadData.defenderCount) || 0,
+                        time: Math.max(0, Number(loadData.time) || 0),
+                        prep: loadData.prep === true
+                    };
+                    if (this.interval) clearInterval(this.interval);
+                    this.interval = setInterval(() => {
+                        if (!this.data || this.data.time <= 0) return;
+                        // Between preparation and battle the server sends the new time shortly after zero.
+                        // Keep 00:01 visible during that handoff so the HUD never flickers or recreates.
+                        if (this.data.prep && this.data.time === 1) return;
+                        this.data.time--;
+                    }, 1000);
+                    this.loaded = true;
+                },
+                hide() {
+                    this.loaded = false;
+                    if (this.interval) clearInterval(this.interval);
+                    this.interval = null;
+                    this.data = null;
+                }
+            }
+        });
+
+        window.bizWarApp = {
+            load: (data) => vueApp.load(data),
+            update: (data) => vueApp.update(data),
+            hide: () => vueApp.hide()
+        };
+    </script>
+</body>
+</html>

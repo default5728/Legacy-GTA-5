@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" type="text/css" href="Chat/chat.css?v=11" media="screen">
+    <style>
+        @font-face { font-family: 'Geometria Regular'; src: url('package://browsers/hud/fonts/Geometria.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+        @font-face { font-family: 'Geometria Bold'; src: url('package://browsers/hud/fonts/Geometria-Bold.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+        @font-face { font-family: 'Geometria Medium'; src: url('package://browsers/hud/fonts/Geometria-Medium.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+
+        html, body {
+            margin: 0; padding: 0;
+            background: transparent;
+            overflow: visible;
+            font-family: 'Geometria Regular', 'Segoe UI', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #chat, #chat ul#chat_messages, #chat ul#chat_messages li,
+        #chat .chat-msg-text, #chat_input_buttons_block, .chat-btn {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #chat_input {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        #chat:focus { outline: none; box-shadow: none; }
+        .chat-btn:focus { outline: none; box-shadow: none; }
+        ::selection {
+            background: transparent !important;
+            color: inherit !important;
+        }
+        ::-moz-selection {
+            background: transparent !important;
+            color: inherit !important;
+        }
+        #chat {
+            position: fixed;
+            top: 22px;
+            left: 0;
+            right: auto;
+            margin: 0;
+            padding: 0;
+            z-index: 99990;
+        }
+    </style>
+    <script>
+        document.addEventListener('selectstart', function (e) {
+            if (e.target && e.target.id === 'chat_input') return;
+            e.preventDefault();
+        }, true);
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        }, true);
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A')) {
+                if (e.target && e.target.id === 'chat_input') return;
+                e.preventDefault();
+            }
+        }, true);
+    </script>
+</head>
+<body>
+
+<div id="chat" class="ui_element">
+    <ul id="chat_messages"></ul>
+</div>
+
+<script src="js/jquery.js"></script>
+    <script src="chat-bridge.js?v=14"></script>
+
+</body>
+</html>

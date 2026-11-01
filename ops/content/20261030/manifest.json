@@ -1,0 +1,22 @@
+[
+  {
+    "pack": "98clk",
+    "bytes": 26344960,
+    "sha256": "83a63a8b240dd6ff1504e1e77015bf5cb56ad198e5e3c0fa87f937bfd5a0d9c6"
+  },
+  {
+    "pack": "200613",
+    "bytes": 214285312,
+    "sha256": "e86feddd394cd3ba5bf33c5a10334e8bdec85c0128d08dfa963ddf73b0bb77ea"
+  },
+  {
+    "pack": "tesroad20",
+    "bytes": 27478528,
+    "sha256": "b0723d279c5c104195d47791ec9e6da3cd99e735cd0638a93f96332ab365d4cb"
+  },
+  {
+    "pack": "legacy26",
+    "bytes": 33808384,
+    "sha256": "d3b19376efdc32a842989e1d849da65415d6388abe74f72de1c917815879d733"
+  }
+]

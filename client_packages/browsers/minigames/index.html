@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мини-игры</title>
+  <link rel="stylesheet" href="../menunew/css/minigames.css" />
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0);
+      color: #f5f5f5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      font-variant-numeric: tabular-nums;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border: none;
+      outline: none;
+    }
+    *, *::before, *::after { outline: none !important; }
+    .dprou, .dprou-card, #mg-game-root, #minigames, #main-window {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
+    #main-window {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 36px 20px 12px;
+      background: #16181c;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+    #mg-picker {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 8px;
+      gap: 16px;
+    }
+    .mg-picker__title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #f5f5f5;
+    }
+    .mg-picker__hint {
+      margin: -6px 0 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.52);
+      line-height: 1.45;
+    }
+    .mg-picker__card {
+      text-align: left;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 18px 20px;
+      border: 1px solid rgba(231, 29, 54, 0.35);
+      background: rgba(14, 14, 14, 0.95);
+      color: #e8e8e8;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset;
+    }
+    .mg-picker__card:hover {
+      border-color: rgba(239, 68, 68, 0.55);
+      box-shadow: 0 0 24px rgba(220, 38, 38, 0.2), 0 0 0 1px rgba(0,0,0,0.35) inset;
+      background: rgba(18, 18, 18, 0.98);
+    }
+    .mg-picker__card-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .mg-picker__card-desc {
+      display: block;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.4;
+    }
+    #mg-game-root {
+      display: none;
+      height: 100%;
+    }
+    #mg-game-root.is-visible {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-sizing: border-box;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #minigames.tab-pane {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    .dprou {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dprou-card {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dprou-viewport-slot {
+      flex: 1 1 auto;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .mg-game-close {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      right: auto;
+      z-index: 30;
+      height: 34px;
+      padding: 0 14px;
+      margin: 0;
+      border: 1px solid rgba(220, 38, 38, 0.38);
+      border-radius: 8px;
+      background: rgba(26, 26, 26, 0.94);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.01em;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mg-game-close:hover {
+      border-color: rgba(239, 68, 68, 0.65);
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.18);
+      color: #fff;
+    }
+    .mg-game-close svg {
+      flex-shrink: 0;
+    }
+    #mg-picker.is-hidden {
+      display: none;
+    }
+    #minigames.tab-pane {
+      display: block;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-window">
+    <div id="mg-game-root" class="is-visible">
+      <div id="minigames" class="tab-pane in active">
+        <div class="dprou">
+          <h3>Мини-игры</h3>
+          <div class="dprou-card">
+            <div class="dprou-head">
+              <div class="dprou-head-main">
+                <div class="dprou-title">Рулетка DP</div>
+                <div class="dprou-bal-row">
+                  <span id="dprouDp" class="dprou-bal-num">0</span><span class="dprou-dp-label">DP</span>
+                </div>
+                <div id="dprouTimer" class="dprou-timer">Ожидание ставок…</div>
+              </div>
+              <aside class="dprou-last-panel">
+                <div class="dprou-last-caption">Последние выпадения</div>
+                <ul id="dprouHistory" class="dprou-history"></ul>
+              </aside>
+            </div>
+            <div class="dprou-viewport-slot">
+            <div class="dprou-viewport">
+              <div class="dprou-marker"></div>
+              <div class="dprou-strip-wrap">
+                <div id="dprouStrip" class="dprou-strip dprou-strip--horizontal"></div>
+              </div>
+            </div>
+            </div>
+            <div class="dprou-betrow">
+              <div class="dprou-input-wrap">
+                <input type="text" id="dprouAmount" inputmode="numeric" placeholder="Сумма" value="1500" autocomplete="off" />
+                <span class="dprou-input-suffix">DP</span>
+              </div>
+            </div>
+            <div class="dprou-colors-grid">
+              <div class="dprou-mul-col">
+                <button type="button" class="dprou-mul-btn dprou--c2" onclick="DpRouletteGame.placeBet('c2')">2X</button>
+                <div id="dprouBets_c2" class="dprou-mul-bets"></div>
+              </div>
+              <div class="dprou-mul-col">
+                <button type="button" class="dprou-mul-btn dprou--c3" onclick="DpRouletteGame.placeBet('c3')">3X</button>
+                <div id="dprouBets_c3" class="dprou-mul-bets"></div>
+              </div>
+              <div class="dprou-mul-col">
+                <button type="button" class="dprou-mul-btn dprou--c5" onclick="DpRouletteGame.placeBet('c5')">5X</button>
+                <div id="dprouBets_c5" class="dprou-mul-bets"></div>
+              </div>
+              <div class="dprou-mul-col">
+                <button type="button" class="dprou-mul-btn dprou--c10" onclick="DpRouletteGame.placeBet('c10')">10X</button>
+                <div id="dprouBets_c10" class="dprou-mul-bets"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../menunew/js/dp_roulette_ui.js"></script>
+  <script>
+    (function () {
+      function enterGame() {
+        var root = document.getElementById('mg-game-root');
+        if (root) root.classList.add('is-visible');
+        if (typeof DpRouletteGame !== 'undefined' && DpRouletteGame.pull) DpRouletteGame.pull();
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', enterGame);
+      } else {
+        enterGame();
+      }
+    })();
+  </script>
+</body>
+</html>

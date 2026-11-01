@@ -1,0 +1,9 @@
+.main-wrap { min-height:0; }
+.container { max-width:calc(100vw - 32px); max-height:calc(100vh - 32px); }
+.content { overflow-y:auto !important; overflow-x:hidden !important; }
+.content.active > * { flex-shrink:0; }
+.menu { overflow-y:auto; min-height:0; }
+.content,.menu,.obsidian-options,.reports-layout,.report-list,.report-chat,.keybind-list,.settings-bind-scroll,#reportHistory,#pricesGrid,#permissionsGrid,#rankRightsGrid,#toolResults { overscroll-behavior-y:contain; scrollbar-width:thin; scrollbar-color:#4b4b54 transparent; }
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-thumb { background:#4b4b54; border-radius:8px; }
+::-webkit-scrollbar-track { background:transparent; }

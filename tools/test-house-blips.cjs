@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const handlers={},ticks=[],markers=[];
+let authenticated=true;
+const locations=require('../client_packages/shared/world-locations.json'),houses=locations.filter(r=>r.type==='house');
+const ctx={require:name=>name.includes('world-interiors')?require('../client_packages/shared/world-interiors.json'):locations,global:{isPlayerSpawned:true,bindGameplayKey(){}},setInterval:fn=>ticks.push(fn),mp:{players:{local:{getVariable:()=>authenticated,position:{x:0,y:0,z:0},dimension:1}},events:{add:(name,fn)=>handlers[name]=fn,callRemote(){}},Vector3:function(x,y,z){Object.assign(this,{x,y,z});},blips:{new:(sprite,position,options)=>{const blip={sprite,position,...options,destroy(){this.removed=true;}};markers.push(blip);return blip;}},peds:{exists:()=>false}},console};
+vm.runInNewContext(fs.readFileSync('client_packages/legacy/world.js','utf8'),ctx);
+const send=(owners,mine)=>handlers['legacy:world:owners'](JSON.stringify({owners,mine}));
+send({},[]);assert.equal(markers.filter(b=>!b.removed).length,houses.length);
+send({[houses[0].id]:true},[]);assert.equal(markers.filter(b=>!b.removed).length,houses.length-1);
+send({[houses[0].id]:true},[houses[0].id]);const own=markers.find(b=>!b.removed&&b.name.startsWith('Ваш дом'));
+assert(own);assert.equal(own.sprite,40);assert.equal(own.color,0);assert.equal(own.shortRange,false);
+send({[houses[0].id]:true},[]);assert(own.removed);assert(!markers.some(b=>!b.removed&&b.name.startsWith('Ваш дом')));
+authenticated=false;ticks[0]();assert(markers.every(b=>b.removed));
+console.log('PASS: vacant house markers remain visible, bought houses hide for others, owners receive a white residence marker, logout clears private markers.');

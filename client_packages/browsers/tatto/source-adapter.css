@@ -1,0 +1,33 @@
+#shop_tatto {
+    position: fixed;
+    inset: 0;
+}
+
+#shop_tatto .yk-shadow-block-item,
+#shop_tatto .yk-btn-circle,
+#shop_tatto button,
+#shop_tatto [role="button"] {
+    cursor: pointer;
+}
+
+#shop_tatto .yk-shadow-block-right > div:first-child {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#shop_tatto #menuMainRightList {
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+}
+
+#shop_tatto .tattoo-buy-block {
+    z-index: 5;
+}
+
+#shop_tatto .tattoo-scroll-arrow {
+    bottom: 165px;
+}
+
+#shop_tatto .yk-btn-circle + .yk-text {
+    white-space: nowrap;
+}

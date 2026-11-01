@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<link rel="stylesheet" href="package://browsers/shared/cef-no-select.css">
+<script src="package://browsers/shared/cef-no-select.js"></script>
+<link rel="stylesheet" href="package://browsers/inventory/fonts/montserrat.css?v=2">
+<link rel="stylesheet" href="package://browsers/shared/qty-dialog.css">
+<script src="package://browsers/shared/qty-dialog.js"></script>
+<script src="package://browsers/shopclothesnew/js/cloth_category_png.js"></script>
+<meta charset="UTF-8">
+<title>Warehouse</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+*, *::before, *::after { transition: none !important; animation: none !important; }
+html, body { height: 100%; width: 100%; overflow: hidden; background: transparent; }
+body { font-family: Montserrat,'Segoe UI',sans-serif; color: #fff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+.wh-dim {
+    position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, rgba(102, 132, 177, 0) 0%, rgba(60, 97, 153, 0.331) 32.26%, rgba(33, 78, 147, 0.359) 40.16%, rgba(10, 60, 135, 0.44) 63.86%, rgba(18, 36, 100, 0.71) 126.4%);
+    opacity: 0.86;
+    pointer-events: none;
+}
+
+.content-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.wh-panel {
+    background: rgba(29, 38, 52, 0.68);
+    border-radius: 5px;
+    padding: 15px;
+}
+.wh-panel + .wh-panel { margin-left: 20px; }
+
+.yk-text {
+    font-family: Montserrat,'Segoe UI',sans-serif;
+    font-size: 14px;
+    color: #fff;
+    text-transform: none;
+}
+.yk-text.w-5 { font-weight: 500; }
+.yk-text.w-6 { font-weight: 600; }
+.yk-text.w-7 { font-weight: 700; }
+.yk-text.s-13 { font-size: 13px; }
+.yk-text.s-17 { font-size: 17px; }
+.yk-text.upper { text-transform: uppercase; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
+
+.yk-scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 5px;
+    height: 430px;
+    width: 540px;
+}
+.wh-panel.right .yk-scroll { height: 390px; }
+.yk-scroll::-webkit-scrollbar { width: 8px; }
+.yk-scroll::-webkit-scrollbar-track {
+    width: 8px;
+    border-radius: 2px;
+    background-color: #121924;
+}
+.yk-scroll::-webkit-scrollbar-thumb {
+    width: 8px;
+    background: linear-gradient(180deg, #FF7A00 0%, #FFB800 100%);
+    border-radius: 2px;
+}
+
+.playerInventory-items-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    width: 100%;
+}
+
+.playerInventory-item-container {
+    position: relative;
+    display: flex;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    padding: 4px;
+    background: linear-gradient(360deg, rgba(36, 48, 65, 0.84) 0%, rgba(31, 45, 66, 0.84) 186%);
+    border: 1px solid #495269;
+    box-sizing: border-box;
+    cursor: default;
+}
+.playerInventory-item-container.has { cursor: grab; }
+.playerInventory-item-container.has {
+    background: linear-gradient(360deg, rgba(36, 48, 65, 0.95) 0%, rgba(38, 52, 78, 0.95) 186%);
+}
+.playerInventory-item-container.has.wh-dragging-source { cursor: grabbing; }
+
+.playerInventory-item-data-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 45px;
+    max-width: 65px;
+    pointer-events: none;
+}
+.playerInventory-item-data-image.weapon {
+    max-height: 50px;
+    max-width: 72px;
+}
+.playerInventory-item-data-image-bg {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%; width: 100%;
+    background: linear-gradient(360deg, rgba(15, 31, 53, 0.74) 0%, rgba(15, 31, 53, 0.74) 18.41%, rgba(22, 33, 50, 0) 73.62%);
+    pointer-events: none;
+}
+.playerInventory-item-data-name,
+.item-name {
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    transform: translateX(-50%);
+    width: 95%;
+    font-family: Montserrat,'Segoe UI',sans-serif;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    line-height: 1.12;
+    pointer-events: none;
+    white-space: normal;
+    word-break: break-word;
+}
+.inv-item-count-meta {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 5;
+    text-align: right;
+    pointer-events: none;
+}
+.inv-item-count-meta .inv-consumable-qty {
+    display: block;
+    font-family: Montserrat,'Segoe UI',sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: #fff;
+    text-align: right;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+}
+#whDragGhost {
+    position: fixed;
+    left: 0;
+    top: 0;
+    max-width: 65px;
+    max-height: 45px;
+    z-index: 99999;
+    pointer-events: none;
+    display: none;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+.yk-progress-block {
+    position: relative;
+    height: 25px;
+    background: rgba(57, 77, 96, 0.33);
+    border-radius: 3px;
+}
+.yk-progress-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+}
+.yk-progress-fill.orange {
+    background: linear-gradient(90deg, #FF5C00 0%, #FFB800 100%);
+}
+.yk-progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-family: Montserrat,'Segoe UI',sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    color: #fff;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.wh-close {
+    position: absolute;
+    left: 50%;
+    bottom: -50px;
+    transform: translateX(-50%);
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.playerInventory-item-selected-wrapper {
+    position: fixed;
+    display: none;
+    min-width: 120px;
+    background-color: rgb(8, 165, 243);
+    border-radius: 8px;
+    z-index: 9999999;
+}
+.playerInventory-item-selected-wrapper-content {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.playerInventory-item-use {
+    flex: 1;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    color: #dfe5ec;
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    text-align: center;
+    cursor: pointer;
+}
+.playerInventory-item-use:first-child {
+    padding-top: 0;
+    border-top: none;
+}
+.playerInventory-item-use:last-child {
+    padding-bottom: 0;
+}
+.playerInventory-item-use:hover {
+    color: #fff;
+}
+
+.wh-materials-cell {
+    cursor: default !important;
+}
+.wh-materials-cell .playerInventory-item-data-image {
+    top: 38%;
+    max-height: 72%;
+    max-width: 78%;
+}
+.wh-materials-cell.leader { cursor: context-menu !important; }
+</style>
+</head>
+<body>
+<div class="wh-dim"></div>
+<div class="content-block">
+    <div class="wh-panel">
+        <div class="yk-scroll">
+            <div class="yk-text w-7 s-17">ВАШИ ПРЕДМЕТЫ</div>
+            <div class="playerInventory-items-container mt-10" id="invGrid"></div>
+            <div class="yk-progress-block mt-15">
+                <div class="yk-progress-fill orange" id="invBar"></div>
+                <div class="yk-progress-text" id="invBarText">0 из 20</div>
+    </div>
+        </div>
+    </div>
+    <div class="wh-panel right">
+        <div class="yk-scroll">
+            <div class="yk-text w-7 s-17 upper" id="warehouseTitle">СКЛАД</div>
+            <div class="playerInventory-items-container mt-10" id="whGrid"></div>
+        </div>
+        <div class="yk-progress-block mt-15">
+            <div class="yk-progress-fill orange" id="whBar"></div>
+            <div class="yk-progress-text" id="whBarText">0 из 300</div>
+        </div>
+    </div>
+    <div class="wh-close yk-text w-5 s-13" id="closeHint">ЗАКРЫТЬ МЕНЮ <span class="yk-text w-5 s-13">(ESC)</span></div>
+</div>
+<div class="playerInventory-item-selected-wrapper" id="ctx"></div>
+<img id="whDragGhost" alt="" draggable="false">
+<script>
+    var INV_SIZE = 20;
+    var WH_SIZE = 300;
+    var kind = 'family';
+    var inv = new Array(INV_SIZE).fill(null);
+    var wh = new Array(WH_SIZE).fill(null);
+    var whCapacity = WH_SIZE;
+    var whMaterials = 0;
+    var whCanMaterials = false;
+    var WH_DRAG_CLICK_MAX = 8;
+    var WH_DRAG_GHOST_AFTER = 5;
+    var whDrag = null;
+    var whDropHoverEl = null;
+
+    function trigger(name) {
+        if (typeof mp === 'undefined' || !mp.trigger) return;
+        var args = Array.prototype.slice.call(arguments, 1);
+        mp.trigger.apply(mp, [name].concat(args));
+    }
+    function used(arr) {
+        var n = 0;
+        for (var i = 0; i < arr.length; i++) if (arr[i]) n++;
+        return n;
+    }
+
+    var WH_MATERIALS_UI_SLOT = 0;
+
+    function whUiToData(uiIdx) {
+        if (kind !== 'fraction') return uiIdx;
+        if (uiIdx <= WH_MATERIALS_UI_SLOT) return -1;
+        return uiIdx - 1;
+    }
+    function isMaterialsUiSlot(side, uiIdx) {
+        return kind === 'fraction' && side === 'wh' && uiIdx === WH_MATERIALS_UI_SLOT;
+    }
+
+    function decodeIc1Payload(e) {
+        if (!e || typeof e !== 'string' || e.indexOf('ic1.') !== 0) return null;
+        try { return JSON.parse(decodeURIComponent(escape(atob(e.slice(4))))); }
+        catch (t) { try { return JSON.parse(atob(e.slice(4))); } catch (e2) { return null; } }
+    }
+    function baseId(e) {
+        return (e == null ? '' : String(e)).replace(/^\uFEFF/, '').trim().split('(')[0].trim().split('#')[0].trim();
+    }
+    function qty(e) {
+        var t = /\((\d+)\)\s*$/.exec(String(e == null ? '' : e));
+        if (!t) return 1;
+        var n = parseInt(t[1], 10);
+        return Number.isFinite(n) && n > 0 ? n : 1;
+    }
+    function armorPct(raw) {
+        var s = String(raw || '').replace(/^\uFEFF/, '').trim().split('(')[0].trim();
+        if (s.split('#')[0].trim() !== 'Бронежилет') return null;
+        var m = s.match(/#(\d+)/);
+        if (!m) return 100;
+        var n = parseInt(m[1], 10);
+        return Number.isFinite(n) ? Math.max(1, Math.min(100, n)) : 100;
+    }
+    function stackable(base) {
+        return base === 'item_spank' || base === 'item_alco' || base === 'Бронежилет' || base === 'Аптечка' || base === 'item_materials' || String(base || '').indexOf('item_elfbar_') === 0;
+    }
+    function isElfbarBase(e) { return String(e || '').indexOf('item_elfbar_') === 0; }
+    function elfbarPct(raw) {
+        if (!isElfbarBase(baseId(raw))) return null;
+        var m = String(raw || '').match(/\((\d+)\)/);
+        if (!m) return 100;
+        var n = parseInt(m[1], 10);
+        return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 100;
+    }
+
+    var INV_CID_SVG = {1:'head.svg',2:'mask.svg',3:'body.svg',4:'trousers.svg',5:'shoe.svg',6:'bascket.svg',7:'body.svg',8:'bascket.svg',9:'armor.svg',12:'bascket.svg',13:'bascket.svg',14:'bascket.svg',15:'bascket.svg'};
+    function invResolveClothIconUrl(e) {
+        var n = Number(e);
+        if (typeof clothCategoryIconSrc === 'function') {
+            var cat = clothCategoryIconSrc(n);
+            if (cat) return cat;
+        }
+        return 'package://browsers/inventory/img/' + (INV_CID_SVG[n] || 'body.svg');
+    }
+    function invPlaceholderIcon() { return typeof clothCategoryIconSrc === 'function' ? clothCategoryIconSrc(3) : 'package://browsers/shopclothesnew/img/icon_top.png'; }
+    function invPkgImg(fn) {
+        if (!fn) return invPlaceholderIcon();
+        if (String(fn).indexOf('package://') === 0) return fn;
+        return 'package://browsers/inventory/img/' + String(fn).replace(/^\/+/, '');
+    }
+    function invMenunewImg(rel) { return 'package://browsers/menunew/img/' + String(rel || '').replace(/^\/+/, ''); }
+    var CALAM_CLOTH_CID_FOLDER = {1:'hats',2:'masks',3:'tops',4:'legs',5:'shoes',6:'accessories',7:'glasses',8:'bags',12:'ears',13:'watches',14:'bracelets',15:'gloves'};
+    function invClothGenderDir() { return window.__invClothMale === false ? 'female' : 'male'; }
+    function invClothTextureUrl(cid, d, t) {
+        var i = CALAM_CLOTH_CID_FOLDER[Number(cid)];
+        if (!i) return null;
+        return 'package://browsers/inventory/clothes_assets/' + invClothGenderDir() + '/' + i + '/' + Number(d) + '_' + Number(t) + '.png';
+    }
+    var F3_HOLSTER = { cobura:{title:'Чёрная Кобура',file:'clothes/cobura.png'}, coburaw:{title:'Белая Кобура',file:'clothes/coburaw.png'} };
+    var F3_BAG = {
+        bag_antisocial:{title:'Antisocial',file:'bags/antisocial.png'}, bag_anime:{title:'Anime',file:'bags/anime.png'},
+        bag_grob:{title:'Гроб',file:'bags/grob.png'}, bag_big_black:{title:'Большой рюкзак чёрный',file:'bags/big_black.png'},
+        bag_big_white:{title:'Большой рюкзак белый',file:'bags/big_white.png'}, bag_waist:{title:'Сумка поясная',file:'bags/waist.png'}
+    };
+    var INV_WEAPON_IMG = {
+        weapon_revolver:'weapon_revolver.png', weapon_revolver_mk2:'weapon_revolver_mk2.png', weapon_assaultrifle:'weapon_assaultrifle.png',
+        weapon_heavyshotgun:'weapon_heavyshotgun.png', weapon_assaultshotgun:'weapon_assaultshotgun.png', weapon_carbinerifle:'weapon_carbinerifle.png',
+        weapon_sniperrifle:'weapon_sniperrifle.png', weapon_heavysniper:'svc.png', weapon_heavysniper_mk2:'weapon_heavysniper_mk2.png',
+        weapon_marksmanrifle:'weapon_marksmanrifle.png', weapon_specialcarbine:'weapon_specialcarbine.png', weapon_specialcarbine_mk2:'weapon_specialcarbine_mk2.png',
+        weapon_precisionrifle:'weapon_precisionrifle.png', weapon_combatmg:'weapon_combatmg.png', weapon_combatmg_mk2:'weapon_combatmg_mk2.png',
+        weapon_minismg:'weapon_minismg.png', weapon_militaryrifle:'weapon_militaryrifle.png', weapon_navyrevolver:'weapon_navyrevolver.png',
+        weapon_musket:'weapon_musket.png', weapon_gadgetpistol:'weapon_gadgetpistol.png', weapon_pumpshotgun:'weapon_pumpshotgun.png',
+        weapon_pumpshotgun_mk2:'weapon_pumpshotgun_mk2.png', weapon_sawnoffshotgun:'weapon_sawnoffshotgun.png', weapon_bullpupshotgun:'weapon_bullpupshotgun.png',
+        weapon_dbshotgun:'weapon_dbshotgun.png', weapon_autoshotgun:'weapon_autoshotgun.png', weapon_pistol:'weapon_pistol.png',
+        weapon_pistol_mk2:'weapon_pistol_mk2.png', weapon_combatpistol:'weapon_combatpistol.png', weapon_appistol:'weapon_appistol.png',
+        weapon_microsmg:'weapon_microsmg.png', weapon_smg:'weapon_smg.png', weapon_smg_mk2:'weapon_smg_mk2.png', weapon_assaultsmg:'weapon_assaultsmg.png',
+        weapon_gusenberg:'weapon_gusenberg.png', weapon_machinepistol:'weapon_machinepistol.png', weapon_raypistol:'weapon_raypistol.png',
+        weapon_doubleaction:'weapon_doubleaction.png'
+    };
+    var INV_WEAPON_DISPLAY_NAMES = {
+        weapon_heavyshotgun:'Heavy Shotgun', weapon_carbinerifle:'Carabine Rifle', weapon_assaultrifle:'Assault Rifle',
+        weapon_assaultshotgun:'Assault Shotgun', weapon_combatmg:'Combat MG', weapon_combatmg_mk2:'Combat MG MKII',
+        weapon_minismg:'Mini SMG', weapon_militaryrifle:'Military Rifle', weapon_sniperrifle:'Sniper Rifle',
+        weapon_heavysniper:'Heavy Sniper MK1', weapon_heavysniper_mk2:'Heavy Sniper MKII', weapon_marksmanrifle:'Marksman Rifle',
+        weapon_specialcarbine:'Special Carbine', weapon_specialcarbine_mk2:'Special Carbine MK2', weapon_precisionrifle:'Precision Rifle',
+        weapon_revolver:'Revolver', weapon_revolver_mk2:'Revolver MKII', weapon_navyrevolver:'Navy Revolver', weapon_musket:'Musket',
+        weapon_gadgetpistol:'Gadget Pistol', weapon_pumpshotgun:'Pump Shotgun', weapon_pumpshotgun_mk2:'Pump Shotgun MKII',
+        weapon_sawnoffshotgun:'Sawed-Off Shotgun', weapon_bullpupshotgun:'Bullpup Shotgun', weapon_dbshotgun:'Double Barrel Shotgun',
+        weapon_autoshotgun:'Sweeper Shotgun', weapon_pistol:'Pistol', weapon_pistol_mk2:'Pistol MKII', weapon_combatpistol:'Combat Pistol',
+        weapon_appistol:'AP Pistol', weapon_microsmg:'Micro SMG', weapon_smg:'SMG', weapon_smg_mk2:'SMG MKII', weapon_assaultsmg:'Assault SMG',
+        weapon_gusenberg:'Gusenberg Sweeper', weapon_machinepistol:'Machine Pistol', weapon_raypistol:'Up-n-Atomizer', weapon_doubleaction:'Double-Action Revolver'
+    };
+    var INV_VAPE_IMG = 'package://browsers/vape_shop/images/';
+    var INV_STATIC_IMG = [
+        ['item_spank','item_spank.png'], ['item_materials','materials.png'], ['item_kontrabanda','smuggling.png'], ['item_alco','package://browsers/hud/images/med.png'],
+        ['item_bong','bong.png'], ['item_thermos','item_thermos.png'],
+        ['item_skateboard','skateborde.png'], ['Бронежилет','armor.png'], ['Аптечка','heal.png'],
+        ['item_elfbar_blueberry', INV_VAPE_IMG + 'blueberry.png'], ['item_elfbar_cola', INV_VAPE_IMG + 'cola.png'],
+        ['item_elfbar_grape', INV_VAPE_IMG + 'grape.png'], ['item_elfbar_kiwi', INV_VAPE_IMG + 'kiwi.png'],
+        ['item_elfbar_strawberry', INV_VAPE_IMG + 'strawberry.png']
+    ];
+
+    function getImageForItem(e) {
+        var t = typeof e === 'string' ? e.replace(/^\uFEFF/, '').trim() : '';
+        if (t.indexOf('ic1.') === 0) {
+            var n = decodeIc1Payload(baseId(t));
+            if (n && Number(n.cid) === 9 && Number(n.d) === 305) {
+                var pc = Number(n.t);
+                var pn = Number.isFinite(pc) ? pc + 1 : 1;
+                if (pn < 1 || pn > 3) pn = 1;
+                return invPkgImg('patrontazh_' + pn + '.png');
+            }
+            if (n && n.cid != null && n.d != null && n.t != null) {
+                var tex = invClothTextureUrl(n.cid, n.d, n.t);
+                if (tex) return tex;
+            }
+            return invResolveClothIconUrl(n && n.cid != null ? Number(n.cid) : 3);
+        }
+        var a = baseId(t);
+        if (a.indexOf('ivhol:') === 0) {
+            var hk = a.slice(6);
+            return F3_HOLSTER[hk] ? invMenunewImg(F3_HOLSTER[hk].file) : invResolveClothIconUrl(6);
+        }
+        if (a.indexOf('ivbag:') === 0) {
+            var bk = a.slice(6);
+            return F3_BAG[bk] ? invMenunewImg(F3_BAG[bk].file) : invMenunewImg('bags/antisocial.png');
+        }
+        if (a.indexOf('frdef:') === 0) {
+            var o = a.split(':');
+            return o[1] === 'bottom' ? invResolveClothIconUrl(4) : o[1] === 'shoes' ? invResolveClothIconUrl(5) : invResolveClothIconUrl(3);
+        }
+        for (var l = 0; l < INV_STATIC_IMG.length; l++) if (INV_STATIC_IMG[l][0] === a) return invPkgImg(INV_STATIC_IMG[l][1]);
+        if (a.indexOf('weapon_') === 0) return INV_WEAPON_IMG[a] ? invPkgImg(INV_WEAPON_IMG[a]) : 'package://browsers/anims/img/cartridge.svg';
+        return invPlaceholderIcon();
+    }
+
+    function getNameForItem(e) {
+        var t = typeof e === 'string' ? e.replace(/^\uFEFF/, '').trim() : '';
+        if (t.indexOf('ic1.') === 0) {
+            var n = decodeIc1Payload(baseId(t));
+            return n && n.nm ? String(n.nm).replace(/\s*\(\d+\s*слотов\)/gi, '').split(' · текст.')[0].split(' · т.')[0].trim() : 'Одежда';
+        }
+        var ap = armorPct(t);
+        if (ap != null) return 'Бронежилет ' + ap + '%';
+        var a = baseId(t);
+        if (a.indexOf('ivhol:') === 0) return F3_HOLSTER[a.slice(6)] ? F3_HOLSTER[a.slice(6)].title : 'Кобура';
+        if (a.indexOf('ivbag:') === 0) return F3_BAG[a.slice(6)] ? F3_BAG[a.slice(6)].title : 'Сумка';
+        if (a.indexOf('frdef:') === 0) return 'Одежда фракции';
+        var r = {
+            item_spank:'Spank', item_materials:'Материалы', item_kontrabanda:'Контрабанда', item_alco:'Медовуха', item_bong:'Трубка Bong',
+            item_thermos:'Термокружка', item_skateboard:'Скейтборд', item_elfbar_blueberry:'Elfbar Blueberry',
+            item_elfbar_cola:'Elfbar Cola', item_elfbar_grape:'Elfbar Grape', item_elfbar_kiwi:'Elfbar Kiwi',
+            item_elfbar_strawberry:'Elfbar Strawberry', 'Аптечка':'Аптечка'
+        };
+        if (isElfbarBase(a)) {
+            var ep = elfbarPct(t);
+            return r[a] ? r[a] + ' (' + ep + '%)' : 'Elfbar (' + ep + '%)';
+        }
+        if (r[a]) return r[a];
+        if (a.indexOf('weapon_') === 0) {
+            if (INV_WEAPON_DISPLAY_NAMES[a]) return INV_WEAPON_DISPLAY_NAMES[a];
+            return a.slice(7).split('_').map(function(p) {
+                return p.toLowerCase() === 'mk2' ? 'MKII' : p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+            }).join(' ');
+        }
+        return a.replace('item_', '') || 'Предмет';
+    }
+
+    function nameSize(text) {
+        var t = String(text || '').length;
+        if (t > 25) return 7;
+        if (t > 20) return 8;
+        if (t > 15) return 9;
+        if (t > 10) return 10;
+        return 12;
+    }
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+    function formatItemNameLines(name) {
+        if (!name || name === 'E') return '';
+        var parts = String(name).trim().split(/\s+/).map(escapeHtml);
+        if (parts.length <= 1) return parts[0] || '';
+        var mid = Math.ceil(parts.length / 2);
+        return parts.slice(0, mid).join(' ') + '<br>' + parts.slice(mid).join(' ');
+    }
+
+    function whPanelTitle() {
+        if (kind === 'fraction') return 'СКЛАД ФРАКЦИИ';
+        if (kind === 'trunk') return 'БАГАЖНИК';
+        return 'СКЛАД';
+    }
+    function whPutLabel() {
+        if (kind === 'trunk') return 'Положить в багажник';
+        if (kind === 'fraction') return 'Положить на склад фракции';
+        return 'Положить на склад';
+    }
+    function whTakeLabel() {
+        if (kind === 'trunk') return 'Забрать из багажника';
+        if (kind === 'fraction') return 'Забрать со склада фракции';
+        return 'Взять со склада';
+    }
+    function whPutPartLabel() {
+        return kind === 'trunk' ? 'Положить часть в багажник' : 'Положить часть';
+    }
+    function whTakePartLabel() {
+        return kind === 'trunk' ? 'Забрать часть из багажника' : 'Взять часть';
+    }
+    function actionName(side) {
+        if (kind === 'trunk') return side === 'inv' ? 'vehicleTrunkDeposit' : 'vehicleTrunkWithdraw';
+        if (kind === 'fraction') return side === 'inv' ? 'fractionWarehouseDeposit' : 'fractionWarehouseWithdraw';
+        return side === 'inv' ? 'familyWarehouseDeposit' : 'familyWarehouseWithdraw';
+    }
+    function swapName() {
+        if (kind === 'trunk') return 'vehicleTrunkSwap';
+        return kind === 'fraction' ? 'fractionWarehouseSwap' : 'familyWarehouseSwap';
+    }
+
+    function parseWarehousePayload(payload) {
+        var raw = payload;
+        if (typeof raw === 'string') {
+            try { raw = JSON.parse(raw); } catch (_e) {}
+        }
+        if (Array.isArray(raw)) return { items: raw, capacity: Math.max(WH_SIZE, raw.length) };
+        if (raw && typeof raw === 'object') {
+            return {
+                items: Array.isArray(raw.items) ? raw.items : [],
+                capacity: parseInt(raw.capacity, 10) || WH_SIZE,
+                materials: Math.max(0, parseInt(raw.materials, 10) || 0),
+                canMaterials: !!raw.canMaterials
+            };
+        }
+        return { items: [], capacity: WH_SIZE, materials: 0, canMaterials: false };
+    }
+    window.updateWarehouseMaterialsDisplay = function(n) {
+        whMaterials = Math.max(0, parseInt(n, 10) || 0);
+        render();
+    };
+    function setBar(el, textEl, cur, max) {
+        var pct = max > 0 ? Math.min(100, (cur / max) * 100) : 0;
+        el.style.width = pct + '%';
+        if (textEl) textEl.textContent = cur + ' из ' + max;
+    }
+    function render() {
+        endWhDrag();
+        hideCtx();
+        fill(document.getElementById('invGrid'), 'inv');
+        fill(document.getElementById('whGrid'), 'wh');
+        setBar(document.getElementById('invBar'), document.getElementById('invBarText'), used(inv), INV_SIZE);
+        setBar(document.getElementById('whBar'), document.getElementById('whBarText'), used(wh), whCapacity);
+        document.getElementById('warehouseTitle').textContent = whPanelTitle();
+    }
+    function fill(el, side) {
+        var arr = side === 'inv' ? inv : wh;
+        /* фракция: слот 0 = материалы, дальше data 0..capacity-1 */
+        var total = side === 'inv' ? INV_SIZE : (side === 'wh' && kind === 'fraction' ? whCapacity + 1 : whCapacity);
+        el.innerHTML = '';
+        for (var i = 0; i < total; i++) {
+            if (side === 'wh' && kind === 'fraction' && isMaterialsUiSlot('wh', i)) {
+                el.appendChild(makeMaterialsCell());
+            } else {
+                var dataIdx = side === 'wh' && kind === 'fraction' ? i - 1 : i;
+                el.appendChild(makeCell(side, arr, dataIdx, i));
+            }
+        }
+    }
+    function makeMaterialsCell() {
+        var c = document.createElement('div');
+        c.className = 'playerInventory-item-container has wh-materials-cell' + (whCanMaterials ? ' leader' : '');
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+        var im = document.createElement('img');
+        im.className = 'playerInventory-item-data-image';
+        im.draggable = false;
+        im.src='package://browsers/inventory/img/material.png';
+        im.onerror = function() { im.src = invPlaceholderIcon(); };
+        wrap.appendChild(im);
+        var bg = document.createElement('div');
+        bg.className = 'playerInventory-item-data-image-bg';
+        wrap.appendChild(bg);
+        var nm = document.createElement('div');
+        nm.className = 'playerInventory-item-data-name yk-text w-6 text-center';
+        nm.style.fontSize = nameSize('Материалы') + 'px';
+        nm.innerHTML = formatItemNameLines('Материалы');
+        wrap.appendChild(nm);
+        var qWrap = document.createElement('div');
+        qWrap.className = 'inv-item-count-meta';
+        var q = document.createElement('div');
+        q.className = 'inv-consumable-qty';
+        q.textContent = String(whMaterials);
+        qWrap.appendChild(q);
+        wrap.appendChild(qWrap);
+        c.appendChild(wrap);
+        c.addEventListener('click', function(e) {
+            if (!whCanMaterials) return;
+            e.preventDefault();
+            e.stopPropagation();
+            showMaterialsCtx(c);
+        });
+        c.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        return c;
+    }
+    function clearWhDropHover() {
+        if (whDropHoverEl) {
+            whDropHoverEl.classList.remove('wh-drop-hover');
+            whDropHoverEl = null;
+        }
+    }
+    function setWhDropHover(el) {
+        if (whDropHoverEl === el) return;
+        clearWhDropHover();
+        if (el) {
+            whDropHoverEl = el;
+            el.classList.add('wh-drop-hover');
+        }
+    }
+    function hideWhDragGhost() {
+        var g = document.getElementById('whDragGhost');
+        if (g) g.style.display = 'none';
+    }
+    function showWhDragGhost(src, x, y) {
+        var g = document.getElementById('whDragGhost');
+        if (!g) return;
+        g.src = src || '';
+        g.style.left = (x - 20) + 'px';
+        g.style.top = (y - 20) + 'px';
+        g.style.display = src ? 'block' : 'none';
+    }
+    function endWhDrag() {
+        if (whDrag && whDrag.el) whDrag.el.classList.remove('wh-dragging-source');
+        whDrag = null;
+        clearWhDropHover();
+        hideWhDragGhost();
+    }
+    function cellFromPoint(x, y) {
+        var el = document.elementFromPoint(x, y);
+        while (el && el !== document.body && el !== document.documentElement) {
+            if (el.getAttribute && el.getAttribute('data-wh-side') != null) return el;
+            el = el.parentElement;
+        }
+        return null;
+    }
+    function onWhMouseMove(e) {
+        if (!whDrag) return;
+        whDrag.tick++;
+        whDrag.x = e.clientX;
+        whDrag.y = e.clientY;
+        if (whDrag.tick > WH_DRAG_GHOST_AFTER) {
+            showWhDragGhost(whDrag.icon, e.clientX, e.clientY);
+        }
+    }
+    function onWhMouseUp(e) {
+        if (!whDrag) return;
+        if (e.button !== 0 && e.type === 'mouseup') return;
+        var src = {
+            side: whDrag.side,
+            idx: whDrag.idx,
+            ctrl: whDrag.ctrl || !!e.ctrlKey,
+            el: whDrag.el
+        };
+        var dx = (e.clientX != null ? e.clientX : whDrag.x) - whDrag.x0;
+        var dy = (e.clientY != null ? e.clientY : whDrag.y) - whDrag.y0;
+        var dist = Math.abs(dx) + Math.abs(dy);
+        var wasDrag = whDrag.tick > WH_DRAG_CLICK_MAX || dist > 12;
+        var x = e.clientX != null ? e.clientX : whDrag.x;
+        var y = e.clientY != null ? e.clientY : whDrag.y;
+        endWhDrag();
+        if (wasDrag) {
+            var over = cellFromPoint(x, y);
+            if (!over) return;
+            var toSide = over.getAttribute('data-wh-side');
+            var toUiIdx = parseInt(over.getAttribute('data-wh-ui'), 10);
+            if (!toSide || !Number.isFinite(toUiIdx)) return;
+            applyWhDrop(src, toSide, toUiIdx, src.ctrl);
+            return;
+        }
+        if (src.el) showCtx(src.el, src.side, src.idx);
+    }
+    function applyWhDrop(src, toSide, toUiIdx, chooseQty) {
+        if (!src || typeof src.idx !== 'number') return;
+        if (isMaterialsUiSlot(src.side, src.idx)) return;
+        if (isMaterialsUiSlot(toSide, toUiIdx)) return;
+        var srcArr = src.side === 'inv' ? inv : wh;
+        var srcDataIdx = src.side === 'wh' ? whUiToData(src.idx) : src.idx;
+        if (srcDataIdx < 0) return;
+        if (srcArr[srcDataIdx] && baseId(srcArr[srcDataIdx]) === 'item_materials') return;
+        if (src.side === toSide) {
+            if (src.idx === toUiIdx) return;
+            if (toSide === 'inv') {
+                var a = inv[src.idx];
+                inv[src.idx] = inv[toUiIdx] || null;
+                inv[toUiIdx] = a || null;
+                render();
+                trigger('inventory:swapGrid', src.idx, toUiIdx);
+            } else {
+                var fromData = whUiToData(src.idx);
+                var toData = whUiToData(toUiIdx);
+                if (fromData < 0 || toData < 0) return;
+                var b = wh[fromData];
+                wh[fromData] = wh[toData] || null;
+                wh[toData] = b || null;
+                render();
+                trigger(swapName(), fromData, toData);
+            }
+            return;
+        }
+        moveRequest(src.side, src.idx, !!chooseQty, toUiIdx);
+    }
+    function makeCell(side, arr, dataIdx, uiIdx) {
+        if (uiIdx == null) uiIdx = dataIdx;
+        var it = arr[dataIdx];
+        var c = document.createElement('div');
+        c.className = 'playerInventory-item-container' + (it ? ' has' : '');
+        c.setAttribute('data-wh-side', side);
+        c.setAttribute('data-wh-ui', String(uiIdx));
+        var blockMaterials = kind === 'fraction' && it && baseId(it) === 'item_materials';
+        if (it) {
+            var b = baseId(it);
+            var count = qty(it);
+            var wrap = document.createElement('div');
+            wrap.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+
+            var im = document.createElement('img');
+            im.className = 'playerInventory-item-data-image' + (b.indexOf('weapon_') === 0 ? ' weapon' : '');
+            im.draggable = false;
+            im.src = getImageForItem(it);
+            im.onerror = function() { im.src = invPlaceholderIcon(); };
+            wrap.appendChild(im);
+
+            var bg = document.createElement('div');
+            bg.className = 'playerInventory-item-data-image-bg';
+            wrap.appendChild(bg);
+
+            var nm = document.createElement('div');
+            var text = getNameForItem(it);
+            nm.className = 'playerInventory-item-data-name yk-text w-6 text-center';
+            nm.style.fontSize = nameSize(text) + 'px';
+            nm.innerHTML = formatItemNameLines(text);
+            wrap.appendChild(nm);
+
+            if (isElfbarBase(b)) {
+                var ep = document.createElement('div');
+                ep.className = 'inv-item-count-meta';
+                var epn = document.createElement('div');
+                epn.className = 'inv-consumable-qty';
+                epn.textContent = String(elfbarPct(it) != null ? elfbarPct(it) : count) + '%';
+                ep.appendChild(epn);
+                wrap.appendChild(ep);
+            } else if (stackable(b) && count > 1) {
+                var q = document.createElement('div');
+                q.className = 'inv-item-count-meta';
+                var qn = document.createElement('div');
+                qn.className = 'inv-consumable-qty';
+                qn.textContent = String(count);
+                q.appendChild(qn);
+                wrap.appendChild(q);
+            }
+
+            c.appendChild(wrap);
+
+            if (!blockMaterials) {
+                c.addEventListener('mousedown', function(e) {
+                    if (e.button !== 0) return;
+                    e.preventDefault();
+                    hideCtx();
+                    whDrag = {
+                        side: side,
+                        idx: uiIdx,
+                        el: c,
+                        icon: im.src,
+                        tick: 0,
+                        x: e.clientX,
+                        y: e.clientY,
+                        x0: e.clientX,
+                        y0: e.clientY,
+                        ctrl: !!e.ctrlKey
+                    };
+                    c.classList.add('wh-dragging-source');
+                });
+            }
+
+            c.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (blockMaterials) return;
+                hideCtx();
+                endWhDrag();
+                moveRequest(side, uiIdx, false, -1);
+            });
+        }
+        return c;
+    }
+    function moveRequest(side, uiIdx, chooseQty, toUiSlot) {
+        if (isMaterialsUiSlot(side, uiIdx)) return;
+        var dataIdx = side === 'wh' ? whUiToData(uiIdx) : uiIdx;
+        if (side === 'wh' && dataIdx < 0) return;
+        if (typeof toUiSlot === 'number' && toUiSlot >= 0 && isMaterialsUiSlot('wh', toUiSlot)) return;
+        var arr = side === 'inv' ? inv : wh;
+        var it = arr[side === 'inv' ? uiIdx : dataIdx];
+        if (!it) return;
+        var b = baseId(it);
+        if (kind === 'fraction' && b === 'item_materials') return;
+        var max = qty(it);
+        var target = -1;
+        if (typeof toUiSlot === 'number' && toUiSlot >= 0) {
+            if (side === 'inv') {
+                target = whUiToData(toUiSlot);
+                if (target < 0) return;
+            } else {
+                target = toUiSlot;
+            }
+        }
+        var slot = side === 'inv' ? uiIdx : dataIdx;
+        if (chooseQty && stackable(b) && max > 1) {
+            openQty({
+                title: side === 'inv'
+                    ? (kind === 'trunk' ? 'Положить в багажник: ' : 'Положить ') + getNameForItem(it)
+                    : (kind === 'trunk' ? 'Забрать из багажника: ' : 'Забрать ') + getNameForItem(it),
+                max: max,
+                def: 1,
+                ok: side === 'inv' ? 'Положить' : 'Забрать',
+                action: function(q) {
+                    trigger(actionName(side), JSON.stringify({ item: it, q: q, slot: slot, toSlot: target }));
+                }
+            });
+            return;
+        }
+        trigger(actionName(side), JSON.stringify({ item: it, q: -1, slot: slot, toSlot: target }));
+    }
+    function openQty(opt) {
+        var max = Math.max(1, parseInt(opt.max, 10) || 1);
+        BloodyQtyDialog.open({
+            title: opt.title || 'Количество',
+            hint: 'Введите количество ( 1 - ' + max + ' )',
+            max: max,
+            value: opt.def || 1,
+            okText: opt.ok || 'ОК',
+            onOk: function(q) { if (opt.action) opt.action(q); }
+        });
+    }
+    var ctx = document.getElementById('ctx');
+    var ctxJustOpened = false;
+    function hideCtx() {
+        if (!ctx) return;
+        ctx.style.display = 'none';
+        ctx.innerHTML = '';
+    }
+    function addCtxAction(content, label, fn) {
+        var d = document.createElement('div');
+        d.className = 'playerInventory-item-use';
+        d.textContent = label;
+        d.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        d.onclick = function(e) {
+            e.stopPropagation();
+            hideCtx();
+            fn();
+        };
+        content.appendChild(d);
+    }
+    function placeCtxOnCell(anchorEl) {
+        if (!ctx || !anchorEl) return;
+        ctx.style.display = 'block';
+        ctx.style.left = '0px';
+        ctx.style.top = '0px';
+        ctx.style.transform = 'none';
+        var r = anchorEl.getBoundingClientRect();
+        var h = ctx.offsetHeight || 40;
+        var left = r.left + r.width / 2;
+        var top = r.bottom + 1.5;
+        if (top + h > window.innerHeight - 8) {
+            top = Math.max(8, r.top - h - 1.5);
+        }
+        ctx.style.left = left + 'px';
+        ctx.style.top = top + 'px';
+        ctx.style.transform = 'translateX(-50%)';
+    }
+    function showCtxMenu(anchorEl, actions) {
+        if (!anchorEl || !actions || !actions.length) return;
+        ctx.innerHTML = '';
+        var content = document.createElement('div');
+        content.className = 'playerInventory-item-selected-wrapper-content';
+        for (var i = 0; i < actions.length; i++) addCtxAction(content, actions[i].label, actions[i].fn);
+        ctx.appendChild(content);
+        placeCtxOnCell(anchorEl);
+        ctxJustOpened = true;
+        setTimeout(function() { ctxJustOpened = false; }, 50);
+    }
+    function showCtx(anchorEl, side, uiIdx) {
+        if (isMaterialsUiSlot(side, uiIdx)) return;
+        var dataIdx = side === 'wh' ? whUiToData(uiIdx) : uiIdx;
+        if (side === 'wh' && dataIdx < 0) return;
+        var arr = side === 'inv' ? inv : wh;
+        var it = arr[dataIdx];
+        if (!it) return;
+        if (kind === 'fraction' && side === 'inv' && baseId(it) === 'item_materials') {
+            if (!whCanMaterials) return;
+            showCtxMenu(anchorEl, [{
+                label: 'Положить материалы',
+                fn: function() {
+                    openQty({
+                        title: 'Положить материалы',
+                        max: qty(it),
+                        def: 1,
+                        ok: 'Положить',
+                        action: function(q) { trigger('fractionMaterialsDeposit', q); }
+                    });
+                }
+            }]);
+            return;
+        }
+        var actions = [{
+            label: side === 'inv' ? whPutLabel() : whTakeLabel(),
+            fn: function() { moveRequest(side, uiIdx, false, -1); }
+        }];
+        if (stackable(baseId(it)) && qty(it) > 1) {
+            actions.push({
+                label: side === 'inv' ? whPutPartLabel() : whTakePartLabel(),
+                fn: function() { moveRequest(side, uiIdx, true, -1); }
+            });
+        }
+        showCtxMenu(anchorEl, actions);
+    }
+    function showMaterialsCtx(anchorEl) {
+        if (!whCanMaterials) return;
+        var actions = [{
+            label: 'Положить материалы',
+            fn: function() {
+                openQty({
+                    title: 'Положить материалы',
+                    max: 999999,
+                    def: 1,
+                    ok: 'Положить',
+                    action: function(q) { trigger('fractionMaterialsDeposit', q); }
+                });
+            }
+        }];
+        if (whMaterials > 0) {
+            actions.push({
+                label: 'Забрать материалы',
+                fn: function() {
+                    openQty({
+                        title: 'Забрать материалы',
+                        max: whMaterials,
+                        def: 1,
+                        ok: 'Забрать',
+                        action: function(q) { trigger('fractionMaterialsWithdraw', q); }
+                    });
+                }
+            });
+        }
+        showCtxMenu(anchorEl, actions);
+    }
+    document.getElementById('closeHint').addEventListener('click', function() {
+        trigger('closeWarehouse');
+    });
+    window.addEventListener('click', function(e) {
+        if (ctxJustOpened) return;
+        if (ctx && ctx.contains(e.target)) return;
+        hideCtx();
+    });
+    var scrolls = document.querySelectorAll('.yk-scroll');
+    for (var si = 0; si < scrolls.length; si++) {
+        scrolls[si].addEventListener('scroll', hideCtx);
+    }
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (typeof BloodyQtyDialog !== 'undefined' && BloodyQtyDialog.isOpen()) {
+                BloodyQtyDialog.close();
+                return;
+            }
+            trigger('closeWarehouse');
+        }
+    });
+    document.addEventListener('mousemove', onWhMouseMove);
+    document.addEventListener('mouseup', onWhMouseUp);
+    window.addEventListener('blur', function() { endWhDrag(); });
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    document.addEventListener('selectstart', function(e) {
+        if (whDrag) e.preventDefault();
+    });
+    function updateWarehouseUI(nextKind, inventory, fastSlots, payload) {
+        var nk = String(nextKind || '').toLowerCase();
+        kind = nk === 'fraction' ? 'fraction' : (nk === 'trunk' ? 'trunk' : 'family');
+        inv = new Array(INV_SIZE).fill(null);
+        var invArr = Array.isArray(inventory) ? inventory : [];
+        for (var i = 0; i < INV_SIZE; i++) inv[i] = invArr[i] || null;
+        var data = parseWarehousePayload(payload);
+        whCapacity = Math.max(1, data.capacity);
+        wh = new Array(whCapacity).fill(null);
+        whMaterials = data.materials || 0;
+        whCanMaterials = !!data.canMaterials;
+        for (var j = 0; j < data.items.length && j < whCapacity; j++) {
+            var cell = data.items[j];
+            wh[j] = (typeof cell === 'string' && cell.length) ? cell : null;
+        }
+        render();
+    }
+    window.updateWarehouseUI = updateWarehouseUI;
+    render();
+</script>
+</body>
+</html>

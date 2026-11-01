@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ammunation preview</title>
+    <link rel="stylesheet" href="source/Lib/css/fonts.css">
+    <link rel="stylesheet" href="source/Menu/UI/style.css">
+    <link rel="stylesheet" href="source/Lib/css/help.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="source/Lib/js/vue.js"></script>
+    <script src="source/Lib/js/preventSelection.js"></script>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, #293342 0%, #121720 70%);
+        }
+        .preview-bar {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 9999;
+            display: flex;
+            gap: 8px;
+            pointer-events: auto;
+        }
+        .preview-bar button {
+            background: #30405a;
+            color: #fff;
+            border: 1px solid #4d5e77;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .preview-bar button:hover { background: #3b5275; }
+    </style>
+</head>
+<body scroll="no" style="overflow: hidden;">
+
+    <div class="preview-bar">
+        <button type="button" onclick="show(1)">Банда (fr 1)</button>
+        <button type="button" onclick="show(6)">FIB (fr 6)</button>
+        <button type="button" onclick="show()">GunShop</button>
+        <button type="button" onclick="hide()">Закрыть</button>
+    </div>
+
+    <!-- markup = index.html #shop_weapon -->
+    <div id="shop_weapon">
+        <template>
+            <div v-if="loaded" class="content-block center">
+                <div class="yk-block" style="background: radial-gradient(122.31% 217.44% at 1.56% 94.83%, #293342 0%, #121720 100%); width: 800px;">
+                    <div class="yk-tab-block-h">
+                        <button v-if="categoryHasProducts('categoryPistol')" @click="selectCategory('categoryPistol')" class="yk-tab-button" :class="{'active': selectedCategoryId === 'categoryPistol'}" style="padding: 10px;">
+                            <span class="yk-tab-button-text">ПИСТОЛЕТЫ</span>
+                        </button>
+                        <button v-if="categoryHasProducts('categoryShotgun')" @click="selectCategory('categoryShotgun')" class="yk-tab-button" :class="{'active': selectedCategoryId === 'categoryShotgun'}" style="padding: 10px;">
+                            <span class="yk-tab-button-text">ДРОБОВИКИ</span>
+                        </button>
+                        <button v-if="categoryHasProducts('categoryRifle')" @click="selectCategory('categoryRifle')" class="yk-tab-button" :class="{'active': selectedCategoryId === 'categoryRifle'}" style="padding: 10px;">
+                            <span class="yk-tab-button-text">АВТОМАТЫ</span>
+                        </button>
+                        <button v-if="categoryHasProducts('categoryOther')" @click="selectCategory('categoryOther')" class="yk-tab-button" :class="{'active': selectedCategoryId === 'categoryOther'}" style="padding: 10px;">
+                            <span class="yk-tab-button-text">ПРОЧЕЕ</span>
+                        </button>
+                        <svg @click="closeShop()" class="ml-auto" width="14" height="14" viewBox="0 0 14 14" style="cursor: pointer;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.41425 7.00025L13.7072 1.70725C14.0982 1.31625 14.0982 0.68425 13.7072 0.29325C13.3162 -0.09775 12.6842 -0.09775 12.2933 0.29325L7.00025 5.58625L1.70725 0.29325C1.31625 -0.09775 0.68425 -0.09775 0.29325 0.29325C-0.09775 0.68425 -0.09775 1.31625 0.29325 1.70725L5.58625 7.00025L0.29325 12.2933C-0.09775 12.6842 -0.09775 13.3162 0.29325 13.7072C0.48825 13.9022 0.74425 14.0002 1.00025 14.0002C1.25625 14.0002 1.51225 13.9022 1.70725 13.7072L7.00025 8.41425L12.2933 13.7072C12.4882 13.9022 12.7443 14.0002 13.0002 14.0002C13.2562 14.0002 13.5122 13.9022 13.7072 13.7072C14.0982 13.3162 14.0982 12.6842 13.7072 12.2933L8.41425 7.00025Z" fill="#4D5E77"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="yk-block d-flex flex-1 mt-20" style="height: 520px; width: 800px; position: relative;">
+                    <div class="yk-content d-flex flex-1" style="padding: 10px 10px 30px 10px;">
+                        <div class="yk-scroll text-center flex-1" style="flex-shrink: 0;">
+                            <div v-for="p in productListCurrent" :key="p.id" @click="selectProduct(p)" style="display: inline-block; width: 166px; height: 229px; border-radius: 4px; position: relative; margin: 12px; cursor: pointer;" :style="{'background': p.id !== selectedProductIndex ? '#233045' : '#30405A'}">
+                                <div v-if="!p.openInfo">
+                                    <div v-if="p.desc" @click.stop="p.openInfo = !p.openInfo" style="position: absolute; top: 5px; right: 5px;" class="yk-text w-5 s-13">i</div>
+                                    <img :src="p.image" style="max-width: 94px; max-height: 94px; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);">
+                                    <div style="position: absolute; top: 130px; left: 50%; transform: translateX(-50%); width: 95%; text-align: center;" class="yk-text w-7 s-14">{{ p.name }}</div>
+                                    <div @click.stop class="shop-product-buy">
+                                        <button type="button" class="yk-btn orange shop-cash-buy" :disabled="p.buying" @click.stop="buy(p)" title="Оплатить наличными">
+                                            {{ p.buying ? 'ПОКУПКА...' : 'НАЛИЧНЫМИ · ' + p.priceDisplay + '$' }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <div @click.stop="p.openInfo = false" style="position: absolute; top: 5px; right: 5px;" class="yk-text w-5 s-13">×</div>
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; padding: 5px;" class="yk-text w-5 s-13">{{ p.desc }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        window.mp = { trigger: function (ev, arg) { console.log('[preview]', ev, arg); } };
+    </script>
+    <script src="app.js"></script>
+    <script>show(1);</script>
+</body>
+</html>

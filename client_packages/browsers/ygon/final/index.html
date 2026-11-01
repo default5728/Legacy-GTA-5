@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Угон</title>
+    <link rel="stylesheet" href="../../shared/veprais-confirm.css">
+</head>
+<body>
+    <div class="popup__newhud">
+        <div class="popup__newhud_esc">
+            <div class="popup__newhud_escbutton">ESC</div>
+            <span>Закрыть</span>
+        </div>
+
+        <div class="popup__newhud_box">
+            <div class="popup__newhud_title">
+                <svg class="popup__newhud_icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8.25" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M10 9V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="10" cy="6.25" r="0.9" fill="currentColor"/>
+                </svg>
+                Сдача транспорта
+            </div>
+
+            <div class="popup__newhud_text">
+                Вы хотите сдать угнанный транспорт?<br>
+                Награда: <strong>100.000$</strong>
+            </div>
+
+            <div id="vehmodel" style="display:none"></div>
+
+            <div class="popup__newhud__buttons">
+                <div class="popup__newhud_button" id="ygonFinalYes">Подтвердить</div>
+                <div class="popup__newhud_button" id="ygonFinalNo">Отмена</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ygonFinalAnswer(yes) {
+            if (typeof mp !== 'undefined' && mp.trigger) {
+                mp.trigger('quest:ygon:final:client', yes ? 'yes' : 'no');
+            }
+        }
+
+        document.getElementById('ygonFinalYes').addEventListener('click', function () {
+            ygonFinalAnswer(true);
+        });
+
+        document.getElementById('ygonFinalNo').addEventListener('click', function () {
+            ygonFinalAnswer(false);
+        });
+
+        window.addEventListener('keyup', function (e) {
+            if (e.key === 'Escape') ygonFinalAnswer(false);
+            else if (e.key === 'Enter') ygonFinalAnswer(true);
+        });
+    </script>
+</body>
+</html>

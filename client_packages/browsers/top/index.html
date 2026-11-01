@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/style/flow-top-vars.css" rel="stylesheet">
+  <link href="assets/style/app.css" rel="stylesheet">
+  <link href="assets/style/flow-top.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <title>Рейтинг</title>
+</head>
+<body>
+<div id="top-root" class="flow-top-root">
+<div id="topMenu" class="window flow-top-shell" v-if="active">
+  <div class="header">
+    <div class="nav-top">
+      <ul class="nav nav-tabs">
+        <li class="active"><a class="{ active: activeTab === 'top' }">Рейтинг игроков</a></li>
+        <li style="list-style: none; display: inline">
+          <div class="shop-line"></div>
+        </li>
+      </ul>
+      <div class="online">
+        <svg height="1.5789473684210527vh" viewbox="0 0 15 15" width="1.5789473684210527vh" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="7.5" cy="7.5" fill="#31C02E" fill-opacity="0.4" r="7.5"></circle>
+          <circle cx="7.5" cy="7.5" fill="#31C02E" r="3.5"></circle>
+        </svg>
+        <p><a>{{ online.real }}</a> / {{ online.max }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div v-show="activeTab === 'top'" class="tab-pane fade in active" id="top">
+      <div class="top-list">
+        <div class="top-block">
+          <div class="top-head">
+            <p class="top-header">Топ 3 убийств</p>
+            <svg height="2.4210526315789473vh" viewbox="0 0 23 23" width="2.4210526315789473vh" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0)">
+                <path d="M11.1234 0C5.56429 0.00266883 1.05664 4.51031 1.05664 10.0721V14.8173C1.05664 15.0682 1.17407 15.303 1.37423 15.4551L5.70306 18.7405V21.4494C5.70306 21.8924 6.06069 22.25 6.50371 22.25H7.1469C7.58992 22.25 7.94755 21.8924 7.94755 21.4494V20.3498C7.94755 20.0696 8.1744 19.8427 8.45462 19.8427C8.73485 19.8427 8.9617 20.0696 8.9617 20.3498V21.4494C8.9617 21.8924 9.31932 22.25 9.76235 22.25H9.78903C10.2321 22.25 10.5897 21.8924 10.5897 21.4494V20.3498C10.5897 20.0696 10.8165 19.8427 11.0968 19.8427H11.1501C11.4304 19.8427 11.6572 20.0696 11.6572 20.3498V21.4494C11.6572 21.8924 12.0148 22.25 12.4579 22.25H12.4845C12.9276 22.25 13.2852 21.8924 13.2852 21.4494V20.3498C13.2852 20.0696 13.512 19.8427 13.7923 19.8427C14.0725 19.8427 14.2993 20.0696 14.2993 20.3498V21.4494C14.2993 21.8924 14.657 22.25 15.1 22.25H15.7459C16.1889 22.25 16.5465 21.8924 16.5465 21.4494V18.7378L20.8753 15.4525C21.0755 15.3004 21.1929 15.0655 21.1929 14.8147V10.0695C21.1903 4.51031 16.6826 0.00266883 11.1234 0ZM6.91471 14.8947C5.38281 14.8947 4.13913 13.651 4.13913 12.1191C4.13913 10.5873 5.38281 9.34356 6.91471 9.34356C8.44662 9.34356 9.69029 10.5873 9.69029 12.1191C9.69029 13.6537 8.44662 14.8947 6.91471 14.8947ZM11.9134 16.9364H10.3361C9.97052 16.9364 9.73833 16.5441 9.91447 16.2238L10.7044 14.7907C10.8859 14.4597 11.3636 14.4597 11.5451 14.7907L12.3351 16.2238C12.5086 16.544 12.2764 16.9364 11.9134 16.9364ZM15.3322 14.8947C13.8003 14.8947 12.5566 13.651 12.5566 12.1191C12.5566 10.5873 13.8003 9.34356 15.3322 9.34356C16.8641 9.34356 18.1078 10.5873 18.1078 12.1191C18.1078 13.6537 16.8668 14.8947 15.3322 14.8947Z" fill="#252635"></path>
+              </g>
+              <defs>
+                <clippath id="clip0">
+                  <rect fill="white" height="22.25" width="22.25"></rect>
+                </clippath>
+              </defs>
+            </svg>
+          </div>
+          <div v-for="(kill, index) in kills.slice(0, 3)" :key="kill.id">
+            <p class="player"><b>{{ index + 1 }}.</b> <a class="nickname">{{ kill.name || '-' }}</a> [#<a>{{ kill.playerId || '-' }}</a>]</p>
+            <p class="cout">
+              <a>{{ kill.kill || 0 }}</a> убийств
+            </p>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="top-block">
+          <div class="top-head">
+            <p class="top-header">Топ 3 смертей</p>
+            <svg height="2.8421052631578947vh" viewbox="0 0 27 27" width="2.8421052631578947vh" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip1)">
+                <path d="M13.1234 3C7.56429 3.00267 3.05664 7.51031 3.05664 13.0721V17.8173C3.05664 18.0682 3.17407 18.303 3.37423 18.4551L7.70306 21.7405V24.4494C7.70306 24.8924 8.06069 25.25 8.50371 25.25H9.1469C9.58992 25.25 9.94755 24.8924 9.94755 24.4494V23.3498C9.94755 23.0696 10.1744 22.8427 10.4546 22.8427C10.7348 22.8427 10.9617 23.0696 10.9617 23.3498V24.4494C10.9617 24.8924 11.3193 25.25 11.7623 25.25H11.789C12.2321 25.25 12.5897 24.8924 12.5897 24.4494V23.3498C12.5897 23.0696 12.8165 22.8427 13.0968 22.8427H13.1501C13.4304 22.8427 13.6572 23.0696 13.6572 23.3498V24.4494C13.6572 24.8924 14.0148 25.25 14.4579 25.25H14.4845C14.9276 25.25 15.2852 24.8924 15.2852 24.4494V23.3498C15.2852 23.0696 15.512 22.8427 15.7923 22.8427C16.0725 22.8427 16.2993 23.0696 16.2993 23.3498V24.4494C16.2993 24.8924 16.657 25.25 17.1 25.25H17.7459C18.1889 25.25 18.5465 24.8924 18.5465 24.4494V21.7378L22.8753 18.4525C23.0755 18.3004 23.1929 18.0655 23.1929 17.8147V13.0695C23.1903 7.51031 18.6826 3.00267 13.1234 3ZM8.91471 17.8947C7.38281 17.8947 6.13913 16.651 6.13913 15.1191C6.13913 13.5873 7.38281 12.3436 8.91471 12.3436C10.4466 12.3436 11.6903 13.5873 11.6903 15.1191C11.6903 16.6537 10.4466 17.8947 8.91471 17.8947ZM13.9134 19.9364H12.3361C11.9705 19.9364 11.7383 19.5441 11.9145 19.2238L12.7044 17.7907C12.8859 17.4597 13.3636 17.4597 13.5451 17.7907L14.3351 19.2238C14.5086 19.544 14.2764 19.9364 13.9134 19.9364ZM17.3322 17.8947C15.8003 17.8947 14.5566 16.651 14.5566 15.1191C14.5566 13.5873 15.8003 12.3436 17.3322 12.3436C18.8641 12.3436 20.1078 13.5873 20.1078 15.1191C20.1078 16.6537 18.8668 17.8947 17.3322 17.8947Z" fill="#252635"></path>
+              </g>
+              <rect fill="#252635" height="34.4891" rx="1.29515" transform="rotate(45 24.7788 0.390137)" width="2.5903" x="24.7788" y="0.390137"></rect>
+              <defs>
+                <clippath id="clip1">
+                  <rect fill="white" height="22.25" transform="translate(2 3)" width="22.25"></rect>
+                </clippath>
+              </defs>
+            </svg>
+          </div>
+          <div v-for="(death, index) in deaths.slice(0, 3)" :key="death.id">
+            <p class="player"><b>{{ index + 1 }}.</b> <a class="nickname">{{ death.name || '-' }}</a> [#<a>{{ death.playerId || '-' }}</a>]</p>
+            <p class="cout">
+              <a>{{ death.death || 0 }}</a> смертей
+            </p>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="top-block">
+          <div class="top-head">
+            <p class="top-header">Топ 3 онлайна</p>
+            <svg height="2.8421052631578947vh" viewbox="0 0 27 27" width="2.8421052631578947vh" xmlns="http://www.w3.org/2000/svg">
+              <path clip-rule="evenodd" d="M12.375 4.56179V3.375H11.25V1.125H15.75V3.375H14.625V4.56179C16.5774 4.77763 18.3626 5.54861 19.819 6.7134L21.7028 4.82136L23.2972 6.40886L21.4102 8.30421C22.7962 10.0365 23.625 12.234 23.625 14.625C23.625 20.2169 19.0919 24.75 13.5 24.75C7.90812 24.75 3.375 20.2169 3.375 14.625C3.375 9.41338 7.31256 5.12142 12.375 4.56179ZM13.5 22.5C17.8492 22.5 21.375 18.9742 21.375 14.625C21.375 10.2758 17.8492 6.75 13.5 6.75C9.15076 6.75 5.625 10.2758 5.625 14.625C5.625 18.9742 9.15076 22.5 13.5 22.5ZM14.625 15.75V9H12.375V15.75H14.625Z" fill="#252635" fill-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div v-for="(online, index) in onlines.slice(0, 3)" :key="online.id">
+            <p class="player"><b>{{ index + 1 }}.</b> <a class="nickname">{{ online.name || '-' }}</a> [#<a>{{ online.playerId || '-' }}</a>]</p>
+            <p class="cout">
+              <a>{{ online.time || 0 }}</a> часов
+            </p>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="top-block">
+          <div class="top-head">
+            <p class="top-header">Топ 3 богачей</p>
+            <svg height="2.8421052631578947vh" viewbox="0 0 27 27" width="2.8421052631578947vh" xmlns="http://www.w3.org/2000/svg">
+              <g id="wallet-icon">
+                <path clip-rule="evenodd" d="M17.3819 1.578C18.5767 1.23662 19.8221 1.92847 20.1634 3.1233C20.2209 3.32432 20.25 3.53236 20.25 3.74142V5.62498H22.5C23.7426 5.62498 24.75 6.63234 24.75 7.87498V21.375C24.75 22.6176 23.7426 23.625 22.5 23.625H4.5C3.25736 23.625 2.25 22.6176 2.25 21.375H2.28004C2.26007 21.254 2.25 21.1314 2.25 21.0085V7.59857C2.25 6.59399 2.91595 5.71112 3.88188 5.43514L17.3819 1.578ZM11.4075 21.375H22.5V12.375H20.25V17.1514C20.25 18.156 19.5841 19.0388 18.6181 19.3148L11.4075 21.375ZM20.25 7.87498H22.5V10.125H20.25V7.87498ZM4.5 7.59854V21.0085L18 17.1514V3.74139L4.5 7.59854ZM15.75 10.125C15.75 10.7463 15.2463 11.25 14.625 11.25C14.0037 11.25 13.5 10.7463 13.5 10.125C13.5 9.50366 14.0037 8.99998 14.625 8.99998C15.2463 8.99998 15.75 9.50366 15.75 10.125Z" fill="#252635" fill-rule="evenodd"></path>
+              </g>
+            </svg>
+          </div>
+          <div v-for="(money, index) in moneys.slice(0, 3)" :key="money.id">
+            <p class="player"><b>{{ index + 1 }}.</b> <a class="nickname">{{ money.name || '-' }}</a> [#<a>{{ money.playerId || '-' }}</a>]</p>
+            <p class="cout">
+              <a>{{ money.money || 0 }}</a>$
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="play" onclick="mp.trigger('playbutton:top:c');">
+    Играть!
+  </button>
+  <img class="back-img" src="assets/images/back-img.png" alt="">
+</div>
+</div>
+<script src="assets/javascript/app.js"></script>
+</body>
+</html>

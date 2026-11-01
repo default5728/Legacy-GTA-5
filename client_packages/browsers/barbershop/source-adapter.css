@@ -1,0 +1,80 @@
+/* GTA5RP shop_barbershop — layout like tattoo (ysk CSS as-is). */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none !important;
+}
+
+#shop_barbershop,
+#shop_barbershop *:focus,
+#shop_barbershop *:focus-visible {
+    outline: none !important;
+    box-shadow: none;
+}
+
+#shop_barbershop .yk-scroll:focus,
+#shop_barbershop .yk-shadow-block-item:focus {
+    outline: none !important;
+}
+
+#shop_barbershop {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: none;
+}
+
+#shop_barbershop > * {
+    pointer-events: none;
+}
+
+#shop_barbershop .yk-shadow-block-right,
+#shop_barbershop .yk-shadow-block-left {
+    pointer-events: auto;
+}
+
+#shop_barbershop .yk-shadow-block-item,
+#shop_barbershop .yk-btn-circle,
+#shop_barbershop .yk-btn,
+#shop_barbershop button,
+#shop_barbershop .barberShop-item-image,
+#shop_barbershop .barberShop-color-block,
+#shop_barbershop [role="button"] {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#shop_barbershop .yk-shadow-block-right > div:first-child {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#shop_barbershop #menuMainRightList {
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+}
+
+#shop_barbershop .yk-btn-circle + .yk-text {
+    white-space: nowrap;
+}
+
+#shop_barbershop .barberShop-item-image {
+    object-fit: cover;
+    background: rgba(20, 28, 48, 0.55);
+    border-radius: 4px;
+}
+
+#shop_barbershop .yk-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}

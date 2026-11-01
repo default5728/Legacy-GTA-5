@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="package://browsers/barbershop/source/Lib/css/fonts.css">
+    <link rel="stylesheet" href="package://browsers/barbershop/source/Menu/UI/style.css">
+    <link rel="stylesheet" href="package://browsers/barbershop/source/Lib/css/help.css">
+    <link rel="stylesheet" href="package://browsers/autosalon-yk/style.css?v=2">
+    <link rel="stylesheet" href="package://browsers/autosalon-yk/fonts-fix.css?v=2">
+    <script type="text/javascript" src="package://browsers/barbershop/source/Lib/js/vue.js"></script>
+    <script type="text/javascript" src="package://browsers/barbershop/source/Lib/js/preventSelection.js"></script>
+</head>
+<body scroll="no" style="overflow: hidden; background: transparent;">
+
+    <div id="shop_vehicle">
+        <template>
+            <div v-if="loaded">
+                <div v-if="!testDriverStarted">
+                    <div class="yk-shadow-block-right" style="width: 297px;">
+                        <div style="position: relative; padding: 10px 0;">
+                            <div id="autosalonVehList" class="yk-scroll" style="height: calc(100vh - 40px);">
+                                <div
+                                    v-for="(veh, vehIndex) in vehicles"
+                                    :key="veh.model"
+                                    class="yk-shadow-block-item"
+                                    @click="selectVeh(vehIndex)"
+                                    :class="{'active': vehIndex === selectedVeh}"
+                                >
+                                    <div class="yk-text w-4 s-18" style="padding: 0 20px;">{{ veh.name }}</div>
+                                </div>
+                            </div>
+                            <div style="position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);">
+                                <svg width="26" height="25" viewBox="0 0 26 25">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M23.0003 8.10027C23.0003 8.38187 22.8914 8.66347 22.6747 8.87797L13.7858 17.6779C13.3514 18.108 12.6492 18.108 12.2147 17.6779L3.32583 8.87797C2.89139 8.44787 2.89139 7.75267 3.32583 7.32257C3.76028 6.89248 4.4625 6.89248 4.89694 7.32257L13.0003 15.3448L21.1036 7.32257C21.538 6.89248 22.2403 6.89248 22.6747 7.32257C22.8914 7.53707 23.0003 7.81867 23.0003 8.10027Z" fill="#3B4662"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedVeh >= 0 && vehicles[selectedVeh]" class="yk-shadow-block-left" style="width: 297px;">
+                        <div class="yk-shadow-block-main-content-left">
+                            <div class="yk-text w-7 s-24 text-center mb-10">{{ vehicles[selectedVeh].name }}</div>
+                            <div class="d-flex center-align" style="justify-content: space-between;">
+                                <div class="d-flex">
+                                    <svg width="23" height="23" viewBox="0 0 23 23">
+                                        <path d="M8.16774 0.0646973H14.5218V6.41628H8.16774V0.0646973ZM8.16774 8.23244H14.5218V14.584H8.16774V8.23244ZM0 8.23244H6.35158V14.584H0V8.23244ZM0 0.0646973H6.35158V6.41628H0V0.0646973ZM0.00249017 16.5828H6.35158V22.936H0.00249017V16.5828ZM8.17023 16.5828H14.5218V22.936H8.17023V16.5828ZM16.6459 0.0646973H23V6.41628H16.6459V0.0646973ZM16.6459 8.23244H23V14.584H16.6459V8.23244ZM16.6459 16.5828H23V22.936H16.6459V16.5828Z" fill="white"/>
+                                    </svg>
+                                    <div class="yk-text w-7 s-20 ml-5">{{ vehicles[selectedVeh].params.maxItems }}</div>
+                                </div>
+                                <div class="d-flex">
+                                    <svg width="23" height="23" viewBox="0 0 19 23">
+                                        <path d="M17.2051 2.83604H17.0933V2.3395C17.0933 1.04946 16.0438 0 14.7538 0H11.1399C9.84988 0 8.80041 1.04946 8.80041 2.3395V2.83604H7.41087C7.18388 2.83604 6.96625 2.9262 6.80557 3.08665L2.16571 7.72662C2.00526 7.88719 1.9151 8.10482 1.9151 8.33192V21.7425C1.9151 22.4359 2.47921 23.0001 3.17272 23.0001H17.2053C17.8987 23.0001 18.4629 22.436 18.4629 21.7425V4.09355C18.4627 3.40015 17.8986 2.83604 17.2051 2.83604ZM10.5121 2.3395C10.5121 1.99348 10.7938 1.71183 11.1398 1.71183H14.7537C15.0997 1.71183 15.3814 1.99348 15.3814 2.3395V2.83604H10.5121V2.3395Z" fill="white"/>
+                                    </svg>
+                                    <div class="yk-text w-7 s-20 ml-5">{{ vehicles[selectedVeh].params.fuelTank }} L</div>
+                                </div>
+                                <div class="d-flex">
+                                    <svg width="23" height="23" viewBox="0 0 23 23">
+                                        <path d="M19.1418 4.75977C18.1011 5.48427 16.6693 5.23129 15.9448 4.19629C15.2145 3.15553 15.4676 1.72378 16.5083 0.993563C17.5491 0.263295 18.9808 0.516277 19.7111 1.55704C20.4356 2.59776 20.1825 4.02951 19.1418 4.75977Z" fill="white"/>
+                                        <path d="M18.4402 17.2027L20.7 6.32373H23L20.7058 17.542C20.2803 20.348 17.8653 22.4237 15.0247 22.4237H6.89999V20.1237H15.0305C16.7325 20.1237 18.1815 18.8817 18.4402 17.2027Z" fill="white"/>
+                                        <path d="M6.63522 15.5238H12.2472L13.4259 10.8088C11.6147 11.8323 9.65397 12.5855 7.50343 12.2118V9.76808C9.37791 10.1188 11.4594 9.45181 12.8969 8.33633L14.7886 6.86431C15.0474 6.66308 15.3521 6.51931 15.6684 6.42729C16.0306 6.32379 16.4216 6.29506 16.8069 6.35829L16.8356 6.36406C18.2443 6.61133 19.1874 7.95106 18.9401 9.35979L17.3818 16.1678C17.0713 17.795 15.6511 18.9737 13.9951 18.9737H6.11762L1.72464 22.4237L-0.000358217 20.6987L6.63522 15.5238Z" fill="white"/>
+                                    </svg>
+                                    <div class="yk-text w-7 s-20 ml-5">{{ numberOfPassengers }}</div>
+                                </div>
+                            </div>
+                            <div class="yk-text w-5 s-17 mt-20">КЛАСС: <span class="yk-text w-6 s-17">{{ vehicles[selectedVeh].className }}</span></div>
+                            <div class="mt-20">
+                                <div class="yk-text w-6 s-17">СКОРОСТЬ:</div>
+                                <div class="yk-progress-block mt-5">
+                                    <div class="yk-progress-fill orange" :style="{'width': maxSpeed + '%'}"></div>
+                                    <div class="yk-progress-text">{{ maxSpeed }} из 100%</div>
+                                </div>
+                                <div class="yk-text w-6 s-17 mt-10">УСКОРЕНИЕ:</div>
+                                <div class="yk-progress-block mt-5">
+                                    <div class="yk-progress-fill orange" :style="{'width': acceleration + '%'}"></div>
+                                    <div class="yk-progress-text">{{ acceleration }} из 100%</div>
+                                </div>
+                                <div class="yk-text w-6 s-17 mt-10">УПРАВЛЕНИЕ:</div>
+                                <div class="yk-progress-block mt-5">
+                                    <div class="yk-progress-fill orange" :style="{'width': maxTraction + '%'}"></div>
+                                    <div class="yk-progress-text">{{ maxTraction }} из 100%</div>
+                                </div>
+                                <div class="yk-text w-6 s-17 mt-10">ТОРМОЖЕНИЕ:</div>
+                                <div class="yk-progress-block mt-5">
+                                    <div class="yk-progress-fill orange" :style="{'width': maxBraking + '%'}"></div>
+                                    <div class="yk-progress-text">{{ maxBraking }} из 100%</div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-10">
+                                <button @click="startTestDrive()" class="yk-btn s-15 p-10-15 orange w-100">Тест драйв</button>
+                            </div>
+                        </div>
+                        <div style="position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); width: 90%;">
+                            <div class="yk-text w-7 s-38 text-center">{{ vehicles[selectedVeh].priceDisplay }}{{ vehicles[selectedVeh].currencyLabel }}</div>
+                            <div v-if="vehicles[selectedVeh].currencyLabel === '$'" class="autosalon-pay-row mt-10">
+                                <button type="button" @click="startBuyVeh(0)" class="yk-btn s-15 p-10-15 green">Оплатить</button>
+                                <button type="button" v-if="family" @click="startBuyVeh(2)" class="yk-btn s-15 p-10-15 purple">Для семьи</button>
+                            </div>
+                            <div v-else class="autosalon-pay-row mt-10">
+                                <button type="button" @click="startBuyVeh(0)" class="yk-btn s-15 p-10-15 green">Оплатить</button>
+                            </div>
+                            <div @click="closeShop()" class="yk-text w-6 s-13 text-center mt-10">ПОКИНУТЬ МАГАЗИН (ESC)</div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-show="startBuyVehType === -1"
+                        class="autosalon-rotate-zone"
+                        :class="{'is-dragging': vehicleShopStartRotate}"
+                        @mousedown.prevent="mouseDown($event)"
+                    ></div>
+                </div>
+
+                <div v-if="startBuyVehType !== -1 && selectedVeh >= 0" class="content-block center autosalon-buy-confirm">
+                    <div class="yk-block">
+                        <div class="yk-content" style="padding: 20px 30px 40px 30px;">
+                            <div class="yk-text w-7 s-18 text-center" style="color: #495779;">ПОКУПКА МАШИНЫ</div>
+                            <div class="yk-text w-5 s-16 text-center mt-10" style="width: 400px;">
+                                Вы подтверждаете покупку
+                                <span class="yk-text w-6 s-16">{{ vehicles[selectedVeh].name }}</span>
+                                за
+                                <span class="yk-text w-6 s-16">{{ vehicles[selectedVeh].priceDisplay }}{{ vehicles[selectedVeh].currencyLabel }}</span>?
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yk-btn-h-list w-100 autosalon-buy-actions">
+                        <button type="button" @click.stop.prevent="cancelBuy()" class="yk-btn s-15 p-10-15 red" style="width: 200px;">Нет</button>
+                        <button type="button" v-if="startBuyVehType === 2" @click.stop.prevent="buyVeh()" class="yk-btn s-15 p-10-15 purple">Оплатить для семьи</button>
+                        <button type="button" v-else-if="startBuyVehType === 0 && selectedVeh >= 0 && vehicles[selectedVeh] && vehicles[selectedVeh].currencyLabel === '$'" @click.stop.prevent="buyVeh()" class="yk-btn s-15 p-10-15 green">Оплатить наличными</button>
+                        <button type="button" v-else @click.stop.prevent="buyVeh()" class="yk-btn s-15 p-10-15 orange">Оплатить за DP</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <style>
+        .autosalon-list-arrow { position: absolute; left: 50%; transform: translateX(-50%); width: 38px; height: 30px; padding: 2px; border: 0; background: transparent; color: #3B4662; cursor: pointer; }
+        .autosalon-list-arrow:hover:not(:disabled) { color: #FFB800; }
+        .autosalon-list-arrow:disabled { opacity: .3; cursor: default; }
+        .autosalon-list-arrow-up { top: -20px; }
+        .autosalon-list-arrow-down { bottom: -20px; }
+    </style>
+    <script src="package://browsers/autosalon-yk/app.js"></script>
+</body>
+</html>

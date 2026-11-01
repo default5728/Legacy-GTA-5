@@ -1,0 +1,97 @@
+#dialog-block {
+	display: none;
+    position: absolute;
+	left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+#dialog-content {
+    position: relative;
+	display: flex;
+	flex-direction: column;
+	background: rgba(29, 38, 52, 0.95);
+    border: 1px solid #30343A;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 30px 30px 50px 30px;
+    text-align: center;
+}
+
+#dialog-header {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    color: #6779A5;
+    text-transform: uppercase;
+}
+
+#dialog-content-area {
+	flex: 1;
+	min-width: 350px;
+	max-width: 700px;
+	max-height: 500px;
+	overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #fff;
+}
+
+#dialog-buttons-area {
+    position: absolute;
+    left: 50%;
+    bottom: -20px;
+    transform: translateX(-50%);
+    min-width: 100%;
+    text-align: center;
+}
+
+#dialog-list-box {
+    text-align: center;
+}
+.dialog-list-item {
+	margin-top: 10px;
+    padding: 15px;
+    background: linear-gradient(270deg, #374976 0%, #556D91 100%);
+    border-radius: 4px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: 0px 1px 2px rgba(0, 103, 47, 0.46);
+}
+.dialog-list-item:first-child {
+    margin-top: 0px;
+}
+.dialog-list-item:hover {
+    box-shadow: 4px 1px 31px #1C3356;
+}
+
+#dialog-content.buttons-vertical-mode {
+    padding: 15px 30px;
+}
+#dialog-buttons-area.buttons-vertical-mode {
+    position: static !important;
+    transform: none !important;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+#dialog-content.dialog-content-left {
+    text-align: left;
+}
+
+#dialog-content-area.width-large {
+	max-width: 900px;
+}

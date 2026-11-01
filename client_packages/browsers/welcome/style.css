@@ -1,0 +1,238 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    color: #e8e8e8;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: tabular-nums;
+}
+
+body {
+    opacity: 0;
+    animation: fadeInBody 0.35s ease forwards;
+}
+
+body.fade-out-exit {
+    animation: none;
+    opacity: 0 !important;
+    transition: opacity 0.45s ease;
+}
+
+@keyframes fadeInBody {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.wrap {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.intro {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    min-height: 0;
+    transition: opacity 0.35s ease;
+}
+
+.intro.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.intro .brand {
+    color: #dc2626;
+    text-shadow: 0 0 28px rgba(220, 38, 38, 0.45), 0 2px 18px rgba(0, 0, 0, 0.9);
+}
+
+.intro h1 {
+    margin: 0;
+    font-size: clamp(42px, 8vw, 76px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.92), 0 1px 6px rgba(0, 0, 0, 0.95);
+}
+
+.intro .sub {
+    color: rgba(245, 245, 245, 0.95);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Как neverDM welcome: h2 + иконка мыши; без отрицательного margin — не слипается с заголовком */
+.hint {
+    margin: 0;
+    font-weight: 600;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9), 0 0 1px rgba(0, 0, 0, 1);
+}
+
+.hint img {
+    width: 38px;
+    vertical-align: -12px;
+}
+
+.loader {
+    width: min(420px, 92vw);
+    flex-shrink: 0;
+    margin-top: 0;
+    margin-bottom: clamp(100px, 22vh, 300px);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    padding: 8px 0 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.loader.visible {
+    opacity: 1;
+}
+
+.loader.hidden {
+    display: none !important;
+}
+
+.bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.28);
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #b91c1c 0%, #ef4444 50%, #dc2626 100%);
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
+    transition: width 0.05s linear;
+}
+
+.pct {
+    margin-top: 12px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f5f5f5;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
+}
+
+.cap {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.62);
+    font-weight: 500;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
+}
+
+.phase-fly {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.phase-fly.phase-fly--active {
+    display: flex;
+}
+
+.phase-fly__blur {
+    position: absolute;
+    inset: 0;
+    animation: flyBlurRamp 3s cubic-bezier(0.22, 0.72, 0.28, 1) forwards;
+}
+
+/* Плавный набор: долго почти без блюра, к финишу — умеренное среднее размытие */
+@keyframes flyBlurRamp {
+    0% {
+        -webkit-backdrop-filter: blur(0px);
+        backdrop-filter: blur(0px);
+        background: rgba(0, 0, 0, 0);
+    }
+    45% {
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+        background: rgba(0, 0, 0, 0.02);
+    }
+    72% {
+        -webkit-backdrop-filter: blur(4.5px);
+        backdrop-filter: blur(4.5px);
+        background: rgba(0, 0, 0, 0.04);
+    }
+    100% {
+        -webkit-backdrop-filter: blur(7px);
+        backdrop-filter: blur(7px);
+        background: rgba(0, 0, 0, 0.06);
+    }
+}
+
+.phase-fly__hi {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0 16px;
+    text-align: center;
+    font-size: clamp(28px, 5.4vw, 64px);
+    font-weight: 800;
+    color: #f5f5f5;
+    text-shadow: 0 2px 22px rgba(0, 0, 0, 0.92), 0 1px 8px rgba(0, 0, 0, 0.88);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: hiBroFadeIn 1.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+}
+
+.phase-fly__hi-welcome,
+.phase-fly__hi-dm {
+    color: #f5f5f5;
+    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.92), 0 1px 10px rgba(0, 0, 0, 0.88);
+}
+
+.phase-fly__hi-flow {
+    color: #dc2626;
+    text-shadow: 0 0 40px rgba(220, 38, 38, 0.45), 0 4px 32px rgba(0, 0, 0, 0.95);
+}
+
+@keyframes hiBroFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru"><head>
+<script src="package://shared/kepler-asset-map.js"></script>
+<script>window.addEventListener("error",function(e){if(window.mp)mp.trigger("kepler:ui:error",String(e.filename||"inline"),Number(e.lineno)||0);});</script>
+<base href="package://inventory/obsidian-v1/">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Legacy Roleplay · Инвентарь</title><link rel="stylesheet" href="style.css"></head>
+<body><main id="inventory" hidden aria-label="Инвентарь">
+<section id="equipment" class="panel equipment">
+  <header><h1><svg class="vital-icon" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg> ПЕРСОНАЖ <span class="title-divider">//</span> ИНВЕНТАРЬ</h1><span class="eyebrow">LEGACY ROLEPLAY</span></header>
+  <div id="equipmentGrid" class="equipment-grid"></div>
+  <div class="vitals"><span title="Сытость"><svg class="vital-icon" viewBox="0 0 24 24"><path d="M4 2v7a3 3 0 0 0 6 0V2M7 2v20M18 2v20M18 2c-4 3-4 10 0 10"/></svg> Сытость <b id="satiety">—</b></span><span title="Жажда"><svg class="vital-icon" viewBox="0 0 24 24"><path d="M12 2c-3 5-7 8-7 13a7 7 0 0 0 14 0c0-5-4-8-7-13Z"/></svg> Жажда <b id="thirst">—</b></span><span title="Настроение"><svg class="vital-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 14a5 5 0 0 0 10 0M8 8h.1M16 8h.1"/></svg> Настроение <b id="mood">—</b></span></div>
+</section>
+<section id="fastAccess" class="panel fast-access">
+  <header><h2>БЫСТРЫЙ ДОСТУП</h2></header>
+  <div id="weaponsGrid" class="weapon-grid"></div>
+</section>
+<section id="items" class="panel inventory-panel">
+  <section id="bagSection" class="storage-section bag-section" hidden>
+    <header class="section-header"><h2><span class="section-mark"></span><span id="bagName">РЮКЗАК</span></h2><small id="bagCapacity">0 / 0 КГ</small></header>
+    <div id="bagGrid" class="bag-grid"></div>
+  </section>
+  <section id="personalSection" class="storage-section personal-section">
+    <header class="section-header"><h2><span class="section-mark"></span>ВАШИ ПРЕДМЕТЫ</h2><small id="inventoryCount">0 / 20 СЛОТОВ</small></header>
+    <div id="itemsGrid" class="item-grid"></div>
+    <nav class="item-pages" aria-label="Страницы предметов"><button id="previousPage" aria-label="Предыдущая страница">‹</button><span id="itemPage">1 / 1</span><button id="nextPage" aria-label="Следующая страница">›</button></nav>
+    <div id="selection" class="selection">Выберите предмет</div>
+    <footer class="dock"><button id="close"><kbd>ESC</kbd><span>Закрыть</span></button><button id="use" disabled><kbd>E</kbd><span>Использовать</span></button><button id="drop" disabled><kbd>R</kbd><span>Выбросить</span></button></footer>
+  </section>
+  <section id="ammoSection" class="storage-section ammo-section">
+    <header class="section-header"><h2><span class="section-mark"></span>ПАТРОНТАШ</h2><small id="ammoCapacity">—</small></header>
+    <div id="ammoGrid" class="ammo-grid"></div>
+  </section>
+</section>
+<section id="environment" class="panel environment">
+  <header><h2>ОКРУЖЕНИЕ</h2></header>
+  <div id="environmentGrid" class="environment-grid"></div>
+</section>
+<section id="character" class="character" aria-hidden="true"><h2>ПЕРСОНАЖ</h2><div id="rotateArea"></div></section>
+<div id="notice" role="status" hidden></div>
+<section id="dropConfirm" class="confirm" hidden><span class="eyebrow">ПОДТВЕРДИТЕ ВЫБРОС</span><h2 id="dropName"></h2><p>Выбросить этот предмет?</p><div><button id="cancelDrop">Нет</button><button id="confirmDrop">Да</button></div></section>
+<div id="itemContextMenu" class="item-context-menu" hidden role="menu"></div>
+<section id="splitDialog" class="confirm split-dialog" hidden aria-label="Разделить предмет"><span class="eyebrow">РАЗДЕЛИТЬ ПРЕДМЕТ</span><h2 id="splitName"></h2><div id="splitAmount" class="split-amount">1 из 2</div><input id="splitSlider" class="split-slider" type="range" min="1" max="1" value="1"><p id="splitRemainder" class="split-remainder"></p><div><button id="splitCancel" type="button">Отмена</button><button id="splitConfirm" type="button">Разделить</button></div></section>
+</main><script src="ui.js"></script><script src="package://controls/cef-input.js"></script><script src="package://kepler-compat/inventory/bridge.js"></script></body></html>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="cardBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#242838"/>
+      <stop offset="100%" stop-color="#12141c"/>
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#e08a45"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="14" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+  
+      <!-- Female Head Base -->
+      <path d="M 50 19 C 36 19 28 32 28 48 C 28 64 38 76 50 76 C 62 76 72 64 72 48 C 72 32 64 19 50 19 Z" fill="url(#skinGrad)"/>
+      <!-- Top Bun -->
+      <circle cx="50" cy="10" r="9" fill="url(#hairGrad)"/>
+      <path d="M 27 40 C 28 20 72 20 73 40 C 66 28 34 28 27 40 Z" fill="url(#hairGrad)"/>
+    
+</svg>

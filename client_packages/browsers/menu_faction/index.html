@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="package://browsers/shared/cef-no-select.css">
+    <script src="package://browsers/shared/cef-no-select.js"></script>
+    <script src="preview-boot.js"></script>
+    <link rel="stylesheet" type="text/css" href="Lib/css/fonts.css?v=3" media="screen">
+    <link rel="stylesheet" type="text/css" href="Lib/css/help.css?v=3" media="screen">
+    <link rel="stylesheet" type="text/css" href="Menu/UI/style.css?v=3" media="screen">
+    <script src="Lib/js/rage-rpc.min.js?v=2"></script>
+    <script src="Lib/js/jquery.js?v=2"></script>
+    <script src="Lib/js/preventSelection.js?v=2"></script>
+    <script src="Lib/js/vue.js?v=2"></script>
+    <script src="Lib/js/serverAPI.js?v=2"></script>
+    <style>
+      html, body {
+        margin: 0; padding: 0; width: 100%; height: 100%;
+        background: transparent !important;
+        overflow: hidden;
+      }
+      body.faction-hidden #faction { display: none !important; }
+      #faction {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: auto;
+      }
+      /* Разрешить клики по кнопкам даже если disabled снят через права */
+      #faction button.yk-btn { pointer-events: auto; cursor: pointer; }
+      #faction button.yk-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+      /* Фиксированная ширина — без прыжков при смене вкладок / скроллбара */
+      #faction .faction-shell {
+        width: 800px;
+        min-width: 800px;
+        max-width: 800px;
+        box-sizing: border-box;
+      }
+      #faction .faction-shell > .yk-block {
+        width: 800px;
+        min-width: 800px;
+        max-width: 800px;
+        box-sizing: border-box;
+      }
+      #faction .yk-tab-block-h {
+        overflow: hidden;
+        min-height: 54px;
+        box-sizing: border-box;
+      }
+      #faction .yk-tab-button {
+        flex-shrink: 0;
+      }
+      #faction .faction-logs-block,
+      #faction .faction-logs-content,
+      #faction .faction-logs-scroll {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      #faction .faction-logs-toolbar {
+        flex: 0 0 auto;
+        min-width: 0;
+        padding-right: 5px;
+        box-sizing: border-box;
+      }
+      #faction .faction-logs-toolbar .yk-input-block {
+        width: min(360px, 52%);
+        min-width: 0;
+      }
+      #faction .faction-logs-row,
+      #faction .faction-logs-scroll .yk-table-header,
+      #faction .faction-logs-scroll .yk-table-row {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+      #faction .faction-logs-row > div,
+      #faction .faction-logs-scroll .yk-table-header > div {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #faction .faction-close-x {
+        position: relative;
+        z-index: 5;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      #faction .yk-tab-button.active:before,
+      #faction .yk-tab-button.active:after {
+        pointer-events: none;
+      }
+      #faction .yk-scroll {
+        scrollbar-gutter: stable;
+      }
+      #faction .faction-panel {
+        width: 800px !important;
+        min-width: 800px;
+        max-width: 800px;
+        height: 530px !important;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      #faction .yk-checkbox:checked:before {
+        display: none;
+        content: none;
+        background: none;
+      }
+    </style>
+    <style>
+
+        .factionMenu-members-item {
+            margin-top: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .factionMenu-members-item:first-child {
+            margin-top: 0px;
+        }
+
+    </style>
+</head>
+<body class="faction-hidden" scroll="no" style="overflow: hidden;">
+<svg width="0" height="0" style="position:absolute;visibility:hidden">
+    <defs>
+        <linearGradient id="ykTabGradActive" gradientTransform="rotate(90)">
+            <stop offset="0%" stop-color="#FFB800"/>
+            <stop offset="100%" stop-color="#FA5C01"/>
+        </linearGradient>
+    </defs>
+</svg>
+<div id="faction">
+    <template>
+    <div v-if="loaded" class="content-block center faction-shell">
+
+        <div class="yk-block" style="background: radial-gradient(122.31% 217.44% at 1.56% 94.83%, #293342 0%, #121720 100%); width: 800px;">
+            <div class="yk-tab-block-h">
+                <button @click="tab = 0" class="yk-tab-button" :class="{'active': tab === 0}">
+                    <svg class="yk-tab-button-ico" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 16H17C19.7614 16 22 18.2386 22 21C22 21.5523 21.5523 22 21 22C20.4872 22 20.0645 21.614 20.0067 21.1166L19.9949 20.8237C19.907 19.3072 18.6928 18.093 17.1763 18.0051L17 18H7C5.34315 18 4 19.3431 4 21C4 21.5523 3.55228 22 3 22C2.44772 22 2 21.5523 2 21C2 18.3112 4.12231 16.1182 6.78311 16.0046L7 16H17H7ZM12 2C15.3137 2 18 4.68629 18 8C18 11.3137 15.3137 14 12 14C8.68629 14 6 11.3137 6 8C6 4.68629 8.68629 2 12 2ZM12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4Z"/>
+                    </svg>                                                                             
+                    <span class="yk-tab-button-text">УЧАСТНИКИ</span>
+                </button>
+                <button @click="tab = 1" class="yk-tab-button" :class="{'active': tab === 1}">
+                    <svg class="yk-tab-button-ico" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM14.9724 13.0008H9.02756C9.1385 15.0043 9.57914 16.8283 10.2533 18.1766C10.8812 19.4324 11.5522 20 12 20C12.4478 20 13.1188 19.4324 13.7467 18.1766C14.4209 16.8283 14.8615 15.0043 14.9724 13.0008ZM19.938 13.001L16.9753 13.0013C16.8543 15.4352 16.2969 17.6123 15.462 19.2152C17.8601 18.0616 19.5952 15.7475 19.938 13.001ZM7.02475 13.0013L4.06202 13.001C4.40485 15.7475 6.13992 18.0615 8.53864 19.2145C7.75535 17.7123 7.2165 15.705 7.05251 13.4545L7.02475 13.0013ZM8.53804 4.78476L8.51189 4.79845C6.12679 5.95583 4.40323 8.26319 4.06192 10.9998L7.0247 10.9997C7.14558 8.56543 7.70294 6.38794 8.53804 4.78476ZM12 4L11.9187 4.00592C11.4734 4.06916 10.8443 4.64145 10.2533 5.82336C9.57902 7.17195 9.13835 8.99633 9.0275 11.0002H14.9725C14.8617 8.99633 14.421 7.17195 13.7467 5.82336C13.1188 4.56758 12.4478 4 12 4ZM15.4614 4.78553L15.4839 4.82724C16.3069 6.42646 16.8556 8.58728 16.9753 11.0004L19.9381 11C19.5956 8.25307 17.8604 5.93862 15.4614 4.78553Z"/>
+                    </svg>                                                                                                                       
+                    <span class="yk-tab-button-text">НОВОСТИ</span>
+                </button>
+                <button @click="tab = 2" class="yk-tab-button" :class="{'active': tab === 2}">
+                    <svg class="yk-tab-button-ico" width="24" height="24" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9 0H11C12.5977 0 13.9037 1.24892 13.9949 2.82373L14 3V4H17C18.6569 4 20 5.34315 20 7V17C20 18.6569 18.6569 20 17 20H3C1.34315 20 0 18.6569 0 17V7C0 5.34315 1.34315 4 3 4H6V3C6 1.40232 7.24892 0.0963391 8.82373 0.00509269L9 0H11H9ZM18 14H2V17C2 17.5523 2.44772 18 3 18H17C17.5523 18 18 17.5523 18 17V14ZM17 6H3C2.44772 6 2 6.44772 2 7V12H18V7C18 6.44772 17.5523 6 17 6ZM11 2H9C8.48716 2 8.06449 2.38604 8.00673 2.88338L8 3V4H12V3C12 2.48716 11.614 2.06449 11.1166 2.00673L11 2Z"/>
+                    </svg>                                                                                                         
+                    <span class="yk-tab-button-text">УПРАВЛЕНИЕ</span>
+                </button>
+                <button @click="tab = 3" class="yk-tab-button" :class="{'active': tab === 3}">
+                    <svg class="yk-tab-button-ico" width="24" height="24" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.89758 0.0019947L11.0201 0.00189209C11.0843 0.0048707 11.1406 0.0122107 11.2197 0.0294428C11.8002 0.155834 12.0209 0.364256 12.5611 1.64074L12.6491 1.85131L12.9886 2.69248L13.0165 2.70396L13.4539 2.50595C14.4066 2.07996 14.8976 1.90052 15.2278 1.85046L15.2962 1.84167L15.4209 1.83494C15.7182 1.83494 16.021 1.94025 16.2528 2.1236L16.3624 2.22165L17.7193 3.57296L17.8137 3.67265C18.2399 4.14218 18.2797 4.47505 17.8082 5.68823L17.6513 6.07961L17.2815 6.95458L17.2886 6.97166L18.1357 7.288L18.5441 7.4494C19.599 7.88072 19.8158 8.1106 19.9568 8.63864C19.9852 8.74511 19.9953 8.81765 19.9986 8.90769L20 9.00547V10.9132C20 11.0488 19.9954 11.1254 19.962 11.2594C19.8216 11.8231 19.6132 12.0378 18.3455 12.5733L18.1363 12.6606L17.301 12.9977L17.2952 13.0118L17.5972 13.6717C18.3484 15.3412 18.3746 15.7072 17.8809 16.257L17.8192 16.324L16.4263 17.7158C16.1769 17.9679 15.8217 18.1067 15.4779 18.1067C15.186 18.1067 14.7275 17.9679 13.9459 17.6545L13.5275 17.4831L13.0509 17.2815L13.0236 17.2928L12.7773 17.9533C12.1744 19.5419 11.9678 19.7998 11.3484 19.9596C11.2569 19.9832 11.1914 19.9933 11.1171 19.9974L10.9945 20H9.08563C8.96649 20 8.89925 19.9964 8.78092 19.9708C8.2007 19.845 7.97914 19.6361 7.43788 18.3589L7.34966 18.1482L7.0096 17.3066L6.98344 17.2957L6.34815 17.5813C5.332 18.0287 4.89179 18.1648 4.57806 18.1648C4.28426 18.1648 3.98508 18.0616 3.74708 17.8765L3.63349 17.7772L2.27843 16.4239L2.12369 16.2552C1.75208 15.8179 1.73381 15.4789 2.18994 14.3119L2.42762 13.7277L2.71777 13.0457L2.71172 13.031L2.05484 12.7862C0.737085 12.2862 0.33098 12.0559 0.137998 11.6354L0.0857984 11.503L0.0421951 11.3566C0.0175227 11.2629 0.00699347 11.1958 0.00271534 11.1195L0 10.9935V9.08467C0 8.94799 0.00473793 8.87073 0.0387721 8.73555C0.165661 8.23156 0.345761 8.00773 1.29447 7.58261L1.68766 7.41282L2.69733 7.00451L2.70425 6.9877L2.32674 6.15478C1.70383 4.73991 1.65224 4.30911 2.04525 3.82796L2.09903 3.76483L2.22636 3.62987L3.57616 2.28313C3.82346 2.03446 4.1772 1.89427 4.5215 1.89427C4.76776 1.89427 5.12934 1.99171 5.70805 2.2109L6.29026 2.4417L6.95028 2.71832L6.97734 2.70707L7.22549 2.04225C7.83405 0.442259 8.05128 0.174689 8.69321 0.0309887C8.77419 0.012862 8.83195 0.00513317 8.89758 0.0019947ZM10.523 2H9.40807L9.25087 2.36853C9.19117 2.51504 9.12383 2.68617 9.04778 2.88481L8.69932 3.81694C8.61575 4.03762 8.45736 4.2204 8.25375 4.33473L8.14832 4.38604L7.3292 4.7269C7.1224 4.81295 6.89398 4.82661 6.6804 4.768L6.55432 4.72416L5.58525 4.31569L5.06181 4.10695L4.70998 3.9771L3.91977 4.76552L4.01277 5.00042C4.04911 5.0889 4.09094 5.18782 4.13863 5.29803L4.2997 5.6633L4.70366 6.5464C4.80042 6.75669 4.82065 6.99264 4.76353 7.2141L4.71997 7.34493L4.38503 8.15885C4.29635 8.37434 4.13575 8.55093 3.93242 8.65982L3.82733 8.7085L2.73976 9.14567L2.19609 9.37872L2 9.46952V10.5997L2.23463 10.7014C2.32346 10.7386 2.42321 10.7791 2.53477 10.8233L2.90579 10.9672L3.80732 11.302C4.03461 11.384 4.22321 11.5449 4.34018 11.7532L4.39255 11.8612L4.72754 12.6728C4.81356 12.8812 4.82615 13.1112 4.76566 13.3257L4.7206 13.4523L4.33182 14.3646L4.088 14.9664L3.96921 15.286L4.75948 16.0752L4.99479 15.9822C5.08146 15.9469 5.17645 15.9073 5.28 15.8631L6.00585 15.543L6.5293 15.3021C6.74835 15.1974 6.99663 15.1766 7.22796 15.2408L7.342 15.28L8.16593 15.6202C8.38432 15.7104 8.56251 15.8744 8.67074 16.0816L8.71888 16.1887L8.92392 16.7061L9.21572 17.4157L9.38458 17.8034L9.47615 18H10.5944L10.7541 17.6235L10.9621 17.0924L11.3007 16.1844C11.3843 15.9617 11.5438 15.7774 11.7492 15.6626L11.8556 15.6112L12.676 15.2726C12.8804 15.1883 13.1058 15.1745 13.317 15.2313L13.4417 15.2738L14.2143 15.6015L14.7781 15.8311L15.0867 15.9501L15.2903 16.0238L16.0815 15.2341L15.929 14.8578L15.7004 14.3363L15.2956 13.4539C15.1985 13.2432 15.1782 13.0068 15.2356 12.7849L15.2793 12.6538L15.6137 11.8434C15.7019 11.6296 15.861 11.4541 16.0624 11.3452L16.1665 11.2964L17.0876 10.9262L17.5578 10.729L17.6871 10.6728L18 10.5297V9.40062L17.6863 9.26673L17.2615 9.0986L16.1891 8.69939C15.9623 8.61688 15.7744 8.45571 15.658 8.24732L15.6059 8.13934L15.2715 7.32452C15.1862 7.11664 15.1738 6.88739 15.2341 6.67355L15.279 6.54739L15.5895 5.8215C15.6703 5.62954 15.7406 5.45931 15.8014 5.30886L15.9103 5.03372L16.029 4.71221L15.2384 3.92482L15.0029 4.01798C14.8727 4.07108 14.7235 4.1341 14.5542 4.20769L14.3782 4.28483L13.4554 4.7034C13.2454 4.7996 13.0101 4.81961 12.7891 4.76264L12.6586 4.71921L11.8352 4.38074C11.6196 4.29214 11.443 4.13159 11.334 3.92829L11.2853 3.82321L10.9942 3.09482L10.7832 2.58452L10.6663 2.31313L10.523 2ZM10.0005 6C12.2066 6 14 7.79302 14 9.99914C14 12.2054 12.2065 14 10.0005 14C7.79382 14 6 12.2057 6 9.99914C6 7.7927 7.79369 6 10.0005 6ZM10.0005 8C8.89801 8 8 8.89752 8 9.99914C8 11.1013 8.89851 12 10.0005 12C11.1016 12 12 11.1011 12 9.99914C12 8.89768 11.1021 8 10.0005 8Z"/>
+                    </svg>                                                                                                                               
+                    <span class="yk-tab-button-text">НАСТРОЙКИ</span>
+                </button>
+                <button v-if="canViewLogs || permissions.isLeader" @click="openLogsTab()" class="yk-tab-button" :class="{'active': tab === 4}">
+                    <svg class="yk-tab-button-ico" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V8.41421C21 8.149 20.8946 7.89464 20.7071 7.70711L16.2929 3.29289C16.1054 3.10536 15.851 3 15.5858 3H4ZM5 5H15V8C15 8.55228 15.4477 9 16 9H19V19H5V5ZM17 7H16.5V5.5L18.5 7.5H17V7ZM7 11H17V13H7V11ZM7 15H14V17H7V15Z"/>
+                    </svg>
+                    <span class="yk-tab-button-text">ЛОГИ</span>
+                </button>
+                <svg @click="currentMenu.close()" class="ml-auto faction-close-x" width="14" height="14" viewBox="0 0 14 14">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.41425 7.00025L13.7072 1.70725C14.0982 1.31625 14.0982 0.68425 13.7072 0.29325C13.3162 -0.09775 12.6842 -0.09775 12.2933 0.29325L7.00025 5.58625L1.70725 0.29325C1.31625 -0.09775 0.68425 -0.09775 0.29325 0.29325C-0.09775 0.68425 -0.09775 1.31625 0.29325 1.70725L5.58625 7.00025L0.29325 12.2933C-0.09775 12.6842 -0.09775 13.3162 0.29325 13.7072C0.48825 13.9022 0.74425 14.0002 1.00025 14.0002C1.25625 14.0002 1.51225 13.9022 1.70725 13.7072L7.00025 8.41425L12.2933 13.7072C12.4882 13.9022 12.7443 14.0002 13.0002 14.0002C13.2562 14.0002 13.5122 13.9022 13.7072 13.7072C14.0982 13.3162 14.0982 12.6842 13.7072 12.2933L8.41425 7.00025Z" fill="#4D5E77"/>
+                </svg>                        
+            </div>
+        </div>
+
+        <div v-show="tab === 0" class="yk-block d-flex mt-20 faction-panel" style="height: 530px; width: 800px;">
+            <div class="yk-content d-flex column flex-1" style="padding: 20px 10px;">
+                <div>
+                    <div class="yk-input-block" style="width: 300px;">
+                        <svg width="17" height="17" viewBox="0 0 17 17" style="margin-right: 4px;">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70801 0.583313C11.643 0.583313 14.833 3.77328 14.833 7.70831C14.833 9.39043 14.2501 10.9364 13.2753 12.1552L16.1845 15.0652C16.4936 15.3744 16.4936 15.8756 16.1845 16.1848C15.8991 16.4702 15.45 16.4921 15.1395 16.2506L15.0649 16.1848L12.1549 13.2756C10.9361 14.2504 9.39013 14.8333 7.70801 14.8333C3.77298 14.8333 0.583008 11.6433 0.583008 7.70831C0.583008 3.77328 3.77298 0.583313 7.70801 0.583313ZM7.70801 2.16665C4.64743 2.16665 2.16634 4.64774 2.16634 7.70831C2.16634 10.7689 4.64743 13.25 7.70801 13.25C10.7686 13.25 13.2497 10.7689 13.2497 7.70831C13.2497 4.64774 10.7686 2.16665 7.70801 2.16665Z" fill="#4D5E77"/>
+                        </svg>                            
+                        <input class="yk-input" v-model="membersSearch" placeholder="Имя для поиска">
+                    </div>
+                </div>
+                <div class="yk-scroll flex-1 mt-10">
+                    <div class="yk-table-header">
+                        <div style="width: 5%;">
+                            <svg @click="enableOnlineSort = !enableOnlineSort" width="11" height="11" viewBox="0 0 11 11">
+                                <circle cx="5.5" cy="5.5" r="5.5" :fill="enableOnlineSort ? 'url(#faction_members_online_gradient)' : '#4D668C'"/>
+                                <defs>
+                                <linearGradient id="faction_members_online_gradient" x1="2.87863e-07" y1="6" x2="11" y2="6" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FF6107"/>
+                                <stop offset="1" stop-color="#FFB800"/>
+                                </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div style="width: 27%;">Имя</div>
+                        <div style="width: 30%;">Должность</div>
+                        <div style="width: 18%;">Последний вход</div>
+                        <div class="text-center" style="width: 20%;">Повышение</div>
+                    </div>
+                    <div class="yk-table-row p-10-10 mt-5" v-for="m in membersList">
+                        <div class="d-flex center-align flex-1">
+                            <div style="width: 5%;">
+                                <svg width="11" height="11" viewBox="0 0 11 11">
+                                    <circle cx="5.5" cy="5.5" r="5.5" :fill="m.isOnline ? 'url(#faction_members_online_gradient)' : '#4D668C'"/>
+                                    <defs>
+                                    <linearGradient id="faction_members_online_gradient" x1="2.87863e-07" y1="6" x2="11" y2="6" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#FF6107"/>
+                                    <stop offset="1" stop-color="#FFB800"/>
+                                    </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div style="width: 27%;" class="yk-text w-6 s-16">{{ m.name }} <span v-if="m.static" style="color:#7A92B6">#{{ m.static }}</span></div>
+                            <div style="width: 30%;">{{ m.rank }} ({{ m.rankN }})</div>
+                            <div style="width: 18%;">{{ m.lastActive }}</div>
+                            <div style="width: 20%; position: relative;" class="text-center">
+                                <button class="yk-btn yk-table-column-btn-ico-b" v-on:click.capture="changeRank(m, '+');" :disabled="!permissions.changeRank">
+                                    <svg class="yk-table-column-btn-ico" width="21" height="21" viewBox="0 0 21 21" style="border-radius: 3px;">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 3C0 1.34315 1.34315 0 3 0H18C19.6569 0 21 1.34315 21 3V18C21 19.6569 19.6569 21 18 21H3C1.34315 21 0 19.6569 0 18V3ZM15.2929 10.7071C15.6834 11.0976 16.3166 11.0976 16.7071 10.7071C17.0976 10.3166 17.0976 9.68342 16.7071 9.29289L11.7071 4.29289C11.3166 3.90237 10.6834 3.90237 10.2929 4.29289L5.29289 9.29289C4.90237 9.68342 4.90237 10.3166 5.29289 10.7071C5.68342 11.0976 6.31658 11.0976 6.70711 10.7071L11 6.41421L15.2929 10.7071ZM16.7071 15.7071C16.3166 16.0976 15.6834 16.0976 15.2929 15.7071L11 11.4142L6.70711 15.7071C6.31658 16.0976 5.68342 16.0976 5.29289 15.7071C4.90237 15.3166 4.90237 14.6834 5.29289 14.2929L10.2929 9.29289C10.6834 8.90237 11.3166 8.90237 11.7071 9.29289L16.7071 14.2929C17.0976 14.6834 17.0976 15.3166 16.7071 15.7071Z"/>
+                                    </svg>
+                                </button>
+                                <button class="yk-btn yk-table-column-btn-ico-b" v-on:click.capture="changeRank(m, '-');" :disabled="!permissions.changeRank">
+                                    <svg class="yk-table-column-btn-ico" width="21" height="21" viewBox="0 0 21 21" style="border-radius: 3px;">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 3C0 1.34315 1.34315 0 3 0H18C19.6569 0 21 1.34315 21 3V18C21 19.6569 19.6569 21 18 21H3C1.34315 21 0 19.6569 0 18V3ZM15.2929 10.2929C15.6834 9.90237 16.3166 9.90237 16.7071 10.2929C17.0976 10.6834 17.0976 11.3166 16.7071 11.7071L11.7071 16.7071C11.3166 17.0976 10.6834 17.0976 10.2929 16.7071L5.29289 11.7071C4.90237 11.3166 4.90237 10.6834 5.29289 10.2929C5.68342 9.90237 6.31658 9.90237 6.70711 10.2929L11 14.5858L15.2929 10.2929ZM16.7071 5.29289C16.3166 4.90237 15.6834 4.90237 15.2929 5.29289L11 9.58579L6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.2929 11.7071C10.6834 12.0976 11.3166 12.0976 11.7071 11.7071L16.7071 6.70711C17.0976 6.31658 17.0976 5.68342 16.7071 5.29289Z"/>
+                                    </svg>                                        
+                                </button>
+                                <button class="yk-btn yk-table-column-btn-ico-b" v-on:click.capture="unInvite(m);" :disabled="!permissions.unInvite" style="position: absolute; top: 50%; right: 5px; transform: translateY(-50%);">
+                                    <svg class="yk-table-column-btn-ico" width="16" height="16" viewBox="0 0 16 16" style="border-radius: 50%">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0ZM12.8906 4.52332L4.52332 12.8906C5.50417 13.5892 6.70411 14 8 14C11.3137 14 14 11.3137 14 8C14 6.70411 13.5892 5.50417 12.8906 4.52332ZM8 2C4.68629 2 2 4.68629 2 8C2 9.29589 2.41083 10.4958 3.10935 11.4767L11.4767 3.10935C10.4958 2.41083 9.29589 2 8 2Z"/>
+                                    </svg>                                                                             
+                                </button>                  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="yk-text s-14 mt-10" style="color: #3B5274;">Всего: <span style="color: #839BB8;">{{ membersCount }}</span> Онлайн: <span style="color: #839BB8;">{{ membersOnline }}</span></div>
+            </div>
+        </div>
+
+        <div v-show="tab === 1" class="yk-block d-flex mt-20 faction-panel" style="height: 530px; width: 800px;">
+            <div class="yk-content d-flex column flex-1" style="padding: 25px;">
+                <div v-if="notify.text.length != 0" style="background: linear-gradient(89.89deg, #2E3A4E 0.1%, rgba(39, 49, 66, 0.55) 99.91%); border-radius: 8px; padding: 20px;">
+                    <div class="yk-text w-7 s-16">Лидер фракции ( {{ notify.leader }} )</div>
+                    <div class="yk-text w-5 s-16 mt-10" style="width: 700px;"> {{ notify.text }} </div>
+                </div>
+                <div class="yk-scroll flex-1 mt-20">
+                    <div v-if="!news || !news.length" class="yk-text w-5 s-16 text-center mt-20" style="color: #7A92B6;">Новостей пока нет</div>
+                    <div v-for="n in news" class="list-mt-20" style="background: linear-gradient(89.89deg, #2E3A4E 0.1%, rgba(39, 49, 66, 0.55) 99.91%); border-radius: 8px; padding: 20px;">
+                        <div class="yk-text w-7 s-16">{{ n.title }}</div>
+                        <div class="yk-text w-5 s-16 mt-10" style="width: 700px;">{{ n.text }}</div>
+                        <div class="yk-text w-5 s-16 mt-10" style="color: #7A92B6">{{ n.date }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-show="tab === 2" class="yk-block d-flex mt-20 faction-panel" style="height: 530px; width: 800px;">
+            <div class="yk-content d-flex column flex-1" style="padding: 25px;">
+                <div class="yk-scroll d-flex flex-1">
+                    <div class="d-flex column flex-1">
+                        <div style="background: #273142; border-radius: 8px; padding: 15px;">
+                            <div class="d-flex center-align">
+                                <svg width="61" height="61" viewBox="0 0 61 61">
+                                    <path d="M30.5 0C13.6872 0 0 13.6872 0 30.5C0 47.3128 13.6872 61 30.5 61C47.3128 61 61 47.3128 61 30.5C61 13.6872 47.3128 0 30.5 0ZM30.5 54.6857C17.1657 54.6857 6.31426 43.8343 6.31426 30.5C6.31426 17.1657 17.1657 6.31426 30.5 6.31426C43.8343 6.31426 54.6857 17.1657 54.6857 30.5C54.6857 43.8343 43.8343 54.6857 30.5 54.6857Z" fill="#34445B"/>
+                                    <path d="M35.7052 28.7859C34.2307 27.9667 32.6678 27.3617 31.1176 26.7189C30.2228 26.3534 29.3658 25.9123 28.6096 25.3074C27.1224 24.11 27.3997 22.1817 29.1515 21.4129C29.6431 21.1987 30.1598 21.1231 30.6891 21.0979C32.7183 20.9844 34.634 21.3625 36.474 22.2448C37.3815 22.6859 37.684 22.5472 37.999 21.602C38.3267 20.5937 38.604 19.5729 38.8939 18.5646C39.0955 17.884 38.8435 17.4303 38.2007 17.153C37.0286 16.6363 35.8187 16.2582 34.5457 16.0691C32.8947 15.8045 32.8947 15.8045 32.8821 14.1408C32.8695 11.784 32.8695 11.784 30.5253 11.7966C30.185 11.7966 29.8447 11.784 29.5044 11.7966C28.4079 11.8344 28.2189 12.0235 28.1937 13.12C28.1811 13.6115 28.1937 14.1156 28.1937 14.6072C28.1811 16.0817 28.1811 16.0565 26.7695 16.5607C23.3666 17.7958 21.2619 20.1148 21.035 23.8328C20.8333 27.1222 22.5474 29.3404 25.2445 30.9536C26.9081 31.9493 28.7482 32.5417 30.5127 33.3231C31.2059 33.6255 31.8612 33.9784 32.4284 34.4574C34.1298 35.8563 33.8147 38.1879 31.7982 39.0702C30.7143 39.5365 29.58 39.6625 28.4205 39.5113C26.6183 39.2844 24.8916 38.8181 23.2784 37.9737C22.3331 37.4822 22.0559 37.6082 21.7282 38.6417C21.4509 39.5365 21.1988 40.4313 20.9594 41.3262C20.6317 42.5361 20.7451 42.826 21.9046 43.3805C23.3666 44.0863 24.942 44.4518 26.5426 44.7165C27.7904 44.9181 27.8408 44.9685 27.8534 46.2667C27.8534 46.859 27.866 47.4514 27.866 48.0311C27.8786 48.7747 28.2315 49.2032 29.0003 49.2158C29.8699 49.2284 30.7395 49.2284 31.6092 49.2158C32.315 49.2032 32.6804 48.8125 32.6931 48.0941C32.6931 47.2875 32.7309 46.4809 32.7057 45.6743C32.6678 44.8551 33.0207 44.4392 33.8147 44.2249C35.6296 43.7334 37.1798 42.7503 38.3771 41.301C41.654 37.2679 40.3937 31.3822 35.7052 28.7859Z" fill="#34445B"/>
+                                </svg>
+                                <div class="ml-10">
+                                    <div class="yk-text w-5 s-16" style="color: #7A92B6;">БАНК ФРАКЦИИ</div>
+                                    <div class="yk-text w-6 s-22 mt-5">{{ bank }}$</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex column center mt-10" style="background: #273142; border-radius: 8px; padding: 15px; flex-shrink: 0;">
+                            <div class="yk-text w-5 s-16" style="color: #7A92B6;">СКЛАД</div>
+                            <button v-if="warehouseCloseStatus" v-on:click="changeWarehouseCloseStatus(false);" :disabled="!permissions.warehouseToggle" class="yk-btn s-15 green mt-10" style="width: 140px;">Открыть</button>
+                            <button v-else v-on:click="changeWarehouseCloseStatus(true);" :disabled="!permissions.warehouseToggle" class="yk-btn s-15 purple mt-10" style="width: 140px;">Закрыть</button>
+                        </div>
+                        <div v-for="a in acrList" class="d-flex column center mt-10" style="background: #273142; border-radius: 8px; padding: 15px; flex-shrink: 0;">
+                            <div class="yk-text w-7 s-14">{{ a.name }}</div>
+                            <div class="yk-text w-5 s-14 text-center" style="width: 300px;">{{ a.desc }}</div>
+                            <div class="yk-text w-5 s-14" style="color: #7A92B6;">от {{ a.creator }} ( {{ a.date }} )</div>
+                            <div class="yk-buttons mt-10">
+                                <button @click="acrAccept(a.id);" :disabled="acrWait" class="yk-btn s-15 p-5-10 green" style="width: 100px;">Принять</button>
+                                <button @click="acrCancel(a.id);" :disabled="acrWait" class="yk-btn s-15 p-5-10 purple" style="width: 100px;">Отклонить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex column flex-1 ml-10">
+                        <div style="background: #273142; border-radius: 8px; padding: 15px 15px 30px 15px;">
+                            <div class="yk-text w-6 s-16" style="color: #7A92B6;">НОВОСТИ:</div>
+                            <div class="yk-input-block mt-10">
+                                <input v-model="form.newsTitle" class="yk-input" placeholder="Заголовок">
+                            </div>
+                            <div class="yk-input-block mt-10" style="position: relative;">
+                                <textarea v-model="form.newsText" class="yk-input" placeholder="Текст" style="height: 70px;"></textarea>
+                                <button v-on:click="createNews(form.newsTitle, form.newsText);" :disabled="!permissions.isLeader" class="yk-btn s-15 p-10-15 orange mt-10" style="width: 140px; position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%);">Создать</button>
+                            </div>
+                        </div>
+                        <div class="mt-10" style="background: #273142; border-radius: 8px; padding: 15px 15px 30px 15px;">
+                            <div class="yk-text w-6 s-16" style="color: #7A92B6;">ОПОВЕЩЕНИЕ:</div>
+                            <div class="yk-input-block mt-10" style="position: relative;">
+                                <textarea v-model="form.notifyText" class="yk-input" placeholder="Текст" style="height: 70px;"></textarea>
+                                <button v-on:click="setNotify(form.notifyText);" :disabled="!permissions.isLeader" class="yk-btn s-15 p-10-15 orange mt-10" style="width: 140px; position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%);">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-show="tab === 3" class="yk-block d-flex mt-20 faction-panel" style="height: 530px; width: 800px;">
+            <div class="yk-content d-flex column flex-1" style="padding: 25px;">
+                <div v-show="settingTab === 0" class="yk-scroll d-flex flex-1" style="flex-shrink: 0;">
+                    <div class="d-flex column" style="flex: 0.6; flex-shrink: 0;">
+                        <div v-if="vehList.length > 0" class="yk-text w-7 s-14 text-center" style="color: #7A92B6">УПРАВЛЕНИЕ ТРАНСПОРТОМ</div>
+                        <div v-if="vehList.length > 0" class="yk-table-header mt-10" style="flex-shrink: 0;">
+                            <div style="width: 30%;">Номер а/м</div>
+                            <div style="width: 70%;">Доступ с ранга</div>
+                        </div>
+                        <div class="yk-table-row p-10-10 mt-5" v-for="(v, vehIndex) in vehList" style="flex-shrink: 0;">
+                            <div class="d-flex center-align flex-1" style="flex-shrink: 0;">
+                                <div style="width: 30%;" class="yk-text w-5 s-16">{{ v.number }}</div>
+                                <div class="d-flex center-align" style="width: 70%;">
+                                    <button class="yk-btn yk-table-column-btn-ico-b" @click="setFactionVehRant(v, vehIndex, +1);" :disabled="!permissions.changeRank">
+                                        <svg class="yk-table-column-btn-ico" width="21" height="21" viewBox="0 0 21 21" style="border-radius: 3px;">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 3C0 1.34315 1.34315 0 3 0H18C19.6569 0 21 1.34315 21 3V18C21 19.6569 19.6569 21 18 21H3C1.34315 21 0 19.6569 0 18V3ZM15.2929 10.7071C15.6834 11.0976 16.3166 11.0976 16.7071 10.7071C17.0976 10.3166 17.0976 9.68342 16.7071 9.29289L11.7071 4.29289C11.3166 3.90237 10.6834 3.90237 10.2929 4.29289L5.29289 9.29289C4.90237 9.68342 4.90237 10.3166 5.29289 10.7071C5.68342 11.0976 6.31658 11.0976 6.70711 10.7071L11 6.41421L15.2929 10.7071ZM16.7071 15.7071C16.3166 16.0976 15.6834 16.0976 15.2929 15.7071L11 11.4142L6.70711 15.7071C6.31658 16.0976 5.68342 16.0976 5.29289 15.7071C4.90237 15.3166 4.90237 14.6834 5.29289 14.2929L10.2929 9.29289C10.6834 8.90237 11.3166 8.90237 11.7071 9.29289L16.7071 14.2929C17.0976 14.6834 17.0976 15.3166 16.7071 15.7071Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="yk-btn yk-table-column-btn-ico-b ml-5"  @click="setFactionVehRant(v, vehIndex, -1);" :disabled="!permissions.changeRank">
+                                        <svg class="yk-table-column-btn-ico" width="21" height="21" viewBox="0 0 21 21" style="border-radius: 3px;">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 3C0 1.34315 1.34315 0 3 0H18C19.6569 0 21 1.34315 21 3V18C21 19.6569 19.6569 21 18 21H3C1.34315 21 0 19.6569 0 18V3ZM15.2929 10.2929C15.6834 9.90237 16.3166 9.90237 16.7071 10.2929C17.0976 10.6834 17.0976 11.3166 16.7071 11.7071L11.7071 16.7071C11.3166 17.0976 10.6834 17.0976 10.2929 16.7071L5.29289 11.7071C4.90237 11.3166 4.90237 10.6834 5.29289 10.2929C5.68342 9.90237 6.31658 9.90237 6.70711 10.2929L11 14.5858L15.2929 10.2929ZM16.7071 5.29289C16.3166 4.90237 15.6834 4.90237 15.2929 5.29289L11 9.58579L6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.2929 11.7071C10.6834 12.0976 11.3166 12.0976 11.7071 11.7071L16.7071 6.70711C17.0976 6.31658 17.0976 5.68342 16.7071 5.29289Z"/>
+                                        </svg>                                        
+                                    </button>
+                                    <span class="ml-5">{{ v.rankName }} ( {{ v.rank }} )</span>
+                                    <button class="yk-btn yk-table-column-btn-ico-b ml-auto" @click="findCar(v)">
+                                        <svg class="yk-table-column-btn-ico yk-table-column-btn-ico-no-shadow" width="18" height="18" viewBox="0 0 18 18">
+                                            <path d="M8.84713 0.553711C5.61281 0.553711 2.98145 3.18507 2.98145 6.41938C2.98145 10.4846 8.85289 17.4287 8.85289 17.4287C8.85289 17.4287 14.7128 10.2846 14.7128 6.41938C14.7128 3.18507 12.0815 0.553711 8.84713 0.553711ZM10.6169 8.13685C10.1289 8.62475 9.48808 8.86875 8.84713 8.86875C8.20628 8.86875 7.56523 8.62475 7.07743 8.13685C6.10153 7.16106 6.10153 5.57326 7.07743 4.59737C7.54998 4.12461 8.17857 3.86423 8.84713 3.86423C9.51568 3.86423 10.1442 4.12471 10.6169 4.59737C11.5928 5.57326 11.5928 7.16106 10.6169 8.13685Z"/>
+                                        </svg>                                                                               
+                                    </button>
+                                    <button class="yk-btn yk-table-column-btn-ico-b ml-5" @click="factionVehRespawn(v)">
+                                        <svg class="yk-table-column-btn-ico yk-table-column-btn-ico-no-shadow" width="17" height="17" viewBox="0 0 17 17">
+                                            <path d="M16.7871 8.30092C17.0952 7.962 17.0655 7.44253 16.7206 7.14096L9.12309 0.49309C8.77823 0.191519 8.22535 0.197836 7.88776 0.507332L0.264399 7.4954C-0.0731931 7.8049 -0.0897624 8.3237 0.227714 8.6537L0.418842 8.85275C0.73593 9.18275 1.24847 9.22209 1.5629 8.94036L2.13263 8.43015V15.8997C2.13263 16.358 2.50397 16.729 2.96192 16.729H5.93353C6.39148 16.729 6.76282 16.358 6.76282 15.8997V10.674H10.5531V15.8997C10.5465 16.3577 10.8742 16.7287 11.3322 16.7287H14.4813C14.9393 16.7287 15.3106 16.3577 15.3106 15.8994V8.53533C15.3106 8.53533 15.468 8.6732 15.6621 8.84383C15.8559 9.01412 16.2629 8.87758 16.5711 8.53832L16.7871 8.30092Z"/>
+                                        </svg>                                                                                   
+                                    </button>   
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-20" v-if="weaponForSetList.length > 0">
+                            <div class="yk-text w-7 s-14 text-center" style="color: #7A92B6">НАБОРЫ БОЕПРИПАСОВ</div>
+                            <div class="yk-table-header mt-10" style="flex-shrink: 0;">
+                                <div style="width: 50%;">Название набора</div>
+                                <div style="width: 50%; text-align: right;">Редактировать</div>
+                            </div>
+                            <div class="yk-table-row p-10-10 mt-5" v-for="(wSet, wSetIndex) in weaponSetList" style="flex-shrink: 0;">
+                                <div class="d-flex center-align flex-1" style="flex-shrink: 0;">
+                                    <div style="width: 80%;" class="yk-text w-5 s-16">{{ wSet.name }} ( {{ wSet.rank }} )</div>
+                                    <div style="width: 20%; text-align: right;">
+                                        <button class="yk-btn yk-table-column-btn-ico-b" @click="startEditWeaponSet(wSet, wSetIndex)" :disabled="!permissions.isLeader">
+                                            <svg class="yk-table-column-btn-ico yk-table-column-btn-ico-no-shadow" width="22" height="22" viewBox="0 0 22 22">
+                                                <path d="M18.0712 11C17.6372 11 17.2855 11.3518 17.2855 11.7857V19.6427C17.2855 20.0767 16.9337 20.4284 16.4997 20.4284H2.35711C1.92316 20.4284 1.57139 20.0767 1.57139 19.6427V3.92864C1.57139 3.4947 1.92316 3.14293 2.35711 3.14293H11.7856C12.2195 3.14293 12.5713 2.79115 12.5713 2.35721C12.5713 1.92326 12.2195 1.57153 11.7856 1.57153H2.35711C1.05531 1.57153 0 2.62685 0 3.92864V19.6427C0 20.9445 1.05531 21.9998 2.35711 21.9998H16.4998C17.8016 21.9998 18.8569 20.9445 18.8569 19.6427V11.7857C18.8569 11.3518 18.5051 11 18.0712 11Z"/>
+                                                <path d="M21.1195 0.881319C20.5554 0.317086 19.7902 0.000164497 18.9923 0.000256571C18.194 -0.0020453 17.428 0.315428 16.8654 0.881826L6.51607 11.2303C6.43021 11.3168 6.36544 11.4219 6.32672 11.5375L4.75533 16.2517C4.61818 16.6634 4.84077 17.1083 5.25249 17.2454C5.33236 17.272 5.41601 17.2856 5.50017 17.2857C5.58451 17.2856 5.66834 17.272 5.74845 17.2457L10.4627 15.6743C10.5785 15.6356 10.6837 15.5705 10.7699 15.4841L21.1192 5.13485C22.2938 3.96034 22.294 2.05596 21.1195 0.881319Z"/>
+                                            </svg>                                            
+                                        </button>
+                                        <button class="yk-btn yk-table-column-btn-ico-b ml-10" @click="deleteWeaponSet(wSetIndex)" :disabled="!permissions.isLeader">
+                                            <svg class="yk-table-column-btn-ico yk-table-column-btn-ico-no-shadow" width="18" height="22">
+                                                <path d="M3.12632 20.1556C3.17779 21.1912 4.0263 22 5.06508 22H12.9353C13.9741 22 14.8227 21.1912 14.8741 20.1556L16.0078 7.11768H1.99268L3.12632 20.1556ZM10.9414 10.353H12.2355V17.4706H10.9414V10.353ZM8.35318 10.353H9.64729V17.4706H8.35318V10.353ZM5.76494 10.353H7.05906V17.4706H5.76494V10.353Z"/>
+                                                <path d="M12.2354 3.23529V1.94118C12.2354 0.870855 11.3647 0 10.2943 0H7.70603C6.6357 0 5.76485 0.870855 5.76485 1.94118V3.23529H0.588379V5.82353H17.4119V3.23529H12.2354ZM7.05897 3.23529V1.94118C7.05897 1.58439 7.34928 1.29412 7.70603 1.29412H10.2943C10.6511 1.29412 10.9413 1.58439 10.9413 1.94118V3.23529H7.05897Z"/>
+                                            </svg>                                                                                       
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex column mt-10">
+                                <button class="yk-btn s-14 orange" @click="startCreateNewWeaponSet()">СОЗДАТЬ НОВЫЙ НАБОР</button>
+                                <button v-if="weaponSetEnable" class="yk-btn s-14 purple mt-5" @click="setWeaponListEnable(false)">Выключить доступ к наборам</button>
+                                <button v-else class="yk-btn s-14 green mt-5" @click="setWeaponListEnable(true)">Включить доступ к наборам</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex column ml-10" style="flex: 0.4; flex-shrink: 0;">
+                        <div class="yk-text w-7 s-14 text-center" style="color: #7A92B6">УПРАВЛЕНИЕ РАНГАМИ</div>
+                        <div class="yk-table-header mt-10" style="flex-shrink: 0;">
+                            <div style="width: 50%;">Ранг</div>
+                            <div style="width: 50%; text-align: right;">Редактировать</div>
+                        </div>
+                        <div class="yk-table-row p-10-10 mt-5" v-for="(r, rIndex) in rankNameList" style="flex-shrink: 0;">
+                            <div class="d-flex center-align flex-1" style="flex-shrink: 0;">
+                                <div style="width: 80%;" class="yk-text w-5 s-16">{{ r }} ({{ rIndex + 1 }})</div>
+                                <div style="width: 20%; text-align: right;">
+                                    <button class="yk-btn yk-table-column-btn-ico-b" @click="startRankEdit(rIndex)" :disabled="rIndex === 9 || !permissions.isLeader">
+                                        <svg class="yk-table-column-btn-ico yk-table-column-btn-ico-no-shadow" width="22" height="22" viewBox="0 0 22 22">
+                                            <path d="M18.0712 11C17.6372 11 17.2855 11.3518 17.2855 11.7857V19.6427C17.2855 20.0767 16.9337 20.4284 16.4997 20.4284H2.35711C1.92316 20.4284 1.57139 20.0767 1.57139 19.6427V3.92864C1.57139 3.4947 1.92316 3.14293 2.35711 3.14293H11.7856C12.2195 3.14293 12.5713 2.79115 12.5713 2.35721C12.5713 1.92326 12.2195 1.57153 11.7856 1.57153H2.35711C1.05531 1.57153 0 2.62685 0 3.92864V19.6427C0 20.9445 1.05531 21.9998 2.35711 21.9998H16.4998C17.8016 21.9998 18.8569 20.9445 18.8569 19.6427V11.7857C18.8569 11.3518 18.5051 11 18.0712 11Z"/>
+                                            <path d="M21.1195 0.881319C20.5554 0.317086 19.7902 0.000164497 18.9923 0.000256571C18.194 -0.0020453 17.428 0.315428 16.8654 0.881826L6.51607 11.2303C6.43021 11.3168 6.36544 11.4219 6.32672 11.5375L4.75533 16.2517C4.61818 16.6634 4.84077 17.1083 5.25249 17.2454C5.33236 17.272 5.41601 17.2856 5.50017 17.2857C5.58451 17.2856 5.66834 17.272 5.74845 17.2457L10.4627 15.6743C10.5785 15.6356 10.6837 15.5705 10.7699 15.4841L21.1192 5.13485C22.2938 3.96034 22.294 2.05596 21.1195 0.881319Z"/>
+                                        </svg>                                            
+                                    </button>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-show="settingTab === 1" class="yk-scroll flex-1" style="flex-shrink: 0;">
+                    <div class="yk-text w-6 s-16" style="color: #7A92B6;">НАЗВАНИЕ ДОЛЖНОСТИ:</div>
+                    <div class="yk-input-block mt-10" style="width: 300px;">
+                        <input v-model="rankEdit.rank" class="yk-input" placeholder="Ранг">
+                    </div>
+                    <div class="yk-text w-6 s-16 mt-10" style="color: #7A92B6;">РАЗРЕШИТЬ ДЕЙСТВИЯ:</div>
+                    <div class="d-flex wrap" style="width: 700px;">
+                        <div v-for="p in rankAllPermissions" style="margin: 10px; flex-shrink: 0;">
+                            <div 
+                                @click="rankEdit.permissions.indexOf(p.code) == -1 ? rankEdit.permissions.push(p.code) : rankEdit.permissions.splice(rankEdit.permissions.indexOf(p.code), 1)" 
+                                class="yk-checkbox-block mt-5">
+                                <input type="checkbox" class="yk-checkbox pe-none" :checked="rankEdit.permissions.indexOf(p.code) != -1" disabled>
+                                <span class="yk-checkbox-text" style="width: 300px; overflow: hidden; word-wrap: none; white-space: nowrap;">{{ p.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yk-btn-h-list w-100" style="position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%); text-align: center;">
+                        <button id="factionRankSave" type="button" :disabled="form.rankSaving" class="yk-btn green" style="width: 150px;">Сохранить</button>
+                        <button @click="settingTab = 0" class="yk-btn purple" style="width: 150px;">Отмена</button>
+                    </div>
+                    <div v-if="form.rankSaveHasError && form.rankSaveResponse" class="yk-text s-14 text-center" style="color: #ef4444; position: absolute; left: 0; right: 0; bottom: 30px;">
+                        {{ form.rankSaveResponse }}
+                    </div>
+                </div>
+                <div v-show="settingTab === 2" class="yk-scroll d-flex flex-1" style="flex-shrink: 0;">
+                    <div class="flex-1" style="flex-shrink: 0;">
+                        <div class="yk-text w-6 s-16 upper" style="color: #7A92B6;">Название набора:</div>
+                        <div class="yk-input-block mt-10 flex-1">
+                            <input v-model="weaponSetForm.name" class="yk-input" placeholder="Название набора">
+                        </div>
+                        <div class="yk-text w-6 s-16 upper mt-10" style="color: #7A92B6;">Ранг:</div>
+                        <div class="yk-input-block mt-10 flex-1">
+                            <input v-model="weaponSetForm.rank" class="yk-input" placeholder="Ранг">
+                        </div>
+                        <div class="yk-text w-6 s-16 upper mt-10" style="color: #7A92B6;">Время ожидания:</div>
+                        <div class="yk-input-block mt-10 flex-1">
+                            <input v-model="weaponSetForm.timeout" class="yk-input" placeholder="Время ожидания в минутах">
+                        </div>
+                    </div>
+                    <div class="flex-1 ml-10" style="flex-shrink: 0;">
+                        <div class="yk-text w-6 s-16 upper" style="color: #7A92B6;">ОРУЖИЕ:</div>
+                        <div v-for="weapon in weaponSetForm.weaponList" class="mt-15" style="flex-shrink: 0;">
+                            <div 
+                                @click="weapon.enable = !weapon.enable" 
+                                class="yk-checkbox-block">
+                                <input type="checkbox" class="yk-checkbox pe-none" :checked="weapon.enable" disabled>
+                                <span class="yk-checkbox-text">{{ weapon.name }}</span>
+                            </div>
+                            <div v-if="weapon.ammoCount > 1" class="d-flex center-align mt-5">
+                                <div class="yk-text">Пачек патрон</div>
+                                <div class="yk-input-block ml-10" style="width: 50px; padding: 5px 10px;">
+                                    <input class="yk-input center" v-model="weapon.currentAmmo">
+                                </div>
+                                <div class="yk-text ml-10">( Одна пачка = {{ weapon.ammoCount }} шт. )</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yk-btn-h-list w-100" style="position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%); text-align: center;">
+                        <button @click="saveWeaponSet" class="yk-btn green" style="width: 150px;">Сохранить</button>
+                        <button @click="settingTab = 0" class="yk-btn purple" style="width: 150px;">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-show="tab === 4" class="yk-block d-flex mt-20 faction-panel faction-logs-block" style="height: 530px; width: 800px;">
+            <div class="yk-content d-flex column flex-1 faction-logs-content" style="padding: 20px 10px;">
+                <div class="d-flex center-align faction-logs-toolbar" style="width: 100%;">
+                    <div class="yk-input-block" style="width: 360px;">
+                        <input class="yk-input" v-model="logsSearch" placeholder="Поиск по ID или действию..." @keyup.enter="requestLogs(logsSearch)">
+                    </div>
+                    <button class="yk-btn s-14 ml-10" style="width: auto; padding: 6px 12px;" :disabled="logsLoading" @click="requestLogs(logsSearch)">Поиск</button>
+                    <button class="yk-btn s-14 ml-auto family-logs-refresh" style="width: auto; padding: 6px 12px;" :disabled="logsLoading" @click="logsSearch=''; requestLogs('')">Обновить</button>
+                </div>
+                <div class="yk-scroll flex-1 mt-10 faction-logs-scroll">
+                    <div class="yk-table-header">
+                        <div style="width: 22%;">Время</div>
+                        <div style="width: 28%;">Участник</div>
+                        <div style="width: 50%;">Действие</div>
+                    </div>
+                    <div class="yk-table-row p-10-10 mt-5" v-for="log in (logsList || [])" :key="log.id">
+                        <div class="d-flex center-align flex-1 faction-logs-row">
+                            <div style="width: 22%; color: #839bb8;" class="yk-text w-5 s-14">{{ formatFactionLogTime(log.time) }}</div>
+                            <div style="width: 28%;" class="yk-text w-6 s-15">{{ log.name || '—' }} <span style="color: #7a92b6;">#{{ log.static }}</span></div>
+                            <div style="width: 50%;" class="yk-text w-5 s-15">{{ log.text || log.type || '—' }}</div>
+                        </div>
+                    </div>
+                    <div v-if="logsLoading" class="yk-text w-5 s-16 text-center mt-20" style="color: #7a92b6;">Загрузка...</div>
+                    <div v-else-if="!(logsList && logsList.length)" class="yk-text w-5 s-16 text-center mt-20" style="color: #7a92b6;">Логов пока нет</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </template>
+    </div>
+
+    
+<script>
+
+const menuManagerMap = new Map;
+class MenuManager {
+  constructor(a, b) {
+    if (this.name = a, !b.data) return alert(`[MENU ERROR] ${a}: data ???`);
+    if (!b.methods) return alert(`[MENU ERROR] ${a}: methods ???`);
+    if (!b.load) return alert(`[MENU ERROR] ${a}: load method ???`);
+    if (!b.close) return alert(`[MENU ERROR] ${a}: close method ???`);
+    let c = this;
+    this.vue = new Vue({
+      el: "#" + a,
+      components: null == b.components ? {} : b.components,
+      data: { currentMenu: c, ...b.data, loaded: !1 },
+      methods: {
+        __load: b.load,
+        async load(a) { try { await this.__load(a); } catch (e) { try { console.log('[faction load]', e); } catch (_e) {} } this.loaded = !0 },
+        __close: b.close,
+        close() { this.__close(), this.loaded = !1 },
+        ...b.methods
+      },
+      computed: null == b.computed ? {} : b.computed,
+      mounted: null == b.mounted ? function () {} : b.mounted
+    });
+    menuManagerMap.set(a, this);
+  }
+  load(a) { this.vue.load(a) }
+  isOpen() { return this.vue.loaded }
+  close() { mp.trigger("client_menuManager_taskClose", this.name) }
+}
+rpc.on("menuManager_menu_open", function (a) {
+  const b = menuManagerMap.get(a.menu);
+  b && b.load(a.data);
+});
+rpc.on("menuManager_menu_close", function (a) {
+  const b = menuManagerMap.get(a);
+  b && b.vue.close();
+});
+
+</script>
+<script>const factionMenu=new MenuManager("faction",{data:{tab:0,permissions:{isLeader:!1,changeRank:!1,unInvite:!1,warehouseAccess:!1,warehouseToggle:!1,canLogs:!1},canViewLogs:!1,logsList:[],logsSearch:"",logsLoading:!1,news:[],notify:{text:"",leader:""},members:[],membersCount:0,membersOnline:0,membersSearch:"",enableOnlineSort:!1,vehList:[],rankPermissions:[],rankAllPermissions:[],rankNameList:[],bank:0,warehouseCloseStatus:!1,settingTab:0,rankEdit:{rank:"",index:0,permissions:[]},acrList:[],acrWait:!1,weaponSetList:[],weaponForSetList:[],weaponSetEnable:!1,weaponSetForm:{id:-1,name:"",rank:1,timeout:1,weaponList:[]},form:{notifyText:"",notifySetResponse:"",notifySetHasError:!1,bankSum:0,newsTitle:"",newsText:"",newsAddResponse:"",newsAddHasError:!1}},computed:{membersList(){const a=this.members.filter(a=>1>this.membersSearch.length||-1!==a.name.indexOf(this.membersSearch.replace("_"," ")));return this.enableOnlineSort?a.sort((c,a)=>(a.isOnline?1:0)-(c.isOnline?1:0)):a}},methods:{setNotify:async function(a){let b="";try{b=await rpc.callServer("server_faction_manage_notify",a)}catch(a){b="\u041E\u0448\u0438\u0431\u043A\u0430 \u043A\u043B\u0438\u0435\u043D\u0442\u0430."}"ok"==b?(this.form.notifySetResponse="\u041E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E.",this.form.notifySetHasError=!1):(this.form.notifySetResponse=b,this.form.notifySetHasError=!0,serverAPI.notifyError(b))},createNews:async function(a,b){let c="";try{c=await rpc.callServer("server_faction_manage_new_news",[a,b])}catch(a){c="\u041E\u0448\u0438\u0431\u043A\u0430 \u043A\u043B\u0438\u0435\u043D\u0442\u0430."}"ok"==c?(this.form.newsAddResponse="\u041D\u043E\u0432\u043E\u0441\u0442\u044C \u0441\u043E\u0437\u0434\u0430\u043D\u0430.",this.form.newsAddHasError=!1,this.form.newsTitle="",this.form.newsText=""):(this.form.newsAddResponse=c,this.form.newsAddHasError=!0,serverAPI.notifyError(c))},changeRank:async function(a,b){try{const c=await serverAPI.getAsync("server_faction_manage_members_rank",{name:a.name.replace(" ","_"),mode:b});a.rank=c,"+"==b?a.rankN++:a.rankN--}catch(a){serverAPI.notifyError(a)}},changeWarehouseCloseStatus:async function(a){let b="";try{b=await rpc.callServer("server_faction_manage_warehouse_closeStatus",a)}catch(a){serverAPI.errorNotify(a)}"ok"==b?this.warehouseCloseStatus=a:serverAPI.errorNotify(b)},unInvite:async function(a){let{error:b}=await rpc.callServer("server_faction_manage_members_unInvite",a.name.replace(" ","_"));1!=b&&(this.members=this.members.filter(b=>b.name!=a.name))},startRankEdit(a){this.rankEdit.rank=this.rankNameList[a],this.rankEdit.index=a,this.rankEdit.permissions=null==this.rankPermissions[a]?[]:this.rankPermissions[a],this.settingTab=1},async saveRankSetting(){try{await serverAPI.getAsync("server_faction_manage_rank_setPermission",[this.rankEdit.index,this.rankEdit.rank,this.rankEdit.permissions]),this.rankPermissions[this.rankEdit.index]=this.rankEdit.permissions,this.settingTab=0}catch(a){serverAPI.notifyError(a)}},async findCar(a){mp.trigger("clientFunc_setWaypoint",a.pos[0],a.pos[1]),serverAPI.notifySuccess("\u0422\u043E\u0447\u043A\u0430 \u043E\u0442\u043C\u0435\u0447\u0435\u043D\u0430 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435.")},async setFactionVehRant(a,b,c){try{const b=await serverAPI.getAsync("server_faction_manage_vehicle_setRank",[a.id,a.rank+c]);a.rank+=c,a.rankName=b}catch(a){serverAPI.notifyError(a)}},async factionVehRespawn(a){try{await serverAPI.getAsync("server_faction_manage_vehicle_spawn",a.id),serverAPI.notifySuccess("\u0413\u043E\u0442\u043E\u0432\u043E")}catch(a){serverAPI.notifyError(a)}},async acrAccept(a){if(!this.acrWait){this.acrWait=!0;try{const b=await serverAPI.getAsync("server_faction_acr_accept",a);b&&(this.acrList=this.acrList.filter(b=>b.id!=a))}catch(a){serverAPI.notifyError(a)}this.acrWait=!1}},async acrCancel(a){if(!this.acrWait){this.acrWait=!0;try{await serverAPI.getAsync("server_faction_acr_cancel",a),this.acrList=this.acrList.filter(b=>b.id!=a)}catch(a){serverAPI.notifyError(a)}this.acrWait=!1}},startCreateNewWeaponSet(){this.weaponSetForm.id=-1,this.weaponSetForm.name="",this.weaponSetForm.rank=1,this.weaponSetForm.timeout=10,this.weaponSetForm.weaponList=this.weaponForSetList.map(a=>({name:a.name,hash:a.hash,ammoCount:a.ammoCount,enable:!1,currentAmmo:0})),this.settingTab=2},startEditWeaponSet(a,b){this.weaponSetForm.id=b,this.weaponSetForm.name=a.name,this.weaponSetForm.rank=a.rank,this.weaponSetForm.timeout=a.timeout,this.weaponSetForm.weaponList=this.weaponForSetList.map(b=>{const c=a.weaponList.find(a=>a.hash==b.hash);return{name:b.name,hash:b.hash,ammoCount:b.ammoCount,enable:!!c&&0<=c.ammoCount,currentAmmo:c?Math.abs(c.ammoCount):0}}),this.settingTab=2},async saveWeaponSet(){try{await serverAPI.getAsync("server_faction_manage_editOrCreateWeaponSet",{id:this.weaponSetForm.id,name:this.weaponSetForm.name,rank:this.weaponSetForm.rank,timeout:this.weaponSetForm.timeout,weapon:this.weaponSetForm.weaponList.filter(a=>a.enable||0<=a.currentAmmo).map(a=>({hash:a.hash,enable:a.enable,ammo:a.currentAmmo}))}),this.settingTab=0,serverAPI.notifySuccess("\u0413\u043E\u0442\u043E\u0432\u043E")}catch(a){serverAPI.notifyError(a)}},async deleteWeaponSet(a){try{await serverAPI.getAsync("server_faction_manage_deleteWeaponSet",a),this.weaponSetList.splice(a,1)}catch(a){serverAPI.notifyError(a)}},async setWeaponListEnable(a){try{await serverAPI.getAsync("server_faction_manage_weaponSetEnable",a),this.weaponSetEnable=a}catch(a){serverAPI.notifyError(a)}}},load(a){this.permissions=a.permissions,this.news=a.news||[],this.notify=a.notify||{text:"",leader:""},this.vehList=a.vehList||[],this.warehouseCloseStatus=a.warehouseCloseStatus,this.bank=a.bank||0,this.rankPermissions=a.rankPermissions||[],this.rankAllPermissions=a.rankAllPermissions||[],this.rankNameList=a.rankNameList||[];const b=a=>10<=a?a:"0"+a;this.members=(a.members||[]).map(a=>{const c=new Date(1e3*a[3]);return{name:String(a[0]||"").replace("_"," "),isOnline:a[1],rank:this.rankNameList[a[2]-1],rankN:a[2],lastActive:`${b(c.getDate())}/${b(c.getMonth()+1)}/${c.getFullYear()} ${b(c.getHours())}:${b(c.getMinutes())}`}}).sort((c,a)=>a.rankN-c.rankN),this.settingTab=0,this.membersCount=this.members.length,this.membersOnline=this.members.filter(a=>a.isOnline).length,this.membersSearch="",this.form.notifyText=this.notify.text,this.acrList=(a.acrList||[]).map(a=>({id:a[0],name:a[1],desc:a[2],creator:a[3],date:a[4]})),this.weaponSetList=a.weaponSetList||[],this.weaponForSetList=a.weaponForSetList||[],this.weaponSetEnable=!!a.weaponSetEnable,this.tab=0},close(){},mounted(){}});</script>
+<script>
+
+(function () {
+  if (typeof serverAPI !== 'undefined' && serverAPI && !serverAPI.errorNotify) {
+    serverAPI.errorNotify = function (msg) { serverAPI.notifyError(msg); };
+  }
+
+  window.__factionRpcPending = window.__factionRpcPending || {};
+
+  window.__factionRpcResult = function (id, ok, payload) {
+    var p = window.__factionRpcPending[id];
+    if (!p) return;
+    delete window.__factionRpcPending[id];
+    if (ok) p.resolve(payload);
+    else p.reject(payload || 'Ошибка');
+  };
+
+  function bridgeCallServer(name, args) {
+    return new Promise(function (resolve, reject) {
+      var id = String(Date.now()) + '_' + Math.floor(Math.random() * 1e9);
+      window.__factionRpcPending[id] = { resolve: resolve, reject: reject };
+      try {
+        mp.trigger('factionMenu:rpc', name, JSON.stringify(args === undefined ? null : args), id);
+      } catch (e) {
+        delete window.__factionRpcPending[id];
+        reject(String(e));
+      }
+      setTimeout(function () {
+        if (window.__factionRpcPending[id]) {
+          delete window.__factionRpcPending[id];
+          reject('TIMEOUT');
+        }
+      }, 15000);
+    });
+  }
+
+  async function saveFactionRank(v) {
+    if (!v || !v.form || v.form.rankSaving) return;
+    v.$set(v.form, 'rankSaving', true);
+    v.$set(v.form, 'rankSaveResponse', '');
+    v.$set(v.form, 'rankSaveHasError', false);
+    try {
+      var index = parseInt(v.rankEdit && v.rankEdit.index, 10);
+      var name = String((v.rankEdit && v.rankEdit.rank) || '').trim();
+      var permissions = v.rankEdit && v.rankEdit.permissions;
+      if (!Number.isInteger(index) || index < 0 || index > 8) {
+        throw 'Нельзя редактировать этот ранг';
+      }
+      if (!name) throw 'Введите название должности';
+      if (!Array.isArray(permissions)) throw 'Некорректные права ранга';
+
+      // Вызываем мост напрямую: этот путь не зависит от переопределений rage-rpc в шаблоне.
+      var result = await bridgeCallServer('server_faction_manage_rank_setPermission', [
+        index, name, permissions.slice()
+      ]);
+      if (!result || result.error) {
+        throw (result && result.errorText) || 'Не удалось сохранить настройки ранга';
+      }
+
+      v.rankPermissions.splice(index, 1, permissions.slice());
+      v.rankNameList.splice(index, 1, name);
+      var rankN = index + 1;
+      (v.members || []).forEach(function (m) {
+        if (m.rankN === rankN) m.rank = name;
+      });
+      v.form.rankSaveResponse = 'Настройки ранга сохранены';
+      v.form.rankSaveHasError = false;
+      v.settingTab = 0;
+    } catch (e) {
+      v.form.rankSaveResponse = String(e || 'Не удалось сохранить настройки ранга');
+      v.form.rankSaveHasError = true;
+      try { serverAPI.notifyError(e); } catch (_e) {}
+    } finally {
+      v.form.rankSaving = false;
+    }
+  }
+
+  var _origCallServer = rpc.callServer.bind(rpc);
+  rpc.callServer = function (name, args, options) {
+    if (typeof name === 'string' && name.indexOf('server_faction_') === 0) {
+      return bridgeCallServer(name, args);
+    }
+    return _origCallServer(name, args, options);
+  };
+
+  function mapRawMembers(v, rawMembers) {
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return (rawMembers || []).map(function (row) {
+      var ts = parseInt(row[3], 10) || 0;
+      var c = ts > 0 ? new Date(1000 * ts) : null;
+      var rankN = parseInt(row[2], 10) || 1;
+      var sid = parseInt(row[4], 10) || 0;
+      return {
+        name: String(row[0] || '').replace(/_/g, ' '),
+        static: sid,
+        isOnline: !!row[1],
+        rank: (v.rankNameList && v.rankNameList[rankN - 1]) || ('Ранг ' + rankN),
+        rankN: rankN,
+        lastActive: c
+          ? (pad(c.getDate()) + '/' + pad(c.getMonth() + 1) + '/' + c.getFullYear() +
+            ' ' + pad(c.getHours()) + ':' + pad(c.getMinutes()))
+          : '—'
+      };
+    }).sort(function (a, b) { return b.rankN - a.rankN; });
+  }
+
+  function formatFactionLogTime(t) {
+    if (!t) return '—';
+    try {
+      var d = new Date(t);
+      if (isNaN(d.getTime())) return String(t);
+      var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+      return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    } catch (_e) {
+      return String(t);
+    }
+  }
+
+  window.factionMenuSetLogs = function (json) {
+    try {
+      var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+      var v = mgr && mgr.vue;
+      if (!v) return;
+      if (v.__logsLoadTimer) {
+        clearTimeout(v.__logsLoadTimer);
+        v.__logsLoadTimer = null;
+      }
+      var list = typeof json === 'string' ? JSON.parse(json) : (json || []);
+      v.logsList = Array.isArray(list) ? list : [];
+      v.logsLoading = false;
+    } catch (_e) {
+      try {
+        var mgr2 = typeof factionMenu !== 'undefined' ? factionMenu : null;
+        if (mgr2 && mgr2.vue) mgr2.vue.logsLoading = false;
+      } catch (_e2) {}
+    }
+  };
+
+  try {
+    if (typeof factionMenu !== 'undefined' && factionMenu.vue) {
+      factionMenu.vue.formatFactionLogTime = formatFactionLogTime;
+      if (typeof factionMenu.vue.requestLogs !== 'function') {
+        factionMenu.vue.requestLogs = function () {};
+      }
+      if (typeof factionMenu.vue.openLogsTab !== 'function') {
+        factionMenu.vue.openLogsTab = function () { this.tab = 4; };
+      }
+    }
+  } catch (_seed) {}
+
+  /** Soft-update участников: не трогает membersSearch / tab / формы. */
+  window.factionMenuUpdateMembers = function (rawMembers, meta) {
+    try {
+      var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+      var v = mgr && mgr.vue;
+      if (!v) return;
+      var list = mapRawMembers(v, rawMembers);
+      v.members = list;
+      v.membersCount = list.length;
+      v.membersOnline = list.filter(function (m) { return m.isOnline; }).length;
+      if (meta && meta.notifyLeader != null) {
+        v.notify = v.notify || { text: '', leader: '' };
+        v.notify.leader = String(meta.notifyLeader || '');
+      }
+    } catch (_e) {}
+  };
+
+  function patchFactionVue() {
+    var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+    var v = mgr && mgr.vue;
+    if (!v) return;
+    if (v.__flowPatched) return;
+    v.__flowPatched = true;
+
+    var _origLoad = v.__load ? v.__load.bind(v) : null;
+    if (_origLoad) {
+      v.__load = function (payload) {
+        _origLoad(payload);
+        this.canViewLogs = !!(payload && (payload.canViewLogs || (payload.permissions && payload.permissions.isLeader)));
+        if (Array.isArray(payload && payload.members) && payload.members.length && Array.isArray(payload.members[0])) {
+          var remapped = mapRawMembers(this, payload.members);
+          this.members = remapped;
+          this.membersCount = remapped.length;
+          this.membersOnline = remapped.filter(function (m) { return m.isOnline; }).length;
+        }
+      };
+    }
+
+    // Поиск без учёта регистра (ник Absolute / absolute).
+    // Не трогаем Vue computed напрямую — патчим через $options + принудительный refresh
+    // через обёртку filter в шаблоне нельзя; переопределяем getter на инстансе.
+    try {
+      Object.defineProperty(v, 'membersList', {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          var q = String(this.membersSearch || '').replace(/_/g, ' ').toLowerCase().trim();
+          var list = (this.members || []).filter(function (m) {
+            if (!q) return true;
+            var name = String(m.name || '').toLowerCase();
+            var sid = String(m.static || '');
+            return name.indexOf(q) !== -1 || sid.indexOf(q) !== -1;
+          });
+          if (this.enableOnlineSort) {
+            list = list.slice().sort(function (a, b) {
+              return (b.isOnline ? 1 : 0) - (a.isOnline ? 1 : 0);
+            });
+          }
+          return list;
+        }
+      });
+    } catch (_e) {}
+
+    var _createNews = v.createNews.bind(v);
+    v.createNews = async function (title, text) {
+      var c = '';
+      try {
+        c = await rpc.callServer('server_faction_manage_new_news', [title, text]);
+      } catch (e) {
+        c = 'Ошибка клиента.';
+      }
+      var ok = false;
+      var item = null;
+      if (c === 'ok') ok = true;
+      else if (c && typeof c === 'object') {
+        if (c.error) {
+          c = c.errorText || 'Ошибка';
+        } else {
+          ok = true;
+          item = c.data || c.item || null;
+        }
+      }
+      if (ok) {
+        this.form.newsAddResponse = 'Новость создана.';
+        this.form.newsAddHasError = false;
+        this.form.newsTitle = '';
+        this.form.newsText = '';
+        if (!item) {
+          var d = new Date();
+          var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+          item = {
+            title: title,
+            text: text,
+            date: pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes())
+          };
+        }
+        if (!Array.isArray(this.news)) this.news = [];
+        this.news.unshift(item);
+      } else {
+        this.form.newsAddResponse = c;
+        this.form.newsAddHasError = true;
+        serverAPI.notifyError(c);
+      }
+    };
+
+    var _setNotify = v.setNotify.bind(v);
+    v.setNotify = async function (text) {
+      var b = '';
+      try {
+        b = await rpc.callServer('server_faction_manage_notify', text);
+      } catch (e) {
+        b = 'Ошибка клиента.';
+      }
+      if (b === 'ok') {
+        this.form.notifySetResponse = 'Оповещение установлено.';
+        this.form.notifySetHasError = false;
+        this.notify = this.notify || { text: '', leader: '' };
+        this.notify.text = String(text || '');
+        this.form.notifyText = this.notify.text;
+      } else {
+        this.form.notifySetResponse = b;
+        this.form.notifySetHasError = true;
+        serverAPI.notifyError(b);
+      }
+    };
+
+    v.formatFactionLogTime = formatFactionLogTime;
+
+    v.requestLogs = function (q) {
+      if (!(this.canViewLogs || (this.permissions && this.permissions.isLeader))) {
+        try { serverAPI.notifyError('Нет прав на логи'); } catch (_e) {}
+        return;
+      }
+      this.logsLoading = true;
+      var search = q != null ? String(q) : String(this.logsSearch || '');
+      var self = this;
+      if (self.__logsLoadTimer) clearTimeout(self.__logsLoadTimer);
+      self.__logsLoadTimer = setTimeout(function () {
+        if (self.logsLoading) self.logsLoading = false;
+      }, 12000);
+      try { mp.trigger('frac:logs:request', search); } catch (_e2) {
+        this.logsLoading = false;
+      }
+    };
+
+    v.openLogsTab = function () {
+      this.tab = 4;
+      this.requestLogs(this.logsSearch);
+    };
+
+    // Повышение/понижение по static; clamp 1–9.
+    v.changeRank = async function (member, mode) {
+      try {
+        var sid = parseInt(member.static, 10) || 0;
+        var key = sid > 0
+          ? ('_(#' + sid + ')')
+          : String(member.name || '').replace(/ /g, '_');
+        var c = await serverAPI.getAsync('server_faction_manage_members_rank', { name: key, mode: mode });
+        member.rank = c;
+        if (mode === '+') member.rankN = Math.min(9, (member.rankN || 1) + 1);
+        else member.rankN = Math.max(1, (member.rankN || 1) - 1);
+      } catch (e) {
+        serverAPI.notifyError(e);
+      }
+    };
+
+    v.unInvite = async function (member) {
+      var sid = parseInt(member.static, 10) || 0;
+      var key = sid > 0
+        ? ('_(#' + sid + ')')
+        : String(member.name || '').replace(/ /g, '_');
+      var res = await rpc.callServer('server_faction_manage_members_unInvite', key);
+      var err = res && typeof res === 'object' ? res.error : 1;
+      if (err != 1) {
+        this.members = this.members.filter(function (m) {
+          if (sid > 0) return parseInt(m.static, 10) !== sid;
+          return m.name != member.name;
+        });
+        this.membersCount = this.members.length;
+        this.membersOnline = this.members.filter(function (m) { return m.isOnline; }).length;
+      } else {
+        serverAPI.notifyError('Нет прав или игрок недоступен');
+      }
+    };
+
+    v.changeWarehouseCloseStatus = async function (closed) {
+      if (!this.permissions.warehouseToggle) {
+        serverAPI.notifyError('Нет прав на склад');
+        return;
+      }
+      try {
+        var result = await rpc.callServer('server_faction_manage_warehouse_closeStatus', !!closed);
+        if (result !== 'ok') throw result || 'Не удалось изменить состояние склада';
+        this.warehouseCloseStatus = !!closed;
+      } catch (e) {
+        serverAPI.notifyError(e);
+      }
+    };
+
+    v.saveRankSetting = async function () {
+      return saveFactionRank(this);
+    };
+
+    // Редактирование прав рангов доступно только лидеру: это исключает повышение прав своего ранга.
+    var _start = v.startRankEdit.bind(v);
+    v.startRankEdit = function (idx) {
+      if (!this.permissions.isLeader) {
+        serverAPI.notifyError('Нет прав');
+        return;
+      }
+      this.$set(this.form, 'rankSaveResponse', '');
+      this.$set(this.form, 'rankSaveHasError', false);
+      _start(idx);
+    };
+  }
+
+  window.factionMenuOpen = function (payload) {
+    try {
+      document.body.classList.remove('faction-hidden');
+      payload = payload || {};
+      if (!payload.permissions) payload.permissions = { isLeader: false, changeRank: false, unInvite: false, warehouseToggle: false };
+      if (!Array.isArray(payload.members)) payload.members = [];
+      if (!Array.isArray(payload.news)) payload.news = [];
+      if (!Array.isArray(payload.logsList)) payload.logsList = [];
+      if (!payload.notify) payload.notify = { text: '', leader: '' };
+      if (!Array.isArray(payload.vehList)) payload.vehList = [];
+      if (!Array.isArray(payload.rankPermissions)) payload.rankPermissions = [];
+      if (!Array.isArray(payload.rankAllPermissions)) payload.rankAllPermissions = [];
+      if (!Array.isArray(payload.rankNameList)) payload.rankNameList = [];
+      if (!Array.isArray(payload.acrList)) payload.acrList = [];
+      if (!Array.isArray(payload.weaponSetList)) payload.weaponSetList = [];
+      if (!Array.isArray(payload.weaponForSetList)) payload.weaponForSetList = [];
+      var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+      if (mgr && mgr.vue) {
+        try { mgr.vue.load(payload); } catch (e) { try { console.log(e); } catch (_e) {} }
+        mgr.vue.loaded = true;
+        mgr.vue.canViewLogs = !!(payload.canViewLogs || (payload.permissions && payload.permissions.isLeader));
+        mgr.vue.logsList = [];
+        mgr.vue.logsSearch = '';
+        mgr.vue.logsLoading = false;
+        if (mgr.vue.permissions) {
+          mgr.vue.permissions.warehouseToggle = !!(payload.permissions && payload.permissions.warehouseToggle);
+        }
+        if (Array.isArray(payload.members) && payload.members.length && Array.isArray(payload.members[0])) {
+          var remapped = mapRawMembers(mgr.vue, payload.members);
+          mgr.vue.members = remapped;
+          mgr.vue.membersCount = remapped.length;
+          mgr.vue.membersOnline = remapped.filter(function (m) { return m.isOnline; }).length;
+        }
+      } else if (typeof rpc !== 'undefined' && rpc.trigger) {
+        rpc.trigger('menuManager_menu_open', { menu: 'faction', data: payload });
+      }
+      patchFactionVue();
+      setTimeout(patchFactionVue, 50);
+      setTimeout(patchFactionVue, 250);
+    } catch (e) {
+      try { console.log(e); } catch (_e) {}
+      try { if (typeof factionMenu !== 'undefined' && factionMenu.vue) factionMenu.vue.loaded = true; } catch (_e2) {}
+    }
+  };
+  window.factionMenuHide = function () {
+    try {
+      if (typeof rpc !== 'undefined' && rpc.trigger) {
+        rpc.trigger('menuManager_menu_close', 'faction');
+      }
+      var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+      if (mgr && mgr.vue) mgr.vue.settingTab = 0;
+      document.body.classList.add('faction-hidden');
+    } catch (e) { console.log(e); }
+  };
+  document.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!target || target.id !== 'factionRankSave') return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var mgr = typeof factionMenu !== 'undefined' ? factionMenu : null;
+    saveFactionRank(mgr && mgr.vue);
+  }, true);
+  if (typeof mp !== 'undefined' && mp.trigger) {
+    try { mp.trigger('frac:gta5rp:ready'); } catch (_e) {}
+  }
+})();
+
+</script>
+</body>
+</html>

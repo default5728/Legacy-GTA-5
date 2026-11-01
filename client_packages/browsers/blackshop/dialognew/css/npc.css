@@ -1,0 +1,90 @@
+.messages-window {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 101px;
+}
+
+.messages-window a.heading {
+  line-height: 45px;
+  display: block;
+  font-weight: 300;
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.messages-window a.who {
+  display: block;
+  font-weight: 300;
+  font-size: 14px;
+  color: rgba(180, 40, 40, 0.9);
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+
+.messages-window .text-block {
+  margin-top: 35px;
+  position: relative;
+  width: 780px;
+  padding: 24px 32px;
+  background: #1a080a;
+  border: 1px solid rgba(180, 40, 40, 0.4);
+  border-radius: 10px;
+}
+
+.messages-window .text-block p {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 27px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.messages-icno {
+  position: absolute;
+  top: -28px;
+  right: -28px;
+}
+
+.polygon-img {
+  position: absolute;
+  top: -25px;
+  left: 5px;
+}
+
+.messages-window .list-but {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.messages-window .list-but a {
+  width: 250px;
+  height: 56px;
+  background: #3d0a0a;
+  border: 1px solid #8B0000;
+  border-radius: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.messages-window .list-but a:hover {
+  background: #b42b2b;
+  border-color: #dc3c3c;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(180, 40, 40, 0.5);
+}

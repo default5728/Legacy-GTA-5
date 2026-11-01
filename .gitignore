@@ -1,0 +1,34 @@
+# Local secrets and operational data
+.env
+.env.*
+!.env.example
+stage.env
+*.pem
+*.key
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+data/
+backups/
+private/
+node_modules/
+.git-sync/
+# Official runtime and large game assets are installed separately
+*.exe
+*.dll
+*.so
+*.rpf
+*.rar
+*.7z
+*.zip
+client_packages/game_resources/
+# Local tools/editors
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.pyc

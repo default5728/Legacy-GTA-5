@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
+  <rect width="160" height="160" rx="20" fill="#121212"/>
+  <rect x="36" y="52" width="88" height="72" rx="12" fill="#181818" stroke="#dc2626" stroke-width="3"/>
+  <path d="M56 52V44c0-10 10-18 24-18s24 8 24 18v8" stroke="#ef4444" stroke-width="4" fill="none"/>
+  <rect x="52" y="72" width="56" height="10" rx="5" fill="rgba(220,38,38,0.35)"/>
+  <text x="80" y="142" text-anchor="middle" fill="#f87171" font-size="14" font-family="Segoe UI,Arial,sans-serif" font-weight="700">BAGS</text>
+</svg>

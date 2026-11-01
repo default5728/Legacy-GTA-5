@@ -1,0 +1,107 @@
+@media (min-width: 799px) and (max-width: 1000px) {
+  .rp-mini-games-window, .rp-bottom-left, .rp-top-menu, .rp-bottom-right, .rp-bottom-right, .mini-game-window,
+  .shop-window, .craft-window, .auto-shop-window, #camera-close a, .computer-window, .car-sale-window, .tattoo-menu-left,
+  #tattoo-menu .tab-content,.setting-lobby-window, .hud-menu-head, .hud-stat, .amount, .hud-weapon-list, .timer-flex,
+  .recording-flex, .recording-duels-flex, #CaptureTimerMainDiv, .attention, .end-round, .attention2, .attention3, .hud-menu-bottom-content,
+  .hud-stats, .hud-zone, .main-micro, .auto-circle, .auto-circle2, .autotuning_list, #autotuning_windows,
+  .gp-shop-window, .walkie-talkie, .roulette-games_header, .family-menu_window,
+  .family-system_window, .hud-message, .new-war_window, .pop-list, .hud-war-start,.messages-window, .rp-animation_window, .voice-chat_player,
+  .mini-games-menu_close-btn, .mini-games-menu_logo, .mini-games-menu_heading, .mini-games-menu_game-list, .mini-games-menu_logo-text,
+  .mini-games-menu_img-back1, .mini-games-menu_img-back2, .mini-games-menu_img-back3, .mini-games-menu_point, .mini-games-menu_statistics,
+  .sale-auto-window, .mini-games-list-info_widnow, .roulette-games_conetent-right, .roulette-games_conetent-left-game, .roulette-games_conetent-left-online,
+  .roulet-main_top-block, .roulet-main_players-chance, .item-list_items-block, .roulet_bet-window, .alert-window, .capture-window, .capture-result_window, .house-window,
+  .estate-agency__window, .shop__wrapper, .lock-hack__window, .auto-rent__window, .barber-shop, .hudx2-logo  {
+    zoom: 50%;
+  }
+  div.roulette-games_conetent-ineer  {
+    width: 800px;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1300px) {
+  .rp-mini-games-window, .rp-bottom-left, .rp-top-menu, .rp-bottom-right, .rp-bottom-right, .mini-game-window,
+  .shop-window, .craft-window, .auto-shop-window, #camera-close a, .computer-window, .car-sale-window, .tattoo-menu-left,
+  #tattoo-menu .tab-content,.setting-lobby-window, .hud-menu-head, .hud-stat, .amount, .hud-weapon-list, .timer-flex,
+  .recording-flex, .recording-duels-flex, #CaptureTimerMainDiv, .attention, .end-round, .attention2, .attention3, .hud-menu-bottom-content,
+  .hud-stats, .hud-zone, .main-micro, .auto-circle, .auto-circle2, .autotuning_list, #autotuning_windows,
+  .gp-shop-window, .walkie-talkie, .roulette-games_header, .family-menu_window,
+  .family-system_window, .hud-message, .new-war_window, .pop-list, .hud-war-start,.messages-window, .rp-animation_window, .voice-chat_player,
+  .mini-games-menu_close-btn, .mini-games-menu_logo, .mini-games-menu_heading, .mini-games-menu_game-list, .mini-games-menu_logo-text,
+  .mini-games-menu_img-back1, .mini-games-menu_img-back2, .mini-games-menu_img-back3, .mini-games-menu_point, .mini-games-menu_statistics,
+  .sale-auto-window, .mini-games-list-info_widnow, .roulette-games_conetent-right, .roulette-games_conetent-left-game, .roulette-games_conetent-left-online,
+  .roulet-main_top-block, .roulet-main_players-chance, .item-list_items-block, .roulet_bet-window, .capture-window, .capture-result_window,
+  .estate-agency__window, .shop__wrapper, .lock-hack__window, .auto-rent__window, .barber-shop, .hudx2-logo {
+    zoom: 62%;
+  }
+  .alert-window, .house-window {
+    zoom: 70%;
+  }
+  div.roulette-games_conetent-ineer  {
+    width: 990px;
+  }
+  .map-list,.top-icon  {
+    zoom: 70%;
+  }
+}
+
+@media (min-width: 1301px) and (max-width: 1400px) {
+  .rp-mini-games-window, .rp-bottom-left, .rp-top-menu, .rp-bottom-right, .rp-bottom-right, .mini-game-window,
+  .shop-window, .craft-window, .auto-shop-window, #camera-close a, .computer-window, .car-sale-window, .tattoo-menu-left,
+  #tattoo-menu .tab-content,.setting-lobby-window, .hud-menu-head, .hud-stat, .amount, .hud-weapon-list, .timer-flex,
+  .recording-flex, .recording-duels-flex, #CaptureTimerMainDiv, .attention, .end-round, .attention2, .attention3, .hud-menu-bottom-content,
+  .hud-stats, .hud-zone, .main-micro, .auto-circle, .auto-circle2, .autotuning_list, #autotuning_windows,
+  .gp-shop-window, .walkie-talkie, .roulette-games_header, .family-menu_window,
+  .family-system_window, .hud-message, .new-war_window, .pop-list, .hud-war-start,.messages-window, .rp-animation_window, .voice-chat_player,
+  .mini-games-menu_close-btn, .mini-games-menu_logo, .mini-games-menu_heading, .mini-games-menu_game-list, .mini-games-menu_logo-text,
+  .mini-games-menu_img-back1, .mini-games-menu_img-back2, .mini-games-menu_img-back3, .mini-games-menu_point, .mini-games-menu_statistics,
+  .sale-auto-window, .mini-games-list-info_widnow, .roulette-games_conetent-right, .roulette-games_conetent-left-game, .roulette-games_conetent-left-online,
+  .roulet-main_top-block, .roulet-main_players-chance, .item-list_items-block, .roulet_bet-window, .capture-window, .capture-result_window,
+  .estate-agency__window, .shop__wrapper, .lock-hack__window, .auto-rent__window, .barber-shop, .hudx2-logo  {
+    zoom: 78%;
+  }
+  .alert-window,.map-list,.top-icon, .house-window  {
+    zoom: 84%;
+  }
+  div.roulette-games_conetent-ineer  {
+    width: 1240px;
+  }
+}
+
+@media (min-width: 1401px) and (max-width: 1600px) {
+  .rp-mini-games-window, .rp-bottom-left, .rp-top-menu, .rp-bottom-right, .rp-bottom-right, .mini-game-window,
+  .shop-window, .craft-window, .auto-shop-window, #camera-close a, .computer-window, .car-sale-window, .tattoo-menu-left,
+  #tattoo-menu .tab-content,.setting-lobby-window, .hud-menu-head, .hud-stat, .amount, .hud-weapon-list, .timer-flex,
+  .recording-flex, .recording-duels-flex, #CaptureTimerMainDiv, .attention, .end-round, .attention2, .attention3, .hud-menu-bottom-content,
+  .hud-stats, .hud-zone, .main-micro, .auto-circle, .auto-circle2, .autotuning_list, #autotuning_windows,
+  .gp-shop-window, .walkie-talkie, .roulette-games_header, .family-menu_window,
+  .family-system_window, .hud-message, .new-war_window, .pop-list, .hud-war-start,.messages-window, .rp-animation_window, .voice-chat_player,
+  .mini-games-menu_close-btn, .mini-games-menu_logo, .mini-games-menu_heading, .mini-games-menu_game-list, .mini-games-menu_logo-text,
+  .mini-games-menu_img-back1, .mini-games-menu_img-back2, .mini-games-menu_img-back3, .mini-games-menu_point, .mini-games-menu_statistics,
+  .sale-auto-window, .mini-games-list-info_widnow, .roulette-games_conetent-right, .roulette-games_conetent-left-game, .roulette-games_conetent-left-online,
+  .roulet-main_top-block, .roulet-main_players-chance, .item-list_items-block, .roulet_bet-window, .alert-window, .capture-window, .capture-result_window,.map-list,.top-icon, .house-window,
+  .estate-agency__window, .shop__wrapper, .lock-hack__window, .auto-rent__window, .barber-shop, .hudx2-logo  {
+    zoom: 84%;
+  }
+
+
+  div.roulette-games_conetent-ineer  {
+    width: 1340px;
+  }
+}
+
+@media (min-width: 1601px) and (max-width: 2560px) {
+  .rp-mini-games-window, .rp-bottom-left, .rp-top-menu, .rp-bottom-right, .rp-bottom-right, .mini-game-window,
+  .shop-window, .craft-window, .auto-shop-window, #camera-close a, .computer-window, .car-sale-window, .tattoo-menu-left,
+  #tattoo-menu .tab-content,.setting-lobby-window, .hud-menu-head, .hud-stat, .amount, .hud-weapon-list, .timer-flex,
+  .recording-flex, .recording-duels-flex, #CaptureTimerMainDiv, .attention, .end-round, .attention2, .attention3, .hud-menu-bottom-content,
+  .hud-stats, .hud-zone, .main-micro, .auto-circle, .auto-circle2, .autotuning_list, #autotuning_windows,
+  .gp-shop-window, .walkie-talkie, .roulette-games_header, .family-menu_window,
+  .family-system_window, .hud-message, .new-war_window, .pop-list, .hud-war-start,.messages-window, .rp-animation_window, .voice-chat_player,
+  .mini-games-menu_close-btn, .mini-games-menu_logo, .mini-games-menu_heading, .mini-games-menu_game-list, .mini-games-menu_logo-text,
+  .mini-games-menu_img-back1, .mini-games-menu_img-back2, .mini-games-menu_img-back3, .mini-games-menu_point, .mini-games-menu_statistics,
+  .sale-auto-window, .mini-games-list-info_widnow, .roulette-games_conetent-right, .roulette-games_conetent-left-game, .roulette-games_conetent-left-online,
+  .roulet-main_top-block, .roulet-main_players-chance, .item-list_items-block, .roulet_bet-window, .alert-window, .capture-window, .capture-result_window, .house-window,
+  .estate-agency__window, .shop__wrapper, .lock-hack__window, .auto-rent__window, .barber-shop, .hudx2-logo {
+    zoom: 100%;
+  }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TSC — редактор одежды</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="clothesEditor" class="ce-root">
+    <div class="box-content clothesEditor">
+      <div class="box-ch">
+        <div class="box-max" id="cePanel">
+          <div class="box-list" id="mainPanel">
+            <div class="label">Компонент:</div>
+            <div class="module-list">
+              <div class="l" id="compL" aria-label="prev">&#8249;</div>
+              <div id="compName">—</div>
+              <div class="r" id="compR" aria-label="next">&#8250;</div>
+            </div>
+            <div class="label spaced">Drawable:</div>
+            <div class="module-list">
+              <div class="l" id="drL">&#8249;</div>
+              <input type="text" inputmode="numeric" id="inpDr" />
+              <div class="r" id="drR">&#8250;</div>
+            </div>
+            <div class="label spaced">Texture:</div>
+            <div class="module-list">
+              <div class="l" id="txL">&#8249;</div>
+              <input type="text" inputmode="numeric" id="inpTx" />
+              <div class="r" id="txR">&#8250;</div>
+            </div>
+            <div id="topsExtra" class="hidden">
+              <div class="label spaced">Undershirts:</div>
+              <div class="module-list">
+                <div class="l" id="unL">&#8249;</div>
+                <div id="unName">—</div>
+                <div class="r" id="unR">&#8250;</div>
+              </div>
+              <div class="label spaced">Torsos:</div>
+              <div class="module-list">
+                <div class="l" id="torL">&#8249;</div>
+                <input type="text" inputmode="numeric" id="inpTor" />
+                <div class="r" id="torR">&#8250;</div>
+              </div>
+            </div>
+          </div>
+          <div class="box-list hidden" id="exportPanel">
+            <textarea class="exportChar" id="exportTa" readonly></textarea>
+          </div>
+        </div>
+        <div class="bottom-btn">
+          <div class="btn green" id="btnExport">Экспортировать</div>
+          <div class="btn red" id="btnExit">Выйти</div>
+        </div>
+      </div>
+      <div class="box-info-button">
+        <div class="bottom-btn hint-bar">
+          <div class="hint-ico"></div>
+          <div class="text">ЛКМ — вращение камеры · ПКМ — высота точки · колёсико — расстояние (как редактор Calamity)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

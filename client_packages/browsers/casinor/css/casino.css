@@ -1,0 +1,586 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  outline: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html, body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+  color: #e5ffff;
+  font-weight: 500;
+}
+
+#app {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  color: #e5ffff;
+}
+
+.casino {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.casino::before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: radial-gradient(circle, rgba(23, 28, 28, 0), rgba(23, 28, 28, 0.2)), -webkit-gradient(linear, left top, left bottom, from(rgba(23, 28, 28, 0.5)), color-stop(20%, rgba(23, 28, 28, 0)), color-stop(80%, rgba(23, 28, 28, 0)), to(rgba(23, 28, 28, 0.5)));
+  background: -webkit-radial-gradient(circle, rgba(23, 28, 28, 0), rgba(23, 28, 28, 0.2)), -webkit-linear-gradient(rgba(23, 28, 28, 0.5), rgba(23, 28, 28, 0) 20%, rgba(23, 28, 28, 0) 80%, rgba(23, 28, 28, 0.5));
+  background: -o-radial-gradient(circle, rgba(23, 28, 28, 0), rgba(23, 28, 28, 0.2)), -o-linear-gradient(rgba(23, 28, 28, 0.5), rgba(23, 28, 28, 0) 20%, rgba(23, 28, 28, 0) 80%, rgba(23, 28, 28, 0.5));
+  background: radial-gradient(circle, rgba(23, 28, 28, 0), rgba(23, 28, 28, 0.2)), linear-gradient(rgba(23, 28, 28, 0.5), rgba(23, 28, 28, 0) 20%, rgba(23, 28, 28, 0) 80%, rgba(23, 28, 28, 0.5));
+  pointer-events: none;
+}
+
+.casino__header {
+  position: absolute;
+  width: 100%;
+  height: 5vw;
+  left: 0;
+  top: 1.25vw;
+}
+
+.casino__header > div:first-child {
+  width: 96.25vw;
+  margin: 0 auto;
+  height: 1.688vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.casino__header > div:last-child {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+  top: 0;
+  width: 17.125vw;
+  height: 100%;
+}
+
+.casino__header > div:last-child::before, .casino__header > div:last-child::after {
+  position: absolute;
+  content: '';
+  height: 0.188vw;
+  width: 41.438vw;
+  bottom: 0.625vw;
+}
+
+.casino__header > div:last-child::before {
+  left: -41.438vw;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.2)));
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+  background: -o-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+}
+
+.casino__header > div:last-child::after {
+  right: -41.438vw;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255, 0)));
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  background: -o-linear-gradient(left, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+}
+
+.casino__header-status {
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: relative;
+}
+
+.casino__header-status > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.casino__header-status > div > div {
+  height: 3vw;
+  width: 100%;
+  font-size: 4.875vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+          background-size: contain;
+}
+
+.casino__header-status > div.casino__header-status__scrolling > div {
+  width: 3vw;
+  height: 3vw;
+}
+
+.casino__header-status > div.casino__header-status__scrolling > div > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-animation: 3s casino-rotate infinite linear;
+          animation: 3s casino-rotate infinite linear;
+  -webkit-transform-origin: center;
+      -ms-transform-origin: center;
+          transform-origin: center;
+}
+
+.casino__header-status > div.casino__header-status__wait > div {
+  width: 3vw;
+  height: 3vw;
+}
+
+.casino__header-status > div.casino__header-status__wait > div > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.casino__header-status > div > p {
+  font-size: 1.125vw;
+}
+
+.casino__header-hint {
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.casino__header-hint > p {
+  font-style: italic;
+  font-size: 0.625vw;
+}
+
+.casino__header-hint:first-child {
+  margin-right: 2.563vw;
+}
+
+.casino__header-hint:last-child {
+  margin-left: auto;
+  -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1);
+          transform: scale(-1, 1);
+}
+
+.casino__header-hint:last-child p {
+  -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1);
+          transform: scale(-1, 1);
+}
+
+.casino__header-hint__image {
+  height: 100%;
+  background: rgba(19, 26, 27, 0.4);
+  -webkit-box-shadow: inset 0 -0.063vw 0 rgba(31, 44, 45, 0.7);
+          box-shadow: inset 0 -0.063vw 0 rgba(31, 44, 45, 0.7);
+  -webkit-border-radius: 0.25vw;
+          border-radius: 0.25vw;
+  margin-right: 0.313vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 0 0.313vw;
+}
+
+.casino__header-hint__image > div {
+  width: 0.875vw;
+  height: 0.875vw;
+  background-image: url("../img/icon__chip.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: contain;
+          background-size: contain;
+  margin-right: 0.313vw;
+}
+
+.casino__header-hint__image > p {
+  font-weight: 600;
+  font-size: 0.875vw;
+}
+
+.casino__menu {
+  position: absolute;
+  height: 7.063vw;
+  width: 100%;
+  bottom: 1.25vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.casino__menu > div:first-child {
+  height: 3.938vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: end;
+  -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.casino__menu > div:last-child {
+  height: 1.75vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.casino__hint {
+  background: rgba(19, 26, 27, 0.15);
+  height: 100%;
+  -webkit-border-radius: 0.25vw;
+          border-radius: 0.25vw;
+  padding-right: 0.625vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-right: 0.625vw;
+}
+
+.casino__hint > div {
+  width: 1.75vw;
+  height: 1.75vw;
+  background-color: rgba(19, 26, 27, 0.4);
+  -webkit-border-radius: 0.25vw;
+          border-radius: 0.25vw;
+  -webkit-box-shadow: inset 0 -0.063vw 0 rgba(31, 44, 45, 0.7);
+          box-shadow: inset 0 -0.063vw 0 rgba(31, 44, 45, 0.7);
+  margin-right: 0.125vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: 50% 50%;
+          background-size: 50%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 0.5vw;
+}
+
+.casino__hint > p {
+  margin-left: 0.625vw;
+  font-style: italic;
+  font-size: 0.625vw;
+}
+
+.casino__menu-help {
+  height: 1.75vw;
+  margin-bottom: 0.563vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.casino__menu-help > div {
+  width: 1.563vw;
+  height: 100%;
+  margin: 0 0.375vw;
+  background-image: url("../img/chips__arrow.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+          background-size: contain;
+}
+
+.casino__menu-help > p {
+  font-weight: 800;
+  font-size: 1.438vw;
+  color: rgba(229, 255, 255, 0.4);
+}
+
+.casino__menu-help:last-child > div {
+  -webkit-transform: scale(-1, 1);
+      -ms-transform: scale(-1, 1);
+          transform: scale(-1, 1);
+}
+
+.casino__chips {
+  width: 24.75vw;
+  height: 100%;
+  margin: 0 0.938vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+  -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.casino__chips > div {
+  width: 3vw;
+  height: 3vw;
+  background-image: url("../img/icon_chip10.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+          background-size: contain;
+  opacity: 0.6;
+}
+
+.casino__chips > div.active {
+  width: 3.625vw;
+  height: 3.625vw;
+  margin-bottom: 0.313vw;
+  opacity: 1;
+  -webkit-filter: drop-shadow(0 0.25vw 0.25vw rgba(0, 0, 0, 0.25));
+          filter: drop-shadow(0 0.25vw 0.25vw rgba(0, 0, 0, 0.25));
+}
+
+.casino__notify {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 1.25vw;
+  width: 25.438vw;
+  height: 50%;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, black));
+  -webkit-mask-image: -webkit-linear-gradient(top, transparent 0%, black 50%);
+          mask-image: -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, black));
+          mask-image: linear-gradient(to bottom, transparent 0%, black 50%);
+}
+
+.casino__notify > div {
+  position: relative;
+  width: 100%;
+  margin-top: 0.625vw;
+  padding: 0.625vw 1.875vw;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.875vw;
+}
+
+.casino__notify > div::before, .casino__notify > div::after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 0.125vw;
+  right: 0;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.2)));
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+  background: -o-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2));
+}
+
+.casino__notify > div::before {
+  top: 0;
+}
+
+.casino__notify > div::after {
+  bottom: 0;
+}
+
+.casino__notify > div.win {
+  background: -webkit-gradient(linear, left top, right top, from(rgba(52, 201, 36, 0)), to(rgba(52, 201, 36, 0.8)));
+  background: -webkit-linear-gradient(left, rgba(52, 201, 36, 0), rgba(52, 201, 36, 0.8));
+  background: -o-linear-gradient(left, rgba(52, 201, 36, 0), rgba(52, 201, 36, 0.8));
+  background: linear-gradient(90deg, rgba(52, 201, 36, 0), rgba(52, 201, 36, 0.8));
+}
+
+.casino__notify > div.fail {
+  background: -webkit-gradient(linear, left top, right top, from(rgba(255, 85, 51, 0)), to(rgba(255, 85, 51, 0.8)));
+  background: -webkit-linear-gradient(left, rgba(255, 85, 51, 0), rgba(255, 85, 51, 0.8));
+  background: -o-linear-gradient(left, rgba(255, 85, 51, 0), rgba(255, 85, 51, 0.8));
+  background: linear-gradient(90deg, rgba(255, 85, 51, 0), rgba(255, 85, 51, 0.8));
+}
+
+.casino__notify > div.oops {
+  background: -webkit-gradient(linear, left top, right top, from(rgba(43, 217, 217, 0)), to(rgba(43, 217, 217, 0.8)));
+  background: -webkit-linear-gradient(left, rgba(43, 217, 217, 0), rgba(43, 217, 217, 0.8));
+  background: -o-linear-gradient(left, rgba(43, 217, 217, 0), rgba(43, 217, 217, 0.8));
+  background: linear-gradient(90deg, rgba(43, 217, 217, 0), rgba(43, 217, 217, 0.8));
+}
+
+.casino__notify > div > span {
+  margin-left: 0.625vw;
+}
+
+.casino__notify > div > div {
+  width: 0.625vw;
+  height: 0.625vw;
+  background-image: url("../img/icon__chip.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: contain;
+          background-size: contain;
+  margin-left: 0.313vw;
+  display: inline-block;
+}
+
+.casino-list-enter-active, .casino-list-leave-active {
+  -webkit-transition: all 1s;
+  -o-transition: all 1s;
+  transition: all 1s;
+}
+
+.casino-list-enter, .casino-list-leave-to {
+  opacity: 0;
+}
+
+@-webkit-keyframes casino-rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes casino-rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}

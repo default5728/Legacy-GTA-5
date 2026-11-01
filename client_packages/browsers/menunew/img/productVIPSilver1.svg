@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <rect width="128" height="128" rx="24" fill="#141414"/>
+  <circle cx="64" cy="58" r="34" fill="rgba(203,213,225,0.12)" stroke="#cbd5e1" stroke-width="4"/>
+  <path d="M64 34 69 52 88 52 73 62 78 80 64 70 50 80 55 62 40 52 59 52Z" fill="#e2e8f0"/>
+  <text x="64" y="108" text-anchor="middle" fill="#94a3b8" font-size="16" font-family="Segoe UI,Arial,sans-serif" font-weight="700">VIP</text>
+</svg>

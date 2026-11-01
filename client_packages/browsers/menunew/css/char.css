@@ -1,0 +1,56 @@
+.char-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+button.char {
+  margin-top: 32px;
+  margin-right: 28px;
+  width: 285px;
+  height: 227px;
+  color: #fff;
+  border: 1px solid #3D3F53;
+  display: block;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  background: none;
+  outline: none;
+}
+button.char img.char1 {
+  width: 285px;
+  height: 150px;
+}
+
+button.char img.char2 {
+  display: none;
+}
+
+button.char hr {
+  margin: 0;
+  width: 100%;
+  border-color: #3D3F53;
+  margin-bottom: 20px;
+}
+
+button.char:hover, button.char:hover hr {
+  border-color: #006EFF;
+}
+
+button.char:hover img.char1 {
+  display: none;
+}
+
+button.char:hover img.char2 {
+  width: 285px;
+  height: 150px;
+  display: block;
+}
+
+.product-info {
+  margin-left: 32px;
+}
+
+#shop p.product-name {
+  color: #fff;
+}

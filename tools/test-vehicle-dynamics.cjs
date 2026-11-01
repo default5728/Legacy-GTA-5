@@ -1,0 +1,28 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const rules=require('../client_packages/shared/vehicle-dynamics');
+const rageShared={exports:{}};vm.runInNewContext(fs.readFileSync('client_packages/shared/vehicle-dynamics.js','utf8'),rageShared);assert.equal(rageShared.exports.scaleSpeed(380),540,'RAGE exports work without Node module');
+assert.equal(rules.scaleSpeed(380),540);assert.equal(rules.scaleSpeed(190),270);assert.equal(rules.scaleSpeed(447),540);
+for(const invalid of [{...rules.defaults,grip:999},{...rules.defaults,height:-9},{...rules.defaults,steering:NaN},{...rules.defaults,extra:1},null])assert.throws(()=>rules.normalize(invalid));
+const base={fInitialDriveMaxFlatVel:100,fInitialDragCoeff:8,fSteeringLock:.5,fTractionCurveMax:2.5,fTractionCurveMin:2,fSuspensionRaise:.02,fAntiRollBarForce:1};
+const events={},handlers={},handling={...base};let tick,cap=0,writes=0;
+const vehicle={type:'vehicle',handle:10,getClass:()=>7,getVariable:()=>({...rules.defaults,height:-5,roll:50}),getHandling:k=>handling[k],setHandling:(k,v)=>{handling[k]=v;writes++;}};
+const sandbox={global:{},module:{exports:{}},require:name=>{assert.equal(name,'./shared/vehicle-dynamics','RAGE client requires resolve from client_packages root');return rageShared.exports;},Map,Number,JSON,Object,console,setInterval:f=>tick=f,mp:{vehicles:{exists:()=>true,forEachInStreamRange:f=>f(vehicle)},events:{add:(n,f)=>events[n]=f,addDataHandler:(n,f)=>handlers[n]=f},game:{vehicle:{setMaxSpeed:(handle,speed)=>{assert.equal(handle,10);cap=speed;}}}}};
+vm.runInNewContext(fs.readFileSync('client_packages/legacy/vehicles/dynamics.js','utf8'),sandbox);
+tick();assert.equal(cap,150);assert.equal(handling.fInitialDriveMaxFlatVel,100*540/380);assert(Math.abs(handling.fSuspensionRaise+.03)<1e-10);assert.equal(handling.fAntiRollBarForce,2);
+const count=writes;tick();assert.equal(writes,count);
+handlers.legacyVehicleTuning(vehicle);tick();assert.equal(handling.fInitialDriveMaxFlatVel,100*540/380,'settings must not compound speed');
+vehicle.getClass=()=>16;vehicle.handle=20;tick();assert.equal(cap,150,'aircraft are not modified');
+
+const serverEvents={},vars={owner:2,carModel:'adder'};let saved=null,clock=1000;
+const car={id:7,velocity:{x:0,y:0,z:0},getVariable:k=>vars[k],setVariable:(k,v)=>vars[k]=v};
+const player={static:2,seat:0,vehicle:car,health:100,getVariable:()=>false,call:()=>{}};const notices=[];
+const server={module:{exports:{}},__dirname:process.cwd()+'/packages/server/legacy',Date:{now:()=>clock},console,mp:{events:{add:(n,f)=>serverEvents[n]=f},vehicles:{exists:()=>true}},require:n=>n==='fs'?{existsSync:()=>false,mkdirSync(){},writeFileSync:(p,s)=>saved=s,renameSync(){}}:n==='path'?require('path'):n==='./access'?{assertPlayer:()=>({accountId:5,characterId:42})}:rules};
+vm.runInNewContext(fs.readFileSync('packages/server/legacy/vehicle-tuning.js','utf8'),server);server.module.exports((p,s)=>notices.push(s));
+const save=raw=>{clock+=500;serverEvents['legacy:vehicle:tuning:save'](player,7,JSON.stringify(raw));};
+player.seat=1;save(rules.defaults);assert.equal(saved,null);
+player.seat=0;car.velocity.x=5;save(rules.defaults);assert.equal(saved,null);
+car.velocity.x=0;vars.owner=3;save(rules.defaults);assert.equal(saved,null);
+vars.owner=2;save({...rules.defaults,height:-5});assert.equal(JSON.parse(saved)['2:adder'].height,-5);assert.equal(vars.legacyVehicleTuning.height,-5);
+const before=saved;save({...rules.defaults,grip:5000});assert.equal(saved,before);
+console.log('PASS: proportional road speed, 540 km/h cap, non-cumulative handling, aircraft exclusion, driver/stop/owner checks and tuning persistence.');

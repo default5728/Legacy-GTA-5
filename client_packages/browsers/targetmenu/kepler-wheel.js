@@ -1,0 +1,20 @@
+(()=>{'use strict';
+ const ns='http://www.w3.org/2000/svg';let revision=0;
+ const paths={vtuning:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',vplates:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M16 6v12M5 10h2M9 10h2M5 14h6M19 10v4"/>',money:'<rect x="2" y="5" width="20" height="14" rx="3"/><circle cx="12" cy="12" r="3"/>',dice:'<circle cx="12" cy="12" r="9"/><path d="M9 8h6M12 8v8M9 16h6"/>',trade:'<path d="M3 7h17l-4-4M21 17H4l4 4M20 7l-4 4M4 17l4-4"/>',handshake:'<path d="m3 12 4-5 5 2 5-2 4 5-6 7-3-2-3 2-6-7ZM9 10l3-1 3 3-2 2-3-2"/>',fracinv:'<circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3"/>',vlock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/>',vsit:'<path d="M8 3H5v12h12v6M8 3v8h8l4 10M5 15v6"/>',vtrunk:'<path d="M3 11h18v9H3zM5 11V6h14v5M9 15h6M5 6l2-3h10l2 3"/>',vsell:'<path d="m4 10 2-6h12l2 6M3 10h18v9H3zM6 19v2M18 19v2M7 14h1M16 14h1"/>'};
+ function geometry(count){const half=Math.PI/count-.035,outer=.495,inner=.225,corner=.022,oa=corner/outer,ia=corner/inner;const point=(r,a)=>[.5+Math.sin(a)*r,.5-Math.cos(a)*r].map(v=>v.toFixed(6)).join(' ');return `M ${point(outer,-half+oa)} A ${outer} ${outer} 0 0 1 ${point(outer,half-oa)} Q ${point(outer,half)} ${point(outer-corner,half)} L ${point(inner+corner,half)} Q ${point(inner,half)} ${point(inner,half-ia)} A ${inner} ${inner} 0 0 0 ${point(inner,-half+ia)} Q ${point(inner,-half)} ${point(inner+corner,-half)} L ${point(outer-corner,-half)} Q ${point(outer,-half)} ${point(outer,-half+oa)} Z`;}
+ function destroy(){const host=document.getElementById('playerTargetMenu');if(host)host.replaceChildren();}
+ function build(items,callbacks){
+  destroy();const host=document.getElementById('playerTargetMenu');if(!host||!items||!items.length)return;
+  const shape=geometry(items.length),seq=++revision;host.className='kepler-wheel';
+  items.forEach((item,i)=>{
+   const angle=i*360/items.length,r=angle*Math.PI/180,b=document.createElement('button'),clip='kepler-sector-'+seq+'-'+i;b.type='button';b.className='kepler-petal';b.setAttribute('aria-label',item.label);b.style.clipPath='url(#'+clip+')';b.style.webkitClipPath='url(#'+clip+')';
+   const surface=document.createElementNS(ns,'svg');surface.setAttribute('viewBox','0 0 1 1');surface.classList.add('kepler-sector-surface');
+   surface.innerHTML='<defs><clipPath id="'+clip+'" clipPathUnits="objectBoundingBox"><path d="'+shape+'" transform="rotate('+angle+' .5 .5)"/></clipPath></defs><path d="'+shape+'" transform="rotate('+angle+' .5 .5)" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1" vector-effect="non-scaling-stroke"/>';
+   const content=document.createElement('span');content.className='kepler-petal-content';content.style.left=(50+Math.sin(r)*35.5)+'%';content.style.top=(50-Math.cos(r)*35.5)+'%';const glyph=document.createElementNS(ns,'svg');glyph.setAttribute('viewBox','0 0 24 24');glyph.setAttribute('fill','none');glyph.setAttribute('stroke','currentColor');glyph.setAttribute('stroke-width','1.5');glyph.setAttribute('stroke-linecap','round');glyph.setAttribute('stroke-linejoin','round');glyph.innerHTML=paths[item.id]||paths.trade;const title=document.createElement('span');title.textContent=item.label;content.append(glyph,title);b.append(surface,content);
+   b.addEventListener('mouseenter',()=>callbacks.onHover&&callbacks.onHover(item.label,item.sub||''));b.addEventListener('mouseleave',()=>callbacks.onHover&&callbacks.onHover(null,null));b.addEventListener('click',()=>callbacks.onPick&&callbacks.onPick(item));host.append(b);
+  });
+  const center=document.createElement('button');center.type='button';center.className='kepler-center';center.textContent='G';center.setAttribute('aria-label','Закрыть взаимодействие');center.addEventListener('click',()=>callbacks.onClose&&callbacks.onClose());host.append(center);
+ }
+ window.tgtHubWheel={build,destroy};
+ window.keplerVehicleState=inside=>document.body.classList.toggle('kepler-in-vehicle',!!inside);
+})();

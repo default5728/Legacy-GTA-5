@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8">
+    <style>
+        html, body, body * {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+        input, textarea, [contenteditable="true"], input *, textarea * {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+        ::selection { background: transparent !important; color: inherit !important; }
+    </style>
+    <script>
+        function isTextInputEl(el) {
+            if (!el || !el.tagName) return false;
+            var tag = el.tagName.toLowerCase();
+            if (tag === 'textarea') return true;
+            if (tag === 'input') {
+                var type = String(el.type || 'text').toLowerCase();
+                return type !== 'checkbox' && type !== 'radio' && type !== 'button' &&
+                    type !== 'submit' && type !== 'reset' && type !== 'file' && type !== 'range';
+            }
+            return !!el.isContentEditable;
+        }
+        document.addEventListener('selectstart', function (e) {
+            if (!isTextInputEl(e.target)) e.preventDefault();
+        }, true);
+        document.addEventListener('dragstart', function (e) { e.preventDefault(); }, true);
+        document.addEventListener('keydown', function (e) {
+            if (!(e.ctrlKey || e.metaKey) || (e.key !== 'a' && e.key !== 'A' && e.keyCode !== 65)) return;
+            if (isTextInputEl(e.target) || isTextInputEl(document.activeElement)) return;
+            e.preventDefault();
+            if (window.getSelection && window.getSelection().removeAllRanges) window.getSelection().removeAllRanges();
+        }, true);
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Tab' && e.keyCode !== 9) return;
+            if (isTextInputEl(e.target) || isTextInputEl(document.activeElement)) return;
+            e.preventDefault();
+        }, true);
+        function disableNavTabFocus() {
+            document.querySelectorAll('#main-nav a, #main-nav li, #main-nav button').forEach(function (el) {
+                el.setAttribute('tabindex', '-1');
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', disableNavTabFocus);
+        } else {
+            disableNavTabFocus();
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Onest:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Unbounded:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/onest@5.0.5/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/onest@5.0.5/600.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/manrope@5.0.18/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/manrope@5.0.18/600.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/700.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded@5.0.4/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded@5.0.4/600.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/golos-text@5.0.4/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/golos-text@5.0.4/500.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/golos-text@5.0.4/700.css">
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/media.css">
+    <link rel="stylesheet" href="css/char.css">
+    <link rel="stylesheet" href="css/fraction.css">
+    <link rel="stylesheet" href="css/account.css">
+    <link rel="stylesheet" href="css/duels.css">
+    <link rel="stylesheet" href="css/lobby.css">
+    <link rel="stylesheet" href="css/lobby-window.css">
+    <link rel="stylesheet" href="css/hud.css">
+    <link rel="stylesheet" href="css/shops.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/computer.css">
+    <link rel="stylesheet" href="css/tattoo.css">
+    <link rel="stylesheet" href="css/rp-menu.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/auto-shop.css">
+    <link rel="stylesheet" href="css/autotuning.css">
+    <link rel="stylesheet" href="css/boxes.css">
+    <link rel="stylesheet" href="css/gp_shop.css">
+    <link rel="stylesheet" href="css/walkie-talkie.css">
+    <link rel="stylesheet" href="css/aim.css">
+    <link rel="stylesheet" href="css/rangeslider.css">
+    <link rel="stylesheet" href="css/roulette-games.css">
+    <link rel="stylesheet" href="css/lottery.css">
+    <link rel="stylesheet" href="css/family.css">
+    <link rel="stylesheet" href="css/npc.css">
+    <link rel="stylesheet" href="css/war-menu.css">
+    <link rel="stylesheet" href="css/rp-animation.css">
+    <link rel="stylesheet" href="css/capture-result.css">
+    <link rel="stylesheet" href="css/gangwarSpawn.css">
+    <link rel="stylesheet" href="css/gangwarHouses.css">
+    <link rel="stylesheet" href="css/estate-agency.css">
+    <link rel="stylesheet" href="css/bp.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="index.js?v=12" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="lib/css/metroui.css" />
+    <link rel="stylesheet" href="lib/css/noty.css" />
+    <link rel="stylesheet" href="css/chiefslider.css">
+    <script src="js/slick.min.js"></script>
+    <script src="js/gauge.js"></script>
+    <script src="js/colorpicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/slick.css">
+    <link rel="stylesheet" type="text/css" href="css/slick-theme.css">
+    <link rel="stylesheet" href="css/flow-menu-theme.css">
+    <link rel="stylesheet" href="css/flow-menu-frost.css">
+    <link rel="stylesheet" href="css/flow-menu-overrides.css?v=3">
+    <link rel="stylesheet" href="css/gilroy.css">
+    <link rel="stylesheet" href="css/flow-menu-5rp.css?v=5">
+    <title></title>
+
+    <style>
+        /* CEF: прозрачность + центр меню (перебивает theme/frost конфликты) */
+        html, body {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: rgba(0, 0, 0, 0) !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+        }
+        #main-tab-content {
+            background: rgba(0, 0, 0, 0) !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+        }
+        #main-tab-content.tab-content > #main-window.tab-pane.fade.in.active {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0) !important;
+            pointer-events: none !important;
+        }
+        #main-window .body {
+            position: relative !important;
+            width: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+            background: rgba(0, 0, 0, 0) !important;
+            pointer-events: auto !important;
+        }
+        #main-window .main-window_bg,
+        #main-window .back-main-img,
+        #main-window .aim-window_bg {
+            display: none !important;
+        }
+        /* ====== NAV HOVER: убираем чёрный квадрат под вкладкой ====== */
+        /* Финальный сброс — стоит после всех CSS-файлов */
+        #main-window .main-nav,
+        #main-window .main-nav ul,
+        #main-window .main-nav ul li,
+        #main-window .main-nav ul li:hover,
+        #main-window .main-nav ul li:focus,
+        #main-window .main-nav ul li:focus-within,
+        #main-window .main-nav ul li:active {
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            outline: none !important;
+        }
+        #main-window .main-nav { background: #121316 !important; }
+        /* НЕ ставим overflow:hidden и translateZ на .main-nav — в CEF создаёт
+           отдельный композит-слой, который при hover мигает чёрным квадратом.
+           Скругление шапки даёт clip от .flow-menu-shell (overflow:hidden). */
+        /* Вкладки шапки — закругление сверху, лёгкий фон при hover/active */
+        #main-window .main-nav ul.flow-nav-list > li > a,
+        #main-window .main-nav ul.flow-nav-list > li > a:link,
+        #main-window .main-nav ul.flow-nav-list > li > a:visited {
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        #main-window .main-nav ul.flow-nav-list > li > a:hover,
+        #main-window .main-nav ul.flow-nav-list > li > a:focus,
+        #main-window .main-nav ul.flow-nav-list > li > a:focus-visible,
+        #main-window .main-nav ul.flow-nav-list > li:hover > a,
+        #main-window .main-nav ul.flow-nav-list > li:focus-within > a {
+            background: rgba(255, 255, 255, 0.06) !important;
+            background-color: rgba(255, 255, 255, 0.06) !important;
+            border-radius: 0 !important;
+        }
+        #main-window .main-nav ul.flow-nav-list > li.active > a,
+        #main-window .main-nav ul.flow-nav-list > li.active > a:hover,
+        #main-window .main-nav ul.flow-nav-list > li.active > a:focus {
+            background: rgba(255, 255, 255, 0.10) !important;
+            background-color: rgba(255, 255, 255, 0.10) !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        #main-window .main-nav ul.flow-nav-list > li,
+        #main-window .main-nav ul.flow-nav-list > li:hover,
+        #main-window .main-nav ul.flow-nav-list > li.active {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+        #main-window .main-nav a:focus,
+        #main-window .main-nav a:focus-visible,
+        #main-window .main-nav li:focus,
+        #main-window .main-nav li:focus-visible,
+        #main-window .main-nav button:focus,
+        #main-window .main-nav button:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        /* ====== NAV-TABS: без скруглений ====== */
+        #main-window .nav-tabs > li > a,
+        #main-window .nav-tabs > li > a:hover,
+        #main-window .nav-tabs > li > a:focus,
+        #main-window .nav-tabs > li > a:active,
+        #main-window .nav-tabs > li.active > a,
+        #main-window .nav-tabs > li.active > a:hover,
+        #main-window .nav-tabs > li.active > a:focus {
+            border-radius: 0 !important;
+        }
+        /* ====== PALETTE SWATCHES: цвет каждого квадрата ====== */
+        /* Специфичность 2 ID = 200 > любых конфликтов с account-content button */
+        #main-window #settings-account-crosshair-pane .crosshair-v2__preset-swatch {
+            background-color: var(--bm-sw-color, #888888) !important;
+            background-image: none !important;
+            border-radius: 0 !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        /* ====== DP в шапке (время убрано) ====== */
+        .bm-topbar-dp-slot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: auto;
+            padding-left: 18px;
+            padding-right: 6px;
+            border-left: 1px solid rgba(255,255,255,0.07);
+            align-self: stretch;
+        }
+        .bm-topbar-dp-line {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 5px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+        .bm-topbar-dp-line .dp-balance { color: #f5f5f5; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
+        .bm-topbar-dp-line .bm-dp-suffix {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #8a8f98;
+            text-transform: uppercase;
+            padding-bottom: 2px;
+        }
+        .crosshair-preview-target-chip {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            z-index: 2;
+            padding: 6px 10px;
+            border-radius: 0;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(15,15,19,0.66);
+            color: #f5f7fb;
+            font-size: 12px;
+            line-height: 1;
+            cursor: default;
+            user-select: none;
+            backdrop-filter: blur(8px);
+        }
+        .crosshair-preview-target-chip.active {
+            border-color: #4a5058;
+            box-shadow: none;
+            color: #fff;
+            background: rgba(38, 41, 46, 0.88);
+        }
+        .chat-fill-setting {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 52px auto;
+            gap: 10px;
+            align-items: center;
+        }
+        .chat-fill-setting input[type="range"] {
+            width: 100%;
+        }
+        .chat-settings-preview {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 0 !important;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(11,13,18,0.7);
+        }
+        .chat-settings-preview__head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: #f4f6fb;
+        }
+        .chat-settings-preview__head small {
+            color: rgba(232,232,232,0.58);
+            font-size: 12px;
+        }
+        .chat-settings-preview__list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-settings-preview .message,
+        #LobbyChatMsgDiv .message {
+            padding: 8px 10px;
+            border-radius: 0 !important;
+            background: rgba(12,14,19,var(--chat-fill-opacity,0.75));
+            transition: background .15s ease;
+        }
+    
+        #ChatSettingsPreviewList .message,
+        #LobbyChatMsgDiv .message,
+        .message,
+        .chat-message,
+        .chat-line,
+        .text-chat-wrap {
+            background: rgba(12,14,19,var(--chat-fill-opacity,0.75));
+        }
+        #ChatSettingsPreviewList .message:hover,
+        #LobbyChatMsgDiv .message:hover,
+        .chat-message:hover,
+        .chat-line:hover {
+            background: rgba(18,22,29,calc(var(--chat-fill-opacity, 0.75) + 0.06));
+        }
+        /* FINAL: без чёрного квадрата, меню по центру экрана */
+        #main-tab-content,
+        #main-tab-content.tab-content {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: rgba(0, 0, 0, 0) !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+            box-shadow: none !important;
+            overflow: visible !important;
+        }
+        #main-tab-content > #main-window,
+        #main-tab-content > #main-window.tab-pane,
+        #main-tab-content.tab-content > #main-window.tab-pane.fade.in.active {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: rgba(0, 0, 0, 0) !important;
+            background-color: rgba(0, 0, 0, 0) !important;
+            box-shadow: none !important;
+            pointer-events: none !important;
+            overflow: visible !important;
+        }
+        #main-window .body {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            width: auto !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-width: none !important;
+            overflow: visible !important;
+            background: rgba(0, 0, 0, 0) !important;
+            pointer-events: auto !important;
+            box-shadow: none !important;
+        }
+        #main-window .window.flow-menu-shell {
+            flex-shrink: 0 !important;
+            margin: 0 auto !important;
+            overflow: hidden !important;
+        }
+        #main-window .main-nav {
+            overflow: hidden !important;
+            -webkit-mask-image: none !important;
+            mask-image: none !important;
+        }
+        #main-window .flow-nav-brand {
+            border-radius: 0 !important;
+        }
+        #main-window .content {
+            border-radius: 0 !important;
+        }
+        #main-window .main-window_bg,
+        #main-window .aim-window_bg,
+        #main-window .back-main-img {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+            pointer-events: none !important;
+        }
+        /* F3 / меню: нулевые скругления — финальный override поверх theme/frost */
+        #main-window,
+        #main-window *,
+        #main-window *::before,
+        #main-window *::after,
+        #mini-games-menu,
+        #mini-games-menu *,
+        #mini-games-menu *::before,
+        #mini-games-menu *::after,
+        #main-window #newprefix,
+        #main-window #NewLoginInputDonate,
+        #main-window button.buy,
+        #main-window .buy,
+        #main-window .product-info input,
+        #main-window .product-info button {
+            border-radius: 0 !important;
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+        /* DP chip: исключение из нулевых скруглений + без обрезки снизу */
+        #main-window #bm-topbar-dp-slot {
+            align-self: center !important;
+            height: 34px !important;
+            padding: 0 12px !important;
+            border-radius: 8px !important;
+            border-top-left-radius: 8px !important;
+            border-top-right-radius: 8px !important;
+            border-bottom-left-radius: 8px !important;
+            border-bottom-right-radius: 8px !important;
+            border-left: 1px solid rgba(106, 161, 255, 0.32) !important;
+        }
+        #main-window #bm-topbar-dp-slot .bm-topbar-dp-line {
+            align-items: center !important;
+        }
+        #main-window #bm-topbar-dp-slot .bm-dp-suffix {
+            padding-bottom: 0 !important;
+        }
+    </style>
+    <script>
+        /* Красное заполнение ползунков — через класс .range-filled и --fill (см. flow-menu-theme.css) */
+        function updateRangeFill(el) {
+            if (!el || el.type !== 'range') return;
+            var min = parseFloat(el.min) || 0;
+            var max = parseFloat(el.max) || 100;
+            var val = parseFloat(el.value) || 0;
+            var pct = Math.max(0, Math.min(100, (val - min) / Math.max(0.0001, (max - min)) * 100));
+            el.classList.add('range-filled');
+            el.style.setProperty('--fill', pct.toFixed(2) + '%');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="range"]').forEach(function(el) {
+                updateRangeFill(el);
+                el.addEventListener('input', function() { updateRangeFill(el); });
+            });
+        });
+
+        /* Пресеты прицела */
+        var CH_PRESETS = {
+            dot:     { Height:0,  Width:0,  CenterDistance:0,  CenterPointSize:6, CrosshairRadius:50, CenterPointVisible:true,  CenterPointRadius:50, ChossHairOpacity:1    },
+            classic: { Height:12, Width:2,  CenterDistance:4,  CenterPointSize:3, CrosshairRadius:10, CenterPointVisible:true,  CenterPointRadius:50, ChossHairOpacity:1    },
+            thin:    { Height:18, Width:1,  CenterDistance:6,  CenterPointSize:1, CrosshairRadius:0,  CenterPointVisible:false, CenterPointRadius:0,  ChossHairOpacity:0.85 },
+            sniper:  { Height:22, Width:1,  CenterDistance:12, CenterPointSize:2, CrosshairRadius:0,  CenterPointVisible:true,  CenterPointRadius:0,  ChossHairOpacity:0.9  }
+        };
+        var CH_PRESET_SLIDERS = {
+            Height:'ch_r_height', Width:'ch_r_width', CenterDistance:'ch_r_centerdist',
+            CenterPointSize:'ch_r_cps', CrosshairRadius:'ch_r_radius',
+            CenterPointRadius:'ch_r_cpr', ChossHairOpacity:'ch_r_opacity'
+        };
+        var CH_PRESET_OUTPUTS = {
+            Height:'ch_out_height', Width:'ch_out_width', CenterDistance:'ch_out_cd',
+            CenterPointSize:'ch_out_cps', CrosshairRadius:'ch_out_cr',
+            CenterPointRadius:'ch_out_cpr', ChossHairOpacity:'ch_out_op'
+        };
+        function applyCrosshairPreset(name) {
+            var p = CH_PRESETS[name]; if (!p) return;
+            Object.keys(p).forEach(function(key) {
+                if (key === 'CenterPointVisible') {
+                    if (typeof changeCrosshair === 'function') changeCrosshair('CenterPointVisible', p[key]);
+                    var cb = document.getElementById('aim_checkbox_settings');
+                    if (cb) cb.checked = p[key];
+                    return;
+                }
+                var el = document.getElementById(CH_PRESET_SLIDERS[key]);
+                var out = document.getElementById(CH_PRESET_OUTPUTS[key]);
+                if (el) {
+                    el.value = p[key];
+                    if (out) out.textContent = p[key];
+                    if (typeof changeCrosshair === 'function') changeCrosshair(key, p[key]);
+                    updateRangeFill(el);
+                    if (typeof updateCrosshairRangeFill === 'function') updateCrosshairRangeFill(el);
+                }
+            });
+        }
+    </script>
+    <link rel="stylesheet" href="css/legacy-store.css?v=1">
+</head>
+
+<body>
+    <div class="pop-list" id="NotifyBlockTop" style="display: block;">
+    </div>
+    <div class="pop-list pop-list--bottom" id="NotifyBlockBottom" style="display: block;">
+    </div>
+    <div id="main-tab-content" class="tab-content">
+        <div id="main-window" class="tab-pane fade in active">
+            <div class="body">
+                <div class="window flow-menu-shell">
+                    <img src="package://browsers/anims/img/back-main.png" class="back-main-img" alt="" aria-hidden="true">
+                    <div class="main-nav" id="main-nav">
+                        <header class="flow-nav-brand">
+                            <span class="flow-nav-brand__title flow-nav-brand__title--menu">LEGACY ROLEPLAY</span>
+                        </header>
+                        <ul class="nav flex-column flow-nav-list">
+
+                            <li class="active"><a data-toggle="tab" href="#shop" onclick="showBG()">Магазин</a></li>
+                            <li><a data-toggle="tab" href="#boxes" onclick="showBG()">Кейсы</a></li>
+                        </ul>
+                        <div id="bm-topbar-dp-slot" class="bm-topbar-dp-slot" aria-label="Баланс DP">
+                            <div class="bm-topbar-dp-line"><b class="dp-balance">0</b><span class="bm-dp-suffix">DP</span></div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="tab-content">
+                            <div id="battle-pass" class="tab-pane fade">
+                                <div class="battle-pass">
+                                    <div class="bp-header">
+                                        <div class="bp-header__left">
+                                            <div class="bp-header__heading">
+                                                <p>Боевой пропуск</p>
+                                                <p>Рвент закончится 10.01.22</p>
+                                            </div>
+                                            <a class="bp-header__btn">Купить пропуск</a>
+                                            <p class="bp-header__price">24,000<b>DP</b></p>
+                                        </div>
+                                        <div class="bp-header__right">
+                                            <p>Баланс <b>5,000</b>DP</p>
+                                            <a class="bp-header__refresh-btn"></a>
+                                            <a class="bp-header__replenish-btn">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="bp-prize">
+                                        <div class="bp-prize__container">
+                                            <div class="bp-prize__progress">
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                    </div>
+                                                    <p>Уровень 1</p>
+                                                </div>
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize active">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                                <div class="bp-prize__prize">
+                                                    <img src="package://browsers/anims/img/bp/gift_black.png">
+                                                    <img src="package://browsers/anims/img/bp/gift.png">
+                                                    <div class="bp-prize__box">
+                                                        <div class="bp-prize__line"></div>
+                                                    </div>
+                                                    <p>Уровень 2</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="bp-prize__slide-btn bp-prize__slide-btn--prev"></a>
+                                        <a class="bp-prize__slide-btn bp-prize__slide-btn--next"></a>
+                                    </div>
+                                    <p class="bp-exp">0 / 0xp</p>
+                                    <div class="bp-content">
+                                        <div class="bp-content__lvl">
+                                            <p class="bp-content__heading">Покупка уровней</p>
+                                            <div class="bp-content__lvl-btn">
+                                                <a>Купить 5 уровней</a>
+                                                <p>0<b>DP</b></p>
+                                            </div>
+                                            <div class="bp-content__lvl-btn">
+                                                <a>Купить 10 уровней</a>
+                                                <p>0<b>DP</b></p>
+                                            </div>
+                                            <div class="bp-content__lvl-btn">
+                                                <a>Купить 20 уровней</a>
+                                                <p>0<b>DP</b></p>
+                                            </div>
+                                            <div class="bp-content__lvl-btn">
+                                                <a>Купить 50 уровней</a>
+                                                <p>0<b>DP</b></p>
+                                            </div>
+                                        </div>
+                                        <div class="bp-content__right">
+                                            <div class="bp-content__right-heading">
+                                                <p class="bp-content__heading">Задания</p>
+                                                <b class="bp-content__timer">До получения 0xp осталось 0ч 0мин</b>
+                                            </div>
+                                            <div class="bp-content__quest-list">
+                                                <div class="bp-content__quest">
+                                                    <p class="bp-content__quest-text">Задание 1</p>
+                                                    <p class="bp-content__quest-progress active">Выполнено 0 / 10</p>
+                                                </div>
+                                                <div class="bp-content__quest">
+                                                    <p class="bp-content__quest-text">Задание 2</p>
+                                                    <p class="bp-content__quest-progress">Выполнено 0 / 10</p>
+                                                </div>
+                                                <div class="bp-content__quest">
+                                                    <p class="bp-content__quest-text">Задание 3</p>
+                                                    <p class="bp-content__quest-progress">Выполнено 0 / 10</p>
+                                                </div>
+                                                <div class="bp-content__quest">
+                                                    <p class="bp-content__quest-text">Задание 3</p>
+                                                    <p class="bp-content__quest-progress active">Выполнено 0 / 10</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="shop" class="tab-pane fade in active">
+                                <div class="top-block">
+                                    <h3>Магазин</h3>
+                                    <div class="balance">
+                                        <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                        <button type="button" name="button" class="update"
+                                            onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                                onclick="mp.trigger('updatedpbalance')"></button>
+                                        <button type="button" name="button" class="replenish"
+                                            onclick="mp.trigger('popolnenie')">
+                                            <p><b>+</b></p>
+                                        </button>
+                                    </div>
+                                    <div class="search">
+                                        <img src="package://browsers/anims/img/search.svg">
+                                        <input type="text" id="search" placeholder="Поиск">
+                                    </div>
+                                </div>
+                                <div class="shop-nav">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a data-toggle="tab" href="#privilege">Привилегии</a></li>
+                                        <div class="shop-line"></div>
+                                        <li><a data-toggle="tab" href="#weapon">Оружие</a></li>
+                                        <div class="shop-line"></div>
+                                        <li><a data-toggle="tab" href="#gangwar">Ghetto Gangwar</a></li>
+                                        <div class="shop-line"></div>
+                                        <li><a data-toggle="tab" href="#shop-armor">Бронежилет</a></li>
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                    <div id="privilege" class="tab-pane fade in active">
+                                        <div class="shop-list" id="PrivilegeShopList">
+                                        </div>
+                                    </div>
+                                    <div id="gangwar" class="tab-pane fade">
+                                        <div class="shop-list" id="GangwarShopList">
+                                        </div>
+                                    </div>
+                                    <div id="shop-char" class="tab-pane fade">
+                                        <div class="shop-list">
+                                        </div>
+                                    </div>
+                                    <div id="shop-armor" class="tab-pane fade">
+                                        <p class="shop-armor-hint">Ваши скины из кейса Armor. Нажмите В«Рспользовать», чтобы надеть.</p>
+                                        <div class="shop-armor-grid" id="ShopArmorCosmeticList"></div>
+                                    </div>
+                                    <div id="weapon" class="tab-pane fade">
+                                        <div class="shop-list" id="WeaponShopList">
+                                        </div>
+                                    </div>
+                                    <div id="shop-all" class="tab-pane fade">
+                                        <div class="shop-list">
+                                        </div>
+                                    </div>
+                                </div>
+                                <script type="text/javascript">
+                                    var _$_b79c = ["val", "hide", ".product", "show", ".product:contains(\"", "\")", "keyup", "#search", "ready"];
+                                    $(document)[_$_b79c[8]](function () {
+                                        $(_$_b79c[7])[_$_b79c[6]](function () {
+                                            var _0x140ED = $(this)[_$_b79c[0]]();
+                                            $(_$_b79c[2])[_$_b79c[1]]();
+                                            $(_$_b79c[4] + _0x140ED + _$_b79c[5])[_$_b79c[3]]()
+                                        })
+                                    })
+                                </script>
+                            </div>
+                            <div id="product-info" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content" id="VIPVehicleProductBlock">
+                                    <span class="bm-prod-ico" data-g="в™›">в™›</span>
+                                    <div class="product-info-left-content">
+                                        <h3>PLATINUM VIP</h3><br>
+                                        <p>VIP Статус действует 12 дней со дня покупки.</p>
+                                        <p>Преимущества:</p>
+                                        <p>-Респавн после смерти 5 секунд</p>
+                                        <p>-PayDay на 700$ больше</p>
+                                        <p>-x2 заработок на убийствах</p>
+                                        <p>-Возрождение на месте смерти</p>
+                                        <div class="product-info-price">
+                                            <h3>0</h3>
+                                            <p><b> DP</b> / мес.</p>
+                                        </div>
+                                        <button type="button" name="button" class="buy">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="product-info2" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content">
+                                    <span class="bm-prod-ico" data-g="%">%</span>
+                                    <div class="product-info-left-content">
+                                        <h3>Личный промокод</h3><br>
+                                        <p>Описание:</p>
+                                        <p>-После покупки вы получаете личный промокод</p>
+                                        <p>-За каждую активацию вашего промокода: +100 DP и +50 000$</p>
+                                        <p>-Активировавший промокод получает: +100 DP и +100 000$</p>
+                                        <input type="text" id="donateOwnPromocode" placeholder="Придумайте промокод"
+                                            maxlength="15" oninput="InputChangesCheck('Promocode')">
+                                        <div class="product-info-price">
+                                            <h3>50</h3>
+                                            <p><b> DP</b></p>
+                                        </div>
+                                        <button type="button" name="button" onclick="DonateBuyPromoCode()"
+                                            class="buy">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="product-info3" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content">
+                                    <img src="package://browsers/menunew/img/productMoney1.png" alt="Ргровая валюта">
+                                    <div class="product-info-left-content">
+                                        <h3>Ргровая валюта</h3><br>
+                                        <p>Вы можете обменять Donate Points на игровую валюту для GHETTO GANGWAR
+                                            режима.</p>
+                                        <p>Описание:</p>
+                                        <p>-Курс: 1 DP = 1000$</p>
+                                        <div class="summa-DP">
+                                            <input type="text" placeholder="Введите сумму" id="DPtoMoneyInput"
+                                                oninput="InputChangesCheck('DPChange')">
+                                            <p>DP</p>
+                                        </div>
+                                        <div class="product-info-price">
+                                            <h3 id="DPtoMoneyResult">Сумма на выходе: 0$</h3>
+                                            <p><b></b></p>
+                                        </div>
+                                        <button type="button" name="button" class="buy"
+                                            onclick="changeDPtoGGMoney()">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="product-info4" class="product-info tab-pane fade">
+                                <h3>Подтверждение выбора</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#fraction" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться к
+                                    выбору</a>
+                                <div class="product-info-content" id="ComfirmNewFractionDiv">
+                                    <span class="bm-prod-ico" data-g="F">F</span>
+                                    <div class="product-info-left-content">
+                                        <h3>Marabunta Grande</h3><br>
+                                        <p>Подтверждение выбора фракции</p>
+                                        <p>После выбора этой фракции вы не сможете сменить фракцию в течении 4 дней.</p>
+                                        <button type="button" name="button" class="buy">Выбрать</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="product-info5" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content">
+                                    <img src="package://browsers/menunew/img/product_prefix1.png" alt="Личный префикс">
+                                    <div class="product-info-left-content">
+                                        <h3>Личный префикс</h3><br>
+                                        <p>Данная Привилегия приобретается навсегда.</p>
+                                        <p>Описание:</p>
+                                        <p>-После покупки вы получаете личный префикс в чате</p>
+                                        <input type="text" maxlength="14" oninput="InputChangesCheck('newprefix')"
+                                            id="newprefix" placeholder="Придумайте префикс">
+                                        <div class="product-info-price">
+                                            <h3>399</h3>
+                                            <p><b> DP</b></p>
+                                        </div>
+                                        <button type="button" name="button"
+                                            onclick="DonateBuyItem('Privilege','OwnPrefix',`${document.getElementById('newprefix').value}`)"
+                                            maxlength="15" class="buy">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="product-info6" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content">
+                                    <img src="package://browsers/menunew/img/productChangelogin1.png" alt="Смена логина">
+                                    <div class="product-info-left-content">
+                                        <h3>Смена логина</h3><br>
+                                        <p>Данная Привилегия приобретается навсегда.</p>
+                                        <input type="text" maxlength="15"
+                                            oninput="InputChangesCheck('NewLoginInputDonate')" id="NewLoginInputDonate"
+                                            placeholder="Введите логин">
+                                        <div class="product-info-price">
+                                            <h3>199</h3>
+                                            <p><b> DP</b></p>
+                                        </div>
+                                        <button type="button" name="button" onclick="PlayerChangeLogin('donate')" class="buy">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="product-info7" class="product-info tab-pane fade">
+                                <h3>Магазин</h3>
+                                <div class="balance">
+                                    <p>Баланс <b class="dp-balance">0</b> DP</p>
+                                    <button type="button" name="button" class="update"
+                                        onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                            onclick="mp.trigger('updatedpbalance')"></button>
+                                    <button type="button" name="button" class="replenish"
+                                        onclick="mp.trigger('popolnenie')">
+                                        <p><b>+</b></p>
+                                    </button>
+                                </div>
+                                <a data-toggle="tab" href="#shop" class="back-shop"><img src="package://browsers/anims/img/back.svg"
+                                        class="back-img-tab1"><img src="package://browsers/anims/img/back2.svg" class="back-img-tab2">Вернуться в
+                                    магазин</a>
+                                <div class="product-info-content">
+                                    <span class="bm-prod-ico" data-g="в„–">в„–</span>
+                                    <div class="product-info-left-content">
+                                        <h3>Смена номера машины</h3><br>
+                                        <p>Описание:</p>
+                                        <p>-После покупки номерной знак машины, в которой вы находить<br>сменится на
+                                            тот, который вы покупаете.</p>
+                                        <p>-При покупке вы должны находиться в той машине, номер которой хотите сменить.
+                                        </p>
+                                        <input type="text" maxlength="7" oninput="InputChangesCheck('PlateNumber')"
+                                            id="PlateNumberInput" placeholder="Введите номер">
+                                        <div class="product-info-price">
+                                            <h3>199</h3>
+                                            <p><b> DP</b></p>
+                                        </div>
+                                        <button type="button" name="button" onclick="PlayerChangePlateNumber()"
+                                            class="buy">Приобрести</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="char" class="tab-pane fade">
+                                <h3>Персонаж</h3>
+                                <div class="char-list">
+                                    <button type="button" name="button" class="char"
+                                        onclick="mp.trigger('saveclothes')">
+                                        <img src="package://browsers/anims/img/product_Perc.png" class="char1">
+                                        <img src="package://browsers/anims/img/product_Perc2.png" class="char2">
+                                        <hr>
+                                        Сохранить одежду
+                                    </button>
+                                    <button type="button" name="button" class="char"
+                                        onclick="mp.trigger('loaddefclothes')">
+                                        <img src="package://browsers/anims/img/product_Perc.png" class="char1">
+                                        <img src="package://browsers/anims/img/product_Perc2.png" class="char2">
+                                        <hr>
+                                        Надеть сохраненную одежду
+                                    </button>
+                                    <button type="button" name="button" class="char"
+                                        onclick="mp.trigger('openClothesSets')">
+                                        <img src="package://browsers/anims/img/product_Perc.png" class="char1">
+                                        <img src="package://browsers/anims/img/product_Perc2.png" class="char2">
+                                        <hr>
+                                        Готовые сеты
+                                    </button>
+                                    <button type="button" name="button" class="char"
+                                        onclick="mp.trigger('opencharacter')">
+                                        <img src="package://browsers/anims/img/product_Perc.png" class="char1">
+                                        <img src="package://browsers/anims/img/product_Perc2.png" class="char2">
+                                        <hr>
+                                        Сменить внешность
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="fraction" class="tab-pane fade">
+                                <h3>Фракции</h3>
+                                <div class="fraction-list">
+                                    <div class="fraction">
+                                        <img src="img/FracBallas.png">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>Ballas</p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn1" disabled="true"
+                                                onclick="ConfirmChangeFraction(1)" data-toggle="tab"
+                                                href="#product-info4">Текущая</button>
+                                        </div>
+                                    </div>
+                                    <div class="fraction">
+                                        <img src="package://browsers/menunew/img/lobbyteam2.png">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>The Families</p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn2"
+                                                onclick="ConfirmChangeFraction(2)" data-toggle="tab"
+                                                href="#product-info4">Вступить</button>
+                                        </div>
+                                    </div>
+                                    <div class="fraction">
+                                        <img src="package://browsers/menunew/img/bloodsgang.png">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>Bloods Street</p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn3"
+                                                onclick="ConfirmChangeFraction(3)" data-toggle="tab"
+                                                href="#product-info4">Вступить</button>
+                                        </div>
+                                    </div>
+                                    <div class="fraction">
+                                        <img src="img/FracLSVagos.png">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>LS Vagos</p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn4"
+                                                onclick="ConfirmChangeFraction(4)" data-toggle="tab"
+                                                href="#product-info4">Вступить</button>
+                                        </div>
+                                    </div>
+                                    <div class="fraction">
+                                        <img src="package://browsers/menunew/img/lobbyteam1.png">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>Marabunta</p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn5"
+                                                onclick="ConfirmChangeFraction(5)" data-toggle="tab"
+                                                href="#product-info4">Вступить</button>
+                                        </div>
+                                    </div>
+                                    <div class="fraction">
+                                        <img src="package://browsers/anims/img/capture/FIB.svg" alt="FIB">
+                                        <hr>
+                                        <div class="fraction-info">
+                                            <p>FIB <small>(VIP)</small></p>
+                                            <br>
+                                            <button type="button" name="button" id="FractionPickBtn6"
+                                                onclick="ConfirmChangeFraction(6)" data-toggle="tab"
+                                                href="#product-info4">Вступить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="duels" class="tab-pane fade">
+                                <div class="top-block">
+                                    <h3>Дуэли</h3>
+                                    <div class="search">
+                                        <img src="package://browsers/anims/img/search.svg">
+                                        <input type="text" id="search3" placeholder="Поиск">
+                                    </div>
+                                </div>
+                                <div class="duels-bar">
+                                    <div class="duels-bar-left">
+                                        <p>Пригласить игрока</p>
+                                        <input type="text" id="DuelTargetID" oninput="InputChangesCheck('DuelTargetID')"
+                                            placeholder="Введите ID">
+                                    </div>
+                                    <div class="duels-bar-right">
+                                        <p>Выбор оружия</p>
+                                        <div class="select">
+                                            <input class="select__input" type="hidden" name="">
+                                            <div class="select__head">Revolver</div>
+                                            <ul class="select__list" style="display: none;">
+                                                <li class="select__item"
+                                                    onclick="mp.trigger('duelChangeWeapon','Revolver')">Revolver</li>
+                                                <li class="select__item"
+                                                    onclick="mp.trigger('duelChangeWeapon','Navy Revolver')">Navy
+                                                    Revolver</li>
+                                                <li class="select__item"
+                                                    onclick="mp.trigger('duelChangeWeapon','Combat PDW')">Combat PDW
+                                                </li>
+                                                <li class="select__item"
+                                                    onclick="mp.trigger('duelChangeWeapon','Carbine Rifle')">Carbine
+                                                    Rifle</li>
+                                                <li class="select__item"
+                                                    onclick="mp.trigger('duelChangeWeapon','Heavy Shotgun')">Heavy
+                                                    Shotgun</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="duels-list">
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelZavod.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelZavod2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Завод</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(0)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPereylok.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPereylok2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Переулок</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(1)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelParkovka.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelParkovka2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Парковка</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(2)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelDamba.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelDamba2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Дамба</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(3)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelVP.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelVP2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: ВП</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(4)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelStreet.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelStreet2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Улица</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(5)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelEMS.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelEMS2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: EMS</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(6)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelFZ.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelFZ2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: FZ</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(7)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelCarWash.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelCarWash2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Car Wash</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(8)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelMegaMoll.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelMegaMoll2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Mega Mall</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(9)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGas.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGas2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: GAS</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(10)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelAnthill.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelAnthill2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Anthill</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(11)">Пригласить</button>
+                                    </div>
+
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelYgol.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelYgol2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Угол</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(12)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGhettoBurger.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGhettoBurger2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Гетто (Burger)</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(13)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGhettoFam.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelGhettoFam2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Гетто (Fam)</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(14)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPortInside.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPortInside2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Порт</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(15)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPortSecond.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelPortSecond2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Порт 2</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(16)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelLCN.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelLCN2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: ЛКН</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(17)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelSky.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelSky2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Самолёты</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(18)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelHouses.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelHouses2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Деревня</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(19)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelArmyKPP.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelArmyKPP2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: КПП</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(20)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelArmy.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelArmy2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Полигон</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(21)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelMost.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelMost2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Мост</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(22)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelDevis.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelDevis2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: Devis</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(23)">Пригласить</button>
+                                    </div>
+                                    <div class="duel">
+                                        <img src="package://browsers/anims/img/duelLocations/duelLSVagos.png" class="duelMainimg1">
+                                        <img src="package://browsers/anims/img/duelLocations/duelLSVagos2.png" class="duelMainimg2">
+                                        <hr>
+                                        <p>Локация: LS-Vagos</p>
+                                        <b>1х1</b><br>
+                                        <button type="button" name="button"
+                                            onclick="duelsInviteTarget(24)">Пригласить</button>
+                                    </div>
+                                </div>
+                                <script type="text/javascript">
+                                    var _$_4e65 = ["val", "hide", ".duel", "show", ".duel:contains(\"", "\")", "keyup", "#search3", "ready"];
+                                    $(document)[_$_4e65[8]](function () {
+                                        $(_$_4e65[7])[_$_4e65[6]](function () {
+                                            var _0x140ED = $(this)[_$_4e65[0]]();
+                                            $(_$_4e65[2])[_$_4e65[1]]();
+                                            $(_$_4e65[4] + _0x140ED + _$_4e65[5])[_$_4e65[3]]()
+                                        })
+                                    })
+                                </script>
+                            </div>
+                            <div id="other" class="tab-pane fade">
+                                <h3>Другое</h3>
+                                <div class="staff">
+                                    <div class="admins">
+                                        <p class="heading">Руководство проекта</p>
+                                        <p>devilhistory / cultura</p>
+                                        <p class="staff-social-text">discord.gg/moondm / Discord Проекта</p>
+                                    </div>
+                                    <div class="developers">
+                                        <p class="heading">Администрация проекта</p>
+                                        <p>.sage#7777 / Sage<b>- Главный Администратор</b></p>
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <div class="ellipse"></div>
+                                    <hr>
+                                    <div class="ellipse-blue"></div>
+                                    <hr>
+                                    <div class="ellipse2"></div>
+                                </div>
+                                <p class="text">Moon DM - крупнейший DM проект в RAGE MP с множеством игровых режимов.
+                                </p><br>
+                                <b>В© 2021 Moon DM Project</b>
+                            </div>
+                            <div id="gift" class="tab-pane fade">
+                                <h3>Подарки</h3>
+                                <p class="gift_info">Следите за предстоящими событиями и получайте призы.</p>
+                                <div class="gift_content">
+                                    <div class="gift_left">
+                                        <img id="GALAXYHBPrizeImg" src="package://browsers/anims/img/gift.png" alt="">
+                                        <div class="shadow_back"></div>
+                                    </div>
+                                    <div class="gift_right">
+                                        <a class="event_name">Лето на Moon DM!</a>
+                                        <div class="gift_day">
+                                            <p>День</p>
+                                            <a id="GALAXYHBPDayText">1</a>
+                                        </div>
+                                        <div class="gift_progress" id="GALAXYHBDaysDiv">
+                                            <div class="progress_block active"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                            <hr class="gift_line">
+                                            <div class="progress_block"></div>
+                                        </div>
+                                        <p class="gift_p">Что делать?</p>
+                                        <a class="gift_task" id="GALAXYHBPrizeText">Отыграйте 4 часа и получите</a>
+                                        <div class="gift_bottom">
+                                            <a class="gift_but"
+                                                onclick="imsg('\u041f\u0440\u0438\u0437 \u0431\u0443\u0434\u0435\u0442 \u0432\u044b\u0434\u0430\u043d \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438.')">Забрать</a>
+                                            <div id="HBPrizeTimeDiv" style="display: flex;">
+                                                <p>Осталось: </p><a id="HBLeftHours">1</a>
+                                                <p>час(ов)</p><a id="HBLeftMins">23</a>
+                                                <p>минут(ы)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="boxes" class="tab-pane fade bm-cases-root">
+                                <div class="bm-cases-head">
+                                    <h3>Кейсы</h3>
+                                    <p class="boxes_top_p">Выберите кейс — крутите рулетку и забирайте приз</p>
+                                </div>
+                                <div class="tab-content bm-cases-tab-content">
+                                    <div id="boxes_list" class="tab-pane fade in active bm-cases-hub">
+                                        <div class="boxes_list bm-cases-grid">
+                                            <a data-toggle="tab" href="#s_case">
+                                                <div class="img_block bm-case-art bm-case-art--silver"><img src="img/boxes/s_case_moon.png" alt="Silver Case"></div>
+                                                <p class="name">Silver Case (149 DP)</p>
+                                            </a>
+                                            <a data-toggle="tab" href="#g_case">
+                                                <div class="img_block bm-case-art bm-case-art--gold"><img src="img/boxes/g_case_moon.png" alt="Gold Case"></div>
+                                                <p class="name">Gold Case (249 DP)</p>
+                                            </a>
+                                            <a data-toggle="tab" href="#armor_case">
+                                                <div class="img_block bm-case-art bm-case-art--armor"><img src="img/boxes/armor_case_moon.png" alt="Armor Case"></div>
+                                                <p class="name">Armor Case (199 DP)</p>
+                                            </a>
+                                            <a data-toggle="tab" href="#gun_case">
+                                                <div class="img_block bm-case-art bm-case-art--gun"><img src="img/boxes/gun_case_moon.png" alt="Gun Case"></div>
+                                                <p class="name">Gun Case (249 DP)</p>
+                                            </a>
+                                            <!-- <h3 style="align-content: center; align-items: center;text-align: center;position: absolute;">Временно отключено</h3> -->
+                                        </div>
+                                    </div>
+                                    <div id="s_case" class="tab-pane fade">
+                                        <div
+                                            class="bm-hide-dp-row"
+                                            style="margin-top: 16px; margin-bottom: 16px; width: 230px; display: flex; align-items: center; justify-content: space-between;">
+                                            <p class="case-dp-balance-label">Баланс <b class="dp-balance">0</b> DP</p>
+                                            <button type="button" name="button" class="case-dp-refresh"
+                                                onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                                    alt=""></button>
+                                            <button type="button" name="button" class="case-dp-plus"
+                                                onclick="mp.trigger('popolnenie')">
+                                                <p style="margin: 0 0 0px;"><b>+</b></p>
+                                            </button>
+                                        </div>
+                                        <a data-toggle="tab" href="#boxes_list" class="back_boxes"><img
+                                                src="package://browsers/anims/img/svg/arrow.svg">Вернуться к списку</a>
+                                        <div id="rouletteblock">
+                                            <div class="rouletteblock">
+                                                <div class="arrowup"><img src="package://browsers/anims/img/svg/arrowup.svg"></div>
+                                                <div class="SlotsWindow s_case">
+                                                    <ul class="Slots s_case">
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="$">$</span><span class="prize-label">20.000 $</span><span class="prize-chance">30%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="в™›">в™›</span><span class="prize-label">Vip-Silver</span><span class="prize-chance">20%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lada 2107</span><span class="prize-chance">20%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi</span><span class="prize-chance">15%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="2">2</span><span class="prize-label">2022 C63</span><span class="prize-chance">5%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi RS 7</span><span class="prize-chance">5%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi Q8</span><span class="prize-chance">5%</span></div></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mid_buts">
+                                            <div class="left_buts">
+                                                <p>Открыть за 149 DP</p>
+                                                <a onclick="openDonateCase(0)">Открыть</a>
+                                                <label class="case-fast-toggle">
+                                                    <input type="checkbox" name="s_case" value="s_case" onchange="changeCaseData('FastOpen',0,this)">
+                                                    <span class="case-fast-toggle__ui"></span>
+                                                    <span class="case-fast-toggle__label"><b>Быстрое открытие</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="possible_prizes">
+                                            <p>Возможные призы</p>
+                                            <ul>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="$">$</span><span class="prize-label">20.000 $</span><span class="prize-chance">30%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="в™›">в™›</span><span class="prize-label">Vip-Silver</span><span class="prize-chance">20%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lada 2107</span><span class="prize-chance">20%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi</span><span class="prize-chance">15%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="2">2</span><span class="prize-label">2022 C63</span><span class="prize-chance">5%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi RS 7</span><span class="prize-chance">5%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="A">A</span><span class="prize-label">Audi Q8</span><span class="prize-chance">5%</span></div></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div id="g_case" class="tab-pane fade">
+                                        <div
+                                            class="bm-hide-dp-row"
+                                            style="margin-top: 16px; margin-bottom: 16px; width: 230px; display: flex; align-items: center; justify-content: space-between;">
+                                            <p class="case-dp-balance-label">Баланс <b class="dp-balance">0</b> DP</p>
+                                            <button type="button" name="button" class="case-dp-refresh"
+                                                onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                                    alt=""></button>
+                                            <button type="button" name="button" class="case-dp-plus"
+                                                onclick="mp.trigger('popolnenie')">
+                                                <p style="margin: 0 0 0px;"><b>+</b></p>
+                                            </button>
+                                        </div>
+                                        <a data-toggle="tab" href="#boxes_list" class="back_boxes"><img
+                                                src="package://browsers/anims/img/svg/arrow.svg">Вернуться к списку</a>
+                                        <div id="rouletteblock">
+                                            <div class="rouletteblock">
+                                                <div class="arrowup"><img src="package://browsers/anims/img/svg/arrowup.svg"></div>
+                                                <div class="SlotsWindow g_case">
+                                                    <ul class="Slots g_case">
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="в—€">в—€</span><span class="prize-label">20 DP</span><span class="prize-chance">35%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="$">$</span><span class="prize-label">35.000 $</span><span class="prize-chance">30%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="в™›">в™›</span><span class="prize-label">Vip-Platinum</span><span class="prize-chance">20%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="C">C</span><span class="prize-label">Chiron 17</span><span class="prize-chance">5%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lamborghini Sian</span><span class="prize-chance">5%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lada Raven</span><span class="prize-chance">4%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="B">B</span><span class="prize-label">BMW M5</span><span class="prize-chance">0.9%</span></div></li>
+                                                        <li class="bm-slot-accent bm-slot-accent--purple"><div class="case-prize-cell"><div class="case-rarity-bar case-rarity-bar--purple"></div><span class="bm-prize-ico" data-g="S">S</span><span class="prize-label">Скейтборд</span><span class="prize-chance">0.1%</span></div></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mid_buts">
+                                            <div class="left_buts">
+                                                <p>Открыть за 249 DP</p>
+                                                <a onclick="openDonateCase(1)">Открыть</a>
+                                                <label class="case-fast-toggle">
+                                                    <input type="checkbox" name="g_case" value="g_case" onchange="changeCaseData('FastOpen',1,this)">
+                                                    <span class="case-fast-toggle__ui"></span>
+                                                    <span class="case-fast-toggle__label"><b>Быстрое открытие</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="possible_prizes">
+                                            <p>Возможные призы</p>
+                                            <ul>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="в—€">в—€</span><span class="prize-label">20 DP</span><span class="prize-chance">35%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="$">$</span><span class="prize-label">35.000 $</span><span class="prize-chance">30%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="в™›">в™›</span><span class="prize-label">Vip-Platinum</span><span class="prize-chance">20%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="C">C</span><span class="prize-label">Chiron 17</span><span class="prize-chance">5%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lamborghini Sian</span><span class="prize-chance">5%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="L">L</span><span class="prize-label">Lada Raven</span><span class="prize-chance">4%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="B">B</span><span class="prize-label">BMW M5</span><span class="prize-chance">0.9%</span></div></li>
+                                                <li><div class="case-prize-hint"><div class="case-rarity-bar case-rarity-bar--purple"></div><span class="bm-prize-ico" data-g="S">S</span><span class="prize-label">Скейтборд</span><span class="prize-chance">0.1%</span></div></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div id="armor_case" class="tab-pane fade">
+                                        <div
+                                            class="bm-hide-dp-row"
+                                            style="margin-top: 16px; margin-bottom: 16px; width: 230px; display: flex; align-items: center; justify-content: space-between;">
+                                            <p class="case-dp-balance-label">Баланс <b class="dp-balance">0</b> DP</p>
+                                            <button type="button" name="button" class="case-dp-refresh"
+                                                onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                                    alt=""></button>
+                                            <button type="button" name="button" class="case-dp-plus"
+                                                onclick="mp.trigger('popolnenie')">
+                                                <p style="margin: 0 0 0px;"><b>+</b></p>
+                                            </button>
+                                        </div>
+                                        <a data-toggle="tab" href="#boxes_list" class="back_boxes"><img
+                                                src="package://browsers/anims/img/svg/arrow.svg">Вернуться к списку</a>
+                                        <div id="rouletteblock">
+                                            <div class="rouletteblock">
+                                                <div class="arrowup"><img src="package://browsers/anims/img/svg/arrowup.svg"></div>
+                                                <div class="SlotsWindow armor_case">
+                                                    <ul class="Slots armor_case" id="ArmorCaseRouletteSlots"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mid_buts">
+                                            <div class="left_buts">
+                                                <p>Открыть за 199 DP</p>
+                                                <a onclick="openDonateCase(2)">Открыть</a>
+                                                <label class="case-fast-toggle">
+                                                    <input type="checkbox" name="armor_case" value="armor_case" onchange="changeCaseData('FastOpen',2,this)">
+                                                    <span class="case-fast-toggle__ui"></span>
+                                                    <span class="case-fast-toggle__label"><b>Быстрое открытие</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="possible_prizes">
+                                            <p>Возможные призы</p>
+                                            <ul class="armor-case-prizes-hint" id="ArmorCasePrizesList"></ul>
+                                        </div>
+                                    </div>
+                                    <div id="gun_case" class="tab-pane fade">
+                                        <div
+                                            class="bm-hide-dp-row"
+                                            style="margin-top: 16px; margin-bottom: 16px; width: 230px; display: flex; align-items: center; justify-content: space-between;">
+                                            <p class="case-dp-balance-label">Баланс <b class="dp-balance">0</b> DP</p>
+                                            <button type="button" name="button" class="case-dp-refresh"
+                                                onclick="mp.trigger('updatedpbalance')"><img src="package://browsers/anims/img/update.svg"
+                                                    alt=""></button>
+                                            <button type="button" name="button" class="case-dp-plus"
+                                                onclick="mp.trigger('popolnenie')">
+                                                <p style="margin: 0 0 0px;"><b>+</b></p>
+                                            </button>
+                                        </div>
+                                        <a data-toggle="tab" href="#boxes_list" class="back_boxes"><img
+                                                src="package://browsers/anims/img/svg/arrow.svg">Вернуться к списку</a>
+                                        <div id="rouletteblock">
+                                            <div class="rouletteblock">
+                                                <div class="arrowup"><img src="package://browsers/anims/img/svg/arrowup.svg"></div>
+                                                <div class="SlotsWindow gun_case">
+                                                    <ul class="Slots gun_case">
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="H">H</span><span class="prize-label">Heavy Sniper MK1</span><span class="prize-chance">10%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="H">H</span><span class="prize-label">Heavy Sniper MK2</span><span class="prize-chance">5%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="S">S</span><span class="prize-label">Sniper Rifle</span><span class="prize-chance">15%</span></div></li>
+                                                        <li><div class="case-prize-cell"><span class="bm-prize-ico" data-g="M">M</span><span class="prize-label">Marksman Rifle</span><span class="prize-chance">30%</span></div></li>
+                                                        <li class="bm-slot-accent"><div class="case-prize-cell"><span class="bm-prize-ico" data-g="P">P</span><span class="prize-label">Precision Rifle</span><span class="prize-chance">40%</span></div></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mid_buts">
+                                            <div class="left_buts">
+                                                <p>Открыть за 249 DP</p>
+                                                <a onclick="openDonateCase(3)">Открыть</a>
+                                                <label class="case-fast-toggle">
+                                                    <input type="checkbox" name="gun_case" value="gun_case" onchange="changeCaseData('FastOpen',3,this)">
+                                                    <span class="case-fast-toggle__ui"></span>
+                                                    <span class="case-fast-toggle__label"><b>Быстрое открытие</b></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="possible_prizes">
+                                            <p>Возможные призы</p>
+                                            <ul>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="H">H</span><span class="prize-label">Heavy Sniper MK1</span><span class="prize-chance">10%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="H">H</span><span class="prize-label">Heavy Sniper MK2</span><span class="prize-chance">5%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="S">S</span><span class="prize-label">Sniper Rifle</span><span class="prize-chance">15%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="M">M</span><span class="prize-label">Marksman Rifle</span><span class="prize-chance">30%</span></div></li>
+                                                <li><div class="case-prize-hint"><span class="bm-prize-ico" data-g="P">P</span><span class="prize-label">Precision Rifle</span><span class="prize-chance">40%</span></div></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="lottery" class="tab-pane fade">
+                                <h3>Лотерея</h3>
+                                <p class="lottery_main-heading">Принимай участие и выигрывай призы</p>
+                                <div class="tab-content">
+                                    <div id="lottery_list" class="tab-pane fade active in">
+                                        <div class="lottery_list">
+                                            <a class="lottery_list-item" data-toggle="tab" href="#lottery_info-window">
+                                                <div class="lottery_img-block">
+                                                    <img src="package://browsers/anims/img/lottery_img.png">
+                                                </div>
+                                                <p class="lottery_list-item-name">Вертолет Maverick</p>
+                                                <div class="lottery_list-ticket-block">
+                                                    <p>Осталось 783 билета(ов)</p>
+                                                </div>
+                                            </a>
+                                            <a class="lottery_list-item" data-toggle="tab" href="#lottery_info-window">
+                                                <div class="lottery_img-block">
+                                                    <img src="package://browsers/anims/img/lottery_img.png">
+                                                </div>
+                                                <p class="lottery_list-item-name">Вертолет Maverick</p>
+                                                <div class="lottery_list-ticket-block">
+                                                    <p>Осталось 783 билета(ов)</p>
+                                                </div>
+                                            </a>
+                                            <a class="lottery_list-item" data-toggle="tab" href="#lottery_info-window">
+                                                <div class="lottery_img-block">
+                                                    <img src="package://browsers/anims/img/lottery_img.png">
+                                                </div>
+                                                <p class="lottery_list-item-name">Вертолет Maverick</p>
+                                                <div class="lottery_list-ticket-block">
+                                                    <p>Осталось 783 билета(ов)</p>
+                                                </div>
+                                            </a>
+                                            <a class="lottery_list-item" data-toggle="tab" href="#lottery_info-window">
+                                                <div class="lottery_img-block">
+                                                    <img src="package://browsers/anims/img/lottery_img.png">
+                                                </div>
+                                                <p class="lottery_list-item-name">Вертолет Maverick</p>
+                                                <div class="lottery_list-ticket-block">
+                                                    <p>Осталось 783 билета(ов)</p>
+                                                </div>
+                                            </a>
+                                            <a class="lottery_list-item" data-toggle="tab" href="#lottery_info-window">
+                                                <div class="lottery_img-block">
+                                                    <img src="package://browsers/anims/img/lottery_img.png">
+                                                </div>
+                                                <p class="lottery_list-item-name">Вертолет Maverick</p>
+                                                <div class="lottery_list-ticket-block">
+                                                    <p>Осталось 783 билета(ов)</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div id="lottery_info-window" class="tab-pane fade">
+                                        <a class="lottery_btn-back" data-toggle="tab" href="#lottery_list"><img
+                                                src="package://browsers/anims/img/back.svg">Вернуться</a>
+                                        <div class="lottery_info-window">
+                                            <div class="lottery_info-img">
+                                                <img src="package://browsers/anims/img/lottery_img.png">
+                                            </div>
+                                            <div class="lottery_info-right">
+                                                <div class="lottery_info-top">
+                                                    <p class="lottery_info-heading">Вертолет Maverick</p>
+                                                    <div>
+                                                        <p>Твой шанс:</p>
+                                                        <a>0.0%</a>
+                                                    </div>
+                                                </div>
+                                                <p class="lottery_info-text1">Чем больше билетов, тем больше шанс на
+                                                    победу!</p>
+                                                <p class="lottery_info-text2">Поторопись, ведь осталось <b>900</b> из
+                                                    <b>1000</b> билета(ов)</p>
+                                                <div class="lottery_info-input-block">
+                                                    <input type="text" name="" value=""
+                                                        placeholder="Укажите кол-во лотов">
+                                                    <p>На данный момент у Вас <b>0</b> билета(ов)</p>
+                                                </div>
+                                                <a class="lottery_info-btn">Приобрести за 100$</a>
+                                                <a class="lottery_info-btn">Приобрести за 1 DP</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            
+        <div id="mini-games-menu" style="display: none;">
+            <div class="mini-games-menu">
+            <div class="tab-content">
+                <div id="mini-games-menu_main" class="tab-pane fade in active">
+                <a class="mini-games-menu_close-btn" onclick="mp.trigger('aimgames', false); mp.trigger('hud', true); document.getElementById('mini-games-menu').style.display= 'none'"><img src="package://browsers/anims/img/close.svg"></a>
+                <div class="mini-games-menu_logo mini-games-menu_logo-bl" aria-hidden="true"><span class="mini-games-menu_bl-letter">B</span><span class="mini-games-menu_bl-letter">L</span></div>
+                <div class="mini-games-menu_heading">
+                    <p>Flow AIM Games</p>
+                    <p>Тренируй свои навыки, чтобы стать лучшим стрелком</p>
+                </div>
+                <div class="mini-games-menu_game-list">
+                    <div class="mini-games-menu_game">
+                    <p class="mini-games-menu_game-heading">Точность</p>
+                    <p class="mini-games-menu_game-name">Aiming</p>
+                    <p class="mini-games-menu_game-price">Длится 60 секунд</p>
+                    <p class="mini-games-menu_game-text">Наводитесь на точки и кликайте.</p>
+                    <a class="mini-games-menu_game-btn" data-toggle="tab" onclick="AIMGAMESStart(1)" href="#mini-games-menu_game-page">Попробовать <img src="package://browsers/anims/img/svg/arrow_right.svg"></a>
+                    </div>
+                    <div class="mini-games-menu_game">
+                    <p class="mini-games-menu_game-heading">Быстрота</p>
+                    <p class="mini-games-menu_game-name">Aiming Relax</p>
+                    <p class="mini-games-menu_game-price">Длится 60 секунд</p>
+                    <p class="mini-games-menu_game-text">Расслабьтесь, и просто наводите курсор на точку.</p>
+                    <a class="mini-games-menu_game-btn" data-toggle="tab" onclick="AIMGAMESStart(2)" href="#mini-games-menu_game-page">Попробовать <img src="package://browsers/anims/img/svg/arrow_right.svg"></a>
+                    </div>
+                    <div class="mini-games-menu_game">
+                    <p class="mini-games-menu_game-heading">Реакция</p>
+                    <p class="mini-games-menu_game-name">AIM Rain</p>
+                    <p class="mini-games-menu_game-price">Длится 60 секунд</p>
+                    <p class="mini-games-menu_game-text">В течение 60 секунд на экране появится 100 точек, ваша задача кликнуть по всем.</p>
+                    <a class="mini-games-menu_game-btn" data-toggle="tab" onclick="AIMGAMESStart(3)" href="#mini-games-menu_game-page">Попробовать <img src="package://browsers/anims/img/svg/arrow_right.svg"></a>
+                    </div>
+                </div>
+                <p class="mini-games-menu_logo-text">FLOW</p>
+                <img class="mini-games-menu_img-back1" src="package://browsers/anims/img/img-back1.png">
+                <img class="mini-games-menu_img-back2" src="package://browsers/anims/img/img-back2.png">
+                <img class="mini-games-menu_img-back3" src="package://browsers/anims/img/img-back3.png">
+                </div>
+                <div id="mini-games-menu_game-page" class="tab-pane fade in">
+                <a class="mini-games-menu_text-back" id="GAIMGamesBackToList" data-toggle="tab" onclick="clearAIMGAMESTimer()" href="#mini-games-menu_main"><img src="package://browsers/anims/img/back.svg" alt="">Назад</a>
+                <a class="mini-games-menu_close-btn" id="GAIMGamesExitGame" data-toggle="tab" onclick="clearAIMGAMESTimer()" href="#mini-games-menu_main" title="К выбору режима"><img src="package://browsers/anims/img/close.svg" alt=""></a>
+                <div class="mini-games-menu_logo mini-games-menu_logo-bl" aria-hidden="true"><span class="mini-games-menu_bl-letter">B</span><span class="mini-games-menu_bl-letter">L</span></div>
+                <div class="mini-games-menu_heading">
+                    <p>Aiming</p>
+                </div>
+                <div id="aimgames-rain-root" aria-hidden="true"></div>
+                <div class="mini-games-menu_point-position" id="AIMGAMESPoint" style="left: 25px; top: 500px;" onmouseenter="AIMGAMESPointClick('relax')" onclick="AIMGAMESPointClick()">
+                    <div class="mini-games-menu_point">
+                    <div class="mini-games-menu_point-inner">
+                    </div>
+                    </div>
+                </div>
+                <div class="mini-games-menu_statistics">
+                    <div class="mini-games-menu_statistics-block" style="opacity: 1;">
+                    <p id="AIMGAMESSuccessClick">11</p>
+                    <p>Попаданий</p>
+                    </div>
+                    <!-- <div class="mini-games-menu_statistics-block">
+                    <p>1</p>
+                    <p>Промахов</p>
+                    </div> -->
+                    <div class="mini-games-menu_statistics-block">
+                    <p id="AIMGAMESLeftTime">01:00</p>
+                    <p>До конца игры</p>
+                    </div>
+                    <div class="mini-games-menu_statistics-block" style="margin: 0; display: none;" >
+                    <p>0</p>
+                    <p>Потеряно</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно приза кейса вне вкладки #boxes: иначе при переходе на В«Рграть»/«Магазин» Bootstrap скрывает #boxes и модалка не видна -->
+    <div class="drop_item bm-case-prize-overlay" style="display:none;" id="CasesPrizeWindow">
+        <div class="info_block">
+            <p id="CasesPrizeName">Вы выиграли</p>
+            <img id="CasesPrizeImg" class="bm-case-prize-photo" src="img/boxes/s_case_moon.png" alt="">
+            <a onclick="CasePrizeInteraction('pick')">Забрать</a>
+            <p class="or_p" id="CasesPrizeOr">или</p>
+            <a onclick="CasePrizeInteraction('sell')" id="CasesPrizeSellLink">Продать за NULL DP</a>
+        </div>
+        <div class="back_shadow" onclick="closePrizeInteraction()"></div>
+    </div>
+
+    <script src="lib/noty.min.js" type="text/javascript"></script>
+    <script src="lib/notymsg.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="lib/css/noty.css" />
+    <script src="js/armor_cosmetic_catalog.js" type="text/javascript"></script>
+    <script src="js/sliders.js" type="text/javascript"></script>
+    <script src="js/roulette.js" type="text/javascript"></script>
+    <script src="js/rangeslider.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/war-map-buttons.js"></script>
+    <script src="js/bm-ui-fixes.js"></script>
+</body>
+
+</html>

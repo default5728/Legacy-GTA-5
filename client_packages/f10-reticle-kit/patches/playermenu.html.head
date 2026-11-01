@@ -1,0 +1,10 @@
+<!-- В <head> playermenu.html -->
+
+<link rel="stylesheet" href="package://browsers/f10-reticle-kit/cef/fonts/css/fonts.css">
+<link rel="stylesheet" href="package://browsers/f10-reticle-kit/cef/css/playermenu-f10-reticle.css">
+<link rel="stylesheet" href="package://browsers/f10-reticle-kit/cef/css/playermenu-reticle-inline.css">
+
+<!-- Или если скопировали в PlayerMenu/Lib: -->
+<!-- <link rel="stylesheet" href="../Lib/css/fonts.css"> -->
+<!-- <link rel="stylesheet" href="../Lib/css/playermenu-f10-reticle.css"> -->
+<!-- <link rel="stylesheet" href="../Lib/css/playermenu-reticle-inline.css"> -->

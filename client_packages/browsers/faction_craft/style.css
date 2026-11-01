@@ -1,0 +1,100 @@
+#craft_weapon {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+#craft_weapon .content-block,
+#craft_weapon .yk-block,
+#craft_weapon button,
+#craft_weapon svg,
+#craft_weapon img {
+    pointer-events: auto;
+}
+
+#craft_weapon .yk-scroll img {
+    object-fit: contain;
+}
+
+#craft_weapon .craft-mats-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid #30343A;
+    border-radius: 6px;
+    padding: 6px 12px;
+    flex-shrink: 0;
+}
+
+#craft_weapon .craft-mats-pill__icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    opacity: 0.85;
+}
+
+#craft_weapon .craft-mats-pill__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1;
+}
+
+#craft_weapon .craft-mats-pill__label {
+    font-family: Montserrat, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #4D5E77;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+#craft_weapon .craft-mats-pill__val {
+    font-family: Montserrat, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFB800;
+}
+
+#craft_weapon .craft-product-buy {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    width: 90%;
+    height: 32px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#craft_weapon .craft-mats-button {
+    width: 100%;
+    height: 32px;
+    padding: 0 6px;
+    border: 0;
+    box-shadow: none;
+    font-family: 'Geometria Medium', Montserrat, sans-serif;
+    font-size: 16px;
+    white-space: nowrap;
+    transition: none;
+}
+
+#craft_weapon .craft-mats-button:disabled,
+#craft_weapon .craft-mats-button[disabled] {
+    opacity: 0.45;
+    cursor: default;
+    filter: grayscale(0.35);
+}
+
+#craft_weapon .craft-close-ico {
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+#craft_weapon .yk-tab-block-h {
+    flex-wrap: wrap;
+    min-height: 58px;
+}

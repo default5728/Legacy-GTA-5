@@ -1,0 +1,57 @@
+.custom_notify-block {
+	height: 305px;
+	width: 657px;
+	display: flex;
+	flex-direction: column-reverse;
+	flex-wrap: nowrap;
+	flex-shrink: 0;
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	overflow: hidden;
+	pointer-events: none;
+	-webkit-user-select: none !important;
+	user-select: none !important;
+}
+
+.custom_notify {
+	position: relative;
+	padding: 15px 35px;
+	margin-top: 5px;
+	word-wrap: break-word;
+	text-align: center;
+	text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+	background: rgba(7, 16, 48, 0.7);
+	border-radius: 50px;
+	flex-shrink: 0;
+	-webkit-user-select: none !important;
+	user-select: none !important;
+	cursor: default;
+}
+
+.custom_notify * {
+	-webkit-user-select: none !important;
+	user-select: none !important;
+	pointer-events: none;
+}
+
+.custom_notify::selection,
+.custom_notify *::selection,
+.custom_notify::-moz-selection,
+.custom_notify *::-moz-selection {
+	background: transparent !important;
+	color: inherit !important;
+}
+
+.custom_notify-ico {
+	position: absolute;
+	top: 50%;
+	left: 7px;
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+/* Shared obsidian notification surface; status glyphs retain their original artwork. */
+.custom_notify{background:rgba(20,20,23,.94)!important;border:1px solid rgba(255,255,255,.09);border-radius:12px!important;text-shadow:none!important;padding:15px 24px 15px 56px;backdrop-filter:blur(12px);color:#fff}
+.custom_notify-ico{left:10px}.purchase-countdown{margin-left:12px;font-variant-numeric:tabular-nums;color:#e8c8c8}

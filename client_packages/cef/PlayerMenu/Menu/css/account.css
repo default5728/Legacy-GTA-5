@@ -1,0 +1,189 @@
+.account-content, #main-account{
+  display: flex;
+  flex-wrap: wrap;
+}
+.account-content p, #shop p, .product-info p{
+  color: #3D3F53;
+}
+
+.account-content b, #shop b, .product-info b{
+  font-weight: normal;
+  color: #A1A3C2;
+}
+
+.account-content input {
+  width: 245px;
+  height: 47px;
+  background: none;
+  border: 1px solid #252635;
+  outline: none;
+  color: #fff;
+  padding-left: 16px;
+  margin-bottom: 16px;
+}
+
+.account-content input::-webkit-input-placeholder {
+  color: #A1A3C2;
+}
+
+.account-content button, #shop button, .product-info button {
+  background: none;
+  border: 1px solid #006EFF;
+  color: #fff;
+  outline: none;
+  height: 47px;
+}
+
+.account-content button:hover, #shop button:hover, .product-info button:hover {
+  background-color: #006EFF;
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+}
+
+.account-left-content, .account-right-content {
+  margin-top: 32px;
+}
+
+.balance {
+  margin-top: 32px;
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.balance p{
+  margin-top: 0;
+  margin: 0 0 0;
+}
+
+.balance, .left-p {
+  margin-top: 32px;
+}
+
+#user-name {
+  color: #fff;
+}
+
+#user-name b {
+  color: #3D3F53;
+}
+
+button.replenish, #shop button.replenish, .product-info button.replenish {
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #A1A3C2;
+}
+
+button.replenish p, #shop button.replenish p, .product-info button.replenish p {
+  width: 10px;
+  height: 19px;
+}
+
+button.replenish:hover b, #shop button.replenish:hover b, .product-info button.replenish:hover b {
+  color: #fff;
+}
+
+button.update + button.replenish,
+#shop button.update + button.replenish,
+.product-info button.update + button.replenish {
+  margin-left: 16px;
+}
+
+button.update, #shop button.update, .product-info button.update {
+  border: none;
+  height: 24px;
+}
+
+button.update:hover, #shop button.update:hover, .product-info button.update:hover {
+  background: none;
+  box-shadow: none;
+}
+
+#activate {
+  width: 184px;
+}
+
+#change {
+  width: 138px;
+}
+
+.custom-radio>input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  display: none;
+}
+
+.custom-radio>span {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.custom-radio>span::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border: 1px solid #252635;
+  background-color: #252635;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  background-repeat: no-repeat;
+  background-position:  50% 50%;
+}
+
+.custom-radio>input:not(:disabled):not(:checked)+span:hover::before {
+  border-color: #006EFF;
+}
+
+.custom-radio>input:not(:disabled):active+span::before {
+  background-color: #252635;
+  border-color: #252635;
+}
+
+.custom-radio>input:checked+span::before {
+  border: 1px solid #006EFF;
+  background-color: #252635;
+  background-image: url(../img/point.svg);
+}
+
+
+.custom-radio>input:disabled+span::before {
+  background-color: #e9ecef;
+}
+
+span {
+  margin-right: 32px;
+}
+
+.weapon-dm, .weapon-dm2, .switch {
+  display: flex;
+  align-items: center;
+}
+
+.account-left-content {
+  margin-right: 128px;
+}
+
+.right-p {
+  margin-top: 32px;
+}
+
+#account ul {
+  margin-top: 32px;
+  border:none;
+}
+
+/* Старая разметка .chat-account / #setting-chat * заменена на .chat-panel в flow-menu-theme.css. */
+.chat-account {
+  display: none;
+}

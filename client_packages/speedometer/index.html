@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kepler RolePlay — Speedometer</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Fixed positioned circular gauge at bottom-right (Minimalist calm design) */
+    .speedo-wrap {
+      position: fixed;
+      right: 36px;
+      bottom: 36px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(16, 18, 22, 0.82) 0%, rgba(10, 11, 14, 0.92) 100%);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65), inset 0 0 1px 1px rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+      pointer-events: none;
+    }
+
+    .speedo-wrap.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* SVG Radial Tachometer Arc */
+    .gauge-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(135deg);
+      overflow: visible;
+    }
+
+    /* Base 270 deg track */
+    .gauge-track {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 4.5;
+      stroke-dasharray: 442 590; /* 2 * PI * 94 * (270/360) */
+      stroke-dashoffset: 0;
+    }
+
+    /* Simple white / calm RPM arc (NOT colorful!) */
+    .gauge-fill {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 5;
+      stroke-dasharray: 442 590;
+      stroke-dashoffset: 442;
+      transition: stroke-dashoffset 0.05s linear;
+      opacity: 0.9;
+    }
+
+    /* Subtle Redline section at end of arc */
+    .gauge-redline {
+      fill: none;
+      stroke: rgba(239, 68, 68, 0.75);
+      stroke-width: 5;
+      stroke-dasharray: 74 590;
+      stroke-dashoffset: -368;
+    }
+
+    /* RPM Radial Numbers */
+    .rpm-numbers {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .rpm-num {
+      position: absolute;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.4);
+      transform: translate(-50%, -50%);
+    }
+
+    .rpm-num.red {
+      color: rgba(248, 113, 113, 0.7);
+    }
+
+    /* Center Content */
+    .gauge-center {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: -6px;
+    }
+
+    .odo-text {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .speed-val {
+      font-size: 56px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 0.95;
+      letter-spacing: -1px;
+    }
+
+    .unit-text {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      color: #94a3b8;
+      margin-top: 3px;
+    }
+
+    /* Minimalist gear circle (white / clean) */
+    .gear-circle {
+      margin-top: 5px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .gear-circle.reverse {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    /* Top Left Status Box (Calm white text) */
+    .hud-left-indicators {
+      position: absolute;
+      top: 22px;
+      left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 3;
+    }
+
+    .gas-line {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .gas-label {
+      color: #94a3b8;
+    }
+
+    .gas-val {
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.8px;
+      transition: color 0.15s ease;
+    }
+
+    .status-text.active-abs {
+      color: #ffffff;
+    }
+
+    .status-text.active-hbk {
+      color: #ef4444;
+    }
+
+    /* Bottom Right (Seatbelt) */
+    .hud-right-indicators {
+      position: absolute;
+      bottom: 22px;
+      right: 22px;
+      display: flex;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .belt-icon {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.2);
+      transition: color 0.15s;
+    }
+
+    .belt-icon.active {
+      color: #f59e0b;
+    }
+  </style>
+<style id="apathy-typography">/* Ordinary medium-weight type across the UI. Never use old-style figures. */
+html,body,body *:not(i):not([class*="fa-"]){font-family:'Segoe UI',Arial,sans-serif!important;font-weight:600!important;font-style:normal!important;font-variant-numeric:lining-nums tabular-nums!important;font-feature-settings:"lnum" 1,"tnum" 1!important;}
+</style>
+</head>
+<body>
+
+  <div class="speedo-wrap" id="speedoWrap">
+    <!-- SVG Radial Tachometer Arc -->
+    <svg class="gauge-svg" viewBox="0 0 220 220">
+      <circle class="gauge-track" cx="110" cy="110" r="94" />
+      <circle class="gauge-redline" cx="110" cy="110" r="94" />
+      <circle id="gaugeFill" class="gauge-fill" cx="110" cy="110" r="94" />
+    </svg>
+
+    <!-- RPM Numbers (0 through 9) positioned radially -->
+    <div class="rpm-numbers">
+      <span class="rpm-num" style="top: 168px; left: 83px;">0</span>
+      <span class="rpm-num" style="top: 132px; left: 68px;">1</span>
+      <span class="rpm-num" style="top: 94px; left: 67px;">2</span>
+      <span class="rpm-num" style="top: 61px; left: 80px;">3</span>
+      <span class="rpm-num" style="top: 39px; left: 104px;">4</span>
+      <span class="rpm-num" style="top: 39px; left: 132px;">5</span>
+      <span class="rpm-num" style="top: 59px; left: 156px;">6</span>
+      <span class="rpm-num" style="top: 92px; left: 169px;">7</span>
+      <span class="rpm-num red" style="top: 130px; left: 168px;">8</span>
+      <span class="rpm-num red" style="top: 165px; left: 151px;">9</span>
+    </div>
+
+    <!-- Top Left Indicators -->
+    <div class="hud-left-indicators">
+      <div class="gas-line">
+        <span class="gas-label">GAS</span>
+        <span class="gas-val" id="gasNum">65</span>
+      </div>
+      <div class="status-text" id="absIndicator">ABS</div>
+      <div class="status-text" id="hbkIndicator">HBK</div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="gauge-center">
+      <div class="odo-text" id="odoDisplay">000367</div>
+      <div class="speed-val" id="speedDisplay">0</div>
+      <div class="unit-text">KM/H</div>
+      <div class="gear-circle" id="gearDisplay">P</div>
+    </div>
+
+    <!-- Bottom Right Indicators -->
+    <div class="hud-right-indicators">
+      <i class="fa-solid fa-user-slash belt-icon active" id="beltIndicator" title="Ремень"></i>
+    </div>
+  </div>
+
+  <script>
+    const MAX_STROKE_OFFSET = 442;
+
+    const speedoWrap = document.getElementById('speedoWrap');
+    const speedDisplay = document.getElementById('speedDisplay');
+    const gearDisplay = document.getElementById('gearDisplay');
+    const odoDisplay = document.getElementById('odoDisplay');
+    const gaugeFill = document.getElementById('gaugeFill');
+    const gasNum = document.getElementById('gasNum');
+    const absIndicator = document.getElementById('absIndicator');
+    const hbkIndicator = document.getElementById('hbkIndicator');
+    const beltIndicator = document.getElementById('beltIndicator');
+
+    function updateSpeedometer(speed, gear, engine, lights, locked, fuel, rpm, hbk, odo) {
+      const s = Math.max(Math.round(speed || 0), 0);
+      speedDisplay.textContent = s;
+
+      let rpmVal = (typeof rpm === 'number' && !isNaN(rpm)) ? rpm : (s / 260);
+      if (s === 0 && !engine) rpmVal = 0;
+      else if (s === 0 && engine && rpmVal < 0.12) rpmVal = 0.12;
+
+      const clampedRpm = Math.min(Math.max(rpmVal, 0), 1.0);
+      const offset = MAX_STROKE_OFFSET - (MAX_STROKE_OFFSET * clampedRpm);
+      gaugeFill.style.strokeDashoffset = Math.max(0, offset);
+
+      // Gear
+      if (gear === 'R') {
+        gearDisplay.textContent = 'R';
+        gearDisplay.className = 'gear-circle reverse';
+      } else {
+        gearDisplay.textContent = gear || 'D';
+        gearDisplay.className = 'gear-circle';
+      }
+
+      // Fuel (calm white number)
+      const f = Math.min(Math.max(fuel !== undefined ? Math.round(fuel) : 65, 0), 100);
+      gasNum.textContent = f;
+
+      // Handbrake & ABS
+      hbkIndicator.classList.toggle('active-hbk', !!hbk);
+      absIndicator.classList.toggle('active-abs', !!(s > 25 && hbk));
+
+      // Seatbelt
+      beltIndicator.classList.toggle('active', !locked);
+
+      // Odometer
+      if (odo) {
+        odoDisplay.textContent = odo;
+      }
+    }
+
+    function setVisibility(visible) {
+      if (visible) {
+        speedoWrap.classList.add('visible');
+      } else {
+        speedoWrap.classList.remove('visible');
+      }
+    }
+
+    window.SPEEDO_UI = {
+      update: updateSpeedometer,
+      show: () => setVisibility(true),
+      hide: () => setVisibility(false)
+    };
+  </script>
+</body>
+</html>

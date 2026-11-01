@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css?v=5">
+    <title>Port</title>
+</head>
+<body>
+<div id="app" v-cloak>
+    <div v-if="opened" class="port_minigame">
+        <div class="port_track">
+            <div class="port_zone" :style="zoneStyle"></div>
+            <div class="port_needle"></div>
+        </div>
+        <div class="port_key">{{ keyName }}</div>
+    </div>
+</div>
+<script src="../PlayerMenu/Lib/js/vue.js"></script>
+<script src="./assets/js/index.js?v=5"></script>
+</body>
+</html>

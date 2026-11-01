@@ -1,0 +1,346 @@
+/*
+ * Экран «Рейтинг игроков»: за панелью — прозрачный фон (игра видна), сама карточка — тёмная для читаемости.
+ */
+
+/* За топом — прозрачно; не заливаем весь CEF чёрным */
+html,
+body {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#top-root,
+#top-root * {
+  font-family: var(--bm-font, 'Inter', system-ui, -apple-system, sans-serif) !important;
+  letter-spacing: 0.01em;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#top-root.flow-top-root {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  min-height: 100vh !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  padding: 16px !important;
+  /* Вокруг карточки — прозрачно (виден мир), не чёрная «подложка» на весь экран */
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#top-root .window.flow-top-shell {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 1440px !important;
+  height: 800px !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(231, 29, 54, 0.28) !important;
+  /* Плотный фон как у F2 — не зависит от несуществующих CSS-переменных */
+  background-color: #0c0c0c !important;
+  background: #0c0c0c !important;
+  box-shadow:
+    0 32px 100px rgba(0, 0, 0, 0.88),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset !important;
+  isolation: isolate;
+}
+
+#top-root .window.flow-top-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(231, 29, 54, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 70% at 0% 100%, rgba(10, 10, 10, 0.5) 0%, transparent 55%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.02) 0%, transparent 42%);
+}
+
+#top-root .window.flow-top-shell > .header,
+#top-root .window.flow-top-shell > .tab-content,
+#top-root .window.flow-top-shell > .play {
+  position: relative;
+  z-index: 2;
+}
+
+#top-root .window.flow-top-shell > .header {
+  flex-shrink: 0;
+}
+
+#top-root .window.flow-top-shell > .tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: #0a0a0a !important;
+}
+
+#top-root .tab-content > .tab-pane {
+  flex: 1;
+  min-height: 0;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#top-root .header {
+  display: flex !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: #121212 !important;
+}
+
+#top-root .nav-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 56px !important;
+  padding: 0 24px !important;
+  border-bottom: none !important;
+  box-sizing: border-box !important;
+}
+
+#top-root .nav-tabs {
+  border-bottom: none !important;
+  margin: 0 !important;
+}
+
+#top-root .nav-tabs > li {
+  margin-left: 0 !important;
+  margin-right: 24px !important;
+  border-bottom: none !important;
+  height: auto !important;
+}
+
+#top-root .nav-tabs > li.active {
+  border-bottom: 2px solid #e71d36 !important;
+  padding-bottom: 4px !important;
+  margin-bottom: -1px !important;
+}
+
+#top-root .nav-tabs > li > a,
+#top-root .nav-tabs > li.active > a,
+#top-root .nav-tabs > li.active > a:hover,
+#top-root .nav-tabs > li.active > a:focus {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: #f5f5f5 !important;
+  background: none !important;
+  border: none !important;
+  padding: 8px 0 !important;
+  margin: 0 !important;
+}
+
+#top-root .nav-tabs > li:not(.active) > a {
+  color: rgba(255, 255, 255, 0.38) !important;
+}
+
+#top-root .nav > li > a:hover,
+#top-root .nav-tabs > li > a:hover {
+  color: #e8e8e8 !important;
+  background: none !important;
+}
+
+#top-root .shop-line {
+  display: none !important;
+}
+
+#top-root .online {
+  display: flex !important;
+  align-items: center !important;
+  margin-right: 0 !important;
+  height: auto !important;
+}
+
+#top-root .online svg circle:first-child {
+  fill: #e71d36 !important;
+  fill-opacity: 0.35 !important;
+}
+
+#top-root .online svg circle:last-child {
+  fill: #e71d36 !important;
+}
+
+#top-root .online p {
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+  margin-left: 8px !important;
+}
+
+#top-root .online p a {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #f5f5f5 !important;
+}
+
+#top-root #top {
+  flex: 1;
+  min-height: 0;
+  margin-top: 0 !important;
+  height: auto !important;
+  padding: 22px 28px 20px !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
+  background: #0a0a0a !important;
+}
+
+#top-root .top-list {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+  gap: 14px !important;
+}
+
+#top-root .top-block {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px 18px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(18, 18, 18, 0.98) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+#top-root .top-head {
+  display: flex !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+#top-root .top-header,
+#top-root .top-head p.top-header {
+  margin-right: 10px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #e8e8e8 !important;
+  letter-spacing: 0.02em !important;
+}
+
+#top-root .top-head svg path,
+#top-root .top-head svg rect,
+#top-root .top-head svg g path {
+  fill: #e71d36 !important;
+}
+
+#top-root .player {
+  margin-top: 12px !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+#top-root .player b {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+#top-root .player a {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 14px !important;
+}
+
+#top-root a.nickname {
+  color: #f5f5f5 !important;
+  font-weight: 600 !important;
+}
+
+#top-root .cout {
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+#top-root .cout a {
+  color: #ef4444 !important;
+  font-weight: 600 !important;
+}
+
+#top-root .line {
+  width: 1px !important;
+  min-width: 1px !important;
+  align-self: stretch !important;
+  height: auto !important;
+  min-height: 200px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 1px !important;
+}
+
+#top-root .play {
+  align-self: flex-end !important;
+  margin: 0 28px 22px auto !important;
+  width: auto !important;
+  min-width: 168px !important;
+  height: 48px !important;
+  padding: 0 28px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #fff !important;
+  background: #e71d36 !important;
+  border: 1px solid #ff2a42 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 28px rgba(231, 29, 54, 0.35) !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease !important;
+}
+
+#top-root .play:hover {
+  background: #ff2a42 !important;
+  box-shadow: 0 10px 36px rgba(231, 29, 54, 0.5) !important;
+}
+
+#top-root .play:active {
+  transform: scale(0.98);
+}
+
+#top-root .back-img {
+  position: absolute !important;
+  z-index: 1 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 38vh !important;
+  max-width: 36% !important;
+  height: auto !important;
+  opacity: 0.12 !important;
+  pointer-events: none !important;
+  filter: saturate(0) brightness(0.55) !important;
+}
+
+#top-root ::-webkit-scrollbar {
+  width: 4px !important;
+  background: transparent !important;
+}
+
+#top-root ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 20px !important;
+}
+
+#top-root ::-webkit-scrollbar-thumb {
+  background: rgba(231, 29, 54, 0.45) !important;
+  border-radius: 20px !important;
+}
+
+#top-root ::-webkit-scrollbar-thumb:hover {
+  background: rgba(231, 29, 54, 0.65) !important;
+}

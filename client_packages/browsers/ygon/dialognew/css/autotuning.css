@@ -1,0 +1,374 @@
+.autotuning_list {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  transform: translate(0, -50%);
+}
+
+.autotuning_list li {
+  position: relative;
+  list-style-type: none;
+}
+
+.autotuning_list a {
+  position: relative;
+  display: flex;
+  width: 64px;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(23, 24, 39, 0.9);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.autotuning_list li.active a {
+  background: #006EFF;
+}
+
+
+.autotuning_list li.active a img {
+  -webkit-filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
+}
+
+.autotuning_list li div {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 80px;
+  top: 21px;
+  display: none;
+}
+.autotuning_list li div img {
+  width: 100%;
+  height: 41px;
+  position: absolute;
+  z-index: 0;
+}
+
+.autotuning_list li div p {
+  position: relative;
+  margin: 0;
+  z-index: 1;
+  padding-left: 40px;
+  padding-right: 32px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.autotuning_list li:hover div {
+  display: flex;
+}
+
+.autotuning_windows {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.back_block_list {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translate(-50%, 0);
+  width: 675px;
+  height: 178px;
+  background: rgba(23, 24, 39, 0.9);
+  border-radius: 10px;
+}
+
+.back_block_list .tab-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.back_block_list .tab-content .slider {
+  position: absolute;
+  visibility: hidden;
+  width: 100%;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.slider__container {
+  height: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+}
+
+.slider__item {
+  flex: 0 0 33.3333333333%;
+  max-width: 33.3333333333%;
+  height: 100%;
+}
+
+.slider__item-container {
+  position: relative;
+  padding-top: 43px;
+  line-height: 50px;
+  font-size: 100px;
+  text-align: center;
+  height: 250px;
+  color: #fff;
+  height: 100%;
+}
+
+.slider__item .slider__item-content {
+  background: none;
+  height: 100%;
+}
+
+.slider__item:hover {
+  background: #252635;
+}
+
+.slider__item-content p {
+  margin: 0;
+}
+
+
+
+.slider__item-content p.name {
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+/* #suspension .slider__item-container p.name, #rear_bumper .slider__item-container p.name {
+  font-size: 16px;
+} */
+
+.slider__item-content p.price {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  margin-top: 8px;
+}
+
+.slider__item-content p.price b {
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.back_block_list .tab-content {
+  width: 100%;
+  height: 100%;
+}
+
+.form_radio_group {
+  position: relative;
+  z-index: 999999;
+	display: flex;
+  margin-bottom: 10px;
+}
+.form_radio_group-item {
+  border: 1px solid #fff;
+  width: 26px;
+  height: 26px;
+  margin-right: 10px;
+}
+.form_radio_group input[type=radio] {
+	display: none;
+}
+.form_radio_group label {
+	cursor: pointer;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+/* Checked */
+.form_radio_group input[type=radio]:checked + label {
+	border: 4px solid #252635;
+}
+
+#neon, #main_color, #secondary_color, #nacre_colors {
+  padding-top: 25px;
+  padding-left: 90px;
+}
+
+.color-name {
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+#payment_block {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 32px;
+  width: 338px;
+  padding: 32px 48px;
+  background: rgba(23, 24, 39, 0.9);
+  border-radius: 10px;
+}
+
+#payment_block p {
+  margin: 0;
+}
+
+#payment_block .name {
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 24px;
+}
+
+#payment_block .flex-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+#payment_block .flex-price p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+
+#payment_block .price {
+  display: flex;
+  align-items: flex-end;
+}
+
+#payment_block .price a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+}
+
+#payment_block .price p {
+  font-weight: 500;
+  font-size: 12px;
+  color: #A1A3C2;
+}
+
+#payment_block .payments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  background: #171827;
+  border-radius: 10px;
+  margin-top: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+}
+
+#payment_block .payments img {
+  margin-left: 10px;
+}
+
+#payment_block .payments.nal {
+  color: #fff;
+  background: #006EFF;
+}
+
+#autotuning_tuning1, #autotuning_color, #autotuning_tuning2, #autotuning_light, #autotuning_wheel,
+#autotuning_brush, #autotuning_rectangle, #autotuning_volume {
+  visibility: hidden;
+}
+
+#autotuning .prev, #autotuning .next {
+  position: absolute;
+  top: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  color: #fff;
+  text-align: center;
+  height: 50px;
+  transform: translateY(-50%);
+  background: #3D3F53;
+  border-radius: 10px;
+  cursor:pointer;
+}
+
+#autotuning div.prev.slick-arrow.slick-disabled, #autotuning div.next.slick-arrow.slick-disabled {
+  display: none !important;
+}
+
+#autotuning .prev:hover, #autotuning .next:hover {
+  background: #006EFF;
+}
+
+#autotuning .prev {
+  left: -110px;
+}
+
+#autotuning .next {
+  right: -110px;
+}
+
+#autotuning .slick-slider .slick-track, #autotuning .slick-slider .slick-list {
+  height: 100%;
+}
+
+#autotuning .sliders {
+  width: 100%;
+  height: 100%;
+}
+
+#autotuning a.slider___item.slick-slide {
+  display: block;
+  height: 100%;
+  cursor: pointer;
+  text-decoration: none;
+  padding-top: 43px;
+}
+
+#engine a.slider___item.slick-slide, #brakes a.slider___item.slick-slide, #suspension a.slider___item.slick-slide, #rear_bumper a.slider___item.slick-slide{
+  padding-top: 30px;
+}
+
+#autotuning a.slider___item.slick-slide img {
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+}
+
+#autotuning a.slider___item.slick-slide p.name {
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+}
+
+#autotuning a.slider___item.slick-slide p.price {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  margin-top: 8px;
+  text-align: center;
+}
+
+#autotuning a.slider___item.slick-slide p.price b {
+  font-weight: 500;
+  font-size: 10px;
+}
+
+#autotuning a.slider___item.slick-slide:hover {
+  background: #252635;
+}

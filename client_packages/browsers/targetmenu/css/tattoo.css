@@ -1,0 +1,234 @@
+.tattoo-menu-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 430px;
+  z-index: 99;
+  background: rgba(23, 24, 39, 0.9);
+  backdrop-filter: blur(15px);
+  overflow: auto;
+}
+
+.tattoo-menu-left::-webkit-scrollbar {
+  width: 5px;
+  background: none;
+}
+
+.tattoo-menu-left::-webkit-scrollbar-thumb {
+  background: none;
+}
+.tattoo-menu-left img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.blue-triangle {
+  position: absolute;
+  left: -20px;
+  top: -51px;
+  width: 38.85px;
+  height: 142px;
+  transform: rotate(45deg);
+  background: #006EFF;
+  z-index: 99;
+}
+
+.tattoo-menu-top {
+  display: flex;
+  align-items: center;
+  margin-top: 64px;
+  margin-left: 64px;
+}
+
+.tattoo-top-text {
+  font-weight: 500;
+  font-size: 16px;
+  color: #A1A3C2;
+}
+
+.tattoo-top-text p {
+  margin: 0;
+}
+
+.tattoo-top-text p.tattoo-heading {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.tattoo-menu-top a.close-tatto-menu {
+  display: flex;
+  width: 59px;
+  height: 59px;
+  margin-left: 82px;
+  background: #252635;
+  border-radius: 10px;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#tattoo-menu ul {
+  margin-top: 48px;
+}
+
+#tattoo-menu ul li {
+
+}
+
+#tattoo-menu ul li a {
+  padding-left: 64px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #A1A3C2;
+  border-left: 3px solid rgba(23, 24, 39, 0.1);
+}
+
+#tattoo-menu ul li a:hover, #tattoo-menu ul li.active a, .nav>li>a:hover {
+  background: rgba(37, 38, 53, 0.9);
+  backdrop-filter: blur(20px);
+  color: #fff;
+}
+
+.nav>li>a:focus {
+  background: none;
+}
+
+#tattoo-menu ul li.active a {
+  border-left: 3px solid #006EFF;
+}
+
+#tattoo-menu ul li ul {
+  margin: 0;
+  display: none;
+  height: 312px;
+  overflow: auto;
+}
+
+#tattoo-menu ul li ul::-webkit-scrollbar {
+  width: 3px;
+  background-color: rgba(23, 24, 39, 0.1);
+  backdrop-filter: blur(15px);
+}
+
+#tattoo-menu ul li ul::-webkit-scrollbar-thumb {
+  background: #006EFF;
+}
+
+#tattoo-menu ul li.active ul {
+  display: block;
+}
+
+#tattoo-menu ul li.active li a {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 96px;
+  padding-right: 32px;
+  background: none;
+  backdrop-filter:none;
+  color: #A1A3C2;
+  border-left: 3px solid rgba(23, 24, 39, 0.1);
+}
+
+#tattoo-menu ul li.active li a p {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
+}
+
+#tattoo-menu ul li.active li a p.tattoo-price {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+#tattoo-menu ul li.active li a:hover {
+  color: #fff;
+}
+
+#tattoo-menu ul li.active li.active a {
+  border-left: 3px solid #006EFF;
+  background: rgba(37, 38, 53, 0.9);
+  backdrop-filter: blur(20px);
+  color: #fff;
+}
+
+#tattoo-menu .tab-content {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 422px;
+  height: 229px;
+  background: rgba(23, 24, 39, 0.9);
+  backdrop-filter: blur(15px);
+  z-index: 99999;
+  padding-top: 48px;
+  padding-left: 48px;
+}
+
+#tattoo-menu .tab-content p {
+  margin: 0;
+}
+
+#tattoo-menu .tab-content p.heading {
+  font-weight: 500;
+  font-size: 24px;
+  color: #fff;
+}
+
+#tattoo-menu .tab-content p.heading2 {
+  font-weight: 500;
+  font-size: 14px;
+  color: #A1A3C2;
+  margin-top: 10px;
+}
+
+.bottom-tattoo-menu {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.bottom-tattoo-menu p {
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+}
+
+.bottom-tattoo-menu div {
+  width: 25px;
+  height: 25px;
+  background: #252635;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 12px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+}
+
+.bottom-tattoo-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 177px;
+  height: 47px;
+  background: #006EFF;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  margin-left: 73px;
+}
+
+#shopul li a:hover, #shopul li.active a, .nav>li>a:hover {
+  background: none;
+}

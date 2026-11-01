@@ -1,0 +1,1 @@
+function show(e){document.querySelector(".accept").style.display="flex",document.getElementById("famname").innerText=e}function hide(){document.querySelector(".accept").style.display="none"}

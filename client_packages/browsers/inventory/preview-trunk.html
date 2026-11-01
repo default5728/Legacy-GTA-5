@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="utf-8">
+<title>Багажник авто - preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="../menunew/js/vue.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; }
+html,body { height:100%; width:100%; overflow:hidden; background:radial-gradient(ellipse at center,#293342 0%,#121720 70%); }
+.preview-bar{position:fixed;top:12px;left:12px;z-index:99999;display:flex;gap:8px;pointer-events:auto}
+.preview-bar button{background:#30405a;color:#fff;border:1px solid #4d5e77;border-radius:4px;padding:8px 12px;cursor:pointer;font-family:Montserrat,sans-serif}
+.preview-bar button:hover{background:#3b5275}
+.preview-hint{position:fixed;top:12px;right:12px;z-index:99999;color:#adbfd9;font-family:Montserrat,sans-serif;font-size:13px;pointer-events:none}
+
+.d-flex{display:flex}.column{flex-direction:column}.center{justify-content:center}.center-align{align-items:center}
+.flex-1{flex:1}.ml-auto{margin-left:auto}.ml-5{margin-left:5px}.ml-10{margin-left:10px}.ml-20{margin-left:20px}
+.mt-5{margin-top:5px}.mt-10{margin-top:10px}.mt-15{margin-top:15px}.mt-20{margin-top:20px}.mt-30{margin-top:30px}
+.mt-auto{margin-top:auto}.p-15{padding:15px}.text-center{text-align:center}.upper{text-transform:uppercase}
+.list-mt-5{margin-top:5px}.list-ml-5{margin-left:5px}.pe-none{pointer-events:none}.w-100{width:100%}
+.s-10{font-size:10px}.s-12{font-size:12px}.s-13{font-size:13px}.s-15{font-size:15px}
+.s-16{font-size:16px}.s-17{font-size:17px}.s-18{font-size:18px}.s-19{font-size:19px}.s-20{font-size:20px}.s-21{font-size:21px}
+
+.yk-text{font-family:Montserrat,sans-serif;font-size:14px;color:#fff;text-transform:none}
+.yk-text.w-4{font-weight:400}.yk-text.w-5{font-weight:500}.yk-text.w-6{font-weight:600}.yk-text.w-7{font-weight:700}
+
+.yk-scroll{overflow-x:visible;overflow-y:auto;padding-right:0;scrollbar-width:none;-ms-overflow-style:none}
+.yk-scroll::-webkit-scrollbar{width:0;height:0}
+.yk-scroll::-webkit-scrollbar-track{width:0;height:0;background:transparent}
+.yk-scroll::-webkit-scrollbar-thumb{width:0;height:0;background:transparent}
+.yk-scroll.hidden{padding-right:0}.yk-scroll.hidden::-webkit-scrollbar{width:0;height:0}
+
+.yk-progress-block{position:relative;height:25px;background:rgba(57,77,96,0.33);border-radius:3px}
+.yk-progress-fill{position:absolute;top:0;left:0;height:100%;border-radius:3px}
+.yk-progress-fill.orange{background:linear-gradient(90deg,#FF5C00 0%,#FFB800 100%)}
+.yk-progress-text{position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);font-family:Montserrat,sans-serif;font-weight:600;font-size:17px;color:#fff}
+
+.yk-block{background:#1D2634;border-radius:10px;border:1px solid #30343A}
+.yk-content{padding:20px}
+
+.yk-btn{display:inline-flex;justify-content:center;align-items:center;padding:10px 30px;font-family:Montserrat,sans-serif;font-weight:500;font-size:20px;color:#fff;background:linear-gradient(270deg,#2D3957 0%,#4C6283 100%);border-radius:4px;cursor:pointer;border:none;outline:none}
+.yk-btn.s-15{font-size:15px}.yk-btn.s-18{font-size:18px}
+.yk-btn.green{background:linear-gradient(270deg,#00CE3A 0%,#BDFF00 100%)}
+.yk-btn.purple{background:linear-gradient(270deg,#AC43FF 0%,#4232FF 100%)}
+.yk-btn:disabled{opacity:0.7}
+
+.yk-input-block{display:flex;padding:10px;background:#171D27;box-shadow:inset 0 4px 4px rgba(0,0,0,.07);border-radius:4px}
+.yk-input{min-width:0;flex:1;background:none;border:none;outline:none;font-family:Montserrat,sans-serif;font-weight:500;font-size:16px;color:#fff;resize:none}
+
+.content-block{position:absolute}
+.content-block.center{top:50%;left:50%;transform:translateX(-50%) translateY(-50%)}
+.menu-color-green{color:#4eff00!important}
+body.ground-pickup-only #playerInventory{display:none!important;pointer-events:none}
+.inv-bag-title{color:#fff;font-weight:700}
+.inv-bag-unequip{color:#778DA6;font-weight:700;cursor:pointer}
+.inv-items-title{font-size:16px;line-height:1.15}
+.inv-bag-section{width:450px;clear:both;padding-top:20px;box-sizing:border-box;flex-shrink:0}
+.inv-bag-scroll{height:210px;overflow-y:auto;overflow-x:hidden;box-sizing:border-box}
+.playerInventory-item-data-name{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:95%;text-align:center;white-space:normal;line-height:1.12;word-break:break-word}
+.inv-fast-slot-num{position:absolute;top:5px;left:5px;color:#778DA6;font-family:Montserrat,sans-serif;font-weight:600;font-size:16px;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.35);pointer-events:none}
+.inv-fast-slot-name{position:absolute;left:5px;right:5px;bottom:5px;color:#fff;text-align:left;line-height:1.1;font-family:Montserrat,sans-serif;font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.inv-bind-label{color:#8294AD;font-weight:600;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.inv-bind-label--empty{color:#92A5B8}
+
+/* inventory item */
+.playerInventory-items-container{display:flex;flex-wrap:wrap;align-items:center}
+.playerInventory-item-container{position:relative;display:flex;height:86px;width:86px;padding:4px;background:linear-gradient(360deg,rgba(36,48,65,.84) 0%,rgba(31,45,66,.84) 186%);border:1px solid #495269;box-sizing:border-box}
+.playerInventory-item-container.weapon{position:relative;width:172px}
+.playerInventory-item-data-image{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-height:45px;max-width:65px}
+.playerInventory-item-data-image.weapon{max-height:50px;max-width:130px}
+.playerInventory-item-data-image-bg{position:absolute;top:0;left:0;height:100%;width:100%;background:linear-gradient(360deg,rgba(15,31,53,.74) 0%,rgba(15,31,53,.74) 18.41%,rgba(22,33,50,0) 73.62%)}
+.playerInventory-item-data-text{display:block}
+#mainInventoryItemsContainer{width:450px}
+#mainInventoryClothesImage{height:600px;width:350px;opacity:.5}
+
+.playerInventory-item-selected-wrapper{position:absolute;min-width:120px;top:calc(100% + 1.5px);left:50%;transform:translateX(-50%);background-color:rgb(8,165,243);border-radius:8px;z-index:9999999}
+.playerInventory-item-selected-wrapper-content{display:flex;flex-direction:column;padding:10px}
+.playerInventory-item-use{flex:1;padding-top:5px;padding-bottom:8px;font-family:Montserrat,sans-serif;font-size:12px;color:#dfe5ec;border-top:1px solid rgba(255,255,255,.35);text-align:center;cursor:pointer}
+.playerInventory-item-use:first-child{padding-top:0;border-top:none}
+.playerInventory-item-use:last-child{padding-bottom:0}
+.playerInventory-item-use:hover{color:#fff}
+.playerInventory-item-load-ico{flex:1;padding-bottom:5px;font-size:18px;color:#fff;text-align:center;animation:spin 4s linear infinite}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.playerInventory-trade-scroll::-webkit-scrollbar{width:7px}
+.playerInventory-trade-scroll::-webkit-scrollbar-track{width:7px;background:rgba(0,0,0,.2);border-radius:1px}
+.playerInventory-trade-scroll::-webkit-scrollbar-thumb{width:7px;background:#37425F;border-radius:1px}
+
+/* vehicle trunk - dual panel (scr1): 6 cols, те же ячейки что в инвентаре */
+.trunk-dual-root{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:auto;box-sizing:border-box}
+.trunk-dual-panels{display:flex;gap:18px;align-items:flex-start}
+.trunk-panel{background:rgba(22,31,46,.94);border:1px solid #30343A;border-radius:6px;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;padding:14px 12px 12px;flex-shrink:0;width:566px}
+.trunk-panel-head{text-align:left;margin-bottom:10px;flex-shrink:0}
+.trunk-panel-title{font-family:Montserrat,sans-serif;font-weight:700;font-size:16px;color:#fff;letter-spacing:.02em;text-transform:uppercase;line-height:1.2}
+.trunk-panel-body{display:flex;flex-direction:column;overflow:hidden;width:100%}
+.trunk-panel-grid{width:540px;height:368px;overflow-y:auto;overflow-x:hidden;flex-shrink:0;margin-bottom:10px;box-sizing:border-box}
+.trunk-panel-grid .playerInventory-items-container{width:540px;display:flex;flex-wrap:wrap;align-items:flex-start}
+.trunk-dual-root .playerInventory-item-container{height:86px;width:86px;padding:4px;background:linear-gradient(360deg,rgba(36,48,65,.84) 0%,rgba(31,45,66,.84) 186%);border:1px solid #495269;box-sizing:border-box}
+.trunk-dual-root .playerInventory-item-data-image{max-height:45px;max-width:65px}
+.trunk-dual-root .playerInventory-item-data-image-bg{position:absolute;top:0;left:0;height:100%;width:100%;background:linear-gradient(360deg,rgba(15,31,53,.74) 0%,rgba(15,31,53,.74) 18.41%,rgba(22,33,50,0) 73.62%)}
+.trunk-weight-bar{position:relative;height:28px;background:rgba(57,77,96,.33);border-radius:3px;flex-shrink:0;overflow:hidden;width:100%;box-sizing:border-box}
+.trunk-weight-fill{position:absolute;top:0;left:0;height:100%;max-width:100%;background:linear-gradient(90deg,#FF5C00 0%,#FFB800 100%);border-radius:3px;transition:width .15s ease;box-sizing:border-box}
+.trunk-weight-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Montserrat,sans-serif;font-weight:600;font-size:16px;color:#fff;white-space:nowrap;z-index:1;pointer-events:none}
+.trunk-close-hint{margin-top:22px;font-family:Montserrat,sans-serif;font-weight:700;font-size:18px;color:#fff;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.trunk-close-hint:hover{color:#FFB800}
+</style>
+</head>
+<body scroll="no" style="overflow:hidden">
+
+<div class="preview-bar">
+    <button type="button" onclick="showTrunkPreview()">Багажник открыт (G)</button>
+    <button type="button" onclick="showTrunkEmpty()">Пустой багажник</button>
+    <button type="button" onclick="invApp.loaded=false">Закрыть</button>
+</div>
+<div class="preview-hint">Превью UI багажника · инвентарь + панель «Багажник»</div>
+
+<!-- ground pickup qty (same layout as drop modal) -->
+<div id="groundPickupOverlay" class="content-block center" style="z-index:99999;display:none">
+    <div class="yk-block yk-content" style="padding:40px 40px 60px 40px">
+        <div class="yk-text w-6 s-18" id="groundPickupTitle">Подобрать предмет</div>
+        <div class="yk-text w-6 s-18" style="margin-top:40px;color:#495779">Введите количество:</div>
+        <div class="d-flex center-align mt-5">
+            <div class="yk-input-block" style="width:255px"><input id="groundPickupQtyInput" class="yk-input" placeholder="Количество" autocomplete="off" inputmode="numeric"></div>
+            <button type="button" id="groundPickupMaxBtn" class="yk-btn s-18">MAX</button>
+        </div>
+    </div>
+    <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:390px;text-align:center">
+        <button type="button" id="groundPickupOkBtn" class="yk-btn s-18 green" style="width:180px">Подобрать</button>
+        <button type="button" id="groundPickupCancelBtn" class="yk-btn s-18 purple ml-10" style="width:180px">Отмена</button>
+    </div>
+</div>
+
+<!-- change name modal -->
+<div id="changeNameOverlay" class="content-block center" style="z-index:99999;display:none">
+    <div class="yk-block yk-content" style="padding:40px 40px 60px 40px">
+        <div class="yk-text w-6 s-18">Смена ника</div>
+        <div class="yk-text w-6 s-18" style="margin-top:40px;color:#495779">Введите новый ник (3–15 символов):</div>
+        <div class="d-flex center-align mt-5">
+            <div class="yk-input-block" style="width:255px"><input id="changeNameInput" class="yk-input" placeholder="Новый ник" autocomplete="off" maxlength="15"></div>
+        </div>
+    </div>
+    <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:390px;text-align:center">
+        <button type="button" id="changeNameOkBtn" class="yk-btn s-18 green" style="width:180px">Сменить</button>
+        <button type="button" id="changeNameCancelBtn" class="yk-btn s-18 purple ml-10" style="width:180px">Отмена</button>
+    </div>
+</div>
+
+<div id="playerInventory">
+<template v-if="loaded">
+
+    <div v-if="data.type == 'playerInventory' && isTrunkOpen" class="trunk-dual-root">
+        <div class="trunk-dual-panels">
+            <div class="trunk-panel">
+                <div class="trunk-panel-head"><span class="trunk-panel-title">ВАШИ ПРЕДМЕТЫ</span></div>
+                <div class="trunk-panel-body">
+                    <div class="trunk-panel-grid yk-scroll" @wheel.stop>
+                        <div class="playerInventory-items-container">
+                            <inv-item style="margin:2px" v-for="(i,index) in data.items" v-bind:key="'inv'+index" v-bind:itemslot="index" v-bind:type="'item'" v-bind:data="i"></inv-item>
+                        </div>
+                    </div>
+                    <div class="trunk-weight-bar">
+                        <div class="trunk-weight-fill" v-bind:style="{width: trunkPlayerWeightPct + '%'}"></div>
+                        <span class="trunk-weight-text">{{ formatWeightKg(data.weight) }} из {{ data.maxWeight }} кг.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="trunk-panel">
+                <div class="trunk-panel-head"><span class="trunk-panel-title">БАГАЖНИК</span></div>
+                <div class="trunk-panel-body">
+                    <div class="trunk-panel-grid yk-scroll" @wheel.stop>
+                        <div class="playerInventory-items-container">
+                            <inv-item style="margin:2px" v-for="(i,index) in data.bagItems" v-bind:key="'trk'+index" v-bind:itemslot="index" v-bind:type="'bagItem'" v-bind:data="i"></inv-item>
+                        </div>
+                    </div>
+                    <div class="trunk-weight-bar">
+                        <div class="trunk-weight-fill" v-bind:style="{width: trunkBagWeightPct + '%'}"></div>
+                        <span class="trunk-weight-text">{{ formatWeightKg(data.bagWeight) }} из {{ data.bagMaxWeight }} кг.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="trunk-close-hint" @click="closeInv()">ESC - <span style="font-weight:400">Закрыть меню</span></div>
+    </div>
+
+    <div v-else-if="data.type == 'playerInventory' && !enableCenterInventory" style="position:absolute;top:0;left:0;height:100%;width:100%">
+        <div style="position:absolute;top:0;left:0;height:100%;width:526px;background:linear-gradient(270deg,rgba(102,123,177,0) 16.25%,rgba(27,42,97,.415) 63.55%,rgba(31,53,108,.449) 78.45%,rgba(21,38,97,.623) 106.32%,rgba(12,28,85,.89) 126.4%);opacity:.86;pointer-events:none"></div>
+        <div style="position:absolute;top:0;right:0;height:100%;width:677px;background:linear-gradient(90deg,rgba(92,118,185,0) 0%,rgba(21,51,97,.623) 63.86%,rgba(12,28,85,.89) 126.4%);opacity:.86;pointer-events:none"></div>
+
+        <!-- LEFT: doll + clothes slots -->
+        <div class="d-flex" style="position:absolute;top:50%;left:50px;transform:translateY(-50%)">
+            <img id="mainInventoryClothesImage" src="img/body.svg" alt="">
+
+            <inv-item style="position:absolute;top:-10px;left:20px"  v-if="data.clothes.glasses.id!='E'" v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.glasses.slot"    v-bind:data="data.clothes.glasses"></inv-item>
+            <inv-item style="position:absolute;top:-10px;left:132px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.hat.slot"        v-bind:data="data.clothes.hat"></inv-item>
+            <inv-item style="position:absolute;top:-10px;left:247px" v-if="data.clothes.mask.id!='E'"    v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.mask.slot"       v-bind:clothesid="data.currentMaskId" v-bind:data="data.clothes.mask"></inv-item>
+            <inv-item style="position:absolute;top:80px;left:20px"   v-if="data.clothes.ears.id!='E'"    v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.ears.slot"       v-bind:data="data.clothes.ears"></inv-item>
+            <inv-item style="position:absolute;top:80px;left:132px"                                      v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.top.slot"        v-bind:data="data.clothes.top"></inv-item>
+            <inv-item style="position:absolute;top:80px;left:247px"  v-if="data.clothes.armor.id!='E'"   v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.armor.slot"      v-bind:data="data.clothes.armor"></inv-item>
+            <inv-item style="position:absolute;top:170px;left:132px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.under.slot"      v-bind:data="data.clothes.under"></inv-item>
+            <inv-item style="position:absolute;top:370px;left:132px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.legs.slot"       v-bind:data="data.clothes.legs"></inv-item>
+            <inv-item style="position:absolute;top:460px;left:132px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.foot.slot"       v-bind:data="data.clothes.foot"></inv-item>
+            <inv-item style="position:absolute;top:170px;left:20px"                                      v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.watch.slot"      v-bind:data="data.clothes.watch"></inv-item>
+            <inv-item style="position:absolute;top:170px;left:247px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.accessories.slot" v-bind:data="data.clothes.accessories"></inv-item>
+            <inv-item style="position:absolute;top:270px;left:-15px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.bracelets.slot"  v-bind:data="data.clothes.bracelets"></inv-item>
+            <inv-item style="position:absolute;top:270px;left:282px"                                     v-bind:type="'clothes'" v-bind:clothesslot="data.clothes.gloves.slot"     v-bind:data="data.clothes.gloves"></inv-item>
+
+            <!-- mood / satiety -->
+            <div class="d-flex column" style="position:absolute;bottom:40px;left:0">
+                <svg width="45" height="45" viewBox="0 0 45 45">
+                    <path d="M22.2687 0C17.8638 7.76643e-07 13.5579 1.30637 9.8955 3.75387C6.23315 6.20137 3.37892 9.68004 1.69385 13.7499C0.00877196 17.8197 -0.431449 22.2979 0.428865 26.618C1.28918 30.938 3.41138 34.9059 6.52703 38.0197C9.64269 41.1335 13.6118 43.2533 17.9324 44.1111C22.253 44.9688 26.7309 44.526 30.7997 42.8385C34.8685 41.151 38.3455 38.2947 40.7909 34.6309C43.2362 30.9671 44.54 26.6604 44.5374 22.2555C44.5304 16.3528 42.1815 10.6941 38.0065 6.52154C33.8314 2.34897 28.1713 0.00349891 22.2687 0V0ZM22.2687 41.8794C18.3874 41.8794 14.5934 40.7285 11.3662 38.5722C8.13907 36.4159 5.62382 33.351 4.13853 29.7652C2.65324 26.1794 2.26462 22.2337 3.02181 18.427C3.77901 14.6203 5.64801 11.1237 8.39246 8.37924C11.1369 5.63478 14.6336 3.76578 18.4402 3.00858C22.2469 2.25139 26.1926 2.64001 29.7784 4.1253C33.3643 5.61059 36.4291 8.12584 38.5854 11.353C40.7417 14.5801 41.8926 18.3742 41.8926 22.2555C41.8891 27.459 39.8205 32.4484 36.141 36.1278C32.4616 39.8073 27.4722 41.8759 22.2687 41.8794Z" fill="#BD00FF"/>
+                    <path d="M19.6901 17.0057C19.6901 16.14 19.4334 15.2938 18.9525 14.574C18.4715 13.8542 17.7879 13.2931 16.9881 12.9618C16.1883 12.6306 15.3082 12.5439 14.4592 12.7128C13.6101 12.8817 12.8302 13.2985 12.218 13.9107C11.6059 14.5228 11.189 15.3027 11.0201 16.1518C10.8513 17.0008 10.9379 17.8809 11.2692 18.6807C11.6005 19.4805 12.1615 20.1641 12.8813 20.6451C13.6011 21.126 14.4474 21.3827 15.3131 21.3827C16.4739 21.3827 17.5873 20.9216 18.4081 20.1007C19.229 19.2799 19.6901 18.1666 19.6901 17.0057Z" fill="#BD00FF"/>
+                    <path d="M29.6344 21.2371C32.0517 21.2371 34.0114 19.2774 34.0114 16.8601C34.0114 14.4427 32.0517 12.483 29.6344 12.483C27.217 12.483 25.2573 14.4427 25.2573 16.8601C25.2573 19.2774 27.217 21.2371 29.6344 21.2371Z" fill="#BD00FF"/>
+                    <path d="M21.9643 30.7054C20.5701 30.8139 19.1795 30.4539 18.0129 29.6826C16.8464 28.9113 15.9706 27.7728 15.5244 26.4474L12.959 27.0821C13.5451 28.9841 14.7492 30.636 16.3805 31.7762C18.0117 32.9164 19.9768 33.4796 21.9643 33.3766C23.9602 33.4737 25.938 32.9566 27.6309 31.8949C29.3239 30.8333 30.6507 29.2782 31.4325 27.4392L28.9464 26.4474C28.3541 27.7833 27.3684 28.9067 26.1208 29.6675C24.8732 30.4284 23.4231 30.7905 21.9643 30.7054Z" fill="#BD00FF"/>
+                </svg>
+                <div class="yk-text w-6 s-17 text-center mt-5">{{ data.player.mood }} %</div>
+                <svg width="49" height="44" viewBox="0 0 49 44" class="mt-20">
+                    <path d="M15.5244 13.99L15.9343 13.5932C16.0936 13.4506 16.2046 13.262 16.2519 13.0535C16.2993 12.8451 16.2808 12.627 16.1988 12.4296C15.9734 11.7605 15.8841 11.0532 15.9364 10.3491C15.9886 9.64509 16.1813 8.95864 16.503 8.33022C17.9576 4.83916 18.222 2.30021 17.2964 0.475346C17.2243 0.358443 17.1278 0.258518 17.0134 0.182429C16.8991 0.106339 16.7697 0.055885 16.634 0.0345297C16.4983 0.0131744 16.3596 0.021423 16.2275 0.0587094C16.0953 0.0959958 15.9727 0.161437 15.8682 0.250544L15.207 0.832386C15.0778 0.941078 14.9872 1.08879 14.9491 1.25332C14.9109 1.41785 14.9272 1.59032 14.9955 1.74482C15.4847 2.85561 15.1806 4.72015 14.0962 7.31199C13.6123 8.29491 13.3452 9.37039 13.3133 10.4655C13.2814 11.5607 13.4852 12.6499 13.9111 13.6594C13.9797 13.8035 14.0808 13.9298 14.2065 14.0282C14.3322 14.1266 14.479 14.1945 14.6354 14.2266C14.7918 14.2586 14.9535 14.2539 15.1077 14.2129C15.262 14.1718 15.4046 14.0955 15.5244 13.99Z" fill="#FA5C01"/>
+                    <path d="M22.8507 13.99L23.2607 13.5933C23.419 13.45 23.5302 13.2622 23.5798 13.0545C23.6294 12.8468 23.6149 12.6289 23.5384 12.4296C23.3023 11.764 23.2041 11.0574 23.2495 10.3527C23.295 9.64805 23.4832 8.95995 23.8028 8.33024C25.2574 4.83919 25.5219 2.30024 24.5963 0.475375C24.5244 0.356356 24.4273 0.254526 24.3118 0.177042C24.1964 0.0995588 24.0654 0.0483022 23.928 0.0268757C23.7906 0.00544917 23.6502 0.0143727 23.5166 0.053019C23.3831 0.0916654 23.2596 0.159097 23.1549 0.250573L22.4805 0.832415C22.3529 0.942372 22.2637 1.09005 22.2257 1.25408C22.1876 1.41811 22.2028 1.58999 22.2689 1.74485C22.7582 2.85564 22.4672 4.72018 21.3697 7.31202C20.8857 8.29494 20.6187 9.37042 20.5867 10.4656C20.5548 11.5607 20.7587 12.6499 21.1845 13.6594C21.2508 13.8128 21.3533 13.9479 21.4833 14.0529C21.6133 14.158 21.7669 14.2298 21.9308 14.2623C22.0947 14.2949 22.2641 14.2871 22.4244 14.2396C22.5846 14.1922 22.7309 14.1065 22.8507 13.99Z" fill="#FA5C01"/>
+                    <path d="M29.2909 13.99L29.7141 13.5933C29.8733 13.4506 29.9843 13.262 30.0317 13.0535C30.0791 12.8451 30.0605 12.627 29.9786 12.4296C29.7531 11.7606 29.6639 11.0532 29.7161 10.3491C29.7684 9.6451 29.961 8.95864 30.2827 8.33022C31.7373 4.83917 32.0018 2.30022 31.0629 0.475356C30.9915 0.351992 30.8934 0.246222 30.7757 0.165849C30.658 0.0854756 30.5238 0.0325492 30.3829 0.0109736C30.242 -0.0106019 30.0981 -0.000276141 29.9618 0.0411893C29.8254 0.0826547 29.7001 0.154202 29.5951 0.250553L28.9339 0.832396C28.805 0.94145 28.7157 1.08998 28.6799 1.25495C28.644 1.41992 28.6636 1.59211 28.7355 1.74483C29.2248 2.85562 28.9207 4.72016 27.8363 7.312C27.3477 8.29318 27.077 9.36841 27.0428 10.464C27.0085 11.5596 27.2116 12.6496 27.638 13.6594C27.7049 13.8104 27.8071 13.9432 27.936 14.0465C28.0649 14.1498 28.2168 14.2207 28.3788 14.2531C28.5408 14.2855 28.7082 14.2785 28.8669 14.2327C29.0257 14.1869 29.1711 14.1037 29.2909 13.99Z" fill="#FA5C01"/>
+                    <path d="M44.6696 18.0365C45.2514 17.6663 47.4598 17.8911 47.8301 17.2299C48.2003 16.5687 48.1871 14.7306 46.4284 14.7967C46.4284 14.7967 46.4284 12.7603 44.6696 13.4743C44.3254 13.7163 44.0438 14.0368 43.8483 14.4094C43.6528 14.782 43.549 15.1958 43.5456 15.6166C43.4134 17.0183 40.7686 18.7638 40.0678 19.2002C36.9248 19.536 33.852 20.3521 30.9566 21.6201C27.9372 20.3635 24.6926 19.738 21.4224 19.782H21.3166C15.2866 19.7424 10.5789 21.6069 7.14079 25.2566C2.39349 30.4139 1.77197 37.5282 1.7323 40.5829H0V43.2276H46.9441V40.5829H44.8547C44.0415 36.4002 42.3662 32.4326 39.9355 28.9328C40.9118 26.302 41.5386 23.5545 41.8001 20.7606C42.7029 19.7977 43.661 18.8881 44.6696 18.0365Z" fill="#FA5C01"/>
+                </svg>
+                <div class="yk-text w-6 s-17 text-center mt-5">{{ data.player.satiety }} %</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: items grid -->
+        <div style="position:absolute;top:50%;right:20px;transform:translateY(-50%)">
+            <div style="text-align:right">
+                <span class="yk-text w-7 inv-items-title">ВАШИ ПРЕДМЕТЫ</span>
+            </div>
+            <div id="mainInventoryItemsContainer" class="playerInventory-items-container mt-10" style="position:relative;float:right;clear:both">
+                <div style="position:absolute;top:0;left:0;transform:translateX(-100%)">
+                    <inv-item style="margin:3px" v-bind:type="'weapon'" v-bind:weaponslot="0" v-bind:data="data.weapons[0]"></inv-item>
+                    <inv-item style="margin:3px" v-bind:type="'weapon'" v-bind:weaponslot="1" v-bind:data="data.weapons[1]"></inv-item>
+                    <inv-item style="margin:3px" v-bind:type="'weapon'" v-bind:weaponslot="2" v-bind:data="data.weapons[2]"></inv-item>
+                </div>
+                <inv-item style="margin:2px" v-for="(i,index) in data.items" v-bind:key="index" v-bind:itemslot="index" v-bind:type="'item'" v-bind:data="i"></inv-item>
+            </div>
+            <div v-if="data.bagName && !isTrunkOpen" class="inv-bag-section">
+                <div style="text-align:right">
+                    <span class="yk-text w-7 inv-bag-title s-19 ml-5">{{ data.bagName }}<span v-if="data.bagName !== 'Багажник'" @click="removeBag()" class="yk-text w-7 inv-bag-unequip s-19"> ( Снять )</span></span>
+                </div>
+                <div class="inv-bag-scroll yk-scroll hidden">
+                    <div class="playerInventory-items-container mt-10">
+                        <inv-item style="margin:2px" v-for="(i,index) in data.bagItems" v-bind:key="index" v-bind:itemslot="index" v-bind:type="'bagItem'" v-bind:data="i"></inv-item>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:right;clear:both;padding-top:20px">
+                <div class="yk-text w-7">ПКМ - <span class="yk-text w-4">Быстрое использование</span></div>
+                <div class="yk-text w-7">CTRL - <span class="yk-text w-4">Разделить</span></div>
+                <div @click="closeInv()" class="yk-text w-7" style="cursor:pointer">ESC - <span class="yk-text w-4">Закрыть</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- drop modal -->
+    <div v-if="dropItem!=null" class="content-block center" style="z-index:99">
+        <div class="yk-block yk-content" style="padding:40px 40px 60px 40px">
+            <div class="yk-text w-6 s-18">Выкинуть {{ dropItem.data.name }} (x{{ dropItem.data.count }})</div>
+            <div class="yk-text w-6 s-18" style="margin-top:40px;color:#495779">Введите количество:</div>
+            <div class="d-flex center-align mt-5">
+                <div class="yk-input-block" style="width:255px"><input v-model.number="form.dropItemCount" class="yk-input" placeholder="Количество"></div>
+                <button @click="form.dropItemCount=dropItem.data.count" class="yk-btn s-18">MAX</button>
+            </div>
+        </div>
+        <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:390px;text-align:center">
+            <button @click="confirmDrop(form.dropItemCount)" class="yk-btn s-18 green" style="width:180px">Выкинуть</button>
+            <button @click="dropItem=null" class="yk-btn s-18 purple ml-10" style="width:180px">Отмена</button>
+        </div>
+    </div>
+
+    <!-- split modal -->
+    <div v-if="replaceItem.start" class="content-block center" style="z-index:99">
+        <div class="yk-block yk-content" style="padding:40px 40px 60px 40px">
+            <div class="yk-text w-6 s-18 text-center">Разделить предмет</div>
+            <div class="yk-text w-6 s-18" style="margin-top:40px;color:#495779">Количество (1 - {{ replaceItem.replaceItemMax }}):</div>
+            <div class="d-flex"><div class="yk-input-block mt-5 flex-1"><input v-model.number="replaceItem.replaceItemCount" class="yk-input" placeholder="Количество"></div></div>
+            <div class="text-center mt-10">
+                <button @click="replaceItem.replaceItemCount=1" class="yk-btn s-18" style="width:120px">1</button>
+                <button @click="replaceItem.replaceItemCount=Math.floor((replaceItem.replaceItemMax+1)/2)" class="yk-btn s-18 ml-10" style="width:120px">50%</button>
+                <button @click="replaceItem.replaceItemCount=replaceItem.replaceItemMax" class="yk-btn s-18 ml-10" style="width:120px">{{ replaceItem.replaceItemMax }}</button>
+            </div>
+        </div>
+        <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:390px;text-align:center">
+            <button @click="replaceItem.start=false;replaceItem.onReplace(Math.min(replaceItem.replaceItemCount,replaceItem.replaceItemMax))" class="yk-btn s-18 green" style="width:180px">Разделить</button>
+            <button @click="replaceItem.start=false;replaceItem.onReplace(0)" class="yk-btn s-18 purple ml-10" style="width:180px">Отмена</button>
+        </div>
+    </div>
+
+    <!-- drag ghost -->
+    <img v-if="startSelectedItem!=null&&startSelectedItem.data&&startSelectedItem.data.name!='E'&&startSelectTick>5"
+        v-bind:src="startSelectedItem.getIcoPath()"
+        draggable="false" style="position:absolute;max-width:65px;max-height:45px;z-index:1;pointer-events:none"
+        v-bind:style="{'top':(mouseY-20)+'px','left':(mouseX-20)+'px'}">
+
+</template>
+</div>
+
+<script>
+'use strict';
+
+/* ── RAGE MP bridge (не перезаписывать глобальный mp!) ── */
+function invTrigger(name) {
+    if (typeof mp !== 'undefined' && mp && typeof mp.trigger === 'function') {
+        var args = Array.prototype.slice.call(arguments, 1);
+        mp.trigger.apply(mp, args.length ? [name].concat(args) : [name]);
+    }
+}
+window.invTrigger = invTrigger;
+
+var inventoryItemData={};
+var shitfMode=false,ctrlMode=false;
+
+/* ── helper: empty slot ── */
+function emptySlot(){return{id:'E',name:'',ico:'E',count:0,weight:0,trade:true,needGetSpecialActionList:false,startLoadSpecialAction:false,specialActionList:[],slot:-1};}
+function emptyWeapon(){return{id:'E',name:'',ico:'E',count:0,weight:0,serial:'',ammo:0};}
+function emptyClothes(slot){return{id:'E',name:'',ico:'',count:0,weight:0,slot:slot||0};}
+
+/* ── inv-item component ── */
+Vue.component('inv-item',{
+    data:function(){return{selected:false};},
+    props:{
+        data:{default:null,type:Object},
+        type:{default:'item',type:String},
+        itemslot:{default:-1,type:Number},
+        clothesslot:{default:-1,type:Number},
+        clothesid:{default:-1,type:Number},
+        weaponslot:{default:-1,type:Number},
+        sourceslot:{default:-1,type:Number},
+        tradeslot:{default:-1,type:Number}
+    },
+    computed:{
+        itemActionList:function(){return inventoryItemData[this.data&&this.data.id]?inventoryItemData[this.data.id].actionList||[]:[];},
+        nameSize:function(){if(!this.data||!this.data.name)return 12;var l=this.data.name.length;if(l>25)return 7;if(l>20)return 8;if(l>15)return 9;if(l>10)return 10;return 12;},
+        weaponNameSize:function(){if(!this.data||!this.data.name)return 12;var l=this.data.name.length;if(l>22)return 10;if(l>16)return 11;return 12;}
+    },
+    template:`
+        <div class="playerInventory-item-container" @mousedown="onDown" @mouseup="onUp" :class="{'weapon':type=='weapon'}">
+            <div class="pe-none" v-if="data&&data.id!='E'">
+                <img draggable="false" class="playerInventory-item-data-image" :class="{'weapon':type=='weapon'}" :src="getIcoPath()" @error="onImgError">
+                <div v-if="['item','bagItem','inventoryItem','tradeItem','noneEffectItem'].includes(type)" class="playerInventory-item-data-image-bg"></div>
+                <div v-if="['item','bagItem','inventoryItem','clothes','tradeItem','noneEffectItem'].includes(type)">
+                    <div class="playerInventory-item-data-name yk-text w-6 text-center" :style="{'font-size':nameSize+'px'}" v-html="formatItemNameLines(data.name)"></div>
+                </div>
+                <div v-if="['item','bagItem','inventoryItem','tradeItem','noneEffectItem'].includes(type)">
+                    <div style="position:absolute;right:2px;top:2px;text-align:right">
+                        <div class="yk-text w-6 s-10">{{ (data.weight*data.count).toFixed(1) }} кг</div>
+                        <div v-if="data.count>1" class="yk-text w-6 s-10">x{{ data.count }}</div>
+                    </div>
+                </div>
+                <div v-if="type=='weapon'">
+                    <div class="inv-fast-slot-num pe-none">{{ weaponslot+1 }}</div>
+                    <div v-if="data.name" class="inv-fast-slot-name yk-text w-5 pe-none" :style="{'font-size':weaponNameSize+'px'}">{{ data.name }}</div>
+                </div>
+            </div>
+            <div v-if="type=='item'&&binderName()!=='-'">
+                <div style="position:absolute;left:2px;top:2px"><div class="yk-text w-6 s-16 inv-bind-label" :class="{'inv-bind-label--empty':!data||data.id==='E'}">{{ binderName() }}</div></div>
+            </div>
+            <div class="playerInventory-item-selected-wrapper" v-if="selected&&type==='item'&&data&&data.id==='E'">
+                <div class="playerInventory-item-selected-wrapper-content">
+                    <div @click.stop="doBindSlot()" class="playerInventory-item-use">{{ hasBind() ? 'Сменить клавишу' : 'Назначить клавишу' }}</div>
+                    <div v-if="hasBind()" @click.stop="doClearBind()" class="playerInventory-item-use">Убрать привязку</div>
+                </div>
+            </div>
+            <div class="playerInventory-item-selected-wrapper" v-if="selected&&(type==='item'||type==='bagItem')&&data&&data.id!=='E'">
+                <div class="playerInventory-item-selected-wrapper-content">
+                    <div v-if="data.startLoadSpecialAction" class="playerInventory-item-load-ico">↻</div>
+                    <div v-for="(u,idx) in itemActionList" @click="useItem(idx,u[1])" class="playerInventory-item-use">{{ u[0] }}</div>
+                    <div v-if="showEquip()" @click.stop="doEquip()" class="playerInventory-item-use">Надеть</div>
+                    <div v-if="showUseBtn()" @click.stop="doUse()" class="playerInventory-item-use">Использовать</div>
+                    <div v-if="showFastSlot()" @click.stop="doFastSlot()" class="playerInventory-item-use">В быстрый слот</div>
+                    <div v-if="type==='item'&&canBind()" @click.stop="doBindSlot()" class="playerInventory-item-use">{{ hasBind() ? 'Сменить клавишу' : 'Назначить клавишу' }}</div>
+                    <div v-if="type==='item'&&hasBind()" @click.stop="doClearBind()" class="playerInventory-item-use">Убрать привязку</div>
+                    <div @click.stop="doDrop()" class="playerInventory-item-use">Выкинуть</div>
+                </div>
+            </div>
+            <div class="playerInventory-item-selected-wrapper" v-if="selected&&type==='clothes'&&data&&data.id!=='E'">
+                <div class="playerInventory-item-selected-wrapper-content">
+                    <div v-if="showToggleTop()" @click.stop="doToggleTop()" class="playerInventory-item-use">Переключить худи</div>
+                    <div @click.stop="doUseClothes()" class="playerInventory-item-use">Снять</div>
+                </div>
+            </div>
+            <div class="playerInventory-item-selected-wrapper" v-if="selected&&type==='weapon'&&data&&data.id!=='E'">
+                <div class="playerInventory-item-selected-wrapper-content">
+                    <div @click.stop="doDrop()" class="playerInventory-item-use">Убрать</div>
+                </div>
+            </div>
+        </div>`,
+    created:function(){if(!this.data){this.$props.data=emptySlot();}if(this.data)this.data.vueComponent=this;},
+    methods:{
+        formatItemNameLines:function(name){
+            if(!name||name==='E')return '';
+            var parts=String(name).trim().split(/\s+/);
+            if(parts.length<=1)return parts[0]||'';
+            var mid=Math.ceil(parts.length/2);
+            return parts.slice(0,mid).join(' ')+'<br>'+parts.slice(mid).join(' ');
+        },
+        onDown:function(e){if(invApp)invApp.startSelectItem(this);},
+        onUp:function(e){if(invApp)invApp.selectItem(this,e.button===2);},
+        useItem:function(idx,closeAfter){
+            this.selected=false;
+            if(window.invPerformItemUse)window.invPerformItemUse(this,closeAfter);
+        },
+        doUse:function(){this.selected=false;if(window.invPerformItemUse)window.invPerformItemUse(this,false);},
+        doEquip:function(){
+            this.selected=false;
+            var raw=this.data.raw||this.data.id;
+            if(!raw||raw==='E')return;
+            invTrigger('inventoryEquipItem',raw);
+        },
+        showEquip:function(){
+            if(this.type!=='item'&&this.type!=='bagItem')return false;
+            if(!this.data||this.data.id==='E')return false;
+            var raw=this.data.raw||this.data.id;
+            return window.invIsEquipableClothToken&&window.invIsEquipableClothToken(raw);
+        },
+        showUseBtn:function(){
+            if(this.type!=='item'&&this.type!=='bagItem')return false;
+            if(!this.data||this.data.id==='E')return false;
+            var raw=this.data.raw||this.data.id;
+            var base=window.invItemBaseId?window.invItemBaseId(raw):raw;
+            if(window.invIsEquipableClothToken&&window.invIsEquipableClothToken(raw))return false;
+            if(base.indexOf('weapon_')===0)return false;
+            return true;
+        },
+        showFastSlot:function(){
+            if(this.type!=='item'||!this.data||this.data.id==='E')return false;
+            var raw=this.data.raw||this.data.id;
+            var base=window.invItemBaseId?window.invItemBaseId(raw):raw;
+            if(base.indexOf('weapon_')!==0)return false;
+            var fs=window.inventoryFastSlotsRef||[];
+            return fs.indexOf('')!==-1&&!window.invFastSlotBlockedBaseName(raw);
+        },
+        doFastSlot:function(){
+            this.selected=false;
+            var raw=this.data.raw||this.data.id;
+            invTrigger('setFastSlot',raw);
+        },
+        showToggleTop:function(){
+            return this.type==='clothes'&&window.invClothSlotToEqKey&&window.invClothSlotToEqKey(this.clothesslot)==='top'&&window.invEquipTopHasDonateToggle&&window.invEquipTopHasDonateToggle(window.lastEquipSnap);
+        },
+        doToggleTop:function(){this.selected=false;invTrigger('inventoryToggleDonateTopVariant');},
+        doDrop:function(){
+            this.selected=false;
+            if(this.type==='weapon'&&this.data&&this.data.id!=='E'){
+                var raw=this.data.raw||this.data.id;
+                invTrigger('removeFastSlot'+(this.weaponslot+1),raw);
+                return;
+            }
+            if(invApp)invApp.startDropItem(this);
+        },
+        doUseClothes:function(){
+            this.selected=false;
+            if(window.invPerformItemUse)window.invPerformItemUse(this,false);
+        },
+        binderName:function(){if(!invApp||!invApp.binderSlotData)return'-';return invApp.binderSlotData[this.itemslot]?invApp.binderSlotData[this.itemslot].keyName:'-';},
+        canBind:function(){return this.type==='item';},
+        hasBind:function(){return window.invHasSlotBind&&window.invHasSlotBind(this.itemslot);},
+        doBindSlot:function(){this.selected=false;if(window.invBeginBindSlot)window.invBeginBindSlot(String(this.itemslot));},
+        doClearBind:function(){this.selected=false;if(window.invClearBindSlot)window.invClearBindSlot(String(this.itemslot));},
+        drop:function(){if(this.type==='item'||this.type==='bagItem'||this.type==='weapon')this.doDrop();},
+        onImgError:function(e){if(window.invOnItemImgError&&e&&e.target)window.invOnItemImgError(e.target,this.data);},
+        getIcoPath:function(){
+            if(!this.data||this.data.id==='E')return '';
+            if(window.invResolveItemIconUrl)return window.invResolveItemIconUrl(this.data);
+            return'';
+        }
+    }
+});
+
+/* ── mock data для preview ── */
+function makeItems(n){var a=[];for(var i=0;i<n;i++)a.push(emptySlot());return a;}
+
+var MOCK={
+    type:'playerInventory',
+    weight:3.5, maxWeight:10,
+    bagWeight:0, bagMaxWeight:10, bagName:'', bagItems:[],
+    currentMaskId:0,
+    player:{mood:90,satiety:75},
+    weapons:[emptyWeapon(),emptyWeapon(),emptyWeapon()],
+    items:makeItems(20),
+    clothes:{
+        hat:       emptyClothes(0),
+        mask:      emptyClothes(1),
+        top:       emptyClothes(11),
+        armor:     emptyClothes(9),
+        under:     emptyClothes(8),
+        legs:      emptyClothes(4),
+        foot:      emptyClothes(6),
+        accessories:emptyClothes(7),
+        glasses:   emptyClothes(-1),
+        watch:     emptyClothes(-6),
+        gloves:    emptyClothes(12),
+        ears:      emptyClothes(-2),
+        bracelets: emptyClothes(-7)
+    }
+};
+/* ── Vue app ── */
+var invApp = new Vue({
+    el:'#playerInventory',
+    data:{
+        loaded:false,
+        enableCenterInventory:false,
+        startSelectedItem:null,
+        mouseX:0,mouseY:0,startSelectTick:0,
+        disableDeleteItem:false,selectedItem:null,
+        dropItem:null,
+        data:MOCK,
+        replaceItem:{start:false,replaceItemCount:1,replaceItemMax:1,onReplace:null},
+        form:{dropItemCount:1},
+        binderSlotData:[]
+    },
+    computed:{
+        isTrunkOpen:function(){
+            return !!(this.data&&this.data.bagName==='Багажник'&&this.data.bagItems&&this.data.bagItems.length);
+        },
+        trunkPlayerWeightPct:function(){
+            var max=Number(this.data&&this.data.maxWeight)||10;
+            var w=Number(this.data&&this.data.weight)||0;
+            return max>0?Math.min(100,(w/max)*100):0;
+        },
+        trunkBagWeightPct:function(){
+            var max=Number(this.data&&this.data.bagMaxWeight)||90;
+            var w=Number(this.data&&this.data.bagWeight)||0;
+            return max>0?Math.min(100,(w/max)*100):0;
+        }
+    },
+    methods:{
+        formatWeightKg:function(val){
+            var n=Number(val)||0;
+            var r=Math.round(n*100)/100;
+            if(Math.abs(r-Math.round(r))<0.001)return String(Math.round(r));
+            return r.toFixed(2).replace(/0+$/,'').replace(/\.$/,'');
+        },
+        handleEmptyGridSlotSelect:function(t,rightBtn){
+            if(!t||t.type!=='item'||!t.data||t.data.id!=='E')return false;
+            if(rightBtn){
+                if(this.selectedItem){this.selectedItem.selected=false;this.selectedItem=null;}
+                return true;
+            }
+            if(this.startSelectTick>INV_DRAG_AS_CLICK_MAX)return true;
+            if(this.selectedItem===t&&t.selected){
+                t.selected=false;
+                this.selectedItem=null;
+                return true;
+            }
+            if(this.selectedItem)this.selectedItem.selected=false;
+            t.selected=true;
+            this.selectedItem=t;
+            return true;
+        },
+        startSelectItem:function(t){this.disableDeleteItem=false;this.startSelectedItem=t;this.startSelectTick=0;},
+        endSelectItem:function(t){t.selected=false;if(this.selectedItem===t)this.selectedItem=null;},
+        selectItem:function(t,rightBtn){
+            var a=this.startSelectedItem;
+            this.disableDeleteItem=true;
+            if(a===t){
+                if(!t.data||t.data.id==='E'){
+                    if(this.handleEmptyGridSlotSelect(t,rightBtn)){
+                        this.startSelectedItem=null;
+                        return;
+                    }
+                    if(this.selectedItem){this.selectedItem.selected=false;this.selectedItem=null;}
+                    this.startSelectedItem=null;
+                    return;
+                }
+                if(rightBtn){
+                    if(window.invPerformItemUse){window.invPerformItemUse(t,false);}
+                    else{
+                    var raw=t.data.raw||t.data.id;
+                    var base=window.invItemBaseId?window.invItemBaseId(raw):raw;
+                    if(t.type==='item'){
+                        if(window.invIsEquipableClothToken&&window.invIsEquipableClothToken(raw))invTrigger('inventoryEquipItem',raw);
+                        else if(base==='Бронежилет'||base==='Аптечка')invTrigger('useConsumable',base);
+                        else if(!window.invFastSlotBlockedBaseName(raw)&&(window.inventoryFastSlotsRef||[]).indexOf('')!==-1)invTrigger('setFastSlot',raw);
+                    }else if(t.type==='weapon'){
+                        invTrigger('removeFastSlot'+(t.weaponslot+1),raw);
+                    }else if(t.type==='bagItem'){
+                        invTrigger('inventoryMoveFromBag',t.itemslot,-1,-1);
+                    }
+                    }
+                    this.startSelectedItem=null;
+                    if(this.selectedItem){this.selectedItem.selected=false;this.selectedItem=null;}
+                    return;
+                }
+                if(this.selectedItem)this.selectedItem.selected=false;
+                t.selected=true;
+                this.selectedItem=t;
+            } else {
+                if(!a)return;
+                var rawA=a.data&&a.data.raw?a.data.raw:(a.data?a.data.id:'');
+                var rawT=t.data&&t.data.raw?t.data.raw:(t.data?t.data.id:'');
+                var baseA=window.invItemBaseId?window.invItemBaseId(rawA):rawA;
+                var baseT=window.invItemBaseId?window.invItemBaseId(rawT):rawT;
+                if(t.type==='item'&&a.type==='item'){
+                    if(baseA===baseT&&baseA!=='E'&&window.invIsConsumableStackBase&&window.invIsConsumableStackBase(baseA)){
+                        invTrigger('inventory:mergeGridStack',a.itemslot,t.itemslot);
+                    }else if(t.data.id==='E'&&window.invIsConsumableStackBase&&window.invIsConsumableStackBase(baseA)&&a.data.count>1&&ctrlMode){
+                        this.openSplitGridModal(a.itemslot,t.itemslot,a.data.count);
+                    }else{
+                        invTrigger('inventoryGridSwap',a.itemslot,t.itemslot);
+                    }
+                }else if(t.type==='weapon'&&a.type==='weapon'){
+                    if(a.data.id!=='E')invTrigger('setFastSlotAt',rawA,t.weaponslot);
+                }else if(t.type==='weapon'&&(a.type==='item'||a.type==='bagItem')){
+                    if(window.invIsEquipableClothToken&&window.invIsEquipableClothToken(rawA)){
+                        invTrigger('inventoryEquipItem',rawA);
+                    }else if(t.data.id==='E'||!t.data.id){
+                        if(!window.invFastSlotBlockedBaseName(rawA))invTrigger('setFastSlotAt',rawA,t.weaponslot);
+                    }
+                }else if(t.type==='bagItem'&&a.type==='bagItem'){
+                    invTrigger('inventorySwapBagSlots',a.itemslot,t.itemslot);
+                }else if(t.type==='item'&&a.type==='bagItem'){
+                    invTrigger('inventoryMoveFromBag',a.itemslot,t.itemslot);
+                }else if(t.type==='bagItem'&&a.type==='item'){
+                    if(ctrlMode&&window.invIsConsumableStackBase&&window.invIsConsumableStackBase(baseA)&&a.data.count>1){
+                        this.openBagSplitModal('toBag',a.itemslot,t.itemslot,a.data.count);
+                    }else{
+                        invTrigger('inventoryMoveToBag',a.itemslot,t.itemslot,-1);
+                    }
+                }else if(t.type==='item'&&a.type==='bagItem'){
+                    if(ctrlMode&&window.invIsConsumableStackBase&&window.invIsConsumableStackBase(baseA)&&a.data.count>1){
+                        this.openBagSplitModal('toInv',a.itemslot,t.itemslot,a.data.count);
+                    }else{
+                        invTrigger('inventoryMoveFromBag',a.itemslot,t.itemslot);
+                    }
+                }
+                this.startSelectedItem=null;
+                if(this.selectedItem){this.selectedItem.selected=false;this.selectedItem=null;}
+            }
+        },
+        openSplitGridModal:function(fromSlot,toSlot,maxQty){
+            var self=this;
+            this.replaceItem.replaceItemMax=Math.max(1,(maxQty||2)-1);
+            this.replaceItem.replaceItemCount=1;
+            this.replaceItem.start=true;
+            this.replaceItem.onReplace=function(qty){
+                if(qty>0)invTrigger('inventory:gridSplitMove',fromSlot,toSlot,qty);
+            };
+        },
+        openBagSplitModal:function(mode,bagSlot,invSlot,maxQty){
+            var self=this;
+            this.replaceItem.replaceItemMax=Math.max(1,parseInt(maxQty,10)||1);
+            this.replaceItem.replaceItemCount=1;
+            this.replaceItem.start=true;
+            this.replaceItem.onReplace=function(qty){
+                if(qty<=0)return;
+                if(mode==='toBag')invTrigger('inventoryMoveToBag',invSlot,bagSlot,qty);
+                else invTrigger('inventoryMoveFromBag',bagSlot,invSlot,qty);
+            };
+        },
+        startDropItem:function(t){
+            if(this.selectedItem)this.selectedItem.selected=false;
+            if(!window.invDropNeedsQtyModal||!window.invDropNeedsQtyModal(t)){
+                if(window.invPerformInstantDrop)window.invPerformInstantDrop(t);
+                return;
+            }
+            this.form.dropItemCount=1;
+            this.dropItem=t;
+        },
+        confirmDrop:function(cnt){
+            if(!this.dropItem)return;
+            var di=this.dropItem;
+            var q=parseInt(cnt,10)||1;
+            var raw=di.data.raw||di.data.id;
+            if(di.type==='bagItem'){
+                if(q>=di.data.count)invTrigger('inventory:dropSlot','bag',di.itemslot);
+                else invTrigger('inventory:dropSlotQty','bag',di.itemslot,q);
+            }else if(di.type==='weapon'){
+                invTrigger('removeFastSlot'+(di.weaponslot+1),raw);
+            }else if(window.invIsConsumableStackBase&&window.invIsConsumableStackBase(window.invItemBaseId(raw))&&q<di.data.count){
+                invTrigger('dropItemQty',JSON.stringify({item:raw,q:q}));
+            }else{
+                invTrigger('dropItem',raw);
+            }
+            this.dropItem=null;
+        },
+        removeBag:function(){
+            if(window.invCanUnequipBag&&!window.invCanUnequipBag(window.lastEquipSnap)){
+                invTrigger('notify:client',2,'bottom-mid','Освободите слот в инвентаре, чтобы снять сумку.',3500);
+                return;
+            }
+            invTrigger('inventoryUnequipSlot','bag');
+        },
+        closeInv:function(){if(window.resetInventoryEscState)window.resetInventoryEscState();invTrigger('closeInventory');},
+        onKeyUp:function(e){if(e.which===27){if(window.resetInventoryEscState)window.resetInventoryEscState();this.closeInv();}else if(e.which===16)shitfMode=false;else if(e.which===17)ctrlMode=false;},
+        onKeyDown:function(e){
+            if(e.which===16)shitfMode=true;
+            else if(e.which===17)ctrlMode=true;
+            else if(e.which===9){
+                if(window._invBindWaitingSlot==null||window._invBindWaitingSlot===''){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if(this.selectedItem){this.selectedItem.selected=false;this.selectedItem=null;}
+                    this.startSelectedItem=null;
+                    if(window.invClearAllItemSelections)window.invClearAllItemSelections();
+                }
+            }
+        },
+        onMouseUp:function(e){if(e.button!==2&&this.startSelectedItem&&!this.disableDeleteItem){this.startSelectedItem.drop();this.startSelectedItem=null;}},
+        onMouseMove:function(e){if(this.startSelectedItem)this.startSelectTick++;this.mouseX=e.clientX;this.mouseY=e.clientY;}
+    },
+    mounted:function(){
+        document.addEventListener('keyup',this.onKeyUp);
+        document.addEventListener('keydown',this.onKeyDown,true);
+        document.addEventListener('mouseup',this.onMouseUp);
+        document.addEventListener('mousemove',this.onMouseMove);
+    }
+});
+
+/* ── публичный API для RAGE MP ── */
+window.openInventory=function(payload){
+    var d=typeof payload==='string'?JSON.parse(payload):payload;
+    if(!d.type)d.type='playerInventory';
+    var slots=['hat','mask','top','armor','under','legs','foot','accessories','glasses','watch','gloves','ears','bracelets'];
+    var slotNums={hat:0,mask:1,top:11,armor:9,under:8,legs:4,foot:6,accessories:7,glasses:-1,watch:-6,gloves:12,ears:-2,bracelets:-7};
+    if(!d.clothes){d.clothes={};slots.forEach(function(s){d.clothes[s]=emptyClothes(slotNums[s]);});}
+    else{slots.forEach(function(s){if(!d.clothes[s])d.clothes[s]=emptyClothes(slotNums[s]);});}
+    if(!d.weapons)d.weapons=[emptyWeapon(),emptyWeapon(),emptyWeapon()];
+    if(!d.player)d.player={mood:90,satiety:90};
+    if(d.weight==null)d.weight=0;
+    if(!d.maxWeight)d.maxWeight=10;
+    if(d.usedSlots==null)d.usedSlots=0;
+    if(d.maxSlots==null)d.maxSlots=20;
+    if(!d.bagWeight)d.bagWeight=0;
+    if(!d.bagMaxWeight)d.bagMaxWeight=10;
+    if(!d.bagName)d.bagName='';
+    if(!d.bagItems)d.bagItems=[];
+    if(!d.items)d.items=makeItems(20);
+    invApp.data=d;
+    invApp.loaded=true;
+    invApp.startSelectedItem=null;
+    invApp.selectedItem=null;
+    invApp.dropItem=null;
+};
+window.invApp=invApp;
+
+window.mp={trigger:function(){var a=Array.prototype.slice.call(arguments);console.log('[preview]',a.join(' '));}};
+
+window.invResolveItemIconUrl=function(d){
+    if(!d||d.id==='E')return'';
+    if(d.icoFull)return d.icoFull;
+    return'../menunew/img/cartridge.svg';
+};
+
+function mkPreviewItem(name,count){
+    return{id:name,name:name,raw:name,ico:'default.png',icoFull:'../menunew/img/cartridge.svg',count:count||1,weight:0.35,trade:true,needGetSpecialActionList:false,startLoadSpecialAction:false,specialActionList:[],slot:-1};
+}
+
+function showTrunkPreview(){
+    var items=makeItems(20);
+    items[0]=mkPreviewItem('Аптечка',5);
+    items[1]=mkPreviewItem('Панамка',1);
+    items[2]=mkPreviewItem('Шарф',1);
+    items[3]=mkPreviewItem('Бургер',4);
+    items[4]=mkPreviewItem('Тыква 2023',640);
+    items[5]=mkPreviewItem('Леденец 2023',60);
+    items[6]=mkPreviewItem('Боди-камера',1);
+    items[7]=mkPreviewItem('Ключи',1);
+    items[8]=mkPreviewItem('Ключи',1);
+    items[9]=mkPreviewItem('Ключи',1);
+    var bagItems=makeItems(48);
+    bagItems[0]=mkPreviewItem('Малая сумка',1);
+    bagItems[30]=mkPreviewItem('Аптечка',3);
+    bagItems[35]=mkPreviewItem('Бургер',2);
+    openInventory({
+        type:'playerInventory',
+        weight:3.75,maxWeight:10,usedSlots:10,maxSlots:20,
+        bagWeight:1,bagMaxWeight:90,bagName:'Багажник',bagItems:bagItems,
+        items:items,player:{mood:90,satiety:75},
+        weapons:[emptyWeapon(),emptyWeapon(),emptyWeapon()],
+        clothes:MOCK.clothes
+    });
+}
+
+function showTrunkEmpty(){
+    openInventory({
+        type:'playerInventory',
+        weight:1.2,maxWeight:10,usedSlots:1,maxSlots:20,
+        bagWeight:0,bagMaxWeight:90,bagName:'Багажник',bagItems:makeItems(48),
+        items:makeItems(20),player:{mood:90,satiety:75},
+        weapons:[emptyWeapon(),emptyWeapon(),emptyWeapon()],
+        clothes:MOCK.clothes
+    });
+}
+
+showTrunkPreview();
+</script>
+</body>
+</html>

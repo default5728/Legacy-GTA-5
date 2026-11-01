@@ -1,0 +1,434 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: transparent !important;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    user-select: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
+button, svg, .playerInventory-item-container {
+    cursor: pointer;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.d-flex.column {
+    flex-direction: column;
+}
+
+.d-flex.center {
+    justify-content: center;
+    align-items: center;
+}
+
+.d-flex.center-align {
+    align-items: center;
+}
+
+.ml-5 { margin-left: 5px; }
+.ml-10 { margin-left: 10px; }
+.ml-20 { margin-left: 20px; }
+.ml-auto { margin-left: auto; }
+
+.mt-5 { margin-top: 5px; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
+.mt-20 { margin-top: 20px; }
+.mt-auto { margin-top: auto; }
+
+.content-block {
+    position: absolute;
+}
+
+.content-block.center {
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.yk-block {
+    background: #1D2634;
+    border-radius: 10px;
+    border: 1px solid #30343A;
+}
+
+.yk-content, .yk-content-10 {
+    padding: 10px;
+}
+
+.yk-tab-block-h {
+    display: flex;
+    align-items: center;
+    padding: 0px 20px;
+}
+
+.yk-tab-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 15px;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 14px;
+    color: #4D5E77;
+    fill: #4D5E77;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.yk-tab-button:hover {
+    color: #7C98C2;
+    fill: #7C98C2;
+}
+
+.yk-tab-button.active {
+    color: #FFF;
+    fill: #FF8A1E;
+}
+
+.yk-tab-button.active:before {
+    content: '';
+    position: absolute;
+    width: 130%;
+    height: 3px;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: linear-gradient(to left, transparent 0%, #FF7A00 36.98%, #FFB800 52.08%, #FF7A00 65.62%, transparent 100%);
+    pointer-events: none;
+}
+
+.yk-tab-button.active:after {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 100%;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at top, rgba(255, 46, 0, 0.48) 10%, rgba(255, 61, 0, 0.14) 35%, transparent 55%);
+    pointer-events: none;
+}
+
+.yk-tab-button-text {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.yk-tab-button-ico {
+    position: relative;
+    z-index: 2;
+    fill: inherit;
+    margin-right: 5px;
+    pointer-events: none;
+}
+
+.yk-scroll {
+    overflow-x: visible;
+    overflow-y: auto;
+    padding-right: 0px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.yk-scroll::-webkit-scrollbar {
+    width: 0px;
+}
+
+.yk-scroll::-webkit-scrollbar-track {
+    width: 0px;
+    border-radius: 2px;
+    background-color: #121924;
+}
+
+.yk-scroll::-webkit-scrollbar-thumb {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+    border-radius: 2px;
+}
+
+.yk-input-block {
+    display: flex;
+    padding: 10px;
+    background: #171D27;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.07);
+    border-radius: 4px;
+    border: none;
+}
+
+.yk-input {
+    min-width: 0px;
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #fff;
+    resize: none;
+}
+
+.yk-checkbox-block {
+    display: flex;
+    align-items: center;
+}
+
+.yk-checkbox {
+    position: relative;
+    height: 23px;
+    width: 23px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: #161B23;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.07);
+    border-radius: 3px;
+}
+
+.yk-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 3px;
+    width: 6px;
+    height: 12px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.yk-checkbox-text {
+    margin-left: 5px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    color: #fff;
+}
+
+.yk-checkbox:checked {
+    background: linear-gradient(180deg, #FFB800 0%, #FF5C00 100%);
+    box-shadow: none;
+}
+
+.yk-checkbox:focus {
+    outline: none;
+}
+
+.yk-text {
+    font-family: Montserrat;
+    font-size: 14px;
+    color: #fff;
+    text-transform: none;
+}
+
+.yk-text.w-5 { font-weight: 500; }
+.yk-text.w-6 { font-weight: 600; }
+.yk-text.w-7 { font-weight: 700; }
+.yk-text.s-14 { font-size: 14px; }
+.yk-text.s-15 { font-size: 15px; }
+.yk-text.s-16 { font-size: 16px; }
+.yk-text.s-17 { font-size: 17px; }
+.yk-text.upper { text-transform: uppercase; }
+.yk-text.text-center { text-align: center; width: 100%; }
+
+.yk-color-w { color: #fff; }
+.yk-color-gray { color: #7A92B6; }
+
+.yk-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 10px 30px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 0px 1px 2px rgba(0, 103, 47, 0.46);
+    text-align: center;
+    background: linear-gradient(270deg, #2D3957 0%, #4C6283 100%);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.yk-btn.s-15 {
+    font-size: 15px;
+}
+
+.yk-btn:hover {
+    box-shadow: 4px 1px 31px #1C3356;
+}
+
+.yk-btn.green {
+    background: linear-gradient(270deg, #00CE3A 0%, #BDFF00 100%);
+}
+
+.yk-btn.green:hover {
+    box-shadow: -2px 1px 31px rgba(51, 255, 0, 0.46);
+}
+
+.yk-btn.purple {
+    background: linear-gradient(270deg, #AC43FF 0%, #4232FF 100%);
+}
+
+.yk-btn.purple:hover {
+    box-shadow: -2px 1px 31px #4232FF;
+}
+
+.yk-btn:disabled, .yk-btn[disabled] {
+    opacity: 0.7;
+    box-shadow: none !important;
+    cursor: not-allowed;
+}
+
+/* Left block (your items): 4 columns × 5 rows */
+#yourItemsGrid {
+    width: 100%;
+    max-width: 320px; /* 4 × (74px + 2×3px margin) = 320px */
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Right block (your offer): 3 columns × 2 rows */
+#yourOfferGrid {
+    width: 240px; /* 3 × 80px */
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.playerInventory-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.playerInventory-item-container {
+    position: relative;
+    display: flex;
+    height: 74px;
+    width: 74px;
+    padding: 5px;
+    background: linear-gradient(360deg, rgba(36, 48, 65, 0.84) 0%, rgba(31, 45, 66, 0.84) 186%);
+    border: 1px solid #495269;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 3px;
+    flex-shrink: 0;
+}
+
+.playerInventory-item-container.dragover {
+    border-color: #FF8A1E;
+    box-shadow: 0 0 0 1px rgba(255, 138, 30, 0.75) inset;
+}
+
+.playerInventory-item-container:hover {
+    border-color: #7C98C2;
+}
+
+.playerInventory-trade-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.playerInventory-trade-scroll::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+.playerInventory-trade-scroll::-webkit-scrollbar-track {
+    width: 0px;
+    background: transparent;
+}
+
+.playerInventory-trade-scroll::-webkit-scrollbar-thumb {
+    width: 0px;
+    background: transparent;
+}
+
+/* ===== содержимое ячеек обмена ===== */
+.ti-img{ position:absolute; left:50%; top:42%; transform:translate(-50%,-50%); width:60%; height:60%; object-fit:contain; pointer-events:none; }
+.ti-img--weapon{ width:78%; height:70%; }
+.ti-qty{ position:absolute; top:3px; right:6px; font-family:Montserrat; font-size:11px; font-weight:800; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.6); }
+.ti-name{ position:absolute; left:2px; right:2px; bottom:3px; font-family:Montserrat; font-size:9px; text-align:center; color:#cdd5e4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ===== список «вы получаете» ===== */
+.trade-recv-money{ font-family:Montserrat; font-weight:700; font-size:16px; color:#00E03A; margin-bottom:6px; }
+.trade-recv-row{ font-family:Montserrat; font-weight:600; font-size:14px; color:#cdd5e4; line-height:1.5; }
+.trade-recv-x{ color:#7A92B6; }
+.trade-empty{ color:#495779; font-size:13px; }
+
+.yk-btn.green.is-dim,
+.yk-btn.green:disabled {
+    opacity: 0.42;
+    filter: grayscale(0.45);
+    box-shadow: none !important;
+}
+
+.trade-qty-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.55); z-index:200; }
+.trade-qty-modal.show { display:flex; }
+.trade-qty-card { width:320px; padding:18px 20px 16px; border-radius:12px; background:linear-gradient(180deg, rgba(18,18,18,0.96) 0%, rgba(10,10,10,0.98) 100%); border:1px solid rgba(110,168,255,.35); box-shadow:0 12px 40px rgba(0,0,0,.65); color:#f2f3f5; }
+.trade-qty-title { font-size:15px; font-weight:700; text-align:center; margin-bottom:4px; }
+.trade-qty-sub { font-size:12px; color:#aab2c2; text-align:center; margin-bottom:10px; }
+.qty-input-wrap { position:relative; margin-bottom:14px; }
+.trade-qty-input { width:100%; padding:10px 58px 10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.35); color:#f5f5f5; font-size:15px; outline:none; }
+.trade-qty-input::-webkit-outer-spin-button, .trade-qty-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+.trade-qty-max { position:absolute; right:6px; top:50%; transform:translateY(-50%); height:28px; padding:0 10px; border-radius:7px; border:1px solid rgba(110,168,255,.35); background:rgba(110,168,255,.18); color:#fff; font-size:11px; font-weight:800; cursor:pointer; }
+.trade-qty-max:hover { background:rgba(110,168,255,.32); }
+.trade-qty-actions { display:flex; gap:8px; justify-content:flex-end; }
+.trade-qty-actions button { flex:0 0 auto; }
+.trade-qty-cancel, .trade-qty-ok { padding:8px 14px; border-radius:8px; border:1px solid rgba(255,255,255,.12); font-size:13px; cursor:pointer; }
+.trade-qty-cancel { background:rgba(255,255,255,.06); color:#d7dce6; }
+.trade-qty-ok { background:rgba(110,168,255,.2); color:#fff; border-color:rgba(110,168,255,.35); }
+
+#tradeRecvList {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+#tradeRecvList::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+#tradeRecvList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#tradeRecvList::-webkit-scrollbar-thumb {
+    background: transparent;
+}

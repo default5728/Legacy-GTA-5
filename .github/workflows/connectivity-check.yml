@@ -1,0 +1,28 @@
+name: Diagnose VPS connectivity
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Check public SSH handshake and resource HTTP
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import socket, urllib.request, urllib.error
+          s=socket.create_connection(('187.13.75.140',22),timeout=8)
+          print('SSH banner:',s.recv(200).decode(errors='replace').strip(),flush=True)
+          s.close()
+          try:
+              r=urllib.request.urlopen('http://187.13.75.140:22006/',timeout=10)
+              print('Resource HTTP:',r.status,flush=True)
+              r.close()
+          except urllib.error.HTTPError as e:
+              print('Resource HTTP:',e.code,flush=True)
+          except Exception as e:
+              print('Resource HTTP:',type(e).__name__,str(e),flush=True)
+          PY
+          ssh-keyscan -T 8 -t ed25519 187.13.75.140

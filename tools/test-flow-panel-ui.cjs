@@ -1,0 +1,12 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../client_packages/browsers/adminpanel/index.html'),'utf8');
+const start=html.indexOf('    window.__adminPanelLvl = 0;'),end=html.indexOf('    function executePunishment',start);assert(start>=0&&end>start);
+const calls=[],buttons=['money','dp'].map(permission=>({dataset:{adminPermission:permission}}));
+const ctx={window:{},document:{getElementById:id=>({value:id.endsWith('static')?'400':'50'}),querySelectorAll:()=>buttons},mp:{trigger:(...args)=>calls.push(args)}};
+vm.runInNewContext(html.slice(start,end),ctx);
+ctx.window.__adminPanelSetLevel(8);ctx.window.__adminPanelSetCapabilities({money:true,dp:false});ctx.executeGrant('givemoney');
+assert.deepEqual(calls[0],['adminPanel:execCommand','givemoney 400 50']);assert.equal(buttons[0].disabled,false);assert.equal(buttons[1].disabled,true);
+ctx.executeGrant('givedp');assert.equal(calls.at(-1)[0],'adminPanel:notify');
+ctx.window.__adminPanelSetCapabilities({money:false,dp:false});const before=calls.filter(c=>c[0]==='adminPanel:execCommand').length;ctx.executeGrant('givemoney');assert.equal(calls.filter(c=>c[0]==='adminPanel:execCommand').length,before);assert.equal(buttons[0].disabled,true);
+console.log('PASS: Flow grant buttons and dispatch use synchronized capabilities; rank downgrade disables money immediately; premium-currency capability stays separate.');

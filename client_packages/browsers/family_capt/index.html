@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="../familynew/js/jquery.min.js"></script>
+</head>
+<body>
+    <div id="capt-hud">
+        <div class="hud-container">
+            <!-- Left Side: Attacker (Red) -->
+            <div class="team attacker">
+                <div class="team-bar red-bar"></div>
+                <div class="team-info">
+                    <div class="team-count red-bg" id="attacker-count">0</div>
+                    <div class="team-name" id="attacker-name">ATTACKERS</div>
+                </div>
+            </div>
+            
+            <!-- Center: Timer -->
+            <div class="timer-container">
+                <div class="timer-value" id="capt-timer">02:00</div>
+                <div class="timer-label" id="timer-label">ПОДГОТОВКА</div>
+            </div>
+
+            <!-- Right Side: Defender (Blue/Green) -->
+            <div class="team defender">
+                <div class="team-info right-align">
+                    <div class="team-name" id="defender-name">DEFENDERS</div>
+                    <div class="team-count blue-bg" id="defender-count">0</div>
+                </div>
+                <div class="team-bar blue-bar"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

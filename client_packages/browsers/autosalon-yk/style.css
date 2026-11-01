@@ -1,0 +1,147 @@
+#shop_vehicle {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#shop_vehicle,
+#shop_vehicle *:focus,
+#shop_vehicle *:focus-visible {
+    outline: none !important;
+}
+
+#shop_vehicle .yk-shadow-block-right,
+#shop_vehicle .yk-shadow-block-left,
+#shop_vehicle .content-block,
+#shop_vehicle .autosalon-buy-confirm,
+#shop_vehicle .autosalon-buy-actions,
+#shop_vehicle button,
+#shop_vehicle .yk-shadow-block-item,
+#shop_vehicle .autosalon-rotate-zone {
+    pointer-events: auto;
+}
+
+#shop_vehicle .yk-shadow-block-right,
+#shop_vehicle .yk-shadow-block-left,
+#shop_vehicle .content-block,
+#shop_vehicle .autosalon-buy-confirm,
+#shop_vehicle button,
+#shop_vehicle .yk-shadow-block-item {
+    cursor: pointer;
+}
+
+#shop_vehicle .yk-shadow-block-right > div:first-child {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 12px 0 28px !important;
+}
+
+#shop_vehicle .yk-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: calc(100vh - 40px);
+    max-height: calc(100vh - 40px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding-right: 0px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#shop_vehicle .yk-scroll.hidden {
+    padding-right: 0px;
+}
+
+#shop_vehicle .yk-scroll.hidden::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+#shop_vehicle .yk-scroll::-webkit-scrollbar {
+    width: 0px;
+}
+#shop_vehicle .yk-scroll::-webkit-scrollbar-track {width: 0px; height: 0px; background: transparent; }
+#shop_vehicle .yk-scroll::-webkit-scrollbar-thumb {width: 0px; height: 0px; background: transparent; }
+
+/* Две кнопки оплаты в один ряд */
+.autosalon-pay-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.autosalon-pay-row > .yk-btn,
+.autosalon-pay-row > button {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.autosalon-pay-row > .yk-btn.ml-5,
+.autosalon-pay-row > button.ml-5 {
+    margin-left: 0 !important;
+}
+
+/* Центр — только мышью крутить авто */
+.autosalon-rotate-zone {
+    position: fixed;
+    left: 320px;
+    right: 320px;
+    top: 80px;
+    bottom: 80px;
+    z-index: 40;
+    cursor: grab;
+    background: transparent;
+}
+
+.autosalon-rotate-zone.is-dragging {
+    cursor: grabbing;
+}
+
+/* Подтверждение покупки выше зоны вращения */
+.autosalon-buy-confirm {
+    z-index: 120 !important;
+    pointer-events: auto !important;
+}
+
+.autosalon-buy-actions {
+    position: absolute;
+    left: 50%;
+    bottom: -15px;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 121;
+    pointer-events: auto !important;
+}
+
+.autosalon-buy-actions > button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.vehicleShop-color-block {
+    display: inline-block;
+    width: 27px;
+    height: 27px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
+    border-radius: 2px;
+    margin: 2px;
+}

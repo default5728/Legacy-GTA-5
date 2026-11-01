@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/media.css">
+    <link rel="stylesheet" href="css/family.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <title></title>
+</head>
+
+<body>
+    <div id="family-menu" v-if="Active">
+        <div class="family-system">
+            <div class="family-menu_window">
+                <a class="family-menu_close-btn" @click="closeFamilyMenu()"><img src="package://browsers/anims/img/close.svg"></a>
+                <div class="family-menu_family-name">
+                    <p>{{ FamilyName }}</p>
+                </div>
+                <p class="family-menu_family-date">Организованна {{ CreateData }}</p>
+                <div class="family-menu_nav-div">
+                    <ul class="family-menu_nav">
+                        <li class="active"><a data-toggle="tab" href="#family-menu_family-list">Участники</a></li>
+                        <li><a data-toggle="tab" href="#family-menu_control">Управление</a></li>
+                        <li><a data-toggle="tab" href="#family-menu_fleet" onclick="try{if(typeof mp!=='undefined'&&mp.trigger)mp.trigger('family:fleet:tab:open');}catch(e){}">Семейный гараж</a></li>
+                        <li><a data-toggle="tab" href="#family-menu_capts">Война семей</a></li>
+                        <li><a data-toggle="tab" href="#family-menu_rating" onclick="mp.trigger('family:rating:request')">Рейтинг семей</a></li>
+                        <li><a data-toggle="tab" href="#family-menu_advertising">Реклама</a></li>
+                        <li v-show="PlayerRank > 9"><a data-toggle="tab" href="#family-menu_setting">Настройка/Матрица</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div id="family-menu_family-list" class="tab-pane fade in active">
+                        <div class="family-menu_family-list">
+                            <table class="family-menu_table">
+                                <thead>
+                                    <tr>
+                                        <th>Никнейм</th>
+                                        <th class="family-menu_table--flex-center">Ранг</th>
+                                        <th class="family-menu_table--flex-end">Действие</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(user, i) in Users">
+                                        <td v-show="user.leader"><b> [#{{ user.staticID }}] {{ user.login }}</b></td>
+                                        <td v-show="!user.leader"> [#{{ user.staticID }}] {{ user.login }}</td>
+                                        <td class="family-menu_table--flex-center">
+                                            <div v-show="!user.leader">{{ user.rankLabel || ('Ранг ' + user.rank) }} <a @click="opnModalFamily(user.rank,user.staticID)"><img src="package://browsers/anims/img/svg/family_edit.svg"></a></div><b v-show="user.leader">{{ user.tag }} ({{ user.rankLabel || ('Ранг ' + user.rank) }})</b>
+                                        </td>
+                                        <td class="family-menu_table--flex-end">
+                                            <div v-show="!user.leader" @click="kickTargetFromFamily(user.staticID)">Исключить <a><img src="package://browsers/anims/img/close.svg"></a></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="family-menu_control" class="tab-pane fade">
+                        <div class="family-menu_control">
+                            <div class="family-menu_control-left">
+                                <div class="family-menu_control-img">
+                                    <img v-bind:src="'img/family/interrior' + Interrior + '.png'">
+                                </div>
+                                <div class="family-menu_control-location">
+                                    <p>Офис семьи</p>
+                                    <div>
+                                        <img src="package://browsers/anims/img/svg/family-menu_location.svg">
+                                        <p>{{ Location }}</p>
+                                    </div>
+                                </div>
+                                <div class="family-menu_control-input">
+                                    <input type="text" name="" value="" id="FamilyInviteTargetID" oninput="InputChangesCheck('FamilyInviteTargetID')" placeholder="Введите Static">
+                                    <a class="family-menu_control-input-btn" onclick="mp.trigger('family:invite:c',document.getElementById('FamilyInviteTargetID').value)">Пригласить</a>
+                                    <a class="family-menu_control-input-btn" onclick="mp.trigger('family:leave:c')">Покинуть семью</a>
+                                </div>
+                            </div>
+                            <div class="family-menu_control-right">
+                                <div class="family-menu_control-info">
+                                    <img src="package://browsers/anims/img/svg/cog.svg">
+                                    <div class="control-info_info-block">
+                                        <p>Материалы</p>
+                                        <b>{{ Materials }}</b>
+                                    </div>
+                                </div>
+                                <div class="family-menu_control-info">
+                                    <img src="package://browsers/anims/img/svg/ticket_star.svg">
+                                    <div class="control-info_info-block">
+                                        <p>Family Rank Points</p>
+                                        <b>{{ RankPoints }}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="family-menu_fleet" class="tab-pane fade">
+                        <div class="family-fleet">
+                            <p class="family-fleet__warn" v-show="!fleetCanSave">Менять настройки может только лидер семьи.</p>
+                            <label class="family-fleet__lbl">Общий номер (до 6 символов)
+                                <input type="text" class="family-fleet__inp" maxlength="6" v-model="fleetPlateInput" :readonly="!fleetCanSave" autocomplete="off" @input="sanitizeFleetPlateInput" />
+                            </label>
+                            <p class="family-fleet__lbl2">Общий цвет (10 пресетов)</p>
+                            <div class="family-fleet__colors family-fleet__colors--scroll">
+                                <button type="button" v-for="c in fleetGtaPalette" :key="'gfc' + c.idx" class="family-fleet__sw" :class="{ active: fleetColorIdx === c.idx }" :style="{ background: c.css }" :title="c.label" @click="selectFleetColorGlobal(c.idx)"></button>
+                            </div>
+                            <button type="button" class="family-fleet__save" v-show="fleetCanSave" @click="saveFamilyFleet">Сохранить номер и базовый цвет</button>
+                            <div class="family-fleet__slots" v-if="fleetVehicles.length">
+                                <div class="family-fleet-slot" v-for="row in fleetVehicles" :key="'fv' + row.slot" :style="fleetSlotCardAccentStyle()">
+                                    <div class="family-fleet-slot__imgwrap">
+                                        <img class="family-fleet-slot__img" :src="vehPreview(row.model)" :alt="row.model" @error="$event.target.onerror=null;$event.target.src=fleetPreviewFallbackImg" />
+                                    </div>
+                                    <p class="family-fleet-slot__title">Слот {{ row.slot }} — {{ row.model }}</p>
+                                    <div class="family-fleet-slot__row">
+                                        <button type="button" class="family-fleet-slot__colorbtn" :style="fleetSlotColorBtnStyle(row)" :disabled="!fleetCanSave" @click="openFleetPalette(parseInt(row.slot,10), row)"></button>
+                                        <div class="family-fleet-slot__ranks">
+                                            <button type="button" class="family-fleet-slot__rankhead" @click="toggleFleetRankOpen(row.slot)">Ранги для завода ▾</button>
+                                            <div class="family-fleet-slot__ranklist" v-show="fleetRanksOpen[row.slot]">
+                                                <label v-for="r in 10" :key="'fr' + row.slot + '-' + r" class="family-fleet-slot__rankcb">
+                                                    <input type="checkbox" :checked="fleetRankSelected(row.slot, r)" :disabled="!fleetCanSave" @change="toggleFleetRankPick(row.slot, r)" />
+                                                    <span>{{ r }}</span>
+                                                </label>
+                                            </div>
+                                            <button type="button" class="family-fleet-slot__rankhead" @click="toggleFleetEvacRankOpen(row.slot)">Эвакуация (ранги) ▾</button>
+                                            <div class="family-fleet-slot__ranklist" v-show="fleetEvacRanksOpen[row.slot]">
+                                                <label v-for="r in 10" :key="'fe' + row.slot + '-' + r" class="family-fleet-slot__rankcb">
+                                                    <input type="checkbox" :checked="fleetEvacRankSelected(row.slot, r)" :disabled="!fleetCanSave" @change="toggleFleetEvacRankPick(row.slot, r)" />
+                                                    <span>{{ r }}</span>
+                                                </label>
+                                            </div>
+                                            <button type="button" class="family-fleet-slot__rankhead" @click="toggleFleetSummonRankOpen(row.slot)">Призыв (ранги) ▾</button>
+                                            <div class="family-fleet-slot__ranklist" v-show="fleetSummonRanksOpen[row.slot]">
+                                                <label v-for="r in 10" :key="'fs' + row.slot + '-' + r" class="family-fleet-slot__rankcb">
+                                                    <input type="checkbox" :checked="fleetSummonRankSelected(row.slot, r)" :disabled="!fleetCanSave" @change="toggleFleetSummonRankPick(row.slot, r)" />
+                                                    <span>{{ r }}</span>
+                                                </label>
+                                            </div>
+                                            <button type="button" class="family-fleet-slot__savemini" v-show="fleetCanSave" @click="saveFleetSlotMeta(parseInt(row.slot,10))">Применить ранги</button>
+                                            <div class="family-fleet-slot__actions" v-if="row.evacAllowed || row.summonAllowed">
+                                                <button type="button" class="family-fleet-slot__act family-fleet-slot__act--evac" v-if="row.evacAllowed" @click="fleetEvacAction(row.slot)">Эвакуировать</button>
+                                                <button type="button" class="family-fleet-slot__act family-fleet-slot__act--sum" v-if="row.summonAllowed" @click="fleetSummonAction(row.slot)">Призвать к себе</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="family-fleet__empty" v-else>Нет машин в семейном гараже. Лидер: донат-авто в F3 → Магазин → Транспорт → кнопка «В гараж семьи», или покупка за $ в автосалоне (dim 124).</p>
+                            <div class="family-fleet-palette" v-if="fleetPaletteOpen" @click.self="closeFleetPalette">
+                                <div class="family-fleet-palette__box" @click.stop>
+                                    <p class="family-fleet-palette__title">Цвет слота {{ fleetPaletteSlot }}</p>
+                                    <div class="family-fleet-palette__grid">
+                                        <button type="button" v-for="c in fleetGtaPalette" :key="'pal' + c.idx" class="family-fleet-palette__sw" :class="{ active: fleetPaletteTempIdx === c.idx }" :style="{ background: c.css }" :title="c.label" @click="applyFleetPalettePick(c.idx)"></button>
+                                    </div>
+                                    <div class="family-fleet-palette__actions">
+                                        <button type="button" class="family-fleet-palette__btn" @click="closeFleetPalette">Отмена</button>
+                                        <button type="button" class="family-fleet-palette__btn family-fleet-palette__btn--ok" @click="confirmFleetPalette">Применить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="family-menu_capts" class="tab-pane fade">
+                        <div class="family-menu_capts">
+                            <p class="capts-instruction">Чтобы назначить войну семей, кликните по желаемому квадрату</p>
+                            
+                            <div class="capts-main-layout">
+                                <!-- Карта с квадратами -->
+                                <div class="capts-map-area">
+                                    <div class="capts-map-bg"></div>
+                                    <div class="capts-map-grid">
+                                        <div 
+                                            class="capts-map-square" 
+                                            v-for="point in ServerPoints" 
+                                            :key="point.id"
+                                            :class="[
+                                                point.owner === FamilyName ? 'owned' : '',
+                                                point.underAttack ? 'under-attack' : '',
+                                                point.owner ? 'has-owner' : 'free',
+                                                selectedPoint && selectedPoint.id === point.id ? 'selected' : ''
+                                            ]"
+                                            @click="selectPoint(point)"
+                                            @mouseenter="hoveredPoint = point"
+                                            @mouseleave="hoveredPoint = null"
+                                        >
+                                            <span class="square-number">{{ point.id }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Боковая панель -->
+                                <div class="capts-sidebar">
+                                    <div class="capts-info-box">
+                                        <img src="img/svg/skull-icon.svg" class="info-icon" onerror="this.src='package://browsers/anims/img/svg/capture_logo.svg'">
+                                        <div class="info-content">
+                                            <span class="info-label">Контролирует квадрат</span>
+                                            <span class="info-value">{{ hoveredPoint ? (hoveredPoint.owner || '—') : '—' }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="capts-info-box">
+                                        <img src="img/svg/skull-icon.svg" class="info-icon" onerror="this.src='package://browsers/anims/img/svg/capture_logo.svg'">
+                                        <div class="info-content">
+                                            <span class="info-label">Ваши квадраты</span>
+                                            <span class="info-value">{{ Territories }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="capts-info-box">
+                                        <img src="img/svg/skull-icon.svg" class="info-icon" onerror="this.src='package://browsers/anims/img/svg/capture_logo.svg'">
+                                        <div class="info-content">
+                                            <span class="info-label">Доход семьи (FRP в час)</span>
+                                            <span class="info-value">{{ FamilyIncomeFRP }} FRP</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Всплывающее меню при выборе квадрата -->
+                            <div class="capts-popup-overlay" v-if="selectedPoint" @click.self="closeCaptPopup">
+                                <div class="capts-popup-menu" @click.stop>
+                                    <button type="button" class="capts-popup-close" @click.stop="closeCaptPopup" title="Закрыть">×</button>
+                                    <h3 class="capts-popup-title">Точка #{{ selectedPoint.id }}</h3>
+                                    
+                                    <div v-if="selectedPoint.owner === FamilyName" class="capts-popup-owned">
+                                        <p>Ваша точка</p>
+                                        <p class="capts-popup-captured" v-if="selectedPoint.capturedAt">Захвачена: {{ formatCapturedAt(selectedPoint.capturedAt) }}</p>
+                                        <p class="capts-popup-captured" v-else>Дата захвата не сохранена (старые точки)</p>
+                                    </div>
+                                    
+                                    <template v-else>
+                                        <div class="capts-popup-section">
+                                            <span class="capts-popup-label">Сколько человек</span>
+                                            <div v-if="CaptLimitsLoading" class="capts-popup-hint">Загрузка лимитов…</div>
+                                            <template v-else>
+                                                <p v-if="CaptFormatMax >= 3" class="capts-popup-range">Можно забить: от 3 до {{ CaptFormatMax }} человек</p>
+                                                <input v-if="CaptFormatMax >= 3"
+                                                    type="number"
+                                                    min="3"
+                                                    :max="CaptFormatMax"
+                                                    inputmode="numeric"
+                                                    class="capts-popup-format-input"
+                                                    v-model="CaptPlayerCountInput"
+                                                    placeholder="Минимум 3"
+                                                    autocomplete="off"
+                                                />
+                                                <p v-else class="capts-popup-hint capts-popup-hint--warn">Недостаточно игроков в сети для войны семей по этой точке.</p>
+                                                <p v-if="CaptFormatMax >= 1" class="capts-popup-hint">В сети у вас: {{ CaptAttackerOnline }}<span v-if="CaptHasDefenderOnPoint">, у владельца точки: {{ CaptDefenderOnline }}</span>.</p>
+                                            </template>
+                                        </div>
+                                        <div class="capts-popup-section" v-for="slotN in [1, 2, 3]" :key="'captw' + slotN">
+                                            <span class="capts-popup-label">{{ slotN === 1 ? 'Оружие — слот 1' : ('Слот ' + slotN) }}</span>
+                                            <div class="capts-popup-weapons capts-popup-weapons--wrap">
+                                                <button type="button"
+                                                    v-for="w in captWeaponOptions"
+                                                    :key="slotN + '-' + (w.key === '' ? 'empty' : w.key)"
+                                                    :class="['capts-popup-weapon-btn', selectedWeaponForSlot(slotN) === w.key ? 'active' : '']"
+                                                    @click="selectCaptWeaponSlot(slotN, w.key)">{{ w.label }}</button>
+                                            </div>
+                                        </div>
+                                        <div class="capts-popup-section">
+                                            <span class="capts-popup-label">Разрешить в войне семей</span>
+                                            <div class="capts-popup-weapons capts-popup-weapons--wrap">
+                                                <button type="button" :class="['capts-popup-weapon-btn', CaptAllowSpank ? 'active' : '']" @click="CaptAllowSpank = !CaptAllowSpank    ">Спанк</button>
+                                                <button type="button" :class="['capts-popup-weapon-btn', CaptAllowAlco ? 'active' : '']" @click="CaptAllowAlco = !CaptAllowAlco">Алко</button>
+                                                <button type="button" :class="['capts-popup-weapon-btn', CaptAllowArmor ? 'active' : '']" @click="CaptAllowArmor = !CaptAllowArmor">Броня</button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="capts-popup-attack-btn" :disabled="CaptLimitsLoading || CaptFormatMax < 1" @click="attackTerritory()">Забить</button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="family-menu_rating" class="tab-pane fade">
+                        <div class="family-rating">
+                            <header class="family-rating__head">
+                                <div class="family-rating__head-main">
+                                    <h2 class="family-rating__title">Рейтинг по территориям</h2>
+                                    <p class="family-rating__subtitle">Учитываются семьи с захваченными точками на карте</p>
+                                </div>
+                                <p class="family-rating__stat" v-if="RatingList.length > 0">{{ RatingList.length }} в рейтинге</p>
+                            </header>
+
+                            <div class="family-rating__board" v-if="RatingList.length > 0">
+                                <div class="family-rating__thead">
+                                    <span class="family-rating__th family-rating__th--rank">Место</span>
+                                    <span class="family-rating__th family-rating__th--name">Название семьи</span>
+                                    <span class="family-rating__th family-rating__th--pts">Точки</span>
+                                </div>
+                                <div class="family-rating__scroll">
+                                    <div
+                                        v-for="(family, i) in RatingList"
+                                        :key="i"
+                                        class="family-rating__row"
+                                        v-bind:class="{
+                                            'family-rating__row--p1': family.position === 1,
+                                            'family-rating__row--p2': family.position === 2,
+                                            'family-rating__row--p3': family.position === 3,
+                                            'family-rating__row--you': family.name === FamilyName
+                                        }">
+                                        <span class="family-rating__td family-rating__td--rank">
+                                            <span class="family-rating__place">{{ family.position }}</span>
+                                        </span>
+                                        <span class="family-rating__td family-rating__td--name">
+                                            <span class="family-rating__fname">{{ family.name }}</span>
+                                            <span class="family-rating__badge-you" v-if="family.name === FamilyName">ваша семья</span>
+                                        </span>
+                                        <span class="family-rating__td family-rating__td--pts">
+                                            <span class="family-rating__pts">{{ family.territories }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="family-rating__empty" v-else>
+                                <p class="family-rating__empty-title">Пока никого в рейтинге</p>
+                                <span class="family-rating__empty-hint">Захватывайте территории в войнах семей — семья появится в списке</span>
+                            </div>
+                        </div>
+                    </div>
+					<div id="family-menu_setting" class="tab-pane fade">
+                        <div class="family-menu_setting">
+                            <div class="family-menu_rankname-bar" v-show="PlayerRank > 9">
+                                <label class="family-menu_rankname-lbl">Название ранга №{{ CurrentRankChange }}</label>
+                                <input type="text" class="family-menu_rankname-input" maxlength="40" v-model="RankSystem[CurrentRankChange].rankName" placeholder="Отображение в списке участников" />
+                            </div>
+                            <ul class="family-menu_rank-list">
+                                <li v-bind:class="[CurrentRankChange == 1 ? 'active' : '']" @click="CurrentRankChange = 1"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank1">Ранг 1</a></li>
+                                <li v-bind:class="[CurrentRankChange == 2 ? 'active' : '']" @click="CurrentRankChange = 2"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank2">Ранг 2</a></li>
+                                <li v-bind:class="[CurrentRankChange == 3 ? 'active' : '']" @click="CurrentRankChange = 3"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank3">Ранг 3</a></li>
+                                <li v-bind:class="[CurrentRankChange == 4 ? 'active' : '']" @click="CurrentRankChange = 4"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank4">Ранг 4</a></li>
+                                <li v-bind:class="[CurrentRankChange == 5 ? 'active' : '']" @click="CurrentRankChange = 5"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank5">Ранг 5</a></li>
+                                <li v-bind:class="[CurrentRankChange == 6 ? 'active' : '']" @click="CurrentRankChange = 6"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank6">Ранг 6</a></li>
+                                <li v-bind:class="[CurrentRankChange == 7 ? 'active' : '']" @click="CurrentRankChange = 7"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank7">Ранг 7</a></li>
+                                <li v-bind:class="[CurrentRankChange == 8 ? 'active' : '']" @click="CurrentRankChange = 8"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank8">Ранг 8</a></li>
+                                <li v-bind:class="[CurrentRankChange == 9 ? 'active' : '']" @click="CurrentRankChange = 9"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_rank9">Ранг 9</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <p class="family-menu_rank-heading">Настройка ранга</p>
+                                <div id="family-menu_rank1" v-bind:class="[CurrentRankChange == 1 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check1" name="rank1_check1" v-model="RankSystem[1].CanInvite">
+                                            <label for="rank1_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check2" name="rank1_check2" v-model="RankSystem[1].ChangeRank">
+                                            <label for="rank1_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check3" name="rank1_check3" v-model="RankSystem[1].CanKick">
+                                            <label for="rank1_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check5" name="rank1_check5" v-model="RankSystem[1].familyWarehouse">
+                                            <label for="rank1_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check6" name="rank1_check6" v-model="RankSystem[1].captParticipate">
+                                            <label for="rank1_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check7" name="rank1_check7" v-model="RankSystem[1].fleetEvac">
+                                            <label for="rank1_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank1_check8" name="rank1_check8" v-model="RankSystem[1].fleetSummon">
+                                            <label for="rank1_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank2" v-bind:class="[CurrentRankChange == 2 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check1" name="rank2_check1" v-model="RankSystem[2].CanInvite">
+                                            <label for="rank2_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check2" name="rank2_check2" v-model="RankSystem[2].ChangeRank">
+                                            <label for="rank2_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check3" name="rank2_check3" v-model="RankSystem[2].CanKick">
+                                            <label for="rank2_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check5" name="rank2_check5" v-model="RankSystem[2].familyWarehouse">
+                                            <label for="rank2_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check6" name="rank2_check6" v-model="RankSystem[2].captParticipate">
+                                            <label for="rank2_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check7" name="rank2_check7" v-model="RankSystem[2].fleetEvac">
+                                            <label for="rank2_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank2_check8" name="rank2_check8" v-model="RankSystem[2].fleetSummon">
+                                            <label for="rank2_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank3" v-bind:class="[CurrentRankChange == 3 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check1" name="rank3_check1" v-model="RankSystem[3].CanInvite">
+                                            <label for="rank3_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check2" name="rank3_check2" v-model="RankSystem[3].ChangeRank">
+                                            <label for="rank3_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check3" name="rank3_check3" v-model="RankSystem[3].CanKick">
+                                            <label for="rank3_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check5" name="rank3_check5" v-model="RankSystem[3].familyWarehouse">
+                                            <label for="rank3_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check6" name="rank3_check6" v-model="RankSystem[3].captParticipate">
+                                            <label for="rank3_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check7" name="rank3_check7" v-model="RankSystem[3].fleetEvac">
+                                            <label for="rank3_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank3_check8" name="rank3_check8" v-model="RankSystem[3].fleetSummon">
+                                            <label for="rank3_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank4" v-bind:class="[CurrentRankChange == 4 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check1" name="rank4_check1" v-model="RankSystem[4].CanInvite">
+                                            <label for="rank4_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check2" name="rank4_check2" v-model="RankSystem[4].ChangeRank">
+                                            <label for="rank4_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check3" name="rank4_check3" v-model="RankSystem[4].CanKick">
+                                            <label for="rank4_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check5" name="rank4_check5" v-model="RankSystem[4].familyWarehouse">
+                                            <label for="rank4_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check6" name="rank4_check6" v-model="RankSystem[4].captParticipate">
+                                            <label for="rank4_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check7" name="rank4_check7" v-model="RankSystem[4].fleetEvac">
+                                            <label for="rank4_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank4_check8" name="rank4_check8" v-model="RankSystem[4].fleetSummon">
+                                            <label for="rank4_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank5" v-bind:class="[CurrentRankChange == 5 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check1" name="rank5_check1" v-model="RankSystem[5].CanInvite">
+                                            <label for="rank5_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check2" name="rank5_check2" v-model="RankSystem[5].ChangeRank">
+                                            <label for="rank5_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check3" name="rank5_check3" v-model="RankSystem[5].CanKick">
+                                            <label for="rank5_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check5" name="rank5_check5" v-model="RankSystem[5].familyWarehouse">
+                                            <label for="rank5_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check6" name="rank5_check6" v-model="RankSystem[5].captParticipate">
+                                            <label for="rank5_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check7" name="rank5_check7" v-model="RankSystem[5].fleetEvac">
+                                            <label for="rank5_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank5_check8" name="rank5_check8" v-model="RankSystem[5].fleetSummon">
+                                            <label for="rank5_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank6" v-bind:class="[CurrentRankChange == 6 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check1" name="rank6_check1" v-model="RankSystem[6].CanInvite">
+                                            <label for="rank6_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check2" name="rank6_check2" v-model="RankSystem[6].ChangeRank">
+                                            <label for="rank6_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check3" name="rank6_check3" v-model="RankSystem[6].CanKick">
+                                            <label for="rank6_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check5" name="rank6_check5" v-model="RankSystem[6].familyWarehouse">
+                                            <label for="rank6_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check6" name="rank6_check6" v-model="RankSystem[6].captParticipate">
+                                            <label for="rank6_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check7" name="rank6_check7" v-model="RankSystem[6].fleetEvac">
+                                            <label for="rank6_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank6_check8" name="rank6_check8" v-model="RankSystem[6].fleetSummon">
+                                            <label for="rank6_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank7" v-bind:class="[CurrentRankChange == 7 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check1" name="rank7_check1" v-model="RankSystem[7].CanInvite">
+                                            <label for="rank7_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check2" name="rank7_check2" v-model="RankSystem[7].ChangeRank">
+                                            <label for="rank7_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check3" name="rank7_check3" v-model="RankSystem[7].CanKick">
+                                            <label for="rank7_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check5" name="rank7_check5" v-model="RankSystem[7].familyWarehouse">
+                                            <label for="rank7_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check6" name="rank7_check6" v-model="RankSystem[7].captParticipate">
+                                            <label for="rank7_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check7" name="rank7_check7" v-model="RankSystem[7].fleetEvac">
+                                            <label for="rank7_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank7_check8" name="rank7_check8" v-model="RankSystem[7].fleetSummon">
+                                            <label for="rank7_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank8" v-bind:class="[CurrentRankChange == 8 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check1" name="rank8_check1" v-model="RankSystem[8].CanInvite">
+                                            <label for="rank8_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check2" name="rank8_check2" v-model="RankSystem[8].ChangeRank">
+                                            <label for="rank8_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check3" name="rank8_check3" v-model="RankSystem[8].CanKick">
+                                            <label for="rank8_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check5" name="rank8_check5" v-model="RankSystem[8].familyWarehouse">
+                                            <label for="rank8_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check6" name="rank8_check6" v-model="RankSystem[8].captParticipate">
+                                            <label for="rank8_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check7" name="rank8_check7" v-model="RankSystem[8].fleetEvac">
+                                            <label for="rank8_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank8_check8" name="rank8_check8" v-model="RankSystem[8].fleetSummon">
+                                            <label for="rank8_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="family-menu_rank9" v-bind:class="[CurrentRankChange == 9 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_setting-list">
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check1" name="rank9_check1" v-model="RankSystem[9].CanInvite">
+                                            <label for="rank9_check1">Приглашать игроков в семью</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check2" name="rank9_check2" v-model="RankSystem[9].ChangeRank">
+                                            <label for="rank9_check2">Менять ранг игрокам</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check3" name="rank9_check3" v-model="RankSystem[9].CanKick">
+                                            <label for="rank9_check3">Исключать игроков из семьи</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check5" name="rank9_check5" v-model="RankSystem[9].familyWarehouse">
+                                            <label for="rank9_check5">Доступ к семейному складу</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check6" name="rank9_check6" v-model="RankSystem[9].captParticipate">
+                                            <label for="rank9_check6">Забитие войны семей</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check7" name="rank9_check7" v-model="RankSystem[9].fleetEvac">
+                                            <label for="rank9_check7">Эвакуировать семейное авто</label>
+                                        </div>
+                                        <div class="family-menu_checkbox">
+                                            <input type="checkbox" class="family-menu_custom-checkbox" id="rank9_check8" name="rank9_check8" v-model="RankSystem[9].fleetSummon">
+                                            <label for="rank9_check8">Призыв семейного авто</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="family-menu_setting-btn" @click="saveRankManagement()">Сохранить</a>
+                        </div>
+                    </div>
+                    <div id="family-menu_advertising" class="tab-pane fade">
+                        <div class="family-menu_setting">
+                            <ul class="family-menu_rank-list">
+                                <li v-bind:class="[CurrentAnnouncement == 1 ? 'active' : '']" @click="CurrentAnnouncement = 1"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_text1">Текст 1</a></li>
+                                <li v-bind:class="[CurrentAnnouncement == 2 ? 'active' : '']" @click="CurrentAnnouncement = 2"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_text2">Текст 2</a></li>
+                                <li v-bind:class="[CurrentAnnouncement == 3 ? 'active' : '']" @click="CurrentAnnouncement = 3"><a class="family-menu_rank-btn" data-toggle="tab" href="#family-menu_text3">Текст 3</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="family-menu_text1" v-bind:class="[CurrentAnnouncement == 1 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_text-list">
+                                        <p class="family-menu_text-heading">Текст объявления</p>
+                                        <p class="family-menu_text-block family-menu_text-block--white">
+                                            Семья «{{ FamilyName }}» приветствует всех игроков сервера!<br>
+                                            Хотим проинформировать Вас о том, что прямо сейчас мы ведём набор в нашу семью.<br>
+                                            Всех желающих вступить в наши ряды ждём около офиса Arcadius!
+                                        </p>
+                                        <p class="family-menu_text-heading">Как работает?</p>
+                                        <p class="family-menu_text-block family-menu_text-block--gray">
+                                            Раз в час ваша семья может купить объявление, выбрав один из 3 вариантов текста.
+                                            После покупки чат блокируется для всех игроков на 15 секунд (никто не сможет отправить сообщение), чтобы рекламу не «перебивали» сообщения игроков.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="family-menu_text2" v-bind:class="[CurrentAnnouncement == 2 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_text-list">
+                                        <p class="family-menu_text-heading">Текст объявления</p>
+                                        <p class="family-menu_text-block family-menu_text-block--white">
+                                            На связи семья «{{ FamilyName }}»!<br>
+                                            Прямо сейчас мы проводим набор в нашу семью!<br>
+                                            Хочешь играть войны семей, зарабатывать деньги, завести новые знакомства? Тогда тебе к нам.<br>
+                                            Всех, кто хочет присоединиться к нам ждём около офиса Arcadius!
+                                        </p>
+                                        <p class="family-menu_text-heading">Как работает?</p>
+                                        <p class="family-menu_text-block family-menu_text-block--gray">
+                                            Раз в час ваша семья может купить объявление, выбрав один из 3 вариантов текста.
+                                            После покупки чат блокируется для всех игроков на 15 секунд (никто не сможет отправить сообщение), чтобы рекламу не «перебивали» сообщения игроков.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="family-menu_text3" v-bind:class="[CurrentAnnouncement == 3 ? 'tab-pane fade in active' : 'tab-pane fade']">
+                                    <div class="family-menu_text-list">
+                                        <p class="family-menu_text-heading">Текст объявления</p>
+                                        <p class="family-menu_text-block family-menu_text-block--white">
+                                            Прямо сейчас проводится набор в семью «{{ FamilyName }}»!<br>
+                                            Если ты хочешь получить ещё больше контента, перестрелок, войн семей, интересных мероприятий - тогда тебе к нам!<br>
+                                            Всех желающих вступить в наши ряды ждём около офиса Arcadius!
+                                        </p>
+                                        <p class="family-menu_text-heading">Как работает?</p>
+                                        <p class="family-menu_text-block family-menu_text-block--gray">
+                                            Раз в час ваша семья может купить объявление, выбрав один из 3 вариантов текста.
+                                            После покупки чат блокируется для всех игроков на 15 секунд (никто не сможет отправить сообщение), чтобы рекламу не «перебивали» сообщения игроков.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="family-menu_advertising-bottom">
+                                <p>Стоимость: <b>100.000$</b></p>
+                                <a @click="buyAnnouncement()">Опубликовать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="family-menu_modal" v-bind:class="[changeRankActive ? 'active' : '']">
+                    <div class="family-menu_modal-window">
+                        <a class="family-system_close-btn close-btn--family-menu" @click="closeModalFamily()"><img src="package://browsers/anims/img/close.svg"></a>
+                        <p class="family-system_window-heading">Изменить ранг</p>
+                        <div class="family-system_line"></div>
+                        <input class="family-system_input-name family-system_input-name--family-menu" type="number" min="1" max="9" v-model.number="rankChangeMainInput" placeholder="Основной ранг 1–9" />
+                        <p class="family-rank-extras-hint">Дополнительные ранги (права суммируются):</p>
+                        <div class="family-rank-extras">
+                            <label v-for="n in 9" :key="'rex' + n" class="family-rank-extras__lbl">
+                                <span class="family-rank-extras__txt">Ранг {{ n }}</span>
+                                <input type="checkbox" :value="n" v-model="rankExtraPick" :disabled="rankChangeMainInput === n" />
+                            </label>
+                        </div>
+                        <div class="family-system_btn-list">
+                            <a class="family-system_btn" @click="closeModalFamily()">Отмена</a>
+                            <a class="family-system_btn family-system_btn--blue" @click="saveChangeRank()">Сохранить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/index.js"></script>
+
+    <script>
+        function InputChangesCheck(_0x15B89) {
+          switch (_0x15B89) {
+            case "DPChange":
+              var _0x15301 = document.getElementById("DPtoMoneyInput");
+              var _0x15B55 = document.getElementById("DPtoMoneyInput").value;
+              _0x15301.value = _0x15B55.replace(/[^\d]/g, "");
+              let _0x15B6F = parseInt(_0x15B55.replace(/[^\d]/g, "")) * 1000;
+              document.getElementById("DPtoMoneyResult").innerText = `Сумма на выходе: ${parseInt(_0x15B6F).toDivideNum()}$`;
+              break;
+            case "PlateNumberInput":
+              var _0x15301 = document.getElementById("NewLoginInput");
+              var _0x15B55 = _0x15301.value;
+              _0x15301.value = _0x15B55.replace(/[\W_]/g, "");
+              break;
+            case "NewLoginInput":
+              var _0x15D29 = document.getElementById("NewLoginInput");
+              var _0x15C59 = _0x15D29.value;
+              _0x15D29.value = _0x15C59.replace(/[\W_]/g, "");
+              break;
+            case "NewLoginRepeat":
+              var _0x15CF5 = document.getElementById("RepeatNewLoginInput");
+              var _0x15C25 = _0x15CF5.value;
+              _0x15CF5.value = _0x15C25.replace(/[\W_]/g, "");
+              break;
+            case "NewLoginInputDonate":
+              var _0x15D0F = document.getElementById("NewLoginInputDonate");
+              var _0x15C3F = _0x15D0F.value;
+              _0x15D0F.value = _0x15C3F.replace(/[\W_]/g, "");
+              break;
+            case "Promocode":
+              var _0x15CC1 = document.getElementById("donateOwnPromocode");
+              var _0x15BD7 = _0x15CC1.value;
+              _0x15CC1.value = _0x15BD7.replace(/[^a-zA-Z0-9]/g, "");
+              break;
+            case "newprefix":
+              var _0x15CA7 = document.getElementById("newprefix");
+              var _0x15BD7 = _0x15CA7.value;
+              _0x15CA7.value = _0x15BD7.replace(/[^a-zA-Zа-яА-Я0-9\s]/g, "");
+              break;
+            case "lobbyChat":
+              var _0x15BA3 = document.getElementById("lobbyChatInput");
+              var _0x15BBD = _0x15BA3.value;
+              var _0x15B21 = _0x15BBD.replace(/[^a-z0-9A-ZА-Яа-я\D]/gi, "");
+              var _0x15B3B = _0x15B21.replace(/[\\]/gi, "");
+              const _0x15C0B = /["`'<}>{█▄&]/g;
+              var _0x15C8D = _0x15B3B.replace(_0x15C0B, "");
+              _0x15BA3.value = _0x15C8D;
+              break;
+            case "EnterPromocode":
+              var _0x15CDB = document.getElementById("EnterPromocodeInput");
+              var _0x15BF1 = _0x15CDB.value;
+              _0x15CDB.value = _0x15BF1.replace(/[^a-zA-Z0-9]/g, "");
+              break;
+            case "DuelTargetID":
+              var _0x14A5F = document.getElementById("DuelTargetID");
+              var _0x15C73 = _0x14A5F.value;
+              _0x14A5F.value = _0x15C73.replace(/[^0-9]/g, "");
+              break;
+            case "PlateNumber":
+              var _0x15301 = document.getElementById("PlateNumberInput");
+              var _0x15B55 = _0x15301.value;
+              _0x15301.value = _0x15B55.replace(/[\W_]/g, "");
+              break;
+            case "RouletteMoneyBetInput":
+              var _0x15301 = document.getElementById("RouletteMoneyBetInput");
+              var _0x15B55 = document.getElementById("RouletteMoneyBetInput").value;
+              _0x15301.value = _0x15B55.replace(/[^\d]/g, "");
+              break;
+            case "familyBuyName":
+              var _0x15CA7 = document.getElementById("familyBuyName").value.replace(/[^a-zA-Z0-9\s]/g, "");
+              document.getElementById("familyBuyName").value = _0x15CA7.replace(/\s+/g, " ");
+              break;
+            case "familyChangeRankInput":
+              document.getElementById("familyChangeRankInput").value = document.getElementById("familyChangeRankInput").value.replace(/[^\d]/g, "");
+              break;
+            case "FamilyInviteTargetID":
+              document.getElementById("FamilyInviteTargetID").value = document.getElementById("FamilyInviteTargetID").value.replace(/[^\d]/g, "");
+              break;
+            case "InputVehSellForTarget":
+              document.getElementById("InputVehSellForTarget").value = document.getElementById("InputVehSellForTarget").value.replace(/[^\d]/g, "");
+              break;
+            case "InputHouseSellForTarget":
+              document.getElementById("InputHouseSellForTarget").value = document.getElementById("InputHouseSellForTarget").value.replace(/[^\d]/g, "");
+              break;
+          }
+        }
+    </script>
+    <script>
+        $(function () {
+            $(document).on('shown.bs.tab', 'a[data-toggle="tab"][href="#family-menu_capts"]', function () {
+                try {
+                    if (typeof mp !== 'undefined' && mp.trigger) mp.trigger('family:capts:request');
+                } catch (e) {}
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+	<meta charset="UTF-8">
+	<title>flow DM</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="mine.css">
+  <link rel="stylesheet" href="lib/css/metroui.css" />
+  <link rel="stylesheet" href="lib/css/noty.css" />
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+  <div class="fullwindow" id="fullwindow">
+    <div class="fullwindowSort">
+
+      <div class="TitleForm">
+        <div class="PlayerInfoBlock">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <a style="color: white; font-size: 25px;">Рулетка</a>
+          </div>
+          <div style="float: right; margin-right: 17px;" onclick="CloseRouletteForm()">
+            <img src="img/closebutton.svg" alt="" style="height: 15px; width: 15px;">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="CapForm">
+        <div class="PlayerInfoBlock">
+          <div style="float: left; margin-left: 50px; margin-right: 10px;">
+            <img src="img/mara.jpg" alt="" class="PlayerAvatar">
+          </div>
+
+          <div style="float: left;">
+            <a style="color: white;" class="PlayerInfoBlockText" id="RoulettePlayerName"></a>
+          </div>
+
+          <div style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;">
+            <button style="margin-right: 10px; margin-bottom: 6px; font-size: 16px; padding: 9px 20px;" class="StartRoulette" onclick="DepositeBalance()">Пополнить баланс</button><br>
+            <button style="margin-right: 10px; font-size: 16px; padding: 9px 20px;" class="StartRoulette" onclick="UpdateBalance()">Обновить баланс</button><br>
+          </div>
+
+          <div style="color: white; left: 50%; top: 50%; transform: translate(-50%, -50%);" class="PlayerInfoBlockText">
+            <a style="font-size: 21px;" id="RoulettePlayerFreeCases">Осталось бесплатных открытий:<br></a>
+            <a style="color: rgb(0, 255, 21); font-size: 21px;" id="RoulettePlayerGDC">Баланс:<br></a>
+          </div>
+        </div>
+      </div>
+
+      <div id="rouletteblock">
+    <div class="rouletteblock">
+      <div class="arrowup"></div>
+      <div class="arrowdown"></div>
+      <!-- <div class="upstick"></div>
+      <div class="downstick"></div> -->
+      <div class="winslot" id="winslot"></div>
+      <div class="SlotsWindow">
+      <ul class="Slots">
+          
+      </ul>
+          <ul class="Slots">
+              <li><img src="img/Cash20.png" alt=""></li>
+              <li><img src="img/VehPrototipo.png" alt=""></li>
+              <li><img src="img/WeapCombatMG.png" alt=""></li>
+              <li><img src="img/Cash5.png" alt=""></li>
+              <li><img src="img/VehSultan2.png" alt=""></li>
+              <li><img src="img/Cash100.png" alt=""></li>
+              <li><img src="img/WeapGusenbergSweeper.png" alt=""></li>
+              <li><img src="img/Cash3.png" alt=""></li> 
+              <li><img src="img/VehTezeract.png" alt=""></li>
+              <li><img src="img/Cash15.png" alt=""></li>
+              <li><img src="img/VehCyclone.png" alt=""></li>
+              <li><img src="img/Cash50.png" alt=""></li>
+              <li><img src="img/WeapHeavyShotgun.png" alt=""></li>
+          </ul>
+      </div>
+  </div>
+  <p style="text-align: center; margin-top: 30px;">
+    <button style="margin-bottom: 10px;" class="StartRoulette" onclick="CallStartRoulette(1)">Крутить бесплатно</button><br>
+    <button class="StartRoulette" style="background: rgb(0, 255, 21); color: black;" onclick="CallStartRoulette(2)">Крутить за 49 GDC</button>
+
+
+
+  </div>
+      <!-- <div class="win">
+          <ul>
+              
+          </ul>
+      </div> -->
+    
+      <div class="WinBlock" style="display: none;" id="WinBlock">
+        <div style="margin-top: 20px;">
+          <a class="WinSlotText" id="WinItemName">Вы выиграли !</a><br>
+        </div>
+        <div style="margin-top: 30px; text-align: center;">
+          <div id="WinItemImg">
+            
+          </div>
+          <div style="margin-top: 15px;">
+            <div onclick="PrizeInteraction(1)" class="PickItemButton" style="margin-bottom: 15px;">Забрать</div>
+            <div onclick="PrizeInteraction(2)" class="PickItemButton" style="width: 200px;" id="WinItemPrice">Продать за</div>
+          </div>
+  
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="ClassicRoulette" id="ClassicRoulette">
+  <div class="ClassicRouletteSort">
+
+    <div class="TitleForm">
+      <div class="PlayerInfoBlock">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <a style="color: white; font-size: 25px;">Классическая рулетка</a>
+        </div>
+        <div style="float: right; margin-right: 17px;" onclick="CloseClassicRouletteForm()">
+          <img src="img/closebutton.svg" alt="" style="height: 15px; width: 15px;">
+        </div>
+
+      </div>
+    </div>
+
+    <div class="CapForm">
+      <div class="PlayerInfoBlock">
+        <div style="float: left; margin-left: 50px; margin-right: 10px;">
+          <img src="img/mara.jpg" alt="" class="PlayerAvatar">
+        </div>
+
+        <div style="float: left;">
+          <a style="color: white;" class="PlayerInfoBlockText" id="ClassicRoulettePlayerName"></a>
+        </div>
+
+        <!-- <div style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;">
+          <button style="margin-right: 10px; margin-bottom: 6px; font-size: 16px; padding: 9px 20px;" class="StartRoulette" onclick="DepositeBalance()">Пополнить баланс</button><br>
+          <button style="margin-right: 10px; font-size: 16px; padding: 9px 20px;" class="StartRoulette" onclick="UpdateBalance()">Обновить баланс</button><br>
+        </div> -->
+
+        <div style="color: white; left: 50%; top: 50%; transform: translate(-50%, -50%);" class="PlayerInfoBlockText">
+          <a style="color: rgb(255, 255, 255); font-size: 21px;" id="ClassicRouletteBalance">Баланс:<br></a>
+          <a style="color: rgb(255, 255, 255); font-size: 25px;" id="ClassicRouletteTimer">Старт через: 20 секунд<br></a>
+        </div>
+      </div>
+    </div>
+
+    <div id="classicrouletteblock">
+  <div class="classicrouletteblock" style="margin-bottom: 20px;">
+    <div class="classicarrowup"></div>
+    <div class="classicarrowdown"></div>
+    <div class="winslot" id="winslot"></div>
+    <div class="ClassicSlotsWindow">
+    <ul class="ClassicRouletteSlots">
+        
+    </ul>
+        <!-- <ul class="ClassicRouletteSlots">
+            <li><img src="img/classicroulette/0.png" alt=""></li>
+            <li><img src="img/classicroulette/1.png" alt=""></li>
+            <li><img src="img/classicroulette/2.png" alt=""></li>
+            <li><img src="img/classicroulette/3.png" alt=""></li>
+            <li><img src="img/classicroulette/4.png" alt=""></li>
+            <li><img src="img/classicroulette/5.png" alt=""></li>
+            <li><img src="img/classicroulette/6.png" alt=""></li>
+            <li><img src="img/classicroulette/7.png" alt=""></li> 
+            <li><img src="img/classicroulette/8.png" alt=""></li>
+            <li><img src="img/classicroulette/9.png" alt=""></li>
+            <li><img src="img/classicroulette/10.png" alt=""></li>
+            <li><img src="img/classicroulette/11.png" alt=""></li>
+            <li><img src="img/classicroulette/12.png" alt=""></li>
+            <li><img src="img/classicroulette/13.png" alt=""></li>
+            <li><img src="img/classicroulette/14.png" alt=""></li>
+        </ul> -->
+        <ul class="ClassicRouletteSlots">
+          <li><img src="img/classicroulette/0.png" alt=""></li>
+          <li><img src="img/classicroulette/1.png" alt=""></li>
+          <li><img src="img/classicroulette/8.png" alt=""></li>
+          <li><img src="img/classicroulette/2.png" alt=""></li>
+          <li><img src="img/classicroulette/9.png" alt=""></li>
+          <li><img src="img/classicroulette/3.png" alt=""></li>
+          <li><img src="img/classicroulette/10.png" alt=""></li>
+          <li><img src="img/classicroulette/4.png" alt=""></li>
+          <li><img src="img/classicroulette/11.png" alt=""></li>
+          <li><img src="img/classicroulette/5.png" alt=""></li>
+          <li><img src="img/classicroulette/12.png" alt=""></li>
+          <li><img src="img/classicroulette/6.png" alt=""></li>
+          <li><img src="img/classicroulette/13.png" alt=""></li>
+          <li><img src="img/classicroulette/7.png" alt=""></li> 
+          <li><img src="img/classicroulette/14.png" alt=""></li>
+      </ul>
+    </div>
+</div>
+<div>
+  <input id="ClassicRouletteInput" type="number" spellcheck="false" class="ClassicRouletteInput" value="0" placeholder="Сумма ставки" readonly>
+
+  <div>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(0)">0$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(50)">+50$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(100)">+100$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(250)">+250$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(1000)">+1.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(5000)">+5.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(25000)">+25.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(50000)">+50.000$</button>
+  </div>
+  <div>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-50)">-50$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-100)">-100$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-250)">-250$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-1000)">-1.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-5000)">-5.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-25000)">-25.000$</button>
+    <button class="BetSumButton" style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" onclick="SetBetSum(-50000)">-50.000$</button>
+  </div>
+
+</div>
+<p style="text-align: center; margin-top: 30px;">
+</div>
+
+
+<div class="ColorsButtonsForm">
+  <div class="ColorButtonBlock">
+    <div class="BetBlock">
+      <button class="BetButton" style="margin-top: 20px;" onclick="MakeClassicBet(1)">Красное (1-7) [x2]</button><br>
+      <div style="margin-top: 10px;">
+        <a class="ClassicUserBetText" id="PlayerBetRed" style="color: red;">Ваша ставка: 0$</a>
+      </div>
+
+
+      <!-- <div class="ClassicBetUsers" style="margin-top: 10px;">
+        <div class="ClassicUserBet">
+          <a class="ClassicUserBetText">Fausto(34) 25.000</a>
+        </div>
+        <div class="ClassicUserBet">
+          <a class="ClassicUserBetText">Fausto(34) 25.000</a>
+        </div>
+        <div class="ClassicUserBet">
+          <a class="ClassicUserBetText">Fausto(34) 25.000</a>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="ColorButtonBlock">
+    <div class="BetBlock">
+      <button style="background: rgb(42, 196, 37); margin-top: 20px;" class="BetButton" onclick="MakeClassicBet(0)">Зеленое (0) [x14]</button><br>
+      <div style="margin-top: 10px;">
+        <a class="ClassicUserBetText" id="PlayerBetGreen" style="color: rgb(42, 196, 37);">Ваша ставка: 0$</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ColorButtonBlock">
+    <div class="BetBlock">
+      <button style="background: rgb(0, 0, 0); margin-top: 20px;" class="BetButton" onclick="MakeClassicBet(2)">Черное (8-14) [x2]</button><br>
+      <div style="margin-top: 10px;">
+        <a class="ClassicUserBetText" id="PlayerBetBlack" style="color: rgb(255, 255, 255);">Ваша ставка: 0$</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- <div class="win">
+        <ul>
+            
+        </ul>
+    </div> -->
+  
+    <div class="WinBlock" style="display: none;" id="WinBlock">
+      <div style="margin-top: 20px;">
+        <a class="WinSlotText" id="WinItemName">Вы выиграли !</a><br>
+      </div>
+      <div style="margin-top: 30px; text-align: center;">
+        <div id="WinItemImg">
+          
+        </div>
+        <div style="margin-top: 15px;">
+          <div onclick="PrizeInteraction(1)" class="PickItemButton" style="margin-bottom: 15px;">Забрать</div>
+          <div onclick="PrizeInteraction(2)" class="PickItemButton" style="width: 200px;" id="WinItemPrice">Продать за</div>
+        </div>
+
+      </div>
+    </div>
+</div>
+</div>
+
+
+  <script src="index.js"></script>
+  <script src="lib/noty.min.js" type="text/javascript"></script>
+  <script src="lib/notymsg.js" type="text/javascript"></script>
+</body>
+</html>

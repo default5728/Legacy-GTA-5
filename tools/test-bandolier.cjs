@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const belt=require('../packages/server/config/bandolier'),items=require('../packages/server/kepler-legacy-items');
+const gun='weapon_specialcarbine#test',ammo=items.encode({id:'a',type:'ammo',count:25}),food=items.encode({id:'f',type:'burger',count:1});
+assert(belt.allowed(gun));assert(belt.allowed(ammo));for(const bad of [food,'weapon_fake!','test_weapon_pistol','ic1.invalid','item_food','ammo_bad!'])assert(!belt.allowed(bad));
+const p={inventory:[gun,ammo,food,null],bandolier:belt.normalize(null)};
+belt.transfer(p,'put',0,0,gun);assert.equal(p.inventory[0],null);assert.equal(p.bandolier[0],gun);
+const snapshot=JSON.stringify(p);assert.throws(()=>belt.transfer(p,'put',2,1,food));assert.equal(JSON.stringify(p),snapshot);
+assert.throws(()=>belt.transfer(p,'put',1,1,gun));assert.equal(JSON.stringify(p),snapshot);
+belt.transfer(p,'put',1,1,ammo);assert.equal(p.bandolier[1],ammo);
+assert.throws(()=>belt.transfer(p,'take',0,2,gun));assert.equal(p.inventory[2],food);
+belt.transfer(p,'swap',0,1,gun);assert.equal(p.bandolier[1],gun);
+p.bandolier=belt.normalize(JSON.stringify(p.bandolier));belt.transfer(p,'take',1,-1,gun);assert.equal(p.inventory[0],gun);assert(!p.bandolier.includes(gun));
+assert.throws(()=>belt.transfer(p,'take',1,-1,gun));assert.throws(()=>belt.transfer(p,'put',2,6,food));
+console.log('PASS: bandolier rejects non-weapons/ammo and stale tokens, round-trips serialized slots, swaps and returns without duplication.');

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="cardBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#242838"/>
+      <stop offset="100%" stop-color="#12141c"/>
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#e08a45"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="14" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+  
+      <!-- Head Base -->
+      <path d="M 50 18 C 34 18 25 32 25 48 C 25 64 36 78 50 78 C 64 78 75 64 75 48 C 75 32 66 18 50 18 Z" fill="url(#skinGrad)"/>
+      <!-- Cornrows / Braids -->
+      <path d="M 25 40 C 26 20 74 20 75 40 Z" fill="#475569"/>
+      <line x1="34" y1="22" x2="34" y2="44" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="3 2"/>
+      <line x1="42" y1="18" x2="42" y2="44" stroke="#e2e8f0" stroke-width="2.5" stroke-dasharray="3 2"/>
+      <line x1="50" y1="16" x2="50" y2="44" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="3 2"/>
+      <line x1="58" y1="18" x2="58" y2="44" stroke="#e2e8f0" stroke-width="2.5" stroke-dasharray="3 2"/>
+      <line x1="66" y1="22" x2="66" y2="44" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="3 2"/>
+    
+</svg>

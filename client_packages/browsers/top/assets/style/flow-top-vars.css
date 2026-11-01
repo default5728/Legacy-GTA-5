@@ -1,0 +1,21 @@
+/* Только палитра/шрифт для экрана топа (совпадает с flow-menu-theme) */
+:root {
+  --bm-bg: #0c0c0c;
+  --bm-ink: #151515;
+  --bm-panel: rgba(255, 255, 255, 0.04);
+  --bm-panel2: rgba(255, 255, 255, 0.08);
+  --bm-card: rgba(255, 255, 255, 0.05);
+  --bm-line: rgba(255, 255, 255, 0.07);
+  --bm-line-soft: rgba(255, 255, 255, 0.13);
+  --bm-accent: #e71d36;
+  --bm-accent-h: #ff2a42;
+  --bm-accent-g: rgba(231, 29, 54, 0.28);
+  --bm-accent-s: rgba(231, 29, 54, 0.12);
+  --bm-text: #ffffff;
+  --bm-text2: rgba(255, 255, 255, 0.7);
+  --bm-muted: rgba(255, 255, 255, 0.32);
+  --bm-r: 6px;
+  --bm-r2: 4px;
+  --bm-font: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  --bm-nav-h: 80px;
+}

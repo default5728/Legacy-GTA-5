@@ -1,0 +1,21 @@
+(()=>{'use strict';
+ const get=id=>document.getElementById(id),clamp=(n,max=1)=>Math.min(max,Math.max(0,Number(n)||0));
+ const status=(id,on,warning=false)=>{const el=get(id);el.classList.toggle('on',!!on&&!warning);el.classList.toggle('warning',!!warning);};
+ window.LegacyGauge={update(data,visible){
+  get('legacySpeed').classList.toggle('visible',!!visible);if(!visible||!data)return;
+  const rpm=clamp(data.rpm),fuel=clamp(data.fuel,100);
+  get('speedValue').textContent=String(Math.round(clamp(data.speed,999)));
+  get('speedGear').textContent=data.reverse?'R':Number(data.gear)>0?String(data.gear):'N';
+  get('speedRpm').style.strokeDashoffset=100-rpm*100;
+  get('speedNeedle').style.transform='rotate('+(rpm*260)+'deg)';
+  get('speedFuel').style.width=fuel+'%';
+  get('speedFuelText').textContent=String(Math.round(fuel));
+  get('speedTrip').textContent=String(Math.floor(clamp(data.distance,999999))).padStart(6,'0');
+  status('speedLock',!data.locked,!!data.locked);
+  status('speedFuelStatus',fuel>10,fuel<=10);
+  status('speedLights',!!data.lights);
+  status('speedBelt',!!data.belt,!data.belt);
+  status('speedEngine',!!data.engine,Number(data.health)<400);
+  status('speedBrake',false,!!data.handbrake);
+ }};
+})();

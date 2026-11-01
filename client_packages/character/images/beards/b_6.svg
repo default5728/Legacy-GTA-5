@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="cardBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#242838"/>
+      <stop offset="100%" stop-color="#12141c"/>
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#e08a45"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="14" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+  
+      <!-- Full Beard -->
+      <path d="M 50 30 C 35 30 30 45 30 58 C 30 72 40 82 50 82 C 60 82 70 72 70 58 C 70 45 65 30 50 30 Z" fill="url(#skinGrad)"/>
+      <path d="M 29 48 C 28 75 38 88 50 88 C 62 88 72 75 71 48 C 66 58 58 64 50 64 C 42 64 34 58 29 48 Z" fill="url(#hairGrad)"/>
+      <path d="M 38 54 Q 50 50 62 54 Q 50 59 38 54 Z" fill="#cbd5e1"/>
+    
+</svg>

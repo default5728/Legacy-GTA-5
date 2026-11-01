@@ -1,0 +1,159 @@
+/*!
+* chiefSlider
+*   site: https://itchief.ru/javascript/slider
+*   github: https://github.com/itchief/how-to
+*
+* Copyright 2018-2021 Alexander Maltsev
+* Licensed under MIT (https://github.com/itchief/chiefSlider/blob/main/LICENSE)
+*/
+
+.slider {
+  height: 100%;
+}
+
+.slider__container {
+  height: 100%;
+}
+
+.slider__wrapper {
+  height: 100%;
+  width: 507px;
+  margin-left: 85px;
+}
+
+.slider__items {
+  height: 100%;
+  display: flex;
+  transition: transform 0.5s ease;
+}
+#colors .slider__wrapper {
+  margin-left: 160px;
+}
+
+.slider_disable-transition {
+  transition: none;
+}
+
+a.slider__item {
+  flex: 0 0 35%;
+  max-width: 35%;
+  user-select: none;
+  height: 100%;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#turbo a.slider__item {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+/* кнопки влево и вправо */
+
+.slider__control {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  color: #fff;
+  text-align: center;
+  height: 50px;
+  transform: translateY(-50%);
+  background: #3D3F53;
+  border-radius: 10px;
+}
+
+.slider__control_hide {
+  display: none;
+}
+
+.slider__control[data-slide='prev'] {
+  left: -24px;
+}
+
+.slider__control[data-slide='next'] {
+  right: -24px;
+}
+
+.slider__control:hover {
+  color: #fff;
+  text-decoration: none;
+  outline: 0;
+  background: #006EFF;
+}
+
+.slider__control::before {
+  content: '';
+  display: inline-block;
+  width: 33px;
+  height: 20px;
+  background: transparent no-repeat center center;
+  background-size: 100% 100%;
+}
+
+.slider__control[data-slide='prev']::before {
+  background-image: url(../img/svg/prev.svg);
+}
+
+.slider__control[data-slide='next']::before {
+  background-image: url(../img/svg/next.svg);
+}
+
+.slider__control.return {
+  left: -24px;
+  top:-17px;
+  transform: none;
+}
+
+#turbo .slider__control.return, #neon .slider__control.return, #colors .slider__control.return, #main_color .slider__control.return,
+#secondary_color .slider__control.return, #nacre_colors .slider__control.return {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.slider__control.return::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background-image: url(../img/svg/arrow_left.svg);
+  background-size: 100% 100%;
+}
+
+/* индикаторы */
+
+.slider__indicators {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  margin-right: 15%;
+  margin-left: 15%;
+  list-style: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.slider__indicators li {
+  box-sizing: content-box;
+  flex: 0 1 auto;
+  width: 30px;
+  height: 5px;
+  margin-right: 3px;
+  margin-left: 3px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-clip: padding-box;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+}
+
+.slider__indicators li.active {
+  background-color: rgba(255, 255, 255, 0.9);
+}

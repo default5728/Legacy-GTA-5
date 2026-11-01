@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync('packages/server/admin_session.js','utf8');
+const start=source.indexOf('    global._registeredChatCommands ='),end=source.indexOf('\n})();',start);
+assert(start>0&&end>start);
+let executions=0;const calls=[];
+const ctx={Map,Number,String,GATED_MIN:1,GATED_MAX:7,ALLOWED_WITHOUT_ADMIN_SESSION:new Set(['logadmin']),orig:()=>{},mp:{players:{exists:()=>true},events:{}},legacyCommandPermission:name=>['tpwp','gotowp'].includes(name)?'waypoint':undefined,require:()=>({hasPermission:p=>p.permission}),pushChatLineToPlayer:()=>{}};ctx.global=ctx;
+vm.runInNewContext(source.slice(start,end),ctx);
+ctx.mp.events.addCommand('tpwp',()=>executions++);
+const player={adminlvl:5,_adminSession:true,permission:true,getVariable:()=>false,call:(...args)=>calls.push(args)};
+ctx._registeredChatCommands.get('tpwp')(player);assert.equal(executions,1);assert.equal(calls.length,0);
+player.permission=false;ctx._registeredChatCommands.get('tpwp')(player);assert.equal(executions,1);
+player.permission=true;player._adminSession=false;ctx._registeredChatCommands.get('tpwp')(player);assert.equal(executions,1);
+player.adminlvl=10;ctx._registeredChatCommands.get('tpwp')(player);assert.equal(executions,2);
+console.log('PASS: chat waypoint command executes without panel, preserving permission and gated-session checks.');

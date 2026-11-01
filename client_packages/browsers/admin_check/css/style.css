@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+.proverka-container,
+.proverka-container * {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+::selection {
+    background: transparent;
+    color: inherit;
+}
+
+::-moz-selection {
+    background: transparent;
+    color: inherit;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: transparent;
+}
+
+.proverka-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    background: transparent;
+}
+
+.proverka-content {
+    width: 640px;
+    min-height: 190px;
+    padding: 22px 30px 20px 30px;
+    background: rgba(13, 23, 32, 0.92);
+    border-radius: 6px;
+    text-align: center;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.proverka-title {
+    color: rgba(180, 188, 205, 0.75);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.proverka-text {
+    color: #ffffff96;
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.18;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+}
+
+.proverka-discord {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 11px 28px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    user-select: none;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+.proverka-discord:hover {
+    background: rgba(88, 101, 242, 0.14);
+    border-color: rgba(114, 137, 218, 0.45);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 14px rgba(88, 101, 242, 0.18);
+}
+
+.proverka-discord:active {
+    transform: scale(0.98);
+}
+
+.proverka-discord-label {
+    display: block;
+    color: rgba(180, 188, 205, 0.65);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+#discord-name {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+}

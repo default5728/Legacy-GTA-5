@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        * {
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+        .queue-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .queue-window {
+            width: 380px;
+            height: auto;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .queue-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        .queue-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .queue-numbers {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .queue-number-block {
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 12px;
+            padding: 10px;
+            width: 45%;
+        }
+        .queue-number {
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .queue-number-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 5px;
+        }
+        @media (max-width: 1024px) {
+            .queue-window {
+                width: 380px;
+                padding: 20px;
+            }
+            .queue-header {
+                font-size: 18px;
+            }
+            .queue-description {
+                font-size: 14px;
+            }
+            .queue-numbers {
+                gap: 20px;
+            }
+            .queue-number-block {
+                width: 45%;
+            }
+            .queue-number {
+                font-size: 26px;
+            }
+        }
+        @media (max-width: 1024px) and (min-width: 600px) {
+            .queue-window {
+                width: 380px;
+                padding: 20px;
+            }
+            .queue-header {
+                font-size: 18px;
+            }
+            .queue-description {
+                font-size: 14px;
+            }
+            .queue-numbers {
+                gap: 20px;
+            }
+            .queue-number-block {
+                width: 45%;
+            }
+            .queue-number {
+                font-size: 26px;
+            }
+        }
+        @media (max-width: 600px) {
+            .queue-window {
+                width: 380px;
+                padding: 20px;
+            }
+            .queue-header {
+                font-size: 18px;
+            }
+            .queue-description {
+                font-size: 14px;
+            }
+            .queue-numbers {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .queue-number-block {
+                width: 100%;
+                text-align: center;
+            }
+            .queue-number {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="queue-container">
+        <div class="queue-window">
+            <div class="queue-header">Ожидание очереди</div>
+            <div class="queue-description">
+                В данный момент сервер испытывает высокую нагрузку на большое количество игроков. Мы посчитали вас в очереди, и как только освободится место, вы сможете войти в игру.
+            </div>
+            <div class="queue-numbers">
+                <div class="queue-number-block">
+                    <div id="pered" class="queue-number">0</div>
+                    <div class="queue-number-label">человек перед вами</div>
+                </div>
+                <div class="queue-number-block">
+                    <div id="posle" class="queue-number">0</div>
+                    <div class="queue-number-label">человек после вас</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function changeOch(before, after) {
+        document.getElementById('pered').textContent = before;
+        document.getElementById('posle').textContent = after;
+    }
+</script>
+</html>

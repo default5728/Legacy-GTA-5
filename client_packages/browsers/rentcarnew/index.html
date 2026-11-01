@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/media.css">
+    <link rel="stylesheet" type="text/css" href="css/auto-shop.css">
+    <link rel="stylesheet" type="text/css" href="css/rent-shell.css">
+    <title>Аренда авто</title>
+  </head>
+  <body>
+    <div id="autoRent">
+      <div class="auto-rent__window">
+        <div class="auto-rent__window-inner">
+
+            <div class="rent-flow-head">
+            <div class="rent-flow-title-wrap">
+              <p class="shop__heading">Аренда транспорта</p>
+              <p class="rent-flow-sub">Подходящее авто под перестрелки и перемещение по округе. Спавн после оплаты.</p>
+            </div>
+            <a class="shop__close-btn" @click="Exit()"><img src="package://browsers/anims/img/close.svg"></a>
+          </div>
+
+          <div class="shop__product-list">
+
+            <div class="auto-rent__auto" v-show="!FIB" v-for="(veh, i) in RentVehiclesCrime">
+              <div class="auto-rent__auto-img">
+                <img v-bind:src="veh.img">
+              </div>
+              <div class="auto-rent__auto-price">
+                <p>{{ veh.Name }}</p>
+                <p>{{ veh.price }}<b>$</b></p>
+              </div>
+              <div class="auto-rent__auto-btn" @click="changeRentModal(veh.Name,veh.img,veh.MaxSpeed,veh.price)">Арендовать</div>
+            </div>
+
+            <div class="auto-rent__auto" v-show="FIB" v-for="(veh, i) in RentVehiclesFIB">
+              <div class="auto-rent__auto-img">
+                <img v-bind:src="veh.img">
+              </div>
+              <div class="auto-rent__auto-price">
+                <p>{{ veh.Name }}</p>
+                <p>{{ veh.price }}<b>$</b></p>
+              </div>
+              <div class="auto-rent__auto-btn" @click="changeRentModal(veh.Name,veh.img,veh.MaxSpeed,veh.price)">Арендовать</div>
+            </div>
+
+          </div>
+
+          <div class="shop__modal shop__modal--right" v-bind:class="{ 'shop__modal--active': rentModal }">
+            <div class="shop__modal-window shop__modal-window--right">
+              <a class="shop__modal-close-btn" @click="rentModal = 0"><img src="package://browsers/anims/img/close.svg"></a>
+              <div class="shop__modal-img-block">
+                <img v-bind:src="rentModalProduct[0].img">
+              </div>
+              <p class="shop__modal-info-name shop__modal-info-name--margin-bottom">{{ rentModalProduct[0].Name }}</p>
+              <div class="modal-info-indicator__info modal-info-indicator__info--margin-bottom">
+                <p>Макс. скорость</p>
+                <p>{{ rentModalProduct[0].MaxSpeed }} км/ч</p>
+              </div>
+              <p class="shop__modal-price2">К оплате: <b>{{ rentModalProduct[0].price }}</b>$</p>
+              <div class="shop__modal-btns shop__modal-btns--colum">
+                <a class="shop__modal-button shop__modal-button--blue" @click="SpawnRentVehicle()">Оплатить наличными<img src="package://browsers/anims/img/svg/wallet.svg"></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="js/shops.js"></script>
+  </body>
+</html>

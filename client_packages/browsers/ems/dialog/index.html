@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS Dialog</title>
+    <link rel="stylesheet" href="../../handler/Lib/css/fonts.css?v=2">
+    <link rel="stylesheet" href="../../handler/Menu/UI/style.css?v=2">
+    <link rel="stylesheet" href="../../handler/Lib/css/help.css?v=2">
+    <link rel="stylesheet" href="../../shared/pedtalk-gta5rp.css?v=3">
+</head>
+<body>
+    <div id="messages" class="pedtalk-root">
+        <div class="pedtalk-gradient"></div>
+        <div id="pedMenu-block">
+            <div class="yk-text w-5 s-20 pedtalk-actor" id="ems-actor">Медработник:</div>
+            <div class="yk-text s-25 mt-5 pedtalk-text" id="ems-text"></div>
+            <div id="pedMenu-scrol" class="yk-scroll" style="max-height: 225px; margin-top: 20px;">
+                <div id="ems-buttons" class="pedtalk-answers-row"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function trig() {
+            try {
+                if (typeof mp !== 'undefined' && mp.trigger) mp.trigger.apply(mp, arguments);
+            } catch (_e) {}
+        }
+
+        function esc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function renderBtn(btn) {
+            if (!btn || btn.hidden) return '';
+            return '<div class="pedMenu-ansButton" data-id="' + esc(btn.id) + '">' +
+                '<span class="yk-text w-4 s-20 pe-none pedtalk-answer-label">' + esc(btn.label) + '</span></div>';
+        }
+
+        window.emsDialog = {
+            show: function (cfg) {
+                cfg = cfg || {};
+                var root = document.getElementById('messages');
+                var actor = document.getElementById('ems-actor');
+                var text = document.getElementById('ems-text');
+                var buttons = document.getElementById('ems-buttons');
+                var list = cfg.buttons || [];
+
+                actor.textContent = esc(cfg.actor || 'Медработник:');
+                text.textContent = esc(cfg.text || '');
+
+                var html = '';
+                list.forEach(function (btn) { html += renderBtn(btn); });
+                buttons.innerHTML = html;
+
+                var nodes = buttons.querySelectorAll('.pedMenu-ansButton');
+                for (var i = 0; i < nodes.length; i++) {
+                    nodes[i].onclick = function (e) {
+                        trig('ems:dialog:btn', e.currentTarget.getAttribute('data-id'));
+                    };
+                }
+
+                root.classList.add('active');
+            },
+            hide: function () {
+                var root = document.getElementById('messages');
+                root.classList.remove('active');
+                document.getElementById('ems-text').textContent = '';
+                document.getElementById('ems-buttons').innerHTML = '';
+            }
+        };
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') trig('ems:dialog:btn', 'esc');
+        });
+    </script>
+</body>
+</html>

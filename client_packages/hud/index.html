@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Legacy RP - HUD</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; user-select: none; }
+    body { width: 100vw; height: 100vh; overflow: hidden; background: transparent; }
+
+    /* Правый верхний угол: Серверный бейдж (GTA 5 RP) */
+    .top-badge {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      text-align: right;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    }
+    .badge-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .badge-title .star { color: #ff9800; margin-right: 2px; }
+    .badge-title .accent { color: #ff9800; }
+    .badge-title .online { color: #aaa; font-size: 12px; font-weight: 600; margin-left: 4px; }
+    
+    .badge-sub {
+      margin-top: 2px;
+      font-size: 12px;
+      color: #e0e0e0;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* Левый нижний угол: над радаром */
+    .radar-panel {
+      position: absolute;
+      bottom: 235px;
+      left: 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .money-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-weight: 800;
+      font-size: 16px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    }
+    .cash-text { color: #85bb65; }
+    .bank-text { color: #ffffff; display: flex; align-items: center; gap: 5px; }
+    .bank-card-icon { font-size: 13px; }
+
+    /* Иконки статуса (микрофон, почта) */
+    .hud-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 3px;
+    }
+    .hud-ico-btn {
+      width: 25px;
+      height: 25px;
+      border-radius: 4px;
+      background: rgba(18, 20, 26, 0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #888;
+      transition: 0.2s;
+    }
+    .hud-ico-btn.active {
+      color: #00ff88;
+      border-color: #00ff88;
+      box-shadow: 0 0 8px rgba(0,255,136,0.3);
+    }
+
+    /* Локация: район и улица */
+    .loc-box {
+      margin-top: 4px;
+      border-left: 3px solid #ff9800;
+      padding-left: 7px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.95);
+    }
+    .loc-zone {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+    .loc-street {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 1px;
+    }
+
+    /* Полосы HP и Брони */
+    .hud-bars {
+      position: absolute;
+      bottom: 46px;
+      left: 35px;
+      width: 240px;
+      display: flex;
+      gap: 6px;
+    }
+    .bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 2px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .fill-hp { height: 100%; width: 100%; background: #2ecc71; transition: width 0.15s ease-out; }
+    .fill-armour { height: 100%; width: 0%; background: #3498db; transition: width 0.15s ease-out; }
+  </style>
+</head>
+<body>
+  <!-- Серверная инфопанель справа сверху -->
+  <div class="top-badge">
+    <div class="badge-title">
+      <span class="star">★</span>GTA5 RP // <span class="accent">LEGACY</span>
+      <span class="online" id="txtOnline">(1 в игре)</span>
+    </div>
+    <div class="badge-sub">
+      <span id="txtName">Player</span> | ID <span id="txtId">0</span> | 
+      <span id="txtTime">12:00</span> | <span id="txtDate">20.07</span>
+    </div>
+  </div>
+
+  <!-- Блок над миникартой слева снизу -->
+  <div class="radar-panel">
+    <div class="money-row">
+      <div class="cash-text" id="txtCash">$ 0</div>
+      <div class="bank-text"><span class="bank-card-icon">💳</span> <span id="txtBank">$ 0</span></div>
+    </div>
+
+    <div class="hud-icons">
+      <div class="hud-ico-btn" id="icoMic">🎙️</div>
+      <div class="hud-ico-btn" id="icoMail">✉️</div>
+    </div>
+
+    <div class="loc-box">
+      <div class="loc-zone" id="txtZone">Международный аэропорт Лос Сантос</div>
+      <div class="loc-street" id="txtStreet">Взлетная полоса 1</div>
+    </div>
+  </div>
+
+  <!-- Полоски здоровья и брони -->
+  <div class="hud-bars">
+    <div class="bar-wrap"><div class="fill-hp" id="barHp"></div></div>
+    <div class="bar-wrap"><div class="fill-armour" id="barArmour"></div></div>
+  </div>
+
+  <script>
+    // Оповещаем клиент, что интерфейс худа загружен
+    if (window.mp) {
+      mp.trigger('client:hud:ready');
+    }
+
+    window.hudAPI = {
+      setBasicInfo: (id, name, online, cash, bank) => {
+        document.getElementById('txtId').innerText = id;
+        document.getElementById('txtName').innerText = name;
+        document.getElementById('txtOnline').innerText = `(${online} в игре)`;
+        document.getElementById('txtCash').innerText = `$ ${Number(cash).toLocaleString()}`;
+        document.getElementById('txtBank').innerText = `$ ${Number(bank).toLocaleString()}`;
+      },
+      setLocation: (zone, street) => {
+        document.getElementById('txtZone').innerText = zone;
+        document.getElementById('txtStreet').innerText = street;
+      },
+      setHealthAndArmor: (hp, arm) => {
+        document.getElementById('barHp').style.width = Math.min(Math.max(hp, 0), 100) + '%';
+        document.getElementById('barArmour').style.width = Math.min(Math.max(arm, 0), 100) + '%';
+      },
+      setMic: (active) => {
+        const el = document.getElementById('icoMic');
+        active ? el.classList.add('active') : el.classList.remove('active');
+      },
+      updatePlayerData: (jsonStr) => {
+        try {
+          const d = JSON.parse(jsonStr);
+          if (d.cash !== undefined) document.getElementById('txtCash').innerText = `$ ${Number(d.cash).toLocaleString()}`;
+          if (d.bank !== undefined) document.getElementById('txtBank').innerText = `$ ${Number(d.bank).toLocaleString()}`;
+        } catch(e) {}
+      }
+    };
+
+    // Таймер часов
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      const mo = String(now.getMonth() + 1).padStart(2, '0');
+      document.getElementById('txtTime').innerText = `${h}:${m}`;
+      document.getElementById('txtDate').innerText = `${d}.${mo}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>

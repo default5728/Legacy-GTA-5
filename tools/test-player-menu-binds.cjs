@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const rpc=fs.readFileSync('client_packages/playermenu_rpc.js','utf8');
+const settings={},calls=[];let flushes=0;
+const ctx={mp:{storage:{data:{settings},flush:()=>flushes++},events:{call:(...a)=>calls.push(a)}},global:{keybindConflictForSetting:()=>false},getFlowSettings:()=>settings,vkToName:n=>String(n),console};
+vm.createContext(ctx);vm.runInContext(rpc.slice(rpc.indexOf('const BINDER_ACTION_MAP'),rpc.indexOf('function getFlowSettingsStorage')),ctx);
+assert(vm.runInContext("saveBinderKey('MENULIST_OPEN',120,'{}')",ctx));assert.equal(settings.player_menu_key,120);assert(calls.some(c=>c[0]==='updateKeybind'&&c[1]==='player_menu'&&c[2]===120));
+assert(vm.runInContext("saveBinderKey('CURSOR_TOGGLE',118,'{}')",ctx));assert.equal(settings.cursor_key,118);assert.equal(flushes,2);
+assert(!vm.runInContext("saveBinderKey('CURSOR_TOGGLE',114,'{}')",ctx));assert.equal(settings.cursor_key,118);
+const keys=new Map();const bindGlobal={bindGameplayKey:(k,d,fn)=>keys.set(k,fn),unbindGameplayKey:k=>keys.delete(k)};
+const menu=fs.readFileSync('client_packages/playermenu.js','utf8');const code=menu.slice(menu.indexOf('function bindPlayerMenuF10Key()'),menu.indexOf("mp.events.add('browserDomReady'",menu.indexOf('function bindPlayerMenuF10Key()')));
+const c={mp:{storage:{data:{settings}}},global:bindGlobal,pmF10KeyHandler(){}};vm.createContext(c);vm.runInContext('let PM_KEY=121;'+code,c);vm.runInContext('bindPlayerMenuF10Key()',c);assert(keys.has(120));assert(!keys.has(121));settings.player_menu_key=119;vm.runInContext('bindPlayerMenuF10Key()',c);assert(keys.has(119));assert(!keys.has(120));
+const cursor=fs.readFileSync('client_packages/binds.js','utf8');const cursorCode=cursor.slice(cursor.indexOf('function rebindLegacyCursor()'),cursor.indexOf('rebindLegacyCursor();',cursor.indexOf('function rebindLegacyCursor()')));
+vm.runInContext('let cursorBindKey=113,cursorMouseHeld=false;function legacyCursorKeyHandler(){};'+cursorCode,c);vm.runInContext('rebindLegacyCursor()',c);assert(keys.has(118));settings.cursor_key=116;vm.runInContext('rebindLegacyCursor()',c);assert(keys.has(116));assert(!keys.has(118));
+console.log('PASS: F10 and cursor settings persist, reject reserved F3 and remove old keyboard handlers on rebind.');

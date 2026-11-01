@@ -1,0 +1,12 @@
+#groundPickupOverlay .yk-text,
+#groundPickupOverlay .yk-input,
+#groundPickupOverlay .yk-btn {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#groundPickupOverlay .yk-input {
+    user-select: text;
+    -webkit-user-select: text;
+    caret-color: #fff;
+}

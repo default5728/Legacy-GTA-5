@@ -1,0 +1,39 @@
+<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null" id="svg_82">
+   <g stroke="null" transform="matrix(0.036662854366903606,0,0,0.036662854366903606,0.17793171009543585,-0.17255744869217438) " id="svg_60">
+    <g stroke="null" id="svg_61">
+     <g stroke="null" id="svg_62">
+      <path stroke="null" id="svg_63" fill="#ffffff" d="m411.902444,209.462234l-36.037,0l0,-82.23c0,-58.322 -48.449,-105.77 -108,-105.77c-59.551,0 -108,47.448 -108,105.77l0,82.23l-35.963,0c-33.084,0 -60,26.916 -60,60l0,204c0,33.084 26.916,60 60,60l288,0c33.084,0 60,-26.916 60,-60l0,-204c0,-33.084 -26.916,-60 -60,-60zm-212.037,-82.23c0,-36.266 30.505,-65.77 68,-65.77s68,29.504 68,65.77l0,82.23l-136,0l0,-82.23zm232.037,346.23c0,11.028 -8.972,20 -20,20l-288,0c-11.028,0 -20,-8.972 -20,-20l0,-204c0,-11.028 8.972,-20 20,-20l288,0c11.028,0 20,8.972 20,20l0,204z"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_64">
+     <g stroke="null" id="svg_65">
+      <path stroke="null" id="svg_66" fill="#ffffff" d="m267.902444,307.462234c-20.435,0 -37,16.565 -37,37c0,13.048 6.76,24.51 16.963,31.098l0,43.902c0,11.045 8.954,20 20,20c11.045,0 20,-8.955 20,-20l0,-43.855c10.244,-6.58 17.037,-18.065 17.037,-31.145c0,-20.435 -16.565,-37 -37,-37z"/>
+     </g>
+    </g>
+    <g stroke="null" id="svg_67"/>
+    <g stroke="null" id="svg_68"/>
+    <g stroke="null" id="svg_69"/>
+    <g stroke="null" id="svg_70"/>
+    <g stroke="null" id="svg_71"/>
+    <g stroke="null" id="svg_72"/>
+    <g stroke="null" id="svg_73"/>
+    <g stroke="null" id="svg_74"/>
+    <g stroke="null" id="svg_75"/>
+    <g stroke="null" id="svg_76"/>
+    <g stroke="null" id="svg_77"/>
+    <g stroke="null" id="svg_78"/>
+    <g stroke="null" id="svg_79"/>
+    <g stroke="null" id="svg_80"/>
+    <g stroke="null" id="svg_81"/>
+   </g>
+  </g>
+ </g>
+</svg>

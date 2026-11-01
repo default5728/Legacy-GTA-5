@@ -1,0 +1,65 @@
+#playerTargetMenuBlock {
+    position: absolute;
+    height: 1000px;
+    width: 1000px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 99999;
+}
+
+#playerTargetMenuBlock image {
+    pointer-events: none;
+}
+#playerTargetMenuBlock svg {
+    pointer-events: none;
+}
+#playerTargetMenuBlock svg path{
+    pointer-events: all;
+}
+
+#playerTargetMenu {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    pointer-events: none;
+}
+
+#playerTargetMenuSub {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    pointer-events: none;
+}
+
+#playerTargetMenuBackground {
+    position: absolute;
+    height: 500px;
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(64% 64% at 50% 50%, rgba(36, 46, 71, 0.52) 0%, rgba(36, 46, 71, 0.52) 46.87%, rgba(37, 47, 78, 0.83) 46.88%);
+    border-radius: 50%;
+}
+
+#playerTargetMenuHeader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.92) !important;
+    text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+#playerTargetMenuDesc {
+    position: absolute;
+    top: calc(50% + 25px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: rgba(217, 232, 255, 0.92);
+    text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}

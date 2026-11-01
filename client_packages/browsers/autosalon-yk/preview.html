@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../dump/Lib/css/fonts.css">
+    <link rel="stylesheet" href="../dump/Menu/UI/style.css">
+    <link rel="stylesheet" href="../dump/Lib/css/help.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../dump/Lib/js/vue.js"></script>
+    <script src="../dump/Lib/js/preventSelection.js"></script>
+    <style>
+        body { background: #1a2332 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23121820" width="100" height="100"/></svg>'); min-height: 100vh; }
+    </style>
+</head>
+<body scroll="no" style="overflow: hidden;">
+
+    <!-- same markup as index.html -->
+    <div id="shop_vehicle">
+        <template>
+            <div v-if="loaded">
+                <div v-if="!testDriverStarted">
+                    <div class="yk-shadow-block-right" style="width: 297px;">
+                        <div style="position: relative; padding: 10px 0;">
+                            <div class="yk-scroll hidden" style="height: calc(100% - 50px);">
+                                <div v-for="(veh, vehIndex) in vehicles" :key="veh.model" class="yk-shadow-block-item" @click="selectVeh(vehIndex)" :class="{'active': vehIndex === selectedVeh}">
+                                    <div class="yk-text w-4 s-18" style="padding: 0 20px;">{{ veh.name }}</div>
+                                </div>
+                            </div>
+                            <div style="position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);">
+                                <svg width="26" height="25" viewBox="0 0 26 25"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.0003 8.10027C23.0003 8.38187 22.8914 8.66347 22.6747 8.87797L13.7858 17.6779C13.3514 18.108 12.6492 18.108 12.2147 17.6779L3.32583 8.87797C2.89139 8.44787 2.89139 7.75267 3.32583 7.32257C3.76028 6.89248 4.4625 6.89248 4.89694 7.32257L13.0003 15.3448L21.1036 7.32257C21.538 6.89248 22.2403 6.89248 22.6747 7.32257C22.8914 7.53707 23.0003 7.81867 23.0003 8.10027Z" fill="#3B4662"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="selectedVeh >= 0 && vehicles[selectedVeh]" class="yk-shadow-block-left" style="width: 297px;">
+                        <div class="yk-shadow-block-main-content-left">
+                            <div class="yk-text w-7 s-24 text-center mb-10">{{ vehicles[selectedVeh].name }}</div>
+                            <div class="yk-text w-5 s-17 mt-20">КЛАСС: <span class="yk-text w-6 s-17">{{ vehicles[selectedVeh].className }}</span></div>
+                            <div class="mt-20">
+                                <div class="yk-text w-6 s-17">СКОРОСТЬ:</div>
+                                <div class="yk-progress-block mt-5"><div class="yk-progress-fill orange" :style="{'width': maxSpeed + '%'}"></div><div class="yk-progress-text">{{ maxSpeed }} из 100%</div></div>
+                                <div class="yk-text w-6 s-17 mt-10">УСКОРЕНИЕ:</div>
+                                <div class="yk-progress-block mt-5"><div class="yk-progress-fill orange" :style="{'width': acceleration + '%'}"></div><div class="yk-progress-text">{{ acceleration }} из 100%</div></div>
+                            </div>
+                            <div class="text-center mt-10"><button @click="startTestDrive()" class="yk-btn s-15 p-10-15 orange w-100">Тест драйв</button></div>
+                        </div>
+                        <div style="position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); width: 90%;">
+                            <div class="yk-text w-7 s-38 text-center">{{ vehicles[selectedVeh].priceDisplay }}{{ vehicles[selectedVeh].currencyLabel }}</div>
+                            <div v-if="vehicles[selectedVeh].currencyLabel === '$'" class="d-flex center mt-10">
+                                <button @click="startBuyVeh(0)" class="yk-btn s-15 p-10-15 green flex-1">Наличные</button>
+                                <button v-if="family" @click="startBuyVeh(2)" class="yk-btn s-15 p-10-15 flex-1 ml-5">Для семьи</button>
+                            </div>
+                            <div v-else class="d-flex center mt-10"><button @click="startBuyVeh(0)" class="yk-btn s-15 p-10-15 green flex-1">Купить за DP</button></div>
+                            <div @click="closeShop()" class="yk-text w-6 s-13 text-center mt-10">ПОКИНУТЬ МАГАЗИН (ESC)</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="startBuyVehType !== -1 && selectedVeh >= 0" class="content-block center">
+                    <div class="yk-block"><div class="yk-content" style="padding: 20px 30px 40px;"><div class="yk-text w-7 s-18 text-center" style="color:#495779;">ПОКУПКА МАШИНЫ</div></div></div>
+                    <div class="yk-btn-h-list w-100" style="position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);text-align:center;">
+                        <button @click="startBuyVehType = -1" class="yk-btn s-15 p-10-15 red" style="width:200px;">Нет</button>
+                        <button @click="buyVeh()" class="yk-btn s-15 p-10-15 orange">Оплатить</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        window.mp = { trigger: function (ev, a) { console.log('[preview]', ev, a); } };
+    </script>
+    <script src="app.js"></script>
+    <script>
+        window.autosalonYk.load({
+            family: true,
+            vehicles: [
+                { brand: 'Bugatti', title: 'Chiron 17', model: 'chiron17', class: 'exclusive', price: 700000000, maxSpeed: 320, currency: '$' },
+                { brand: 'Audi', title: 'RS 7', model: '2020rs7', class: 'premium', price: 600000000, maxSpeed: 310, currency: '$' },
+                { brand: 'Lada', title: '2107', model: 'lada2107', class: 'basic', price: 15000000, maxSpeed: 160, currency: '$' },
+                { brand: 'Bugatti', title: 'Tourbillon', model: 'tourbillon', class: 'exclusive', price: 100000, maxSpeed: 340, currency: 'DP' },
+            ]
+        });
+    </script>
+</body>
+</html>

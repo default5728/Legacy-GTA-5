@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Стройка</title>
+<style>
+@font-face{
+  font-family:'Geometria Medium';
+  src:url('package://browsers/hud/fonts/Geometria-Medium.ttf') format('truetype');
+  font-weight:normal;
+  font-style:normal;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;-webkit-font-smoothing:antialiased}
+#root{
+  position:fixed;left:50%;top:62%;
+  transform:translate(-50%,-50%);
+  display:none;flex-direction:column;align-items:center;
+  pointer-events:none
+}
+#root.show{display:flex}
+.bar-wrap{
+  width:340px;height:34px;
+  background:#000;
+  border-radius:999px;
+  overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 2px 10px rgba(0,0,0,.55);
+}
+.bar-fill{
+  height:100%;width:0%;
+  border-radius:999px;
+  background:#32d74b;
+  transition:width .12s linear;
+}
+.key-badge{
+  margin-top:14px;
+  min-width:72px;height:54px;
+  padding:0 28px;
+  background:#000;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;
+  font-family:'Geometria Medium',Montserrat,Arial,sans-serif;
+  font-size:34px;
+  font-weight:normal;
+  line-height:1;
+  letter-spacing:0;
+}
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="bar-wrap"><div class="bar-fill" id="fill"></div></div>
+  <div class="key-badge" id="keyLbl">F</div>
+</div>
+<script>
+window.constructionWorkUi = {
+  setVisible(on){ document.getElementById('root').classList.toggle('show', !!on); },
+  setState(key, pct){
+    var k = String(key||'F').toUpperCase();
+    document.getElementById('keyLbl').textContent = k;
+    var p = Math.max(0, Math.min(100, Number(pct)||0));
+    document.getElementById('fill').style.width = p + '%';
+  }
+};
+</script>
+</body>
+</html>

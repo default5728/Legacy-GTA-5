@@ -1,0 +1,410 @@
+.lobby-content {
+  width: 100%;
+  padding-top: 32px;
+  padding-left: 64px;
+  padding-right: 64px;
+  padding-bottom: 32px;
+  overflow: auto;
+}
+
+.lobby-content hr {
+  margin: 0;
+}
+
+.lobby-top-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lobby-button-top-content {
+  display: flex;
+}
+
+.lobby-button-top-content a {
+  width: 201px;
+  height: 46px;
+  border: 1px solid #252635;
+  background: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #A1A3C2;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.lobby-button-top-content a.tbut {
+  cursor: pointer;
+  margin-right: 16px;
+}
+.lobby-button-top-content a:hover {
+  border-color: #006EFF;
+  color: #fff;
+}
+
+.team-count {
+  display: flex;
+  align-items: center;
+}
+
+.team-count p {
+  margin-left: 16px;
+  color: #3D3F53;
+  margin-bottom: 0;
+}
+
+.team-count p b {
+  font-weight: normal;
+  color: #A1A3C2;
+}
+
+#team-count2 {
+  margin-top: 32px;
+}
+
+.team-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.team-list a {
+  margin-top: 24px;
+  width: 70px;
+  height: 70px;
+  border: 1px solid #252635;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #A1A3C2;
+  font-size: 24px;
+}
+
+.team-list a:hover {
+  border-color: #006EFF;
+  color: #fff;
+}
+
+.player {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background-color: #252635;
+  margin-right: 16px;
+  margin-top: 24px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.player img {
+
+  width: 70px;
+}
+
+.nickname {
+  display: none;
+  position: absolute;
+  left: 25px;
+  top: 55px;
+  z-index: 999;
+}
+
+.player.hover .nickname {
+  display: block;
+}
+
+.trapezoid {
+  border-bottom: 11px solid #3D3F53;
+  border-right: 20px solid transparent;
+  height: 0;
+  width: 25px;
+}
+
+.nick {
+  height: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3D3F53;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.nick p {
+  margin: 0;
+  color: #fff;
+}
+
+.player-del {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-color: #3D3F53;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  top:-10px;
+  right: -10px;
+}
+
+.cross {
+  width: 10px;
+  height: 10px;
+}
+
+.cross:before, .cross:after {
+  position:  absolute;
+  margin-left: 3px;
+  content: ' ';
+  height: 10px;
+  width: 2px;
+  background-color: #A1A3C2;
+}
+
+.player-del:hover .cross:before, .player-del:hover .cross:after  {
+  background-color: #006EFF;
+}
+.cross:before {
+  transform: rotate(45deg);
+}
+.cross:after {
+  transform: rotate(-45deg);
+}
+
+.add-playe {
+  margin-top: 24px;
+  display: flex;
+  height: 70px;
+  align-items: center;
+}
+
+.add-playe input {
+  width: 245px;
+  height: 48px;
+  background: none;
+  outline: none;
+  border: 1px solid #252635;
+  padding-left: 16px;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.add-playe input::-webkit-input-placeholder {
+  color: #A1A3C2;
+}
+
+.add-playe a.apbut {
+  width: 164px;
+  height: 48px;
+  outline: none;
+  border: none;
+  color: #A1A3C2;
+  background-color: #252635;
+  font-size: 16px;
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+.add-playe a.apbut:hover {
+  border: 1px solid #006EFF;
+  color: #fff;
+}
+
+.add-playe a {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #252635;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.add-playe a .icon2 {
+  display: none;
+}
+
+.add-playe a:hover .icon1 {
+  display: none;
+}
+
+.add-playe a:hover .icon2 {
+  display: block;
+}
+.add-playe a:hover {
+  border-color: #006EFF;
+}
+
+.lobby-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.lobby-bottom-right-content {
+  margin-top: 98px;
+}
+
+.info-lobby p {
+  margin: 0;
+  text-align: right;
+  color: #3D3F53;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.info-lobby p b {
+  color: #A1A3C2;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+#b-position1 {
+  margin-right: 95px;
+}
+
+#b-position2 {
+  margin-right: 92px;
+}
+
+#b-weapon {
+  margin-right: 128px;
+}
+
+#b-max-player {
+  margin-right: 69px;
+}
+
+#b-status {
+  margin-right: 140px;
+  color: #fff;
+}
+
+.lobby-bottom-button {
+  display: flex;
+  margin-top: 32px;
+}
+
+.lobby-bottom-button a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+}
+
+#setting-lobby {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #252635;
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+#setting-lobby:hover {
+  border-color: #006EFF;
+  background: none;
+  box-shadow: none;
+}
+
+.lobby-bottom-button a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  width: 192px;
+  height: 48px;
+  border: 1px solid #006EFF;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.lobby-bottom-button a:hover {
+  background-color: #006EFF;
+  box-shadow: 0px 10px 40px rgba(0, 110, 255, 0.3);
+}
+
+.lobby-bottom-left-content input {
+  width: 562px;
+  height: 48px;
+  background: none;
+  outline: none;
+  border: 1px solid #252635;
+  padding-left: 16px;
+  color: #fff;
+}
+
+.lobby-bottom-left-content input::-webkit-input-placeholder {
+  color: #A1A3C2;
+}
+
+.input-chat {
+  display: flex;
+}
+
+.input-chat a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  background-color: #252635;
+  border: none;
+  outline: none;
+}
+
+.input-chat a:hover {
+  border: 1px solid #006EFF;
+}
+
+.read-chat {
+  width: 610px;
+  height: 280px;
+  margin-top: 30px;
+  overflow: auto;
+}
+
+.read-chat::-webkit-scrollbar {
+  width: 0;
+}
+
+.message p {
+  color: #A1A3C2;
+  margin: 0;
+}
+
+p.chat-nick b {
+  font-weight: normal;
+  font-size: 12px;
+  color: #3D3F53;
+}
+
+p.text-chat {
+  color: #fff;
+}
+
+.message {
+  margin-bottom: 16px;
+}
+
+#lobby-window .line {
+  margin-top: 32px;
+}
+
+#setting-lobby .icon2 {
+  display: none;
+}
+
+#setting-lobby:hover .icon1 {
+  display: none;
+}
+
+#setting-lobby:hover .icon2 {
+  display: block;
+}

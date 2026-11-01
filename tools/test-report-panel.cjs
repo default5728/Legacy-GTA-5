@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const events={},calls=[],notices=[];
+const player=(cid,adminlvl)=>({static:cid,adminlvl,login:'Player'+cid,_adminSession:true,vars:{auth:true},getVariable(k){return this.vars[k];},setVariable(k,v){this.vars[k]=v;},call(n,a){calls.push({cid,n,a});},outputChatBox(){}});
+const user=player(2,0),admin=player(1,9),online=[user,admin];
+const ctx={console,Date,JSON,Number,Math,require:name=>name.includes('report-history')?{persist(){}}:({hasPermission:(p,key)=>p.adminlvl>=1}),isNotify:(...args)=>notices.push(args),mp:{players:{exists:p=>online.includes(p),forEach:fn=>online.forEach(fn),toArray:()=>online},events:{add:(n,f)=>events[n]=f,addCommand:()=>{}}},pushChatLineToPlayer:()=>{},sendDiscordLog:()=>{},adminSessionIsGated:()=>false};ctx.global=ctx;
+vm.runInNewContext(fs.readFileSync('packages/server/playerreport.js','utf8'),ctx);
+ctx.playerReportCreate(user,'Не работает магазин одежды');assert(ctx.reportThreads[2]);assert(user.vars.report);assert(calls.some(c=>c.cid===1&&c.n==='adminPanel:addReportPayload'));
+ctx.playerReportCreate(user,'Второй репорт не нужен');assert.equal(ctx.reportThreads[2].messages.length,1);
+events['report:admin:replyOnly'](admin,JSON.stringify({s:2,t:'Здравствуйте, проверим.'}));assert.equal(ctx.reportThreads[2].messages.at(-1).role,'admin');
+events['report:admin:closeTicket'](user,2);assert(ctx.reportThreads[2]);
+events['report:admin:closeTicket'](admin,2);assert.equal(ctx.reportThreads[2],undefined);assert.equal(user.vars.report,null);assert(calls.some(c=>c.n==='adminPanel:removeReport'));
+console.log('PASS: first report accepts undefined state, reaches panel, rejects duplicates, receives admin reply and closes only with staff permissions.');

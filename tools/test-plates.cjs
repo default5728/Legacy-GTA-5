@@ -1,0 +1,24 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),items=require('../packages/server/kepler-legacy-items');
+let disk=null,clock=1000,cash=20000,bank=20000,charges=0,saves=0;const events=new Map(),calls=[];
+const p={inventory:Array(50).fill(null),money:cash,_legacyCharacterId:1,getVariable:k=>k==='bank'?bank:false,static:1,dimension:0,health:100,position:{x:0,y:0,z:0},call:(...a)=>calls.push(a)};
+const vars={owner:1,carModel:'adder'},v={dimension:0,position:{x:1,y:0,z:0},model:1,numberPlate:'old',setVariable:(k,v)=>vars[k]=v,getVariable:k=>vars[k]};
+const npc={dimension:0,position:{x:0,y:0,z:0},getVariable:k=>k==='legacyService'?'plates':null};
+const db={transaction:async work=>work({query:async(sql,args)=>{if(sql.startsWith('SELECT'))return{rows:[{money:cash,bank}]};if(sql.startsWith('UPDATE')){[cash,bank]=args;charges++;}return{rows:[]};}})};
+const ctx={module:{exports:{}},Date:{now:()=>clock},setInterval:()=>({unref(){}}),global:{invGridTryPush:(p,x)=>{const i=p.inventory.indexOf(null);if(i<0)return false;p.inventory[i]=x;return true;},saveInventory:()=>saves++,emitPlayerInventory:()=>{}},mp:{players:{exists:()=>true,toArray:()=>[p]},events:{add:(e,f)=>events.set(e,f)},peds:{toArray:()=>[npc]},vehicles:{at:()=>v,exists:()=>true,toArray:()=>[v]}},require:name=>name==='fs'?{existsSync:()=>false,mkdirSync(){},writeFileSync:(f,s)=>disk=s,renameSync(){}}:name==='./access'?{assertPlayer:()=>({characterId:1,accountId:2})}:name==='./connection'?db:name==='../kepler-legacy-items'?items:name==='./economy'?{sync:(p,id,b)=>p.money=b.cash}:require(name),__dirname:process.cwd()+'/packages/server/legacy'};
+vm.runInNewContext(fs.readFileSync('packages/server/legacy/plates.js','utf8'),ctx);ctx.module.exports(()=>{});
+(async()=>{
+ events.get('server:plates:open')(p);let state=JSON.parse(calls.at(-1)[1][0]);assert.equal(state.cost,6000);assert.equal(state.plate,'');assert.equal(state.canSave,false);
+ const act=(id,kind,pay='cash')=>events.get('server:plates:action')(p,state.session,id,kind,pay,state.revision,'77');
+ await act('roll','digits');state=JSON.parse(calls.at(-1)[1][0]);assert.equal(state.canSave,false);assert.match(state.plate,/^ [0-9]{3}  $/);assert.equal(cash,14000);assert.equal(charges,1);
+ await events.get('server:plates:action')(p,state.session,'replay','digits','cash',0,'77');assert.equal(charges,1);
+ clock+=400;await act('premature','save');assert(JSON.parse(calls.at(-1)[1][0]).error);assert.equal(p.inventory.filter(Boolean).length,0);
+ clock+=400;await act('letters','letters');state=JSON.parse(calls.at(-1)[1][0]);assert(state.canSave);assert.match(state.plate,/^[\u0410-\u042f][0-9]{3}[\u0410-\u042f]{2}$/);assert.equal(charges,2);
+ clock+=400;p.inventory.fill('occupied');await act('savefull','save');assert.equal(JSON.parse(calls.at(-1)[1][0]).error,'Освободите место в инвентаре.');
+ clock+=400;p.inventory[0]=null;await act('save','save');const saved=calls.at(-1)[1][0];assert.equal(calls.at(-1)[0],'client:plates:saved');assert.equal(items.decode(p.inventory[0]).plate,saved);assert(saves>0);assert(JSON.parse(disk).inventoryImported[1].includes(saved));
+ events.get('server:plates:choose')(p,2);assert.equal(calls.at(-1)[0],'legacy:plates:choose');
+ vars.owner=2;events.get('server:plates:install')(p,2,saved);assert.equal(v.numberPlate,'old');vars.owner=1;
+ events.get('server:plates:install')(p,2,saved);assert.notEqual(v.numberPlate,'old');assert.equal(JSON.parse(disk).assignments['1:adder'],saved);assert(!p.inventory.some(x=>items.decode(x)?.plate===saved));events.get('server:plates:remove')(p,2);assert(p.inventory.some(x=>items.decode(x)?.plate===saved));assert.equal(JSON.parse(disk).assignments['1:adder'],'');assert.equal(v.numberPlate,' ');assert.equal(vars.legacyPlateVisual,'');events.get('server:plates:install')(p,2,saved);p.inventory.fill('full');events.get('server:plates:remove')(p,2);assert.equal(JSON.parse(disk).assignments['1:adder'],saved);p.inventory[0]=null;
+ events.get('server:plates:open')(p);state=JSON.parse(calls.at(-1)[1][0]);clock+=400;await act('bank','letters','bank');assert.equal(bank,14000);state=JSON.parse(calls.at(-1)[1][0]);assert.equal(state.canSave,false);assert.match(state.plate,/^[\u0410-\u042f] {3}[\u0410-\u042f]{2}$/);
+ state=JSON.parse(calls.at(-1)[1][0]);cash=0;clock+=400;await act('poor','digits');assert.equal(charges,3);assert.equal(JSON.parse(calls.at(-1)[1][0]).error,'Недостаточно наличных.');
+ console.log('PASS: paid cash/bank rolls, insufficient funds, stale replay, full inventory, physical plate save and ownership checks.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

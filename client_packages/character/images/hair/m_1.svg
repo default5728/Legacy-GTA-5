@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="cardBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#242838"/>
+      <stop offset="100%" stop-color="#12141c"/>
+    </radialGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#e08a45"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="14" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+  
+      <!-- Head Base -->
+      <path d="M 50 18 C 34 18 25 32 25 48 C 25 64 36 78 50 78 C 64 78 75 64 75 48 C 75 32 66 18 50 18 Z" fill="url(#skinGrad)"/>
+      <ellipse cx="23" cy="50" rx="4" ry="7" fill="#e08a45"/>
+      <ellipse cx="77" cy="50" rx="4" ry="7" fill="#e08a45"/>
+      <!-- Buzz Cut Layer -->
+      <path d="M 25 45 C 24 24 76 24 75 45 C 72 32 28 32 25 45 Z" fill="url(#hairGrad)"/>
+      <path d="M 28 40 C 35 24 65 24 72 40" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="2 3" fill="none"/>
+    
+</svg>

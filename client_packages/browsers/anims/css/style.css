@@ -1,0 +1,109 @@
+
+#main {
+	display: flex;
+	justify-content: center;
+	color: #fff;
+	margin-top: 18px;
+}
+
+#main svg {
+	z-index: 10;
+}
+
+#main div {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: column;
+}
+
+#center_block {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 18px;
+	font-weight: bolder;
+	padding: 0 34px;
+	margin-top: 15px;
+}
+
+.center_block-inner {
+	position: relative;
+}
+
+#center_block p b {
+	position: absolute;
+	font-size: 18px;
+	font-weight: bolder;
+	left: 50%;
+	top: 40%;
+	transform: translate(-50%, -50%);
+}
+
+#first_band, #second_band {
+	position: absolute;
+}
+
+#first_band {
+	right: 150px;
+}
+
+#second_band {
+	left: 150px;
+}
+
+#first_band p, #second_band p {
+	font-size: 24px;
+	font-weight: 700;
+	margin-top: 10px;
+}
+
+
+
+#timer {
+	position: absolute;
+	bottom: -50px;
+	display: flex;
+	align-items: center;
+	margin-top: 18px;
+}
+
+#timer svg {
+	margin-right: 3px;
+}
+#timer a {
+	margin-left: 3px;
+	color: #fff;
+	text-decoration: none;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+#vs {
+	position: absolute;
+	width: 100%;
+	top: 30px;
+	display: flex;
+	justify-content: center;
+	right: 5.5%;
+
+}
+
+#first_band .blur {
+	width: 92px;
+	height: 92px;
+	background: #31C02E;
+	filter: blur(50px);
+}
+
+#second_band .blur {
+	width: 92px;
+	height: 92px;
+	background: #A841E8;
+	filter: blur(50px);
+}
+
+.blur {
+	margin-top: -90px;
+}

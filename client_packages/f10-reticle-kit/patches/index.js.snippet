@@ -1,0 +1,11 @@
+// Добавить в client_packages/index.js (порядок важен):
+
+require('./playermenu_rpc.js');      // или ваш RPC-мост с global.rpc = rage-rpc
+require('./playermenu_reticle.js');
+require('./playermenu_reticle_rpc.js');
+require('./crosshair.js');
+
+// Альтернатива: если playermenu_rpc.js уже есть — достаточно добавить только:
+// require('./playermenu_reticle.js');
+// require('./playermenu_reticle_rpc.js');
+// require('./crosshair.js');

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аренда транспорта</title>
+    <link href="https://fonts.cdnfonts.com/css/proxima-nova" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/index.css">
+</head>
+<body>
+<div v-cloak id="rentcar">
+    <transition name="slide">
+        <div v-if="opened" class="rent_container centrized">
+
+            <div class="rent_breadcrumb">
+                <div class="rent_breadcrumb_left">
+                    <span
+                        v-if="showFibTab"
+                        class="rent_breadcrumb_inactive"
+                        :class="{ rent_breadcrumb_tab_active: tab === 'fib' }"
+                        @click="setTab('fib')"
+                    >FIB</span>
+                    <span
+                        v-if="!showFibTab"
+                        class="rent_breadcrumb_active rent_breadcrumb_single"
+                    >Аренда транспорта</span>
+                    <span class="rent_breadcrumb_separator">//</span>
+                    <span class="rent_breadcrumb_active">Каталог</span>
+                </div>
+                <button class="rent_close" @click="tryClose" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+
+            <div class="rent_subtitle">
+                Выберите транспорт. Оплата наличными — спавн сразу.
+            </div>
+
+            <div class="rent_search_wrap">
+                <div class="rent_search_input_container">
+                    <svg class="rent_search_icon" viewBox="0 0 24 24" fill="none">
+                        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <input
+                        class="rent_search"
+                        v-model="search"
+                        type="text"
+                        placeholder="Быстрый поиск"
+                        @keyup.esc="tryClose"
+                    />
+                </div>
+            </div>
+
+            <div class="rent_container_items">
+                <transition-group name="list" tag="div" class="rent_container_items_grid">
+                    <div
+                        v-for="item in filteredVehicles"
+                        :key="tab + '-' + item.Name"
+                        class="rent_container_items_block"
+                    >
+                        <div class="rent_container_items_block_img">
+                            <img :src="item.img" :alt="item.Name">
+                        </div>
+                        <div class="rent_container_items_block_info">
+                            <div class="rent_container_items_block_model">{{ item.Name }}</div>
+                            <div class="rent_container_items_block_number">{{ item.MaxSpeed }} км/ч</div>
+                        </div>
+                        <button class="rent_container_items_block_btn" type="button" @click="onRent(item)">
+                            Арендовать <span class="price">{{ item.price }} $</span>
+                        </button>
+                    </div>
+                </transition-group>
+
+                <div v-if="filteredVehicles.length === 0" class="rent_empty">
+                    Нет доступного транспорта
+                </div>
+            </div>
+
+            <transition name="fade">
+                <div v-if="rentModal" class="rent_modal_backdrop" @click.self="closeRentModal">
+                    <div class="rent_modal_panel">
+                        <button class="rent_close rent_modal_close" type="button" @click="closeRentModal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                        <div class="rent_modal_img">
+                            <img :src="rentModalProduct.img" :alt="rentModalProduct.Name">
+                        </div>
+                        <div class="rent_modal_title">{{ rentModalProduct.Name }}</div>
+                        <div class="rent_modal_meta">
+                            <span>Макс. скорость</span>
+                            <span>{{ rentModalProduct.MaxSpeed }} км/ч</span>
+                        </div>
+                        <div class="rent_modal_price">
+                            К оплате: <span>{{ rentModalProduct.price }} $</span>
+                        </div>
+                        <button class="rent_modal_pay" type="button" @click="confirmRent">
+                            Взять авто
+                            <img src="package://browsers/anims/img/svg/wallet.svg" alt="">
+                        </button>
+                    </div>
+                </div>
+            </transition>
+
+        </div>
+    </transition>
+</div>
+
+<script src="package://browsers/rentcarnew/js/vue.js"></script>
+<script src="./src/index.js"></script>
+</body>
+</html>

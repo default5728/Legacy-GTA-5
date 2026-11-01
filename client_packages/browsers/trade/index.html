@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обмен вещами</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="content-block center" id="tradeContainer" style="z-index: 1; top: 50%;">
+        <div class="yk-block" style="background: radial-gradient(122.31% 217.44% at 1.56% 94.83%, #293342 0%, #121720 100%); width: 680px;">
+            <div class="yk-tab-block-h">
+                <button class="yk-tab-button active">
+                    <svg class="yk-tab-button-ico" width="20" height="20" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 14H15C17.7614 14 20 16.2386 20 19C20 19.5523 19.5523 20 19 20C18.4872 20 18.0645 19.614 18.0067 19.1166L17.9949 18.8237C17.907 17.3072 16.6928 16.093 15.1763 16.0051L15 16H5C3.34315 16 2 17.3431 2 19C2 19.5523 1.55228 20 1 20C0.447715 20 0 19.5523 0 19C0 16.3112 2.12231 14.1182 4.78311 14.0046L5 14H15H5ZM10 0C13.3137 0 16 2.68629 16 6C16 9.31371 13.3137 12 10 12C6.68629 12 4 9.31371 4 6C4 2.68629 6.68629 0 10 0ZM10 2C7.79086 2 6 3.79086 6 6C6 8.20914 7.79086 10 10 10C12.2091 10 14 8.20914 14 6C14 3.79086 12.2091 2 10 2Z"/>
+                    </svg>
+                    <span class="yk-tab-button-text">ОБМЕН ВЕЩАМИ</span>
+                </button>
+                <svg class="ml-auto" width="14" height="14" viewBox="0 0 14 14" onclick="closeTrade()">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.41425 7.00025L13.7072 1.70725C14.0982 1.31625 14.0982 0.68425 13.7072 0.29325C13.3162 -0.09775 12.6842 -0.09775 12.2933 0.29325L7.00025 5.58625L1.70725 0.29325C1.31625 -0.09775 0.68425 -0.09775 0.29325 0.29325C-0.09775 0.68425 -0.09775 1.31625 0.29325 1.70725L5.58625 7.00025L0.29325 12.2933C-0.09775 12.6842 -0.09775 13.3162 0.29325 13.7072C0.48825 13.9022 0.74425 14.0002 1.00025 14.0002C1.25625 14.0002 1.51225 13.9022 1.70725 13.7072L7.00025 8.41425L12.2933 13.7072C12.4882 13.9022 12.7443 14.0002 13.0002 14.0002C13.2562 14.0002 13.5122 13.9022 13.7072 13.7072C14.0982 13.3162 14.0982 12.6842 13.7072 12.2933L8.41425 7.00025Z" fill="#4D5E77"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="d-flex mt-20">
+            <div class="yk-block yk-content" style="width: 360px; height: 478px;">
+                <div class="d-flex" style="justify-content: space-between; align-items: center;">
+                    <div class="yk-text w-6 s-14" style="color: #495779;">ВАШИ ПРЕДМЕТЫ</div>
+                </div>
+                <div class="d-flex center mt-10">
+                    <div class="playerInventory-items-container" id="yourItemsGrid">
+                        <!-- 20 slots - 5x4 -->
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                        <div class="playerInventory-item-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="yk-block yk-content d-flex column ml-20" style="width: 300px; height: 478px;">
+                <div class="yk-text w-6 s-14 text-center upper" style="color: #495779;">ВЫ ОТДАЁТЕ <span id="tradePartnerName">ПАРТНЁР</span></div>
+                <div class="d-flex center mt-10">
+                    <svg width="30" height="30" viewBox="0 0 30 30">
+                        <path d="M15 0C6.73141 0 0 6.73141 0 15C0 23.2686 6.73141 30 15 30C23.2686 30 30 23.2686 30 15C30 6.73141 23.2686 0 15 0ZM15 26.8946C8.44215 26.8946 3.10537 21.5579 3.10537 15C3.10537 8.44215 8.44215 3.10537 15 3.10537C21.5579 3.10537 26.8946 8.44215 26.8946 15C26.8946 21.5579 21.5579 26.8946 15 26.8946Z" fill="url(#inventoryTradeMoney_gradient)"/>
+                        <path d="M17.5591 14.157C16.8338 13.7541 16.0653 13.4565 15.3029 13.1404C14.8628 12.9607 14.4413 12.7437 14.0694 12.4462C13.338 11.8574 13.4743 10.909 14.3359 10.5309C14.5777 10.4255 14.8318 10.3884 15.0921 10.376C16.09 10.3202 17.0322 10.5061 17.9372 10.94C18.3834 11.157 18.5322 11.0888 18.6872 10.6239C18.8483 10.128 18.9847 9.62596 19.1272 9.1301C19.2264 8.79539 19.1024 8.57224 18.7863 8.43588C18.2099 8.18175 17.6148 7.9958 16.9888 7.90282C16.1768 7.77266 16.1768 7.77266 16.1706 6.95448C16.1644 5.79538 16.1644 5.79538 15.0115 5.80158C14.8442 5.80158 14.6768 5.79538 14.5095 5.80158C13.9702 5.82018 13.8772 5.91315 13.8648 6.45241C13.8586 6.69415 13.8648 6.94208 13.8648 7.18381C13.8586 7.90902 13.8586 7.89662 13.1644 8.14456C11.4909 8.752 10.4558 9.89249 10.3442 11.721C10.245 13.3388 11.088 14.4297 12.4144 15.2231C13.2326 15.7127 14.1376 16.0041 15.0053 16.3884C15.3462 16.5371 15.6686 16.7107 15.9475 16.9462C16.7843 17.6342 16.6293 18.7809 15.6376 19.2148C15.1045 19.4441 14.5467 19.5061 13.9764 19.4317C13.09 19.3202 12.2409 19.0908 11.4475 18.6756C10.9826 18.4338 10.8462 18.4958 10.6851 19.0041C10.5487 19.4441 10.4248 19.8842 10.307 20.3243C10.1458 20.9194 10.2016 21.0619 10.7719 21.3346C11.4909 21.6818 12.2657 21.8615 13.0529 21.9917C13.6665 22.0908 13.6913 22.1156 13.6975 22.7541C13.6975 23.0454 13.7037 23.3367 13.7037 23.6218C13.7099 23.9875 13.8834 24.1983 14.2615 24.2045C14.6892 24.2107 15.1169 24.2107 15.5446 24.2045C15.8917 24.1983 16.0715 24.0061 16.0777 23.6528C16.0777 23.2561 16.0962 22.8594 16.0838 22.4627C16.0653 22.0598 16.2388 21.8553 16.6293 21.7499C17.5219 21.5082 18.2843 21.0247 18.8731 20.3119C20.4847 18.3284 19.8648 15.4338 17.5591 14.157Z" fill="url(#inventoryTradeMoney_gradient)"/>
+                        <defs>
+                            <linearGradient id="inventoryTradeMoney_gradient" x1="15.0011" y1="5.79883" x2="15.0011" y2="24.2091" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#FFB800"/>
+                                <stop offset="1" stop-color="#FF5C00"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="yk-input-block ml-10" style="width: 207px;">
+                        <input class="yk-input" id="tradeMoneyInput" value="0">
+                        <div class="yk-text w-6 ml-10" id="tradeBalanceLabel" style="color: #495779;"> / 0$</div>
+                    </div>
+                </div>
+                <div class="d-flex center mt-10">
+                    <div class="playerInventory-items-container" style="width: 270px;" id="yourOfferGrid">
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                        <div class="playerInventory-item-container" style="margin: 2px;"></div>
+                    </div>
+                </div>
+                <div class="yk-text w-6 s-14 text-center upper mt-20" style="color: #495779;">ВЫ ПОЛУЧАЕТЕ</div>
+                <div id="tradeRecvList" class="mt-10" style="height: 145px; text-align: left; padding: 0 10px; overflow-y: auto;"></div>
+                <div class="d-flex center mt-auto" style="position: relative;">
+                        <div class="yk-checkbox-block" onclick="toggleReady()">
+                            <input type="checkbox" class="yk-checkbox" id="readyCheckboxInput" disabled style="pointer-events: none;">
+                            <span class="yk-checkbox-text">Готов к обмену</span>
+                        </div>
+                        <div style="position: absolute; left: 50%; bottom: -55px; transform: translateX(-50%);" class="d-flex">
+                            <button onclick="confirmTrade()" class="yk-btn s-15 green" style="width: 150px;">ПОДТВЕРДИТЬ</button>
+                            <button onclick="closeTrade()" class="yk-btn s-15 purple ml-10" style="width: 150px;">ОТМЕНИТЬ</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div style="position: absolute; left: 0; top: calc(100% + 50px); width: 680px; background: rgba(165, 0, 0, 0.41); border-radius: 9px; padding: 15px; text-align: center;">
+            <div class="yk-text s-16">Каждый обмен совершается на Ваш страх и риск, не доверяйте людям, которые представляются администрацией или медиа и требуют им что-то передать. В случае обмана имущество Вам возвращено не будет, администрация — не гарант Ваших договоров и сделок.</div>
+        </div>
+    </div>
+
+    <script src="index.js?v=2"></script>
+</body>
+</html>

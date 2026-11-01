@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Clothes</title>
+</head>
+<body>
+    <form id="setClothesForm">
+        <label>
+            Slot:
+            <input type="number" id="slot" name="slot" required>
+        </label>
+        <label>
+            Drawable:
+            <input type="number" id="drawable" name="drawable" required>
+        </label>
+        <label>
+            Texture:
+            <input type="number" id="texture" name="texture" required>
+        </label>
+        <label>
+            Color:
+            <input type="number" id="color" name="color" required>
+        </label>
+        <button type="button" id="applyButton">Apply</button>
+    </form>
+
+    <script>
+        document.getElementById('applyButton').addEventListener('click', () => {
+            const slot = parseInt(document.getElementById('slot').value, 10);
+            const drawable = parseInt(document.getElementById('drawable').value, 10);
+            const texture = parseInt(document.getElementById('texture').value, 10);
+            const color = parseInt(document.getElementById('color').value, 10);
+
+            if (!isNaN(slot) && !isNaN(drawable) && !isNaN(texture) && !isNaN(color)) {
+                mp.trigger('setclothes', slot, drawable, texture, color);
+            }
+        });
+    </script>
+</body>
+</html>

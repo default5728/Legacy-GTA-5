@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="package://shared/kepler-asset-map.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,800;1,500;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="package://lib/front/css/resptt.css" />
+    <link rel="stylesheet" href="./css/casino.css">
+    <title>Casino</title>
+</head>
+<body>
+    <div id="app">
+        <div class="casino">
+            <div class="casino__header">
+                <div>
+                    <div class="casino__header-hint">
+                        <div class="casino__header-hint__image">
+                            <div></div>
+                            <p>{{outString(minbet)}}</p>
+                        </div>
+                        <p>Минимум стола</p>
+                    </div>
+                    <div class="casino__header-hint">
+                        <div class="casino__header-hint__image">
+                            <div></div>
+                            <p>{{outString(maxbet)}}</p>
+                        </div>
+                        <p>Максимум стола</p>
+                    </div>
+                    <div class="casino__header-hint">
+                        <div class="casino__header-hint__image">
+                            <div></div>
+                            <p>{{outString(balance)}}</p>
+                        </div>
+                        <p>Баланс</p>
+                    </div>  
+                </div>
+                <div>
+                    <transition-group name="casino-list" tag="div" class="casino__header-status" :class="">
+                        <div class="casino__header-status__scrolling" v-show="timer===0" :key="1">
+                            <div>
+                                <img src="./img/roulete.svg" alt="">
+                            </div>
+                            <p>ИДЕТ ПРОКРУТКА</p>
+                        </div>
+                        <div class="casino__header-status__wait" v-show="timer===-1" :key="2">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;display:block;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                    <circle cx="86" cy="50" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.875s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.875s"></animate>
+                                    </circle><circle cx="75.45584412271572" cy="75.45584412271572" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.75s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.75s"></animate>
+                                    </circle><circle cx="50" cy="86" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.625s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.625s"></animate>
+                                    </circle><circle cx="24.54415587728429" cy="75.45584412271572" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.5s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.5s"></animate>
+                                    </circle><circle cx="14" cy="50.00000000000001" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.375s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.375s"></animate>
+                                    </circle><circle cx="24.544155877284282" cy="24.54415587728429" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.25s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.25s"></animate>
+                                    </circle><circle cx="49.99999999999999" cy="14" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="-0.125s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="-0.125s"></animate>
+                                    </circle><circle cx="75.4558441227157" cy="24.544155877284282" fill="#e5ffff" r="10">
+                                      <animate attributeName="r" values="6;6;10;6;6" times="0;0.1;0.2;0.3;1" dur="1s" repeatCount="indefinite" begin="0s"></animate>
+                                      <animate attributeName="fill" values="#e5ffff;#e5ffff;#e5ffff;#e5ffff;#e5ffff" repeatCount="indefinite" times="0;0.1;0.2;0.3;1" dur="1s" begin="0s"></animate>
+                                    </circle>
+                                </svg>
+                            </div>
+                            <p>ОЖИДАНИЕ СТАВОК</p>
+                        </div>
+                        <div class="casino__header-status__await" v-show="timer>0" :key="3">
+                            <div>{{timer}}</div>
+                            <p>ДО НАЧАЛА ИГРЫ</p>
+                        </div>
+                    </transition-group>
+                </div>
+            </div>
+            <div class="casino__menu">
+                <div>
+                    <div class="casino__menu-help">
+                        <div></div>
+                        <p>A</p>
+                    </div>
+                    <div class="casino__chips">
+                        <div v-for="oneBet in betList" :class="{active:oneBet===bet}" :style="getChip(oneBet)"></div>
+                    </div>
+                    <div class="casino__menu-help">
+                        <p>D</p>
+                        <div></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="casino__hint">
+                        <div style="background-image: url('./img/icon__mouseleft.svg');"></div>
+                        <p>Поставить ставку</p>
+                    </div>
+                    <div class="casino__hint">
+                        <div>A</div>
+                        <div>D</div>
+                        <p>Выбор фишки</p>
+                    </div>
+                    <!-- <div class="casino__hint">
+                        <div>J</div>
+                        <p>Режим камеры</p>
+                    </div> -->
+                    <div class="casino__hint">
+                        <div>E</div>
+                        <p>Покинуть стол</p>
+                    </div>
+                </div>
+            </div>
+            <transition-group name="casino-list" tag="div" class="casino__notify">
+                <div v-for="notify in notifyList" :class="{oops:notify.type===0,win:notify.type===1,fail:notify.type===-1}" :key="notify.id" v-html="getMessage(notify)">
+                </div> 
+            </transition-group>
+        </div>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script src="./js/message.js"></script>
+    <script src="./js/parallax3d.js"></script>
+    <script src="./js/modal-universal.js"></script>
+    <script src="./js/casino.js"></script>
+</body>
+</html>

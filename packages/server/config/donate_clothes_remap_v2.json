@@ -1,0 +1,3202 @@
+{
+  "mode": "bags_remap_v3",
+  "byItemId": {
+    "85001": {
+      "clothId": 6,
+      "oldDrawable": 210,
+      "drawable": 210,
+      "fromDrawables": [
+        210
+      ],
+      "name": "Кабура",
+      "folder": "Accessories",
+      "nameOnly": true
+    },
+    "85002": {
+      "clothId": 6,
+      "oldDrawable": 210,
+      "drawable": 210,
+      "fromDrawables": [
+        210
+      ],
+      "name": "Кабура",
+      "folder": "Accessories",
+      "nameOnly": true
+    },
+    "85003": {
+      "clothId": 6,
+      "drawable": 204,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        204
+      ],
+      "oldDrawable": 204
+    },
+    "85004": {
+      "clothId": 6,
+      "drawable": 204,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        204
+      ],
+      "oldDrawable": 204
+    },
+    "85005": {
+      "clothId": 6,
+      "drawable": 204,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        204
+      ],
+      "oldDrawable": 204
+    },
+    "85006": {
+      "clothId": 6,
+      "drawable": 204,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        204
+      ],
+      "oldDrawable": 204
+    },
+    "85007": {
+      "clothId": 6,
+      "drawable": 204,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        204
+      ],
+      "oldDrawable": 204
+    },
+    "85008": {
+      "clothId": 6,
+      "drawable": 206,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        206
+      ],
+      "oldDrawable": 206
+    },
+    "85009": {
+      "clothId": 6,
+      "drawable": 206,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        206
+      ],
+      "oldDrawable": 206
+    },
+    "85010": {
+      "clothId": 6,
+      "drawable": 206,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        206
+      ],
+      "oldDrawable": 206
+    },
+    "85011": {
+      "clothId": 6,
+      "drawable": 206,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        206
+      ],
+      "oldDrawable": 206
+    },
+    "85012": {
+      "clothId": 6,
+      "drawable": 206,
+      "nameOnly": true,
+      "name": "Шарф Дрейн",
+      "fromDrawables": [
+        206
+      ],
+      "oldDrawable": 206
+    },
+    "85013": {
+      "clothId": 6,
+      "drawable": 208,
+      "nameOnly": true,
+      "name": "Цепь",
+      "fromDrawables": [
+        208
+      ],
+      "oldDrawable": 208
+    },
+    "85014": {
+      "clothId": 6,
+      "oldDrawable": 209,
+      "drawable": 209,
+      "fromDrawables": [
+        209
+      ],
+      "name": "Костюм священника",
+      "folder": "Accessories",
+      "nameOnly": true
+    },
+    "85516": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85517": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85518": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85519": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85520": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85521": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85522": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85523": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85524": {
+      "clothId": 5,
+      "drawable": 164,
+      "nameOnly": true,
+      "name": "Кеды с пауком",
+      "fromDrawables": [
+        164
+      ],
+      "oldDrawable": 164
+    },
+    "85525": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85526": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85527": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85528": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85529": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85530": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85531": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85532": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85533": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85534": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85535": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85536": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85537": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85538": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85539": {
+      "clothId": 5,
+      "drawable": 165,
+      "nameOnly": true,
+      "name": "Кроссовки Nice Pro",
+      "fromDrawables": [
+        165
+      ],
+      "oldDrawable": 165
+    },
+    "85540": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85541": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85542": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85543": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85544": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85545": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85546": {
+      "clothId": 5,
+      "oldDrawable": 166,
+      "drawable": 166,
+      "fromDrawables": [
+        166
+      ],
+      "name": "Кроссовки Nbalas",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85547": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85548": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85549": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85550": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85551": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85552": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85553": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85554": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85555": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85556": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85557": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85558": {
+      "clothId": 5,
+      "oldDrawable": 168,
+      "drawable": 168,
+      "fromDrawables": [
+        168
+      ],
+      "name": "Кроссовки Asiks",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85559": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85560": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85561": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85562": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85563": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85564": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85565": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85566": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85567": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85568": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85569": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85570": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85571": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85572": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85573": {
+      "clothId": 5,
+      "drawable": 169,
+      "nameOnly": true,
+      "name": "Кроссовки Кампусы",
+      "fromDrawables": [
+        169
+      ],
+      "oldDrawable": 169
+    },
+    "85574": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85575": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85576": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85577": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85578": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85579": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85580": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85581": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85582": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85583": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85584": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85585": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85586": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85587": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85588": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85589": {
+      "clothId": 5,
+      "drawable": 170,
+      "nameOnly": true,
+      "name": "Кроссовки Newбеленсы",
+      "fromDrawables": [
+        170
+      ],
+      "oldDrawable": 170
+    },
+    "85590": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85591": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85592": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85593": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85594": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85595": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85596": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85597": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85598": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85599": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85600": {
+      "clothId": 5,
+      "drawable": 171,
+      "nameOnly": true,
+      "name": "Кроссовки Cуперстары",
+      "fromDrawables": [
+        171
+      ],
+      "oldDrawable": 171
+    },
+    "85601": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85602": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85603": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85604": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85605": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85606": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85607": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85608": {
+      "clothId": 5,
+      "oldDrawable": 172,
+      "drawable": 172,
+      "fromDrawables": [
+        172
+      ],
+      "name": "Тапочки",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85625": {
+      "clothId": 8,
+      "oldDrawable": 118,
+      "drawable": 111,
+      "alt": null,
+      "fromDrawables": [
+        118,
+        111
+      ],
+      "name": "Сумка Miu Miu",
+      "folder": "Bags"
+    },
+    "85626": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85627": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85628": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85629": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85630": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85631": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85632": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85633": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85634": {
+      "clothId": 8,
+      "oldDrawable": 119,
+      "drawable": 112,
+      "alt": null,
+      "fromDrawables": [
+        119,
+        112
+      ],
+      "name": "Сумка Пузo",
+      "folder": "Bags"
+    },
+    "85635": {
+      "clothId": 8,
+      "oldDrawable": 120,
+      "drawable": 113,
+      "alt": null,
+      "fromDrawables": [
+        120,
+        113
+      ],
+      "name": "Рюкзак Нокио",
+      "folder": "Bags"
+    },
+    "85637": {
+      "clothId": 8,
+      "oldDrawable": 121,
+      "drawable": 114,
+      "alt": 115,
+      "fromDrawables": [
+        121,
+        114,
+        122,
+        149,
+        150,
+        115
+      ],
+      "name": "Сумка Balenciara Chips",
+      "folder": "Bags",
+      "keepImgDrawable": 121
+    },
+    "85653": {
+      "clothId": 8,
+      "oldDrawable": 124,
+      "drawable": 117,
+      "alt": null,
+      "fromDrawables": [
+        124,
+        117
+      ],
+      "name": "Сумка бумага",
+      "folder": "Bags"
+    },
+    "85654": {
+      "clothId": 8,
+      "oldDrawable": 125,
+      "drawable": 118,
+      "alt": null,
+      "fromDrawables": [
+        125,
+        118
+      ],
+      "name": "Портфель кожаный",
+      "folder": "Bags"
+    },
+    "85655": {
+      "clothId": 8,
+      "oldDrawable": 126,
+      "drawable": 119,
+      "alt": null,
+      "fromDrawables": [
+        126,
+        119
+      ],
+      "name": "Рюкзак сердце",
+      "folder": "Bags"
+    },
+    "85656": {
+      "clothId": 8,
+      "oldDrawable": 126,
+      "drawable": 119,
+      "alt": null,
+      "fromDrawables": [
+        126,
+        119
+      ],
+      "name": "Рюкзак сердце",
+      "folder": "Bags"
+    },
+    "85657": {
+      "clothId": 8,
+      "oldDrawable": 127,
+      "drawable": 120,
+      "alt": null,
+      "fromDrawables": [
+        127,
+        120
+      ],
+      "name": "Сумка El Hardy",
+      "folder": "Bags"
+    },
+    "85662": {
+      "clothId": 8,
+      "oldDrawable": 131,
+      "drawable": 124,
+      "alt": null,
+      "fromDrawables": [
+        131,
+        124
+      ],
+      "name": "Рюкзак Stone Islet Nylon",
+      "folder": "Bags"
+    },
+    "85663": {
+      "clothId": 8,
+      "oldDrawable": 132,
+      "drawable": 125,
+      "alt": null,
+      "fromDrawables": [
+        132,
+        125
+      ],
+      "name": "Рюкзак Chill Guy",
+      "folder": "Bags"
+    },
+    "85664": {
+      "clothId": 8,
+      "oldDrawable": 132,
+      "drawable": 125,
+      "alt": null,
+      "fromDrawables": [
+        132,
+        125
+      ],
+      "name": "Черный с зеленым рюкзак дракона (Luminoforo)",
+      "folder": "Bags"
+    },
+    "85665": {
+      "clothId": 8,
+      "oldDrawable": 132,
+      "drawable": 125,
+      "alt": null,
+      "fromDrawables": [
+        132,
+        125
+      ],
+      "name": "Черный с зеленым рюкзак дракона (Luminoforo)",
+      "folder": "Bags"
+    },
+    "85666": {
+      "clothId": 8,
+      "oldDrawable": 132,
+      "drawable": 125,
+      "alt": null,
+      "fromDrawables": [
+        132,
+        125
+      ],
+      "name": "Черный с зеленым рюкзак дракона (Luminoforo)",
+      "folder": "Bags"
+    },
+    "85759": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85760": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85761": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85762": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85763": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85764": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85765": {
+      "clothId": 5,
+      "oldDrawable": 173,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Veezy 700",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85766": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85767": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85768": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85769": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85770": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85771": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85772": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85773": {
+      "clothId": 5,
+      "oldDrawable": 174,
+      "drawable": 174,
+      "fromDrawables": [
+        174
+      ],
+      "name": "Кроссовки Sup Skeleton",
+      "folder": "Shoes",
+      "nameOnly": true
+    },
+    "85802": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Большая сумка Guggii",
+      "folder": "Bags"
+    },
+    "85803": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Большая сумка Guggii",
+      "folder": "Bags"
+    },
+    "85804": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85805": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85806": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85807": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85808": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85809": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85810": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85811": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85812": {
+      "clothId": 8,
+      "oldDrawable": 133,
+      "drawable": 126,
+      "alt": null,
+      "fromDrawables": [
+        133,
+        126
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85813": {
+      "clothId": 8,
+      "oldDrawable": 134,
+      "drawable": 127,
+      "alt": 128,
+      "fromDrawables": [
+        134,
+        127,
+        135,
+        119,
+        120,
+        128
+      ],
+      "name": "Прикольная сумка",
+      "folder": "Bags"
+    },
+    "85814": {
+      "clothId": 8,
+      "oldDrawable": 134,
+      "drawable": 127,
+      "alt": 128,
+      "fromDrawables": [
+        134,
+        127,
+        135,
+        119,
+        120,
+        128
+      ],
+      "name": "Сумка-мессенджер LW",
+      "folder": "Bags"
+    },
+    "85815": {
+      "clothId": 8,
+      "oldDrawable": 136,
+      "drawable": 129,
+      "alt": null,
+      "fromDrawables": [
+        136,
+        129
+      ],
+      "name": "Большая сумка на плече",
+      "folder": "Bags"
+    },
+    "85816": {
+      "clothId": 8,
+      "oldDrawable": 137,
+      "drawable": 130,
+      "alt": null,
+      "fromDrawables": [
+        137,
+        130
+      ],
+      "name": "Рюкзак Guggi Urban",
+      "folder": "Bags"
+    },
+    "85817": {
+      "clothId": 8,
+      "oldDrawable": 137,
+      "drawable": 130,
+      "alt": null,
+      "fromDrawables": [
+        137,
+        130
+      ],
+      "name": "Рюкзак Guggi Urban",
+      "folder": "Bags"
+    },
+    "85818": {
+      "clothId": 8,
+      "oldDrawable": 138,
+      "drawable": 131,
+      "alt": null,
+      "fromDrawables": [
+        138,
+        131
+      ],
+      "name": "Маленькая сумка с мишкой",
+      "folder": "Bags"
+    },
+    "85819": {
+      "clothId": 8,
+      "oldDrawable": 138,
+      "drawable": 131,
+      "alt": null,
+      "fromDrawables": [
+        138,
+        131
+      ],
+      "name": "Сумка Nermes Kirkin",
+      "folder": "Bags"
+    },
+    "85820": {
+      "clothId": 8,
+      "oldDrawable": 139,
+      "drawable": 132,
+      "alt": null,
+      "fromDrawables": [
+        139,
+        132
+      ],
+      "name": "Сумка дракончик",
+      "folder": "Bags"
+    },
+    "85821": {
+      "clothId": 8,
+      "oldDrawable": 139,
+      "drawable": 132,
+      "alt": null,
+      "fromDrawables": [
+        139,
+        132
+      ],
+      "name": "Сумка дракончик",
+      "folder": "Bags"
+    },
+    "85822": {
+      "clothId": 8,
+      "oldDrawable": 139,
+      "drawable": 132,
+      "alt": null,
+      "fromDrawables": [
+        139,
+        132
+      ],
+      "name": "Сумка дракончик",
+      "folder": "Bags"
+    },
+    "85901": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85902": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85903": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85904": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85905": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85906": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85907": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85908": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85909": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85910": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85911": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Сумка Walk",
+      "folder": "Bags"
+    },
+    "85912": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85913": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85914": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85915": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85916": {
+      "clothId": 8,
+      "oldDrawable": 140,
+      "drawable": 133,
+      "alt": null,
+      "fromDrawables": [
+        140,
+        133
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85917": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW (передняя)",
+      "folder": "Bags"
+    },
+    "85918": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW (передняя)",
+      "folder": "Bags"
+    },
+    "85919": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85920": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85921": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85922": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85923": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85924": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85925": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85926": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85927": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85928": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85929": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85930": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85931": {
+      "clothId": 8,
+      "oldDrawable": 141,
+      "drawable": 134,
+      "alt": null,
+      "fromDrawables": [
+        141,
+        134
+      ],
+      "name": "Сумка LW NeoSummer",
+      "folder": "Bags"
+    },
+    "85932": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Сумка LW (задняя)",
+      "folder": "Bags"
+    },
+    "85933": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Сумка LW (задняя)",
+      "folder": "Bags"
+    },
+    "85934": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85935": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85936": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85937": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85938": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85939": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85940": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85941": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85942": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85943": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85944": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85945": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85946": {
+      "clothId": 8,
+      "oldDrawable": 142,
+      "drawable": 135,
+      "alt": null,
+      "fromDrawables": [
+        142,
+        135
+      ],
+      "name": "Кросс сумка SportBunny",
+      "folder": "Bags"
+    },
+    "85947": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Рюкзак Spice",
+      "folder": "Bags"
+    },
+    "85948": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85949": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85950": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85951": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85952": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85953": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85954": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85955": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85956": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85957": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85958": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85959": {
+      "clothId": 8,
+      "oldDrawable": 143,
+      "drawable": 136,
+      "alt": null,
+      "fromDrawables": [
+        143,
+        136
+      ],
+      "name": "Сумка чемодан Lui Wuitton",
+      "folder": "Bags"
+    },
+    "85960": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумочка Miu Mua",
+      "folder": "Bags"
+    },
+    "85961": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумочка Miu Mua",
+      "folder": "Bags"
+    },
+    "85962": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85963": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85964": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85965": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85966": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85967": {
+      "clothId": 8,
+      "oldDrawable": 144,
+      "drawable": 137,
+      "alt": null,
+      "fromDrawables": [
+        144,
+        137
+      ],
+      "name": "Сумка Rik Ovens Gemini",
+      "folder": "Bags"
+    },
+    "85968": {
+      "clothId": 8,
+      "oldDrawable": 130,
+      "drawable": 123,
+      "alt": null,
+      "fromDrawables": [
+        130,
+        123
+      ],
+      "name": "Рюкзак Guggi Urban",
+      "folder": "Bags"
+    },
+    "85969": {
+      "clothId": 8,
+      "oldDrawable": 130,
+      "drawable": 123,
+      "alt": null,
+      "fromDrawables": [
+        130,
+        123
+      ],
+      "name": "Рюкзак Guggi Urban",
+      "folder": "Bags"
+    },
+    "85970": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка на плече",
+      "folder": "Bags"
+    },
+    "85971": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка на плече",
+      "folder": "Bags"
+    },
+    "85972": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85973": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85974": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85975": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85976": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85977": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85978": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85979": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85980": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85981": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85982": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85983": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85984": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85985": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85986": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85987": {
+      "clothId": 8,
+      "oldDrawable": 111,
+      "drawable": 138,
+      "alt": null,
+      "fromDrawables": [
+        111,
+        138
+      ],
+      "name": "Сумка Mua Mua",
+      "folder": "Bags"
+    },
+    "85988": {
+      "clothId": 8,
+      "oldDrawable": 112,
+      "drawable": 139,
+      "alt": null,
+      "fromDrawables": [
+        112,
+        139
+      ],
+      "name": "Сумка мишка",
+      "folder": "Bags"
+    },
+    "85989": {
+      "clothId": 8,
+      "oldDrawable": 113,
+      "drawable": 140,
+      "alt": null,
+      "fromDrawables": [
+        113,
+        140
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85990": {
+      "clothId": 8,
+      "oldDrawable": 113,
+      "drawable": 140,
+      "alt": null,
+      "fromDrawables": [
+        113,
+        140
+      ],
+      "name": "Торба Adibas Summer",
+      "folder": "Bags"
+    },
+    "85991": {
+      "clothId": 8,
+      "oldDrawable": 114,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        114,
+        141,
+        115,
+        142
+      ],
+      "name": "Нано сумка",
+      "folder": "Bags"
+    },
+    "85992": {
+      "clothId": 8,
+      "oldDrawable": 114,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        114,
+        141,
+        115,
+        142
+      ],
+      "name": "Нано сумка",
+      "folder": "Bags"
+    },
+    "85993": {
+      "clothId": 8,
+      "oldDrawable": 114,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        114,
+        141,
+        115,
+        142
+      ],
+      "name": "Нано сумка",
+      "folder": "Bags"
+    },
+    "85994": {
+      "clothId": 8,
+      "oldDrawable": 114,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        114,
+        141,
+        115,
+        142
+      ],
+      "name": "Нано сумка",
+      "folder": "Bags"
+    },
+    "85995": {
+      "clothId": 8,
+      "oldDrawable": 114,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        114,
+        141,
+        115,
+        142
+      ],
+      "name": "Нано сумка",
+      "folder": "Bags"
+    },
+    "85996": {
+      "clothId": 8,
+      "oldDrawable": 116,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        116,
+        143
+      ],
+      "name": "Сумка коробка LW",
+      "folder": "Bags"
+    },
+    "85997": {
+      "clothId": 8,
+      "oldDrawable": 116,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        116,
+        143
+      ],
+      "name": "Сумка коробка LW",
+      "folder": "Bags"
+    },
+    "85998": {
+      "clothId": 8,
+      "oldDrawable": 116,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        116,
+        143
+      ],
+      "name": "Сумка коробка LW",
+      "folder": "Bags"
+    },
+    "85999": {
+      "clothId": 8,
+      "oldDrawable": 116,
+      "drawable": 142,
+      "alt": null,
+      "fromDrawables": [
+        116,
+        143
+      ],
+      "name": "Сумка коробка LW",
+      "folder": "Bags"
+    },
+    "86000": {
+      "clothId": 8,
+      "oldDrawable": 116,
+      "drawable": 143,
+      "alt": null,
+      "fromDrawables": [
+        116,
+        143
+      ],
+      "name": "Сумка коробка LW",
+      "folder": "Bags"
+    },
+    "86001": {
+      "clothId": 8,
+      "oldDrawable": 117,
+      "drawable": 144,
+      "alt": null,
+      "fromDrawables": [
+        117,
+        144
+      ],
+      "name": "Сумка Rik Owens",
+      "folder": "Bags"
+    }
+  },
+  "bagAlt": {
+    "114": 115,
+    "115": 114,
+    "127": 128,
+    "128": 127,
+    "134": 127,
+    "135": 128,
+    "141": 142,
+    "149": 114,
+    "150": 115
+  },
+  "clothesRestoreByNewDrawable": {
+    "headwear": {
+      "250": 247,
+      "252": 249,
+      "253": 250,
+      "254": 251
+    },
+    "masks": {
+      "255": 249,
+      "256": 250,
+      "257": 251,
+      "258": 252
+    },
+    "top": {
+      "629": 663,
+      "630": 664,
+      "631": 665,
+      "632": 666,
+      "633": 667,
+      "634": 668,
+      "635": 669,
+      "636": 670,
+      "637": 671,
+      "638": 672,
+      "639": 673,
+      "640": 674,
+      "641": 675,
+      "642": 676,
+      "656": 629,
+      "657": 630,
+      "658": 631,
+      "659": 632,
+      "660": 633,
+      "661": 634,
+      "662": 635,
+      "663": 637,
+      "664": 636,
+      "665": 638,
+      "666": 639,
+      "667": 640,
+      "668": 641,
+      "669": 642,
+      "670": 643,
+      "671": 644,
+      "672": 645,
+      "673": 646,
+      "674": 647,
+      "675": 648,
+      "676": 649,
+      "677": 650,
+      "678": 651,
+      "679": 652,
+      "680": 653,
+      "681": 654,
+      "682": 655,
+      "683": 656,
+      "684": 657,
+      "685": 658,
+      "686": 659,
+      "687": 660
+    },
+    "bottom": {
+      "235": 255,
+      "236": 256,
+      "245": 235,
+      "246": 236,
+      "247": 237,
+      "248": 238,
+      "250": 240,
+      "251": 241,
+      "252": 242,
+      "253": 243,
+      "254": 244,
+      "256": 246,
+      "257": 247,
+      "258": 248,
+      "259": 249,
+      "260": 250,
+      "261": 251,
+      "262": 252,
+      "263": 253
+    },
+    "shoes": {
+      "164": 173,
+      "165": 174,
+      "167": 164,
+      "168": 165,
+      "169": 166,
+      "171": 168,
+      "172": 169,
+      "173": 170,
+      "174": 171,
+      "175": 172
+    },
+    "accessories": {
+      "205": 204,
+      "207": 206,
+      "209": 208,
+      "210": 209,
+      "211": 210
+    },
+    "glasses": {
+      "60": 61,
+      "61": 63,
+      "62": 64,
+      "64": 66
+    },
+    "bags": {
+      "118": 133,
+      "119": 134,
+      "120": 135,
+      "121": 136,
+      "122": 137,
+      "123": 138,
+      "124": 139,
+      "125": 140,
+      "126": 141,
+      "127": 142,
+      "128": 143,
+      "129": 144,
+      "146": 118,
+      "147": 119,
+      "148": 120,
+      "149": 121,
+      "150": 122,
+      "152": 124,
+      "153": 125,
+      "154": 126,
+      "155": 127,
+      "157": 130,
+      "158": 130,
+      "159": 131,
+      "160": 132
+    }
+  },
+  "bagsColumnRemap": {
+    "111": 138,
+    "112": 139,
+    "113": 140,
+    "114": 114,
+    "115": 115,
+    "116": 143,
+    "117": 144,
+    "118": 111,
+    "119": 112,
+    "120": 113,
+    "121": 121,
+    "122": 122,
+    "124": 117,
+    "125": 118,
+    "126": 119,
+    "127": 120,
+    "130": 123,
+    "131": 124,
+    "132": 125,
+    "133": 126,
+    "134": 127,
+    "135": 128,
+    "136": 129,
+    "137": 130,
+    "138": 131,
+    "139": 132,
+    "140": 133,
+    "141": 134,
+    "142": 135,
+    "143": 136,
+    "144": 137,
+    "149": 121,
+    "150": 122
+  }
+}

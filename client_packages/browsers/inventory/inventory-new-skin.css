@@ -1,0 +1,615 @@
+/* ==========================================================================
+   Новый инвентарь (inventory-new.html) — обычный режим, не склад семьи.
+   Подключается последним; склад (.mode-family-warehouse) не трогаем.
+   ========================================================================== */
+
+:root {
+    --inv-cell: clamp(52px, 7.2vh, 92px);
+    --inv-gap: clamp(6px, 0.9vh, 10px);
+    --inv-accent: #6ea8ff;
+    --inv-cell-bg: linear-gradient(180deg, rgba(40, 46, 64, 0.55) 0%, rgba(24, 28, 40, 0.55) 100%);
+    --inv-cell-border: rgba(255, 255, 255, 0.10);
+}
+
+/* --- Прозрачный фон, без красного оверлея bridge --- */
+body:not(.mode-family-warehouse) {
+    background: transparent !important;
+    color: #eaeef5 !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body:not(.mode-family-warehouse) .box-inventory,
+body:not(.mode-family-warehouse) .magicinv,
+body:not(.mode-family-warehouse) .minvosn,
+body:not(.mode-family-warehouse) .inv-main-stack,
+body:not(.mode-family-warehouse) .inv-top-row,
+body:not(.mode-family-warehouse) .centerinv,
+body:not(.mode-family-warehouse) .rightinv,
+body:not(.mode-family-warehouse) .rightinv-main,
+body:not(.mode-family-warehouse) .inv-player-panel,
+body:not(.mode-family-warehouse) .equipment-panel {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body:not(.mode-family-warehouse) .magicinv {
+    overflow: visible !important;
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+body:not(.mode-family-warehouse) .magicinv::before {
+    display: none !important;
+}
+
+body:not(.mode-family-warehouse) #familyWhLeft,
+body:not(.mode-family-warehouse) #equipHeading,
+body:not(.mode-family-warehouse) .closedinv {
+    display: none !important;
+}
+
+/* --- Синее размытие по бокам --- */
+.inv-side-blur {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 32%;
+    pointer-events: none;
+    z-index: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.inv-side-blur.left {
+    left: 0;
+    background: linear-gradient(90deg, rgba(40, 80, 170, 0.55) 0%, rgba(40, 80, 170, 0) 100%);
+    -webkit-mask: linear-gradient(90deg, #000 0%, transparent 100%);
+    mask: linear-gradient(90deg, #000 0%, transparent 100%);
+}
+
+.inv-side-blur.right {
+    right: 0;
+    background: linear-gradient(270deg, rgba(40, 80, 170, 0.55) 0%, rgba(40, 80, 170, 0) 100%);
+    -webkit-mask: linear-gradient(270deg, #000 0%, transparent 100%);
+    mask: linear-gradient(270deg, #000 0%, transparent 100%);
+}
+
+body.mode-family-warehouse .inv-side-blur,
+body.mode-family-warehouse .inv-hints-bottom {
+    display: none !important;
+}
+
+/* --- Общая раскладка --- */
+body:not(.mode-family-warehouse) .minvosn {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-main-stack {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    gap: 0 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-top-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 100% !important;
+    gap: 0 !important;
+    padding: 0 !important;
+}
+
+/* --- Экипировка (силуэт слева) --- */
+body:not(.mode-family-warehouse) .centerinv {
+    flex: 0 0 42% !important;
+    max-width: 42% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 16px 0 16px clamp(16px, 2.5vw, 30px) !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+}
+
+body:not(.mode-family-warehouse) .equipment-panel {
+    width: 100% !important;
+    height: 74vh !important;
+    max-height: 74vh !important;
+    aspect-ratio: 0.66 / 1 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    padding: 0 !important;
+}
+
+body:not(.mode-family-warehouse) .equipment-grid.eq-paper-doll,
+body:not(.mode-family-warehouse) #paperDoll {
+    display: block !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    grid-template-areas: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+body:not(.mode-family-warehouse) #paperDoll {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    gap: 0 !important;
+    padding: 0 !important;
+}
+
+body:not(.mode-family-warehouse) #paperDoll::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1500 / 1000;
+    background: url('img/suyet.png') no-repeat left top, url('img/body.svg') no-repeat center top;
+    background-size: 100% 100%, contain;
+    filter: brightness(0.62);
+    pointer-events: none;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell {
+    position: absolute !important;
+    transform: translate(-50%, -50%);
+    width: 7% !important;
+    aspect-ratio: 1 / 1;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    grid-area: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    padding: 0 !important;
+    box-sizing: border-box;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot.empty,
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot:not(.empty) {
+    background: rgba(22, 26, 36, 0.66) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot:not(.empty) {
+    border-color: rgba(110, 168, 255, 0.45) !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot:hover {
+    border-color: var(--inv-accent) !important;
+    background: rgba(28, 34, 48, 0.78) !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot.empty img {
+    display: none !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot img {
+    width: 62% !important;
+    height: 62% !important;
+    max-width: 62% !important;
+    max-height: 62% !important;
+    object-fit: contain !important;
+    opacity: 1 !important;
+    filter: none !important;
+    pointer-events: none;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot-caption {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 3px);
+    font-size: clamp(8px, 1.05vh, 10.5px);
+    line-height: 1.1;
+    text-align: center;
+    white-space: nowrap;
+    color: #aab2c2;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-cell .equip-slot:not(.empty) + .equip-slot-caption {
+    color: #dfe5f0;
+}
+
+body:not(.mode-family-warehouse) .equip-slot[data-eq]::after {
+    display: none !important;
+}
+
+body:not(.mode-family-warehouse) .eq-grid-ears     { left: 10.3%; top:  8.8%; }
+body:not(.mode-family-warehouse) .eq-grid-headwear { left: 20.5%; top:  9.5%; }
+body:not(.mode-family-warehouse) .eq-grid-mask     { left: 31.3%; top:  9.5%; }
+body:not(.mode-family-warehouse) .eq-grid-glasses  { left: 38.4%; top:  9.5%; }
+body:not(.mode-family-warehouse) .eq-grid-top      { left: 20.5%; top: 24.0%; }
+body:not(.mode-family-warehouse) .eq-grid-bracelet { left: 11.5%; top: 41.5%; }
+body:not(.mode-family-warehouse) .eq-grid-watch    { left: 29.6%; top: 41.5%; }
+body:not(.mode-family-warehouse) .eq-grid-bag      { left: 37.9%; top: 41.2%; }
+body:not(.mode-family-warehouse) .eq-grid-pants    { left: 20.5%; top: 50.0%; }
+body:not(.mode-family-warehouse) .eq-grid-gloves   { left: 10.3%; top: 54.7%; }
+body:not(.mode-family-warehouse) .eq-grid-holster  { left: 31.3%; top: 53.8%; }
+body:not(.mode-family-warehouse) .eq-grid-shoes    { left: 20.5%; top: 90.0%; }
+
+/* --- Правая колонка: быстрые + сетка --- */
+body:not(.mode-family-warehouse) .rightinv {
+    flex: 0 0 auto !important;
+    margin-left: auto !important;
+    padding: clamp(56px, 14vh, 135px) clamp(20px, 3vw, 40px) clamp(24px, 4vh, 34px) 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 18px !important;
+    width: auto !important;
+    max-width: none !important;
+}
+
+body:not(.mode-family-warehouse) .rightinv-main {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+}
+
+body:not(.mode-family-warehouse) .inv-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+body:not(.mode-family-warehouse) .inv-head-count {
+    font-size: clamp(11px, 1.5vh, 13px) !important;
+    color: #9fb4e0 !important;
+    font-weight: 500 !important;
+    margin: 0 !important;
+    text-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-head-count b,
+body:not(.mode-family-warehouse) #invSlotCounter b {
+    color: #fff !important;
+}
+
+body:not(.mode-family-warehouse) .inv-head-title,
+body:not(.mode-family-warehouse) #playerInvTitle {
+    font-size: clamp(14px, 1.9vh, 18px) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.06em !important;
+    color: #eaeef5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    text-shadow: none !important;
+    text-transform: none !important;
+}
+
+body:not(.mode-family-warehouse) .rightinv > h1,
+body:not(.mode-family-warehouse) .rightinv h1::after {
+    display: none !important;
+}
+
+/* --- Сетка 5×4 --- */
+body:not(.mode-family-warehouse) .inv-grid-wrap,
+body:not(.mode-family-warehouse) #inventory {
+    display: grid !important;
+    grid-template-columns: repeat(5, var(--inv-cell)) !important;
+    grid-auto-rows: var(--inv-cell) !important;
+    gap: var(--inv-gap) !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-grid-cell,
+body:not(.mode-family-warehouse) .inv-bag-cell {
+    width: var(--inv-cell) !important;
+    height: var(--inv-cell) !important;
+    min-width: var(--inv-cell) !important;
+    min-height: var(--inv-cell) !important;
+    border-radius: 12px !important;
+    background: var(--inv-cell-bg) !important;
+    border: 1px solid var(--inv-cell-border) !important;
+    position: relative !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    transition: border-color 0.12s !important;
+}
+
+body:not(.mode-family-warehouse) .inv-grid-cell:has(img),
+body:not(.mode-family-warehouse) .inv-grid-cell:not(:empty),
+body:not(.mode-family-warehouse) .inv-bag-cell:has(img) {
+    background: linear-gradient(180deg, rgba(46, 54, 76, 0.65), rgba(26, 30, 44, 0.65)) !important;
+}
+
+body:not(.mode-family-warehouse) .inv-grid-cell:hover,
+body:not(.mode-family-warehouse) .inv-bag-cell:hover {
+    border-color: var(--inv-accent) !important;
+}
+
+body:not(.mode-family-warehouse) .inv-grid-cell > img,
+body:not(.mode-family-warehouse) .inv-bag-cell > img {
+    position: absolute !important;
+    left: 50% !important;
+    top: 42% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 56% !important;
+    height: 56% !important;
+    max-width: 56% !important;
+    max-height: 56% !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-grid-cell > img.inv-item-img--weapon,
+body:not(.mode-family-warehouse) .inv-bag-cell > img.inv-item-img--weapon {
+    width: 56% !important;
+    height: 56% !important;
+    max-width: 56% !important;
+    max-height: 56% !important;
+}
+
+body:not(.mode-family-warehouse) .inv-slot-bind {
+    position: absolute !important;
+    top: 5px !important;
+    left: 7px !important;
+    font-size: clamp(9px, 1.2vh, 11px) !important;
+    font-weight: 800 !important;
+    color: #9fb0cf !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    text-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-consumable-qty {
+    position: absolute !important;
+    top: 5px !important;
+    right: 7px !important;
+    left: auto !important;
+    bottom: auto !important;
+    font-size: clamp(10px, 1.3vh, 12px) !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+body:not(.mode-family-warehouse) .inv-slot-label {
+    position: absolute !important;
+    left: 4px !important;
+    right: 4px !important;
+    bottom: 5px !important;
+    top: auto !important;
+    font-size: clamp(8px, 1.1vh, 10.5px) !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    color: #cdd5e4 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    background: transparent !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+}
+
+body:not(.mode-family-warehouse) .inv-player-panel {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    overflow: visible !important;
+}
+
+/* --- Быстрые слоты --- */
+body:not(.mode-family-warehouse) .inv-fast-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--inv-gap) !important;
+    margin-top: calc(clamp(14px, 1.9vh, 18px) + 12px + var(--inv-gap)) !important;
+    width: auto !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar__label {
+    display: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slots {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--inv-gap) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem {
+    width: calc(var(--inv-cell) * 2 + var(--inv-gap)) !important;
+    height: var(--inv-cell) !important;
+    min-height: var(--inv-cell) !important;
+    max-height: var(--inv-cell) !important;
+    border-radius: 12px !important;
+    background: var(--inv-cell-bg) !important;
+    border: 1px dashed rgba(255, 255, 255, 0.18) !important;
+    box-shadow: none !important;
+    position: relative !important;
+    transition: border-color 0.15s, background 0.15s !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem:hover {
+    border-color: var(--inv-accent) !important;
+    background: rgba(110, 168, 255, 0.12) !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem.dragover {
+    border-color: var(--inv-accent) !important;
+    background: rgba(110, 168, 255, 0.18) !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem:has(img) {
+    border-style: solid !important;
+    border-color: rgba(110, 168, 255, 0.5) !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem .slot-number {
+    position: absolute !important;
+    top: 6px !important;
+    left: 8px !important;
+    font-size: clamp(10px, 1.4vh, 13px) !important;
+    font-weight: 800 !important;
+    color: #8fa0bd !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    text-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem > img {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    height: 72% !important;
+    width: auto !important;
+    max-width: 80% !important;
+    max-height: 72% !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-fast-bar .slot.blockitem > img.inv-item-img--weapon {
+    height: 72% !important;
+    max-height: 72% !important;
+    max-width: 80% !important;
+}
+
+/* --- Сумка --- */
+body:not(.mode-family-warehouse) .inv-bag-section {
+    margin-top: 22px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-bag-title {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 10px !important;
+    justify-content: flex-end !important;
+    font-size: clamp(12px, 1.7vh, 16px) !important;
+    font-weight: 800 !important;
+    color: #cfd6e6 !important;
+    margin: 0 0 var(--inv-gap) 0 !important;
+    text-align: right !important;
+    text-shadow: none !important;
+}
+
+body:not(.mode-family-warehouse) .inv-bag-scroll {
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+body:not(.mode-family-warehouse) .inv-bag-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, var(--inv-cell)) !important;
+    grid-auto-rows: var(--inv-cell) !important;
+    gap: var(--inv-gap) !important;
+}
+
+/* --- Подсказки --- */
+.inv-hints-bottom {
+    position: fixed;
+    right: clamp(18px, 2.5vw, 32px);
+    bottom: clamp(16px, 3vh, 26px);
+    text-align: right;
+    font-size: clamp(11px, 1.5vh, 13px);
+    color: #c7cfde;
+    line-height: 1.7;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.inv-hints-bottom b {
+    color: #fff;
+}
+
+/* --- Контекстное меню --- */
+body:not(.mode-family-warehouse) .context-menu {
+    min-width: 170px;
+    background: rgba(18, 22, 32, 0.97) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    padding: 6px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+body:not(.mode-family-warehouse) .context-menu li {
+    color: #dce3f0 !important;
+    padding: 8px 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+body:not(.mode-family-warehouse) .context-menu li:hover {
+    background: rgba(110, 168, 255, 0.18) !important;
+    color: #fff !important;
+}
+
+/* --- Склад: не ломаем 10 колонок bridge --- */
+body.mode-family-warehouse .inv-grid-wrap,
+body.mode-family-warehouse #inventory {
+    grid-template-columns: repeat(10, var(--inv-slot)) !important;
+}

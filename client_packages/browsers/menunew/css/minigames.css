@@ -1,0 +1,453 @@
+
+/* ============================================================
+ *  Рулетка DP — основной интерфейс (F2 → Мини-игра)
+ * ============================================================ */
+#minigames.tab-pane { color: #e8e8e8; }
+
+.dprou {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 4px 8px 8px;
+  box-sizing: border-box;
+}
+.dprou > h3 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f5f5f5;
+}
+.dprou > h3::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 2px;
+  margin-top: 8px;
+  background: #dc2626;
+  border-radius: 0;
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+}
+
+.dprou-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: 0;
+  border: none;
+  background: #17181c;
+  box-shadow: none;
+  padding: 18px 20px 16px;
+  box-sizing: border-box;
+  outline: none;
+}
+.dprou-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+.dprou-betrow,
+.dprou-colors-grid,
+.dprou-hint {
+  flex-shrink: 0;
+}
+
+.dprou-head-main { min-width: 0; }
+
+.dprou-viewport-slot {
+  flex: 1 1 auto;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.dprou-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #f3f4f6;
+  margin-bottom: 6px;
+}
+.dprou-bal-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.28);
+}
+.dprou-bal-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.dprou-dp-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+}
+.dprou-timer {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #ef4444;
+}
+.dprou-timer--wait { color: rgba(255, 255, 255, 0.45); }
+
+.dprou-last-panel {
+  flex-shrink: 0;
+  width: 230px;
+  max-width: 44%;
+}
+.dprou-last-caption {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 8px;
+  text-align: right;
+}
+.dprou-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.dprou-hist-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.dprou-hist-empty {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Лента рулетки ── */
+.dprou-viewport {
+  position: relative;
+  border-radius: 0;
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  background: #121316;
+  overflow: hidden;
+  padding: 0;
+  margin-bottom: 0;
+  min-height: 168px;
+  height: 168px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+}
+.dprou-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.85);
+  z-index: 6;
+  border-radius: 3px;
+}
+.dprou-marker::before,
+.dprou-marker::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+.dprou-marker::before {
+  top: -1px;
+  border-top: 8px solid #ef4444;
+}
+.dprou-marker::after {
+  bottom: -1px;
+  border-bottom: 8px solid #ef4444;
+}
+.dprou-strip-wrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+}
+.dprou-strip-wrap::before,
+.dprou-strip-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  z-index: 4;
+  pointer-events: none;
+}
+.dprou-strip-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(10, 10, 12, 0.98) 0%, rgba(10, 10, 12, 0) 100%);
+}
+.dprou-strip-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(10, 10, 12, 0.98) 0%, rgba(10, 10, 12, 0) 100%);
+}
+.dprou-strip {
+  display: flex;
+  gap: 10px;
+  will-change: transform;
+}
+.dprou-cell--h {
+  flex: 0 0 96px;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* Цвета множителей */
+.dprou--c2  { background: linear-gradient(180deg, #4b5563 0%, #374151 100%); }
+.dprou--c3  { background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%); }
+.dprou--c5  { background: linear-gradient(180deg, #16a34a 0%, #15803d 100%); }
+.dprou--c10 { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); }
+
+.dprou-hist--c2  { background: #374151; border-color: rgba(255, 255, 255, 0.15); }
+.dprou-hist--c3  { background: #1d4ed8; border-color: rgba(37, 99, 235, 0.6); }
+.dprou-hist--c5  { background: #15803d; border-color: rgba(22, 163, 74, 0.6); }
+.dprou-hist--c10 { background: #b91c1c; border-color: rgba(239, 68, 68, 0.6); }
+
+/* ── Ставка ── */
+.dprou-betrow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.dprou-input-wrap {
+  position: relative;
+  width: 280px;
+  max-width: 100%;
+}
+.dprou-input-wrap input {
+  width: 100%;
+  height: 46px;
+  padding: 0 52px 0 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.dprou-input-wrap input:focus {
+  border-color: rgba(220, 38, 38, 0.6);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
+}
+.dprou-input-suffix {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Множители / колонки ставок ── */
+.dprou-colors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.dprou-mul-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dprou-mul-btn {
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.dprou-mul-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+}
+.dprou-mul-btn:active { transform: translateY(0); }
+.dprou-mul-btn.dprou--c2  { background: linear-gradient(180deg, #4b5563 0%, #374151 100%); }
+.dprou-mul-btn.dprou--c3  { background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25); }
+.dprou-mul-btn.dprou--c5  { background: linear-gradient(180deg, #16a34a 0%, #15803d 100%); box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25); }
+.dprou-mul-btn.dprou--c10 { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
+
+.dprou-mul-bets {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 28px;
+  max-height: 88px;
+  overflow-y: auto;
+  padding: 2px;
+}
+.dprou-bet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+}
+.dprou-bet-row--me {
+  background: rgba(220, 38, 38, 0.14);
+  border-color: rgba(220, 38, 38, 0.4);
+}
+.dprou-bet-name {
+  color: rgba(255, 255, 255, 0.75);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dprou-bet-amt {
+  flex-shrink: 0;
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dprou-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* ── Оверлей результата рулетки DP (после спина) ── */
+
+.dprou-result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.dprou-result-overlay.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dprou-result__inner {
+  text-align: center;
+  max-width: 360px;
+  padding: 28px 32px;
+  border-radius: 14px;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  background: linear-gradient(180deg, rgba(22, 22, 22, 0.98) 0%, rgba(12, 12, 12, 0.98) 100%);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 0 24px rgba(220, 38, 38, 0.15);
+}
+
+.dprou-result__title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  color: #f5f5f5;
+}
+
+.dprou-result__title--win { color: #ef4444; }
+.dprou-result__title--lose { color: rgba(255, 255, 255, 0.55); }
+.dprou-result__title--info { color: rgba(255, 255, 255, 0.75); font-size: 16px; }
+
+.dprou-result__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  height: 40px;
+  padding: 0 16px;
+  margin: 0 auto 12px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.dprou-result__sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
+}
+
+.dprou-result__amount {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dprou-result__amount--win { color: #ef4444; }
+.dprou-result__amount--lose { color: rgba(255, 255, 255, 0.45); }
+
+.dprou-result__hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.42);
+}
